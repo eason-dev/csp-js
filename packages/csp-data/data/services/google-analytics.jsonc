@@ -1,0 +1,38 @@
+{
+  // Google Analytics 4 (GA4) - Universal Analytics successor
+  "id": "google-analytics",
+  "name": "Google Analytics 4",
+  "category": "analytics",
+  "description": "Web analytics service that tracks and reports website traffic",
+  "website": "https://analytics.google.com/",
+  "officialDocs": [
+    "https://developers.google.com/tag-platform/security/guides/csp",
+    "https://content-security-policy.com/examples/google-analytics/"
+  ],
+  "csp": {
+    "script-src": [
+      "https://www.googletagmanager.com",
+      "https://www.google-analytics.com",
+      "https://ssl.google-analytics.com"
+    ],
+    "img-src": [
+      "https://www.google-analytics.com",
+      "https://www.googletagmanager.com"
+    ],
+    "connect-src": [
+      "https://www.google-analytics.com",
+      "https://analytics.google.com",
+      "https://stats.g.doubleclick.net"
+    ]
+  },
+  "notes": [
+    "For Google Signals (cross-device tracking), additional domains may be required",
+    "gtag.js automatically handles most CSP requirements",
+    "Consider using nonce-based approach for inline scripts"
+  ],
+  "aliases": ["ga4", "gtag", "google-gtag"],
+  "lastUpdated": "2024-06-28T00:00:00.000Z",
+  "version": "GA4",
+  "requiresDynamic": true,
+  "requiresNonce": false
+}

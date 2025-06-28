@@ -1,0 +1,40 @@
+{
+  // Typeform - Online form builder and survey tool
+  "id": "typeform",
+  "name": "Typeform",
+  "category": "forms",
+  "description": "Online form builder for creating surveys, quizzes, and questionnaires",
+  "website": "https://www.typeform.com/",
+  "officialDocs": [
+    "https://community.typeform.com/integrate-your-typeform-43/csp-allowing-form-submissions-to-typeform-via-intercom-integration-9338"
+  ],
+  "csp": {
+    "script-src": [
+      "https://embed.typeform.com"
+    ],
+    "frame-src": [
+      "https://form.typeform.com",
+      "https://embed.typeform.com"
+    ],
+    "form-action": [
+      "https://form.typeform.com",
+      "https://intercom-integration.typeform.com"
+    ],
+    "connect-src": [
+      "https://api.typeform.com",
+      "https://form.typeform.com"
+    ],
+    "img-src": [
+      "https://images.typeform.com"
+    ]
+  },
+  "notes": [
+    "Embedded forms require frame-src permissions",
+    "Intercom integration requires additional form-action permissions",
+    "API integration requires connect-src permissions"
+  ],
+  "aliases": ["typeform-embed"],
+  "lastUpdated": "2024-06-28T00:00:00.000Z",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

@@ -1,0 +1,38 @@
+{
+  // YouTube - Video embedding service
+  "id": "youtube",
+  "name": "YouTube",
+  "category": "video",
+  "description": "Video hosting and embedding service",
+  "website": "https://www.youtube.com/",
+  "officialDocs": [
+    "https://developers.google.com/youtube/iframe_api_reference"
+  ],
+  "csp": {
+    "frame-src": [
+      "https://www.youtube.com",
+      "https://www.youtube-nocookie.com"
+    ],
+    "script-src": [
+      "https://www.youtube.com",
+      "https://s.ytimg.com"
+    ],
+    "img-src": [
+      "https://i.ytimg.com",
+      "https://i9.ytimg.com",
+      "https://ytimg.googleusercontent.com"
+    ],
+    "connect-src": [
+      "https://www.youtube.com"
+    ]
+  },
+  "notes": [
+    "youtube-nocookie.com is the privacy-enhanced mode",
+    "iframe API requires script-src permissions",
+    "Thumbnail images are served from ytimg.com domains"
+  ],
+  "aliases": ["youtube-embed", "yt"],
+  "lastUpdated": "2024-06-28T00:00:00.000Z",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

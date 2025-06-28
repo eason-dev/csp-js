@@ -1,0 +1,28 @@
+{
+  // Google Fonts - Web font service
+  "id": "google-fonts",
+  "name": "Google Fonts",
+  "category": "fonts",
+  "description": "Free web font service with hundreds of font families",
+  "website": "https://fonts.google.com/",
+  "officialDocs": [
+    "https://developers.google.com/fonts/docs/getting_started"
+  ],
+  "csp": {
+    "style-src": [
+      "https://fonts.googleapis.com"
+    ],
+    "font-src": [
+      "https://fonts.gstatic.com"
+    ]
+  },
+  "notes": [
+    "fonts.googleapis.com serves CSS files",
+    "fonts.gstatic.com serves the actual font files",
+    "Both domains are required for Google Fonts to work properly"
+  ],
+  "aliases": ["gfonts"],
+  "lastUpdated": "2024-06-28T00:00:00.000Z",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

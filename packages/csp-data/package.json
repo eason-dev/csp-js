@@ -1,0 +1,53 @@
+{
+  "name": "@csp-js/data",
+  "version": "0.1.0",
+  "description": "Service definitions and CSP mappings database for csp-js",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./services": {
+      "types": "./dist/services.d.ts",
+      "import": "./dist/services.js",
+      "require": "./dist/services.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "data",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "validate": "node scripts/validate-data.js"
+  },
+  "keywords": [
+    "csp",
+    "content-security-policy",
+    "services",
+    "data",
+    "mappings"
+  ],
+  "author": "Eason",
+  "license": "MIT",
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3",
+    "eslint": "^9.29.0",
+    "tsup": "^8.0.0",
+    "typescript": "5.8.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

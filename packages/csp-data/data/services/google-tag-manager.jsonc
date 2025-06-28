@@ -1,0 +1,33 @@
+{
+  // Google Tag Manager - Tag management system
+  "id": "google-tag-manager",
+  "name": "Google Tag Manager",
+  "category": "analytics",
+  "description": "Tag management system for managing marketing and analytics tags",
+  "website": "https://tagmanager.google.com/",
+  "officialDocs": [
+    "https://developers.google.com/tag-platform/security/guides/csp",
+    "https://www.simoahava.com/analytics/google-tag-manager-content-security-policy/"
+  ],
+  "csp": {
+    "script-src": [
+      "https://www.googletagmanager.com"
+    ],
+    "img-src": [
+      "https://www.googletagmanager.com"
+    ],
+    "connect-src": [
+      "https://www.googletagmanager.com"
+    ]
+  },
+  "notes": [
+    "GTM requires nonce implementation for secure inline script execution",
+    "Preview mode may require additional permissions",
+    "Tags within GTM may require additional CSP rules",
+    "Consider using nonce-based approach for optimal security"
+  ],
+  "aliases": ["gtm", "google-gtm"],
+  "lastUpdated": "2024-06-28T00:00:00.000Z",
+  "requiresDynamic": true,
+  "requiresNonce": true
+}
