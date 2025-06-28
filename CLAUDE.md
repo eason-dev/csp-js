@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Basic
+
+- Always use `pnpm` as package manager.
+- Never run `pnpm dev` to validate your changes.
+- Always use `Context7 MCP` when working with libraries. Use it to get latest documentation for a library, such as Next.js, React, TailwindCSS, etc.
+- Always use `eslint` and `prettier` to format your code.
+
 ## Project Structure
 
 This is a Turborepo monorepo with TypeScript and React/Next.js applications. The project uses pnpm as the package manager and requires Node.js >=22.
