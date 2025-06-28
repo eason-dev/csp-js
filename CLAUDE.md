@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Always use `pnpm` as package manager.
 - Never run `pnpm dev` to validate your changes.
 - Always use `Context7 MCP` when working with libraries. Use it to get latest documentation for a library, such as Next.js, React, TailwindCSS, etc.
-- Always use `eslint` and `prettier` to format your code.
+- Prefer using `eslint` and `prettier` to format your code.
 
 ## Project Structure
 
