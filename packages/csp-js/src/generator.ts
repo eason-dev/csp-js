@@ -1,5 +1,5 @@
 import { getService, type CSPDirectives } from '@csp-js/data';
-import { CSPOptions, CSPResult } from './types.js';
+import type { CSPOptions, CSPResult } from './types.js';
 import {
   generateNonce,
   mergeCSPDirectives,

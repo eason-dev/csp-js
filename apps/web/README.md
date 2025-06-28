@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
+# CSP Generator Web App
+
+A modern web application for generating Content Security Policy headers using the csp-js library.
+
+## Features
+
+- 🎨 Modern UI built with Next.js 15 and TailwindCSS v4
+- 🔍 Interactive service search and selection
+- 📋 One-click copy to clipboard
+- 🌙 Dark mode support
+- 📱 Responsive design
+- ⚡ Fast build times with TailwindCSS v4
+
+## Browser Support
+
+This application uses TailwindCSS v4, which requires modern browsers:
+
+- ✅ Safari 16.4+ (March 2023)
+- ✅ Chrome 111+ (March 2023)  
+- ✅ Firefox 128+ (July 2024)
+- ✅ Edge 111+ (March 2023)
+
+If you need to support older browsers, consider using TailwindCSS v3 instead.
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development Commands
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
+```bash
+# Install dependencies
+pnpm install
 
-## Learn More
+# Start development server
+pnpm dev
 
-To learn more about Next.js, take a look at the following resources:
+# Build for production
+pnpm build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Run linting
+pnpm lint
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Type checking
+pnpm check-types
+```
+
+## Technology Stack
+
+- **Framework**: Next.js 15 with App Router
+- **Styling**: TailwindCSS v4 with PostCSS
+- **Icons**: Lucide React
+- **Fonts**: Geist Sans & Geist Mono
+- **TypeScript**: Full type safety
+- **Library**: csp-js for CSP generation
 
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This app is optimized for deployment on Vercel and other modern hosting platforms that support Next.js.
