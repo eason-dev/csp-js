@@ -1,7 +1,7 @@
-import { base } from '@repo/eslint-config/base.js';
+import { config } from '@repo/eslint-config/base.js';
 
 export default [
-  ...base,
+  ...config,
   {
     ignores: ['dist/**'],
   },
