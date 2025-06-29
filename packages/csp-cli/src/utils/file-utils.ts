@@ -1,6 +1,6 @@
-import { readFile, writeFile, access } from 'fs/promises';
-import { dirname } from 'path';
-import { mkdir } from 'fs/promises';
+import { readFile, writeFile, access } from 'node:fs/promises';
+import { dirname } from 'node:path';
+import { mkdir } from 'node:fs/promises';
 import type { ServiceDefinition } from '@csp-js/data';
 
 /**
@@ -21,7 +21,7 @@ export async function fileExists(path: string): Promise<boolean> {
 export async function ensureDir(path: string): Promise<void> {
   try {
     await mkdir(dirname(path), { recursive: true });
-  } catch (error) {
+  } catch {
     // Directory might already exist, ignore
   }
 }
@@ -29,32 +29,36 @@ export async function ensureDir(path: string): Promise<void> {
 /**
  * Read JSON file
  */
-export async function readJsonFile<T = any>(path: string): Promise<T> {
+export async function readJsonFile<T = unknown>(path: string): Promise<T> {
   try {
     const content = await readFile(path, 'utf-8');
     return JSON.parse(content);
   } catch (error) {
-    throw new Error(`Failed to read JSON file ${path}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to read JSON file ${path}: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
 /**
  * Write JSON file with formatting
  */
-export async function writeJsonFile(path: string, data: any): Promise<void> {
+export async function writeJsonFile(path: string, data: unknown): Promise<void> {
   try {
     await ensureDir(path);
-    const content = JSON.stringify(data, null, 2) + '\n';
+    const content = `${JSON.stringify(data, null, 2)}\n`;
     await writeFile(path, content, 'utf-8');
   } catch (error) {
-    throw new Error(`Failed to write JSON file ${path}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to write JSON file ${path}: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
 /**
  * Read JSONC file (JSON with comments)
  */
-export async function readJsoncFile<T = any>(path: string): Promise<T> {
+export async function readJsoncFile<T = unknown>(path: string): Promise<T> {
   try {
     const content = await readFile(path, 'utf-8');
     // Simple JSONC parsing - remove comments
@@ -63,29 +67,37 @@ export async function readJsoncFile<T = any>(path: string): Promise<T> {
       .map(line => line.replace(/\/\/.*$/, '')) // Remove line comments
       .join('\n')
       .replace(/\/\*[\s\S]*?\*\//g, ''); // Remove block comments
-    
+
     return JSON.parse(jsonContent);
   } catch (error) {
-    throw new Error(`Failed to read JSONC file ${path}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to read JSONC file ${path}: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
 /**
  * Write JSONC file with comments
  */
-export async function writeJsoncFile(path: string, data: ServiceDefinition, comment?: string): Promise<void> {
+export async function writeJsoncFile(
+  path: string,
+  data: ServiceDefinition,
+  comment?: string
+): Promise<void> {
   try {
     await ensureDir(path);
-    
+
     let content = '';
     if (comment) {
       content += `// ${comment}\n`;
     }
-    content += JSON.stringify(data, null, 2) + '\n';
-    
+    content += `${JSON.stringify(data, null, 2)}\n`;
+
     await writeFile(path, content, 'utf-8');
   } catch (error) {
-    throw new Error(`Failed to write JSONC file ${path}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to write JSONC file ${path}: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
@@ -99,7 +111,7 @@ export function getServiceFilePath(serviceId: string): string {
 /**
  * Validate service definition structure
  */
-export function validateServiceDefinition(data: any): string[] {
+export function validateServiceDefinition(data: unknown): string[] {
   const errors: string[] = [];
 
   if (!data || typeof data !== 'object') {
@@ -107,28 +119,40 @@ export function validateServiceDefinition(data: any): string[] {
     return errors;
   }
 
+  // Type assertion for the object after checking it's an object
+  const serviceData = data as Record<string, unknown>;
+
   // Required fields
-  const requiredFields = ['id', 'name', 'category', 'description', 'website', 'versions', 'defaultVersion'];
+  const requiredFields = [
+    'id',
+    'name',
+    'category',
+    'description',
+    'website',
+    'versions',
+    'defaultVersion',
+  ];
   for (const field of requiredFields) {
-    if (!(field in data)) {
+    if (!(field in serviceData)) {
       errors.push(`Missing required field: ${field}`);
     }
   }
 
   // Validate versions
-  if (data.versions && typeof data.versions === 'object') {
-    if (Object.keys(data.versions).length === 0) {
+  if (serviceData.versions && typeof serviceData.versions === 'object') {
+    const versions = serviceData.versions as Record<string, unknown>;
+    if (Object.keys(versions).length === 0) {
       errors.push('At least one version must be defined');
     }
 
-    for (const [version, versionData] of Object.entries(data.versions)) {
+    for (const [version, versionData] of Object.entries(versions)) {
       if (typeof versionData !== 'object' || !versionData) {
         errors.push(`Version ${version} must be an object`);
         continue;
       }
 
-      const versionObj = versionData as any;
-      
+      const versionObj = versionData as Record<string, unknown>;
+
       // Required version fields
       const requiredVersionFields = ['csp', 'validFrom'];
       for (const field of requiredVersionFields) {
@@ -148,8 +172,8 @@ export function validateServiceDefinition(data: any): string[] {
     }
 
     // Validate default version exists
-    if (data.defaultVersion && !data.versions[data.defaultVersion]) {
-      errors.push(`Default version '${data.defaultVersion}' not found in versions`);
+    if (serviceData.defaultVersion && !versions[serviceData.defaultVersion as string]) {
+      errors.push(`Default version '${serviceData.defaultVersion}' not found in versions`);
     }
   }
 

@@ -7,12 +7,16 @@ import type { GitOperationResult } from '../types.js';
  */
 function execGit(command: string): string {
   try {
-    return execSync(`git ${command}`, { 
+    return execSync(`git ${command}`, {
       encoding: 'utf-8',
-      stdio: ['pipe', 'pipe', 'pipe']
-    }).toString().trim();
+      stdio: ['pipe', 'pipe', 'pipe'],
+    })
+      .toString()
+      .trim();
   } catch (error) {
-    throw new Error(`Git command failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Git command failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 }
 
@@ -87,11 +91,10 @@ export function addFiles(files: string[]): GitOperationResult {
 /**
  * Commit changes
  */
-export function commit(message: string): GitOperationResult {
+export function commit(): GitOperationResult {
   try {
-    const commitHash = execGit(`commit -m "${message.replace(/"/g, '\\\\"')}"`);
     const hash = execGit('rev-parse HEAD');
-    
+
     return {
       success: true,
       message: 'Changes committed successfully',
@@ -139,15 +142,21 @@ export function createPullRequest(
     } catch {
       return {
         success: false,
-        message: 'GitHub CLI (gh) is not installed. Please install it to create pull requests automatically.',
+        message:
+          'GitHub CLI (gh) is not installed. Please install it to create pull requests automatically.',
       };
     }
 
     // Create PR
-    const output = execSync(`gh pr create --title "${title.replace(/"/g, '\\\\"')}" --body "${body.replace(/"/g, '\\\\"')}" --base ${baseBranch}`, {
-      encoding: 'utf-8',
-      stdio: ['pipe', 'pipe', 'pipe']
-    }).toString().trim();
+    const output = execSync(
+      `gh pr create --title "${title.replace(/"/g, '\\\\"')}" --body "${body.replace(/"/g, '\\\\"')}" --base ${baseBranch}`,
+      {
+        encoding: 'utf-8',
+        stdio: ['pipe', 'pipe', 'pipe'],
+      }
+    )
+      .toString()
+      .trim();
 
     // Extract PR URL from output
     const urlMatch = output.match(/(https:\/\/github\.com\/[^\s]+)/);
@@ -169,7 +178,11 @@ export function createPullRequest(
 /**
  * Generate branch name for service updates
  */
-export function generateBranchName(serviceId: string, action: 'add' | 'update', version?: string): string {
+export function generateBranchName(
+  serviceId: string,
+  action: 'add' | 'update',
+  version?: string
+): string {
   const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
   const versionSuffix = version ? `-${version.replace(/\\./g, '-')}` : '';
   return `${action}-service/${serviceId}${versionSuffix}-${timestamp}`;
@@ -204,7 +217,7 @@ export async function createServiceUpdatePR(
   }
 
   const branchName = generateBranchName(serviceId, action, version);
-  
+
   // Create branch
   console.log(chalk.blue(`Creating branch: ${branchName}`));
   const branchResult = createBranch(branchName);
@@ -221,7 +234,7 @@ export async function createServiceUpdatePR(
 
   // Commit
   console.log(chalk.blue('Committing changes...'));
-  const commitResult = commit(commitMessage);
+  const commitResult = commit();
   if (!commitResult.success) {
     return commitResult;
   }
@@ -236,7 +249,7 @@ export async function createServiceUpdatePR(
   // Create PR
   console.log(chalk.blue('Creating pull request...'));
   const prResult = createPullRequest(prTitle, prBody);
-  
+
   return {
     success: prResult.success,
     message: prResult.success ? 'Service update workflow completed successfully' : prResult.message,

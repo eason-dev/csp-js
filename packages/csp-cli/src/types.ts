@@ -1,4 +1,4 @@
-import type { ServiceDefinition, ServiceVersion } from '@csp-js/data';
+import type { ServiceDefinition } from '@csp-js/data';
 
 /**
  * CLI Command options

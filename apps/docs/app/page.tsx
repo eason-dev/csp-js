@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Button } from '@repo/ui/button';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -7,11 +6,10 @@ export default function Home() {
     <div className={styles.page}>
       <main className={styles.main}>
         <div className={styles.hero}>
-          <h1 className={styles.title}>
-            CSP-JS Documentation
-          </h1>
+          <h1 className={styles.title}>CSP-JS Documentation</h1>
           <p className={styles.description}>
-            Comprehensive documentation for CSP-JS - Generate Content Security Policy headers for popular web services
+            Comprehensive documentation for CSP-JS - Generate Content Security Policy headers for
+            popular web services
           </p>
         </div>
 
@@ -40,7 +38,8 @@ export default function Home() {
         <div className={styles.quickStart}>
           <h2>Quick Start</h2>
           <div className={styles.codeBlock}>
-            <pre><code>{`npm install csp-js
+            <pre>
+              <code>{`npm install csp-js
 
 import { generateCSP } from 'csp-js';
 
@@ -51,7 +50,8 @@ const result = generateCSP([
 ]);
 
 console.log(result.header);
-// Content-Security-Policy: script-src 'self' https://www.googletagmanager.com...`}</code></pre>
+// Content-Security-Policy: script-src 'self' https://www.googletagmanager.com...`}</code>
+            </pre>
           </div>
         </div>
 
