@@ -107,16 +107,6 @@ generateCSP(['google-analytics@latest']);
 generateCSP(['google-analytics']); // same as above
 ```
 
-#### Service Categories
-Services are organized by category for easy discovery:
-
-- **Analytics**: Google Analytics, Microsoft Clarity, Adobe Analytics
-- **Payment**: Stripe, PayPal, Square
-- **Social**: Facebook Pixel, Twitter, LinkedIn
-- **Forms**: Typeform, Google Forms, JotForm
-- **Chat**: Intercom, Zendesk, Crisp
-- **And more**: CDN, Fonts, Maps, Video, Testing, Monitoring
-
 ### API Reference
 
 #### `generateCSP(options)`
@@ -197,126 +187,6 @@ Use our interactive web interface at [csp-js.eason.ch](https://csp-js.eason.ch) 
 - Validate configurations
 - Preview CSP impact
 
-## 🏗️ Architecture
-
-CSP-JS is built as a modular monorepo with clear separation of concerns:
-
-```
-csp-js/
-├── packages/
-│   ├── csp-js/          # Core library and CSP generation
-│   ├── csp-data/        # Service definitions database
-│   └── csp-cli/         # Command-line tools
-├── apps/
-│   ├── web/             # Interactive web interface (Next.js)
-│   └── docs/            # Documentation site
-└── packages/
-    ├── ui/              # Shared UI components
-    └── typescript-config/ # Shared TypeScript configurations
-```
-
-### Design Principles
-
-1. **Service-First**: Configure CSP by services, not individual directives
-2. **Version Aware**: Support multiple versions of service implementations
-3. **Automated Updates**: Monitor services for CSP requirement changes
-4. **Developer Experience**: Intuitive APIs with comprehensive TypeScript support
-5. **Security by Default**: Conservative defaults with opt-in for relaxed policies
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Quick Contribution Guide
-
-1. **Fork & Clone**
-   ```bash
-   git clone https://github.com/yourusername/csp-js.git
-   cd csp-js
-   ```
-
-2. **Install Dependencies**
-   ```bash
-   pnpm install
-   ```
-
-3. **Development Setup**
-   ```bash
-   # Build all packages
-   pnpm build
-   
-   # Run tests
-   pnpm test
-   
-   # Start development servers
-   pnpm dev
-   ```
-
-4. **Add New Services**
-   ```bash
-   # Interactive service addition
-   pnpm cli add --interactive
-   
-   # Or manually edit packages/csp-data/data/services/
-   ```
-
-### Project Structure
-
-- **Monorepo**: Uses Turborepo for efficient builds and caching
-- **Package Manager**: pnpm with workspaces
-- **TypeScript**: 100% TypeScript with strict mode
-- **Testing**: Vitest for unit tests
-- **Linting**: ESLint + Prettier with zero-warning policy
-- **CI/CD**: GitHub Actions for testing, building, and deployment
-
-### Development Commands
-
-```bash
-# Root commands (run from project root)
-pnpm dev          # Start all development servers
-pnpm build        # Build all packages
-pnpm test         # Run all tests
-pnpm lint         # Lint all packages
-pnpm check-types  # TypeScript type checking
-pnpm format       # Format code with Prettier
-
-# Package-specific commands
-pnpm --filter csp-js test        # Test specific package
-pnpm --filter web dev            # Start web app only
-pnpm --filter @csp-js/cli build  # Build CLI only
-```
-
-## 📋 Service Support
-
-### Currently Supported Services
-
-| Service | Versions | Category | Auto-Monitoring |
-|---------|----------|----------|-----------------|
-| Google Analytics | 4.0.0, 4.1.0 | Analytics | ✅ |
-| Microsoft Clarity | 1.0.0 | Analytics | ✅ |
-| Typeform | 1.0.0 | Forms | ✅ |
-| Google Tag Manager | 1.0.0 | Analytics | ✅ |
-| Google Fonts | 1.0.0 | Fonts | ✅ |
-| YouTube | 1.0.0 | Video | ✅ |
-
-### Request New Services
-
-We're always adding new services! To request support for a service:
-
-1. [Create an issue](https://github.com/eason-dev/csp-js/issues/new?template=add-service.yml) using our service request template
-2. Use the CLI: `csp-cli add --interactive`
-3. Submit a pull request with the service definition
-
-### Service Update Process
-
-Services are automatically monitored for CSP requirement changes:
-
-1. **Automated Monitoring**: GitHub Actions check services weekly
-2. **Change Detection**: Compare current vs. expected CSP requirements
-3. **Issue Creation**: Automatic issues for detected changes
-4. **Community Review**: Maintainers and community validate changes
-5. **Version Release**: Updated service definitions released
-
 ## 🔐 Security
 
 ### Security Considerations
@@ -328,22 +198,24 @@ Services are automatically monitored for CSP requirement changes:
 
 ### Reporting Security Issues
 
-Please report security vulnerabilities to [security@csp-js.eason.ch](mailto:security@csp-js.eason.ch) or through [GitHub Security Advisories](https://github.com/eason-dev/csp-js/security/advisories/new).
+Please report security vulnerabilities through [GitHub Security Advisories](https://github.com/eason-dev/csp-js/security/advisories/new).
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) and [Architecture Guide](ARCHITECTURE.md) for details.
+
+## 📋 Service Support
+
+CSP-JS supports 50+ popular services including Google Analytics, Stripe, Typeform, YouTube, and more. 
+
+See [SERVICE_SUPPORT.md](SERVICE_SUPPORT.md) for:
+- Complete list of supported services with versions
+- Service categories (Analytics, Payment, Social, etc.)
+- How to request new services
 
 ## 📈 Roadmap
 
-### Current Focus (Q1 2025)
-- [ ] Expand service database to 100+ services
-- [ ] Advanced version selection UI
-- [ ] CSP violation analysis tools
-- [ ] Performance monitoring integration
-
-### Future Plans
-- [ ] Browser extension for CSP testing
-- [ ] Webpack/Vite plugins for build-time CSP generation
-- [ ] Integration with popular frameworks (Next.js, Nuxt, etc.)
-- [ ] CSP policy optimization recommendations
-- [ ] Real-time CSP monitoring dashboard
+See [ROADMAP.md](ROADMAP.md) for our development plans and upcoming features.
 
 ## 📄 License
 
@@ -361,7 +233,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/eason-dev/csp-js/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/eason-dev/csp-js/discussions)
 - 📖 **Documentation**: [csp-js.eason.ch/docs](https://csp-js.eason.ch/docs)
-- 📧 **Email**: [hello@csp-js.eason.ch](mailto:hello@csp-js.eason.ch)
 
 ---
 
