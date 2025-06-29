@@ -64,9 +64,13 @@ program.exitOverride((err) => {
 });
 
 // Parse arguments
-try {
-  await program.parseAsync();
-} catch (error) {
-  console.error(chalk.red('Error:'), error instanceof Error ? error.message : 'Unknown error');
-  process.exit(1);
+async function main() {
+  try {
+    await program.parseAsync();
+  } catch (error) {
+    console.error(chalk.red('Error:'), error instanceof Error ? error.message : 'Unknown error');
+    process.exit(1);
+  }
 }
+
+main();

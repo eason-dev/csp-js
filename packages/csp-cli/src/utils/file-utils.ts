@@ -44,7 +44,7 @@ export async function readJsonFile<T = any>(path: string): Promise<T> {
 export async function writeJsonFile(path: string, data: any): Promise<void> {
   try {
     await ensureDir(path);
-    const content = JSON.stringify(data, null, 2) + '\\n';
+    const content = JSON.stringify(data, null, 2) + '\n';
     await writeFile(path, content, 'utf-8');
   } catch (error) {
     throw new Error(`Failed to write JSON file ${path}: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -59,10 +59,10 @@ export async function readJsoncFile<T = any>(path: string): Promise<T> {
     const content = await readFile(path, 'utf-8');
     // Simple JSONC parsing - remove comments
     const jsonContent = content
-      .split('\\n')
-      .map(line => line.replace(/\\/\\/.*$/, '')) // Remove line comments
-      .join('\\n')
-      .replace(/\\/\\*[\\s\\S]*?\\*\\//g, ''); // Remove block comments
+      .split('\n')
+      .map(line => line.replace(/\/\/.*$/, '')) // Remove line comments
+      .join('\n')
+      .replace(/\/\*[\s\S]*?\*\//g, ''); // Remove block comments
     
     return JSON.parse(jsonContent);
   } catch (error) {
@@ -79,9 +79,9 @@ export async function writeJsoncFile(path: string, data: ServiceDefinition, comm
     
     let content = '';
     if (comment) {
-      content += `// ${comment}\\n`;
+      content += `// ${comment}\n`;
     }
-    content += JSON.stringify(data, null, 2) + '\\n';
+    content += JSON.stringify(data, null, 2) + '\n';
     
     await writeFile(path, content, 'utf-8');
   } catch (error) {

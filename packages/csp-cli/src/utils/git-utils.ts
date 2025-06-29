@@ -150,7 +150,7 @@ export function createPullRequest(
     }).toString().trim();
 
     // Extract PR URL from output
-    const urlMatch = output.match(/(https:\\/\\/github\\.com\\/[^\\s]+)/);
+    const urlMatch = output.match(/(https:\/\/github\.com\/[^\s]+)/);
     const pullRequestUrl = urlMatch ? urlMatch[1] : undefined;
 
     return {

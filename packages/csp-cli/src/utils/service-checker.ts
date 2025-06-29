@@ -149,7 +149,10 @@ export async function checkServiceCSP(
     );
 
     // Compare with expected CSP
-    result.comparisonResult = compareCSP(serviceVersion.csp, result.detectedCSP);
+    const expectedCSP = Object.fromEntries(
+      Object.entries(serviceVersion.csp).filter(([, value]) => value !== undefined)
+    ) as Record<string, string[]>;
+    result.comparisonResult = compareCSP(expectedCSP, result.detectedCSP);
 
     // Add warnings for differences
     if (Object.keys(result.comparisonResult.missing).length > 0) {

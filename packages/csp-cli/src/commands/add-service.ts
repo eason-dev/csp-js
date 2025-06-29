@@ -192,7 +192,7 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
   ]);
 
   // Collect CSP directives
-  console.log(chalk.yellow('\\nNow let\\'s define the CSP requirements...'));
+  console.log(chalk.yellow('\nNow let\'s define the CSP requirements...'));
   const csp: Record<string, string[]> = {};
   
   const cspDirectives = [
