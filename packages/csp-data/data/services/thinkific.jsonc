@@ -1,0 +1,30 @@
+{
+  // Thinkific - Online course platform
+  "id": "thinkific",
+  "name": "Thinkific",
+  "category": "other",
+  "description": "Online course creation and student management platform",
+  "website": "https://www.thinkific.com/",
+  "officialDocs": [
+    "https://developers.thinkific.com/api/api-documentation/",
+    "https://support.thinkific.com/hc/en-us/articles/360030350314-Thinkific-API"
+  ],
+  "csp": {
+    "script-src": [
+      "https://thinkific.com"
+    ],
+    "frame-src": [
+      "https://thinkific.com",
+      "https://*.thinkific.com"
+    ]
+  },
+  "notes": [
+    "Course player requires frame embedding",
+    "White-label solutions may use custom domains"
+  ],
+  "aliases": ["thinkific-courses"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "1.0",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

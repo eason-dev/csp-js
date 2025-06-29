@@ -1,0 +1,31 @@
+{
+  // Sanity Headless CMS
+  "name": "Sanity",
+  "category": "other",
+  "description": "Structured content platform with real-time APIs",
+  "website": "https://sanity.io",
+  "officialDocs": [
+    "https://www.sanity.io/docs/",
+    "https://www.sanity.io/docs/http-api"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2017-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://sanity.io"
+        ],
+        "connect-src": [
+          "https://api.sanity.io",
+          "https://cdn.sanity.io"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Sanity content platform API and CDN endpoints"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["sanity-cms"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

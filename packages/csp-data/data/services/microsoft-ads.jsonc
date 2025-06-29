@@ -1,0 +1,30 @@
+{
+  // Microsoft Ads (Bing Ads)
+  "name": "Microsoft Ads",
+  "category": "advertising",
+  "description": "Microsoft's advertising platform (formerly Bing Ads)",
+  "website": "https://ads.microsoft.com",
+  "officialDocs": [
+    "https://docs.microsoft.com/en-us/advertising/",
+    "https://help.ads.microsoft.com/apex/index/3/en/56684"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2006-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://bat.bing.com"
+        ],
+        "connect-src": [
+          "https://bat.bing.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Microsoft Ads Universal Event Tracking (UET) tag"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["bing-ads", "uet"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

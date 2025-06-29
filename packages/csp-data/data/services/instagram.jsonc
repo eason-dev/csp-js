@@ -1,0 +1,37 @@
+{
+  "id": "instagram",
+  "name": "Instagram",
+  "category": "social",
+  "description": "Instagram photo and video sharing platform integration for embedded posts",
+  "website": "https://instagram.com",
+  "officialDocs": [
+    "https://developers.facebook.com/docs/instagram-basic-display-api/",
+    "https://developers.facebook.com/docs/instagram-api/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://www.instagram.com"
+        ],
+        "frame-src": [
+          "https://www.instagram.com"
+        ],
+        "connect-src": [
+          "https://www.instagram.com"
+        ],
+        "img-src": [
+          "https://scontent.cdninstagram.com",
+          "https://instagram.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Instagram embedded posts and stories"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["instagram-embed"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

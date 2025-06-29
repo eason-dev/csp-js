@@ -1,0 +1,35 @@
+{
+  "id": "twitch",
+  "name": "Twitch",
+  "category": "video",
+  "description": "Twitch live streaming platform for embedded video players and chat",
+  "website": "https://twitch.tv",
+  "officialDocs": [
+    "https://dev.twitch.tv/docs/embed/",
+    "https://dev.twitch.tv/docs/embed/video-and-clips/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "frame-src": [
+          "https://player.twitch.tv",
+          "https://www.twitch.tv"
+        ],
+        "img-src": [
+          "https://static-cdn.jtvnw.net"
+        ],
+        "connect-src": [
+          "https://gql.twitch.tv",
+          "https://api.twitch.tv"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Twitch embedded player and chat integration"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["twitch-player"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

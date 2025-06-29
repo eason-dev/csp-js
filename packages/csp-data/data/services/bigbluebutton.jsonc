@@ -1,0 +1,33 @@
+{
+  // BigBlueButton Web Conferencing
+  "name": "BigBlueButton",
+  "category": "video",
+  "description": "Open-source web conferencing system for distance education",
+  "website": "https://bigbluebutton.org",
+  "officialDocs": [
+    "https://docs.bigbluebutton.org/",
+    "https://docs.bigbluebutton.org/dev/api.html"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2009-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://*.bigbluebutton.org"
+        ],
+        "frame-src": [
+          "https://*.bigbluebutton.org"
+        ],
+        "connect-src": [
+          "https://*.bigbluebutton.org"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "BigBlueButton web conferencing integration (replace with your server domain)"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["bbb"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

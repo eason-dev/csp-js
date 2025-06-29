@@ -1,0 +1,29 @@
+{
+  // Constructor - Product search and discovery
+  "id": "constructor",
+  "name": "Constructor",
+  "category": "other",
+  "description": "Product search and discovery platform for e-commerce",
+  "website": "https://constructor.io/",
+  "officialDocs": [
+    "https://docs.constructor.io/",
+    "https://docs.constructor.io/build/integration-guides/javascript-client/"
+  ],
+  "csp": {
+    "script-src": [
+      "https://cnstrc.com"
+    ],
+    "connect-src": [
+      "https://ac.cnstrc.com"
+    ]
+  },
+  "notes": [
+    "Autocomplete features require connect permissions",
+    "Product recommendations may need additional domains"
+  ],
+  "aliases": ["constructor-io"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "1.x",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

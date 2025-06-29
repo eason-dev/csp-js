@@ -1,0 +1,33 @@
+{
+  "id": "cdnjs",
+  "name": "cdnjs",
+  "category": "cdn",
+  "description": "Free and open-source CDN service powered by Cloudflare",
+  "website": "https://cdnjs.com",
+  "officialDocs": [
+    "https://cdnjs.com/about",
+    "https://cdnjs.com/libraries"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2011-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://cdnjs.cloudflare.com"
+        ],
+        "style-src": [
+          "https://cdnjs.cloudflare.com"
+        ],
+        "font-src": [
+          "https://cdnjs.cloudflare.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "cdnjs hosted libraries including jQuery, Bootstrap, React, and more"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["cdnjs-cloudflare"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

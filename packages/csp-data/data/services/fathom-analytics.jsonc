@@ -1,0 +1,30 @@
+{
+  "id": "fathom-analytics",
+  "name": "Fathom Analytics",
+  "category": "analytics",
+  "description": "Privacy-first website analytics without cookies",
+  "website": "https://usefathom.com",
+  "officialDocs": [
+    "https://usefathom.com/docs/script/script-advanced",
+    "https://usefathom.com/docs/integrations/javascript"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://cdn.usefathom.com"
+        ],
+        "connect-src": [
+          "https://api.usefathom.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Fathom Analytics tracking script"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["fathom"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

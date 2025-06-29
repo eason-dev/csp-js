@@ -1,0 +1,31 @@
+{
+  // Square Payment Processing
+  "name": "Square",
+  "category": "payment",
+  "description": "Square payment processing and commerce platform",
+  "website": "https://squareup.com",
+  "officialDocs": [
+    "https://developer.squareup.com/docs/web-payments/overview",
+    "https://developer.squareup.com/docs/web-payments/security"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://js.squareup.com"
+        ],
+        "connect-src": [
+          "https://connect.squareup.com",
+          "https://pci-connect.squareup.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Square Web Payments SDK for secure payment processing"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["square-payments"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

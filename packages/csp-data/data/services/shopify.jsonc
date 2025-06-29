@@ -1,0 +1,31 @@
+{
+  // Shopify E-commerce Platform
+  "name": "Shopify",
+  "category": "payment",
+  "description": "E-commerce platform with integrated payment processing",
+  "website": "https://shopify.com",
+  "officialDocs": [
+    "https://shopify.dev/docs/api/checkout-ui-extensions",
+    "https://shopify.dev/docs/apps/checkout/web-pixels"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://cdn.shopify.com"
+        ],
+        "connect-src": [
+          "https://checkout.shopify.com",
+          "https://shop.app"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Shopify checkout and payment processing scripts"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["shopify-checkout"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

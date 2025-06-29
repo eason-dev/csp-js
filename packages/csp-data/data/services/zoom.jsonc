@@ -1,0 +1,33 @@
+{
+  // Zoom Video Communications
+  "name": "Zoom",
+  "category": "video",
+  "description": "Video conferencing and communication platform",
+  "website": "https://zoom.us",
+  "officialDocs": [
+    "https://marketplace.zoom.us/docs/sdk/native-sdks/web",
+    "https://marketplace.zoom.us/docs/guides/build/web-sdk"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2011-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://source.zoom.us"
+        ],
+        "frame-src": [
+          "https://*.zoom.us"
+        ],
+        "connect-src": [
+          "https://*.zoom.us"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Zoom Web SDK and meeting integration"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["zoom-video"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

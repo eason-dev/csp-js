@@ -1,0 +1,30 @@
+{
+  // Google Pay Payment Processing
+  "name": "Google Pay",
+  "category": "payment",
+  "description": "Google's digital payment platform and digital wallet",
+  "website": "https://pay.google.com",
+  "officialDocs": [
+    "https://developers.google.com/pay/api/web/guides/setup",
+    "https://developers.google.com/pay/api/web/reference/client"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2018-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://pay.google.com"
+        ],
+        "connect-src": [
+          "https://payments.google.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Google Pay API for web payments integration"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["googlepay", "gpay"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

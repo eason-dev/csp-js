@@ -1,0 +1,36 @@
+{
+  "id": "tawk-to",
+  "name": "Tawk.to",
+  "category": "chat",
+  "description": "Free live chat software for websites",
+  "website": "https://tawk.to",
+  "officialDocs": [
+    "https://help.tawk.to/article/why-are-images-not-showing-up-in-the-widget",
+    "https://developer.tawk.to/jsapi/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2018-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://embed.tawk.to"
+        ],
+        "style-src": [
+          "'unsafe-inline'"
+        ],
+        "img-src": [
+          "https://tawk.to"
+        ],
+        "connect-src": [
+          "wss://tawk.to"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": true,
+      "notes": "Tawk.to chat widget - requires unsafe-inline for styles due to inline CSS"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["tawk"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

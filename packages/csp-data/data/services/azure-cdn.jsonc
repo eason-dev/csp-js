@@ -1,0 +1,36 @@
+{
+  // Microsoft Azure CDN
+  "name": "Azure CDN",
+  "category": "cdn",
+  "description": "Microsoft Azure content delivery network",
+  "website": "https://azure.microsoft.com/en-us/services/cdn/",
+  "officialDocs": [
+    "https://docs.microsoft.com/en-us/azure/cdn/",
+    "https://docs.microsoft.com/en-us/azure/cdn/cdn-security"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2014-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://*.azureedge.net"
+        ],
+        "connect-src": [
+          "https://*.azureedge.net"
+        ],
+        "img-src": [
+          "https://*.azureedge.net"
+        ],
+        "style-src": [
+          "https://*.azureedge.net"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Azure CDN endpoints for content delivery"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["azure-content-delivery"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

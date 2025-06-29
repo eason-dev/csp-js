@@ -1,0 +1,34 @@
+{
+  "id": "stripe",
+  "name": "Stripe",
+  "category": "payment",
+  "description": "Online payment processing platform for internet businesses",
+  "website": "https://stripe.com",
+  "officialDocs": [
+    "https://stripe.com/docs/js",
+    "https://stripe.com/docs/security/guide#content-security-policy"
+  ],
+  "versions": {
+    "v3": {
+      "validFrom": "2018-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://js.stripe.com"
+        ],
+        "frame-src": [
+          "https://js.stripe.com",
+          "https://hooks.stripe.com"
+        ],
+        "connect-src": [
+          "https://api.stripe.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Stripe.js v3 library for secure payment processing"
+    }
+  },
+  "defaultVersion": "v3",
+  "aliases": ["stripe-js"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

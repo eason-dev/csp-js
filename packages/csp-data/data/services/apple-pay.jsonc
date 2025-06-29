@@ -1,0 +1,30 @@
+{
+  // Apple Pay Payment Processing
+  "name": "Apple Pay",
+  "category": "payment",
+  "description": "Apple's digital payment and digital wallet service",
+  "website": "https://developer.apple.com/apple-pay/",
+  "officialDocs": [
+    "https://developer.apple.com/documentation/apple_pay_on_the_web",
+    "https://developer.apple.com/apple-pay/Apple-Pay-Web-Implementation-Guide.pdf"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2016-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://applepay.cdn-apple.com"
+        ],
+        "connect-src": [
+          "https://cn-sec.apple.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Apple Pay Web implementation for secure payments"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["applepay"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

@@ -1,0 +1,33 @@
+{
+  // Auth0 - Identity platform for developers
+  "id": "auth0",
+  "name": "Auth0",
+  "category": "other",
+  "description": "Identity platform for developers and enterprise security",
+  "website": "https://auth0.com/",
+  "officialDocs": [
+    "https://auth0.com/docs/troubleshoot/content-security-policy",
+    "https://auth0.com/docs/get-started/auth0-overview"
+  ],
+  "csp": {
+    "script-src": [
+      "https://cdn.auth0.com"
+    ],
+    "connect-src": [
+      "https://*.auth0.com"
+    ],
+    "frame-src": [
+      "https://*.auth0.com"
+    ]
+  },
+  "notes": [
+    "Tenant-specific domains require wildcard permissions",
+    "Social login may require additional provider domains",
+    "Universal Login requires frame embedding"
+  ],
+  "aliases": ["auth0-identity"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "9.x",
+  "requiresDynamic": true,
+  "requiresNonce": false
+}

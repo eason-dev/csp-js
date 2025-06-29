@@ -1,0 +1,33 @@
+{
+  // Microsoft Teams
+  "name": "Microsoft Teams",
+  "category": "video",
+  "description": "Microsoft's collaboration and video conferencing platform",
+  "website": "https://teams.microsoft.com",
+  "officialDocs": [
+    "https://docs.microsoft.com/en-us/microsoftteams/platform/",
+    "https://docs.microsoft.com/en-us/microsoftteams/platform/tabs/how-to/create-tab-pages/content-page"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2017-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://statics.teams.cdn.office.net"
+        ],
+        "frame-src": [
+          "https://teams.microsoft.com"
+        ],
+        "connect-src": [
+          "https://teams.microsoft.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Microsoft Teams integration and web client"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["teams", "ms-teams"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

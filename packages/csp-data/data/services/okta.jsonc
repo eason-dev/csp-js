@@ -1,0 +1,35 @@
+{
+  // Okta - Identity and access management
+  "id": "okta",
+  "name": "Okta",
+  "category": "other",
+  "description": "Identity and access management platform",
+  "website": "https://www.okta.com/",
+  "officialDocs": [
+    "https://developer.okta.com/docs/guides/content-security-policy/main/",
+    "https://developer.okta.com/"
+  ],
+  "csp": {
+    "script-src": [
+      "https://oktacdn.com"
+    ],
+    "connect-src": [
+      "https://*.okta.com",
+      "https://*.oktapreview.com"
+    ],
+    "frame-src": [
+      "https://*.okta.com",
+      "https://*.oktapreview.com"
+    ]
+  },
+  "notes": [
+    "Organization-specific subdomains require wildcard permissions",
+    "Preview environments use oktapreview.com domain",
+    "Widget embedding requires frame permissions"
+  ],
+  "aliases": ["okta-identity"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "7.x",
+  "requiresDynamic": true,
+  "requiresNonce": false
+}

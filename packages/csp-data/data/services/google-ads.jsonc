@@ -1,0 +1,32 @@
+{
+  // Google Ads
+  "name": "Google Ads",
+  "category": "advertising",
+  "description": "Google's online advertising and marketing platform",
+  "website": "https://ads.google.com",
+  "officialDocs": [
+    "https://developers.google.com/google-ads/api/docs/",
+    "https://support.google.com/google-ads/answer/2404197"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2000-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://googleadservices.com",
+          "https://www.googleadservices.com"
+        ],
+        "connect-src": [
+          "https://google.com",
+          "https://www.google.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Google Ads conversion tracking and remarketing scripts"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["google-adwords", "adwords"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

@@ -1,0 +1,36 @@
+{
+  // MaxCDN Content Delivery Network
+  "name": "MaxCDN",
+  "category": "cdn",
+  "description": "Content delivery network (now part of StackPath)",
+  "website": "https://www.maxcdn.com",
+  "officialDocs": [
+    "https://support.stackpath.com/hc/en-us/categories/360001091912-MaxCDN",
+    "https://support.stackpath.com/hc/en-us/articles/360001091912"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2009-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://*.maxcdn.com"
+        ],
+        "connect-src": [
+          "https://*.maxcdn.com"
+        ],
+        "img-src": [
+          "https://*.maxcdn.com"
+        ],
+        "style-src": [
+          "https://*.maxcdn.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "MaxCDN content delivery network (legacy, now StackPath)"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["stackpath-legacy"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

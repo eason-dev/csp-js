@@ -1,0 +1,40 @@
+{
+  "id": "hotjar",
+  "name": "Hotjar",
+  "category": "analytics",
+  "description": "Website heatmaps, visitor recordings, and user feedback analytics tool",
+  "website": "https://hotjar.com",
+  "officialDocs": [
+    "https://help.hotjar.com/hc/en-us/articles/115009336727-Content-Security-Policy-CSP-",
+    "https://help.hotjar.com/hc/en-us/articles/115009336727"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://static.hotjar.com"
+        ],
+        "connect-src": [
+          "https://*.hotjar.com",
+          "wss://*.hotjar.com"
+        ],
+        "font-src": [
+          "https://script.hotjar.com"
+        ],
+        "img-src": [
+          "https://script.hotjar.com"
+        ],
+        "style-src": [
+          "https://script.hotjar.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Hotjar tracking script for heatmaps and recordings"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["hotjar-analytics"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

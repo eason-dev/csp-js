@@ -1,0 +1,36 @@
+{
+  // KeyCDN Content Delivery Network
+  "name": "KeyCDN",
+  "category": "cdn",
+  "description": "High performance content delivery network",
+  "website": "https://www.keycdn.com",
+  "officialDocs": [
+    "https://www.keycdn.com/support",
+    "https://www.keycdn.com/support/security-headers"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2012-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://*.kxcdn.com"
+        ],
+        "connect-src": [
+          "https://*.kxcdn.com"
+        ],
+        "img-src": [
+          "https://*.kxcdn.com"
+        ],
+        "style-src": [
+          "https://*.kxcdn.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "KeyCDN pull and push zones for content delivery"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["kxcdn"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

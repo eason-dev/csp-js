@@ -1,0 +1,30 @@
+{
+  // Ghost Inspector Automated Testing
+  "name": "Ghost Inspector",
+  "category": "testing",
+  "description": "Automated browser testing and website monitoring service",
+  "website": "https://ghostinspector.com",
+  "officialDocs": [
+    "https://ghostinspector.com/docs/",
+    "https://ghostinspector.com/docs/api/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2014-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://ghostinspector.com"
+        ],
+        "connect-src": [
+          "https://api.ghostinspector.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Ghost Inspector automated testing platform integration"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["ghost-test"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

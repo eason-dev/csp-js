@@ -1,0 +1,31 @@
+{
+  // Drupal Content Management System
+  "name": "Drupal",
+  "category": "other",
+  "description": "Open-source content management framework",
+  "website": "https://drupal.org",
+  "officialDocs": [
+    "https://www.drupal.org/docs/",
+    "https://www.drupal.org/docs/drupal-apis"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2001-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://drupal.org"
+        ],
+        "connect-src": [
+          "https://drupal.org",
+          "https://updates.drupal.org"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Drupal.org resources and update services"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["drupal-cms"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

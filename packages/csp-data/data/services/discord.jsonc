@@ -1,0 +1,33 @@
+{
+  "id": "discord",
+  "name": "Discord",
+  "category": "social",
+  "description": "Discord chat platform with widget embeds and invites",
+  "website": "https://discord.com",
+  "officialDocs": [
+    "https://discord.com/developers/docs/resources/widget",
+    "https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://discord.com"
+        ],
+        "frame-src": [
+          "https://discord.com"
+        ],
+        "img-src": [
+          "https://cdn.discordapp.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Discord server widgets and invite embeds"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["discord-widget"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

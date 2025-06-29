@@ -1,0 +1,31 @@
+{
+  // Notion - All-in-one workspace
+  "id": "notion",
+  "name": "Notion",
+  "category": "other",
+  "description": "All-in-one workspace for notes, docs, and collaboration",
+  "website": "https://www.notion.so/",
+  "officialDocs": [
+    "https://developers.notion.com/",
+    "https://www.notion.so/help/embed-and-connect-other-apps"
+  ],
+  "csp": {
+    "script-src": [
+      "https://notion.so",
+      "https://www.notion.so"
+    ],
+    "frame-src": [
+      "https://notion.so",
+      "https://www.notion.so"
+    ]
+  },
+  "notes": [
+    "Page embeds require frame permissions",
+    "Database embeds may require additional domains"
+  ],
+  "aliases": ["notion-workspace"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "1.0",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

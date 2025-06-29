@@ -1,0 +1,33 @@
+{
+  "id": "calendly",
+  "name": "Calendly",
+  "category": "forms",
+  "description": "Scheduling software for appointments and meetings",
+  "website": "https://calendly.com",
+  "officialDocs": [
+    "https://developer.calendly.com/docs/embed-options-overview",
+    "https://help.calendly.com/hc/en-us/articles/360020052833-Advanced-embed-options"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://assets.calendly.com"
+        ],
+        "frame-src": [
+          "https://calendly.com"
+        ],
+        "style-src": [
+          "https://assets.calendly.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Calendly scheduling widget and inline embeds"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["calendly-widget"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

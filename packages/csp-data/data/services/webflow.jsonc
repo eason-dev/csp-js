@@ -1,0 +1,33 @@
+{
+  // Webflow - Visual web development platform
+  "id": "webflow",
+  "name": "Webflow",
+  "category": "other",
+  "description": "Visual web development platform for designers",
+  "website": "https://webflow.com/",
+  "officialDocs": [
+    "https://developers.webflow.com/",
+    "https://university.webflow.com/lesson/custom-code-in-the-head-and-body-tags"
+  ],
+  "csp": {
+    "script-src": [
+      "https://webflow.com",
+      "https://d3e54v103j8qbb.cloudfront.net"
+    ],
+    "connect-src": [
+      "https://api.webflow.com"
+    ],
+    "img-src": [
+      "https://uploads-ssl.webflow.com"
+    ]
+  },
+  "notes": [
+    "Custom code embeds may require additional permissions",
+    "CMS assets are served from CloudFront CDN"
+  ],
+  "aliases": ["webflow-cms"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "1.0",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

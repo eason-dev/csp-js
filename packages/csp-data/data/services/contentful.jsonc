@@ -1,0 +1,31 @@
+{
+  // Contentful Headless CMS
+  "name": "Contentful",
+  "category": "other",
+  "description": "API-first headless content management system",
+  "website": "https://contentful.com",
+  "officialDocs": [
+    "https://www.contentful.com/developers/docs/",
+    "https://www.contentful.com/developers/docs/references/content-delivery-api/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2013-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://contentful.com"
+        ],
+        "connect-src": [
+          "https://cdn.contentful.com",
+          "https://preview.contentful.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Contentful API endpoints and content delivery network"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["contentful-cms"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

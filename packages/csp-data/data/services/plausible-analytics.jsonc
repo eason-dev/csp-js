@@ -1,0 +1,30 @@
+{
+  "id": "plausible-analytics",
+  "name": "Plausible Analytics",
+  "category": "analytics",
+  "description": "Privacy-focused web analytics without cookies or personal data collection",
+  "website": "https://plausible.io",
+  "officialDocs": [
+    "https://plausible.io/docs/plausible-script",
+    "https://plausible.io/docs/script-extensions"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://plausible.io"
+        ],
+        "connect-src": [
+          "https://plausible.io"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Plausible Analytics tracking script"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["plausible"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

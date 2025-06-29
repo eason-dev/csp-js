@@ -1,0 +1,40 @@
+{
+  "id": "twitter",
+  "name": "Twitter",
+  "category": "social",
+  "description": "Twitter social media platform integration for embedded tweets and buttons",
+  "website": "https://twitter.com",
+  "officialDocs": [
+    "https://developer.twitter.com/en/docs/twitter-for-websites/embedded-tweets/overview",
+    "https://developer.twitter.com/en/docs/twitter-for-websites/javascript-api/overview"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://platform.twitter.com"
+        ],
+        "frame-src": [
+          "https://platform.twitter.com"
+        ],
+        "connect-src": [
+          "https://api.twitter.com"
+        ],
+        "img-src": [
+          "https://pbs.twimg.com",
+          "https://abs.twimg.com"
+        ],
+        "style-src": [
+          "https://platform.twitter.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Twitter widgets for embedded tweets and follow buttons"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["twitter-widgets", "x"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "drift",
+  "name": "Drift",
+  "category": "chat",
+  "description": "Conversational marketing platform with live chat and chatbots",
+  "website": "https://drift.com",
+  "officialDocs": [
+    "https://devdocs.drift.com/docs/enabling-drift-in-your-apps-content-security-policy-csp",
+    "https://devdocs.drift.com/docs/drift-javascript-api"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2019-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://js.driftt.com"
+        ],
+        "frame-src": [
+          "https://widget.drift.com"
+        ],
+        "connect-src": [
+          "wss://customer-api.drift.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Drift chat widget and conversational marketing tools"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["drift-chat"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

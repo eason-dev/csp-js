@@ -1,0 +1,30 @@
+{
+  // Strapi Headless CMS
+  "name": "Strapi",
+  "category": "other",
+  "description": "Open-source headless content management system",
+  "website": "https://strapi.io",
+  "officialDocs": [
+    "https://docs.strapi.io/",
+    "https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/rest-api.html"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2015-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://strapi.io"
+        ],
+        "connect-src": [
+          "https://api.strapi.io"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Strapi headless CMS API endpoints (replace with your instance URL)"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["strapi-cms"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

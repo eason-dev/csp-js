@@ -1,0 +1,39 @@
+{
+  "id": "paypal",
+  "name": "PayPal",
+  "category": "payment",
+  "description": "Online payment service that allows payments and money transfers",
+  "website": "https://paypal.com",
+  "officialDocs": [
+    "https://developer.paypal.com/docs/checkout/reference/security/",
+    "https://developer.paypal.com/docs/checkout/integration-features/content-security-policy/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://www.paypal.com",
+          "https://www.paypalobjects.com"
+        ],
+        "frame-src": [
+          "https://www.paypal.com"
+        ],
+        "connect-src": [
+          "https://www.paypal.com",
+          "https://api.paypal.com"
+        ],
+        "img-src": [
+          "https://www.paypalobjects.com",
+          "https://t.paypal.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "PayPal Checkout and payment buttons"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["paypal-checkout"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

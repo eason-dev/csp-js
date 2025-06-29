@@ -1,0 +1,29 @@
+{
+  // Swiftype - Search platform (now part of Elastic)
+  "id": "swiftype",
+  "name": "Swiftype",
+  "category": "other",
+  "description": "Search platform for websites (now part of Elastic Enterprise Search)",
+  "website": "https://swiftype.com/",
+  "officialDocs": [
+    "https://swiftype.com/documentation/",
+    "https://www.elastic.co/guide/en/enterprise-search/current/index.html"
+  ],
+  "csp": {
+    "script-src": [
+      "https://swiftype.com"
+    ],
+    "connect-src": [
+      "https://api.swiftype.com"
+    ]
+  },
+  "notes": [
+    "Service has been integrated into Elastic Enterprise Search",
+    "Legacy implementations may still require these domains"
+  ],
+  "aliases": ["swiftype-search"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "legacy",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

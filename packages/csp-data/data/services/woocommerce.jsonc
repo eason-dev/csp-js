@@ -1,0 +1,31 @@
+{
+  // WooCommerce E-commerce Platform
+  "name": "WooCommerce",
+  "category": "payment",
+  "description": "WordPress-based e-commerce platform and payment processing",
+  "website": "https://woocommerce.com",
+  "officialDocs": [
+    "https://woocommerce.com/document/woocommerce-rest-api/",
+    "https://developer.woocommerce.com/category/checkout/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2019-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://woocommerce.com"
+        ],
+        "connect-src": [
+          "https://woocommerce.com",
+          "https://checkout.woocommerce.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "WooCommerce payment processing and checkout scripts"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["woo"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

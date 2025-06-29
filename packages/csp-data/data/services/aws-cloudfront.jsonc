@@ -1,0 +1,36 @@
+{
+  // AWS CloudFront CDN
+  "name": "AWS CloudFront",
+  "category": "cdn",
+  "description": "Amazon Web Services content delivery network",
+  "website": "https://aws.amazon.com/cloudfront/",
+  "officialDocs": [
+    "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/",
+    "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-https-viewers-to-cloudfront.html"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2010-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://*.cloudfront.net"
+        ],
+        "connect-src": [
+          "https://*.cloudfront.net"
+        ],
+        "img-src": [
+          "https://*.cloudfront.net"
+        ],
+        "style-src": [
+          "https://*.cloudfront.net"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "AWS CloudFront distribution domains (replace with your specific distribution ID)"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["cloudfront"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

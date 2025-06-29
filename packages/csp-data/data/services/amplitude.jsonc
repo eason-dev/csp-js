@@ -1,0 +1,30 @@
+{
+  "id": "amplitude",
+  "name": "Amplitude",
+  "category": "analytics",
+  "description": "Digital analytics platform for tracking user behavior and product usage",
+  "website": "https://amplitude.com",
+  "officialDocs": [
+    "https://developers.amplitude.com/docs/javascript",
+    "https://help.amplitude.com/hc/en-us/articles/230901628-Content-Security-Policy-CSP-"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://cdn.amplitude.com"
+        ],
+        "connect-src": [
+          "https://api2.amplitude.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Amplitude JavaScript SDK for user analytics"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["amplitude-analytics"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

@@ -1,0 +1,36 @@
+{
+  "id": "linkedin",
+  "name": "LinkedIn",
+  "category": "social",
+  "description": "LinkedIn professional networking platform integration for share buttons and company follow",
+  "website": "https://linkedin.com",
+  "officialDocs": [
+    "https://docs.microsoft.com/en-us/linkedin/shared/integrations/people/profile-api",
+    "https://www.linkedin.com/developers/tools"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://platform.linkedin.com"
+        ],
+        "frame-src": [
+          "https://www.linkedin.com"
+        ],
+        "connect-src": [
+          "https://www.linkedin.com"
+        ],
+        "img-src": [
+          "https://media.licdn.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "LinkedIn share buttons, follow company buttons, and AutoFill"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["linkedin-widgets"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

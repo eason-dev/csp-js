@@ -1,0 +1,29 @@
+{
+  // Crazy Egg - Heatmap and user behavior analytics
+  "id": "crazy-egg",
+  "name": "Crazy Egg",
+  "category": "other",
+  "description": "Heatmap and user behavior analytics platform",
+  "website": "https://www.crazyegg.com/",
+  "officialDocs": [
+    "https://support.crazyegg.com/hc/en-us/articles/115003890728-Content-Security-Policy-CSP-",
+    "https://www.crazyegg.com/help/"
+  ],
+  "csp": {
+    "script-src": [
+      "https://script.crazyegg.com"
+    ],
+    "connect-src": [
+      "https://crazyegg.com"
+    ]
+  },
+  "notes": [
+    "Heatmap overlays may require 'unsafe-inline' styles",
+    "Recording features may need additional permissions"
+  ],
+  "aliases": ["crazyegg"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "1.0",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

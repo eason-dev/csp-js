@@ -1,0 +1,34 @@
+{
+  "id": "slack",
+  "name": "Slack",
+  "category": "social",
+  "description": "Slack workspace communication platform with embeds and integrations",
+  "website": "https://slack.com",
+  "officialDocs": [
+    "https://api.slack.com/docs/slack-button",
+    "https://api.slack.com/legacy/slack-button"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://platform.slack-edge.com"
+        ],
+        "frame-src": [
+          "https://slack.com"
+        ],
+        "img-src": [
+          "https://slack.com",
+          "https://platform.slack-edge.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Slack buttons and workspace embeds"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["slack-button"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

@@ -1,0 +1,29 @@
+{
+  // Klevu - AI-powered search and discovery
+  "id": "klevu",
+  "name": "Klevu",
+  "category": "other",
+  "description": "AI-powered search and discovery platform for e-commerce",
+  "website": "https://www.klevu.com/",
+  "officialDocs": [
+    "https://developers.klevu.com/",
+    "https://help.klevu.com/support/solutions/articles/5000871323-content-security-policy-csp-"
+  ],
+  "csp": {
+    "script-src": [
+      "https://js.klevu.com"
+    ],
+    "connect-src": [
+      "https://api.klevu.com"
+    ]
+  },
+  "notes": [
+    "Search widgets may require additional style permissions",
+    "Custom implementations may need extra domains"
+  ],
+  "aliases": ["klevu-search"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "2.x",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

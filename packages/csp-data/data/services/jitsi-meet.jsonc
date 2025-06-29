@@ -1,0 +1,33 @@
+{
+  // Jitsi Meet Video Conferencing
+  "name": "Jitsi Meet",
+  "category": "video",
+  "description": "Open-source video conferencing platform",
+  "website": "https://meet.jit.si",
+  "officialDocs": [
+    "https://jitsi.github.io/handbook/docs/dev-guide/dev-guide-iframe",
+    "https://github.com/jitsi/jitsi-meet/blob/master/doc/api.md"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2014-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://meet.jit.si"
+        ],
+        "frame-src": [
+          "https://meet.jit.si"
+        ],
+        "connect-src": [
+          "https://meet.jit.si"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Jitsi Meet open-source video conferencing integration"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["jitsi"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

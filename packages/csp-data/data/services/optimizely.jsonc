@@ -1,0 +1,30 @@
+{
+  // Optimizely - A/B testing and experimentation platform
+  "id": "optimizely",
+  "name": "Optimizely",
+  "category": "other",
+  "description": "A/B testing and experimentation platform for digital optimization",
+  "website": "https://www.optimizely.com/",
+  "officialDocs": [
+    "https://docs.developers.optimizely.com/web/docs/content-security-policy",
+    "https://docs.developers.optimizely.com/"
+  ],
+  "csp": {
+    "script-src": [
+      "https://cdn.optimizely.com"
+    ],
+    "connect-src": [
+      "https://logx.optimizely.com",
+      "https://p13nlog.dz.optimizely.com"
+    ]
+  },
+  "notes": [
+    "Experiment variations may require 'unsafe-inline' for styles",
+    "Custom events tracking requires additional connect sources"
+  ],
+  "aliases": ["optimizely-web"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "1.x",
+  "requiresDynamic": true,
+  "requiresNonce": false
+}

@@ -1,0 +1,31 @@
+{
+  // Udemy - Online learning marketplace
+  "id": "udemy",
+  "name": "Udemy",
+  "category": "other",
+  "description": "Online learning and teaching marketplace",
+  "website": "https://www.udemy.com/",
+  "officialDocs": [
+    "https://www.udemy.com/developers/affiliate/",
+    "https://support.udemy.com/hc/en-us/articles/229233387-API-Basics"
+  ],
+  "csp": {
+    "script-src": [
+      "https://udemy.com",
+      "https://www.udemy.com"
+    ],
+    "frame-src": [
+      "https://udemy.com",
+      "https://www.udemy.com"
+    ]
+  },
+  "notes": [
+    "Course embeds require frame permissions",
+    "Affiliate links may require additional domains"
+  ],
+  "aliases": ["udemy-courses"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "2.0",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

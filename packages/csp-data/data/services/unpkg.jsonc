@@ -1,0 +1,33 @@
+{
+  "id": "unpkg",
+  "name": "unpkg",
+  "category": "cdn",
+  "description": "Fast, global content delivery network for everything on npm",
+  "website": "https://unpkg.com",
+  "officialDocs": [
+    "https://unpkg.com/",
+    "https://github.com/mjackson/unpkg"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2016-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://unpkg.com"
+        ],
+        "style-src": [
+          "https://unpkg.com"
+        ],
+        "font-src": [
+          "https://unpkg.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "unpkg CDN for npm packages and libraries"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["unpkg-cdn"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

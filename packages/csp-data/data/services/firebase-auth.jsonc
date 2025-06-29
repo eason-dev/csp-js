@@ -1,0 +1,32 @@
+{
+  // Firebase Auth - Google's authentication service
+  "id": "firebase-auth",
+  "name": "Firebase Authentication",
+  "category": "other",
+  "description": "Google's authentication service for web and mobile apps",
+  "website": "https://firebase.google.com/products/auth",
+  "officialDocs": [
+    "https://firebase.google.com/docs/auth/web/start",
+    "https://firebase.google.com/docs/hosting/content-security-policy"
+  ],
+  "csp": {
+    "script-src": [
+      "https://firebase.googleapis.com",
+      "https://www.gstatic.com"
+    ],
+    "connect-src": [
+      "https://identitytoolkit.googleapis.com",
+      "https://securetoken.googleapis.com"
+    ]
+  },
+  "notes": [
+    "Social providers may require additional domains",
+    "FirebaseUI requires additional script sources",
+    "Custom domains need separate configuration"
+  ],
+  "aliases": ["firebase-authentication", "google-firebase-auth"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "10.x",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

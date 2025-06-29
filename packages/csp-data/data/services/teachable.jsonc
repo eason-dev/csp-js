@@ -1,0 +1,30 @@
+{
+  // Teachable - Online course platform
+  "id": "teachable",
+  "name": "Teachable",
+  "category": "other",
+  "description": "Online course creation and hosting platform",
+  "website": "https://teachable.com/",
+  "officialDocs": [
+    "https://support.teachable.com/hc/en-us/articles/219090947-Teachable-s-API",
+    "https://docs.teachable.com/"
+  ],
+  "csp": {
+    "script-src": [
+      "https://teachable.com"
+    ],
+    "frame-src": [
+      "https://teachable.com",
+      "https://*.teachable.com"
+    ]
+  },
+  "notes": [
+    "Course embeds require frame-src permissions",
+    "Custom domains may need additional CSP entries"
+  ],
+  "aliases": ["teachable-courses"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "1.0",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

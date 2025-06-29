@@ -1,0 +1,30 @@
+{
+  "id": "cloudflare-analytics",
+  "name": "Cloudflare Analytics",
+  "category": "analytics",
+  "description": "Web analytics service by Cloudflare with privacy focus",
+  "website": "https://cloudflare.com/web-analytics/",
+  "officialDocs": [
+    "https://developers.cloudflare.com/analytics/web-analytics/getting-started/",
+    "https://developers.cloudflare.com/analytics/web-analytics/understanding-web-analytics/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://static.cloudflareinsights.com"
+        ],
+        "connect-src": [
+          "https://cloudflareinsights.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Cloudflare Web Analytics beacon"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["cf-analytics", "cloudflare-insights"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

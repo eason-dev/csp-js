@@ -1,0 +1,34 @@
+{
+  // WordPress Content Management System
+  "name": "WordPress",
+  "category": "other",
+  "description": "Open-source content management system and blogging platform",
+  "website": "https://wordpress.org",
+  "officialDocs": [
+    "https://developer.wordpress.org/",
+    "https://developer.wordpress.org/rest-api/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2003-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://w.org",
+          "https://s.w.org"
+        ],
+        "connect-src": [
+          "https://api.wordpress.org"
+        ],
+        "img-src": [
+          "https://s.w.org"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "WordPress.org resources and API endpoints"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["wp"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

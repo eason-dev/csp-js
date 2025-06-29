@@ -1,0 +1,33 @@
+{
+  "id": "mixpanel",
+  "name": "Mixpanel",
+  "category": "analytics",
+  "description": "Event tracking and user analytics platform for product teams",
+  "website": "https://mixpanel.com",
+  "officialDocs": [
+    "https://developer.mixpanel.com/docs/javascript",
+    "https://help.mixpanel.com/hc/en-us/articles/115004613766-Content-Security-Policy-CSP-"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2019-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://cdn.mxpnl.com"
+        ],
+        "connect-src": [
+          "https://api.mixpanel.com"
+        ],
+        "img-src": [
+          "https://cdn.mxpnl.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Mixpanel JavaScript library for event tracking"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["mixpanel-analytics"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

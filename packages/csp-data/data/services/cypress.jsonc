@@ -1,0 +1,31 @@
+{
+  // Cypress End-to-End Testing
+  "name": "Cypress",
+  "category": "testing",
+  "description": "End-to-end testing framework for web applications",
+  "website": "https://www.cypress.io",
+  "officialDocs": [
+    "https://docs.cypress.io/",
+    "https://docs.cypress.io/guides/references/configuration"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2017-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://download.cypress.io"
+        ],
+        "connect-src": [
+          "https://api.cypress.io",
+          "https://dashboard.cypress.io"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Cypress testing framework and dashboard integration"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["cy"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

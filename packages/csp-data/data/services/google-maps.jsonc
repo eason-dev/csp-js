@@ -1,0 +1,34 @@
+{
+  "id": "google-maps",
+  "name": "Google Maps",
+  "category": "maps",
+  "description": "Interactive maps and location services by Google",
+  "website": "https://maps.google.com",
+  "officialDocs": [
+    "https://developers.google.com/maps/documentation/javascript/get-api-key",
+    "https://developers.google.com/maps/documentation/javascript/load-maps-js-api"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://maps.googleapis.com"
+        ],
+        "connect-src": [
+          "https://maps.googleapis.com"
+        ],
+        "img-src": [
+          "https://maps.googleapis.com",
+          "https://maps.gstatic.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Google Maps JavaScript API for interactive maps"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["google-maps-api", "gmaps"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

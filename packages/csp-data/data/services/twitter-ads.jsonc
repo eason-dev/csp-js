@@ -1,0 +1,30 @@
+{
+  // Twitter Ads
+  "name": "Twitter Ads",
+  "category": "advertising",
+  "description": "Twitter's advertising and marketing platform",
+  "website": "https://ads.twitter.com",
+  "officialDocs": [
+    "https://developer.twitter.com/en/docs/twitter-ads-api",
+    "https://business.twitter.com/en/help/campaign-measurement-and-analytics/conversion-tracking-for-websites.html"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2010-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://static.ads-twitter.com"
+        ],
+        "connect-src": [
+          "https://ads.twitter.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Twitter Ads conversion tracking and website tag"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["twitter-conversion", "x-ads"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

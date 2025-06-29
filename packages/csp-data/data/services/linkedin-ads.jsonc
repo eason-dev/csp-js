@@ -1,0 +1,30 @@
+{
+  // LinkedIn Ads
+  "name": "LinkedIn Ads",
+  "category": "advertising",
+  "description": "LinkedIn's advertising and marketing platform",
+  "website": "https://business.linkedin.com/marketing-solutions/ads",
+  "officialDocs": [
+    "https://docs.microsoft.com/en-us/linkedin/marketing/",
+    "https://www.linkedin.com/help/lms/answer/a427660"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2008-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://snap.licdn.com"
+        ],
+        "connect-src": [
+          "https://px.ads.linkedin.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "LinkedIn Insight Tag for conversion tracking and analytics"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["linkedin-insight"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

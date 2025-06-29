@@ -1,0 +1,29 @@
+{
+  // VWO - A/B testing and conversion optimization
+  "id": "vwo",
+  "name": "VWO",
+  "category": "other",
+  "description": "A/B testing and conversion optimization platform",
+  "website": "https://vwo.com/",
+  "officialDocs": [
+    "https://help.vwo.com/hc/en-us/articles/360033730594-Content-Security-Policy-CSP-and-VWO",
+    "https://developers.vwo.com/"
+  ],
+  "csp": {
+    "script-src": [
+      "https://dev.visualwebsiteoptimizer.com"
+    ],
+    "connect-src": [
+      "https://dev.visualwebsiteoptimizer.com"
+    ]
+  },
+  "notes": [
+    "Test variations may require 'unsafe-inline' styles",
+    "Heatmaps and recordings may need additional permissions"
+  ],
+  "aliases": ["visual-website-optimizer"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "1.0",
+  "requiresDynamic": true,
+  "requiresNonce": false
+}

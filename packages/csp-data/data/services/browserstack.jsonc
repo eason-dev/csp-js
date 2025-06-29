@@ -1,0 +1,31 @@
+{
+  // BrowserStack Cross-Browser Testing
+  "name": "BrowserStack",
+  "category": "testing",
+  "description": "Cross-browser testing platform for web and mobile applications",
+  "website": "https://www.browserstack.com",
+  "officialDocs": [
+    "https://www.browserstack.com/docs",
+    "https://www.browserstack.com/docs/automate/selenium/getting-started"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2011-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://www.browserstack.com"
+        ],
+        "connect-src": [
+          "https://api.browserstack.com",
+          "https://hub-cloud.browserstack.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "BrowserStack testing platform integration scripts"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["bs"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

@@ -1,0 +1,29 @@
+{
+  // ConvertKit - Email marketing for creators
+  "id": "convertkit",
+  "name": "ConvertKit",
+  "category": "other",
+  "description": "Email marketing platform designed for creators and bloggers",
+  "website": "https://convertkit.com/",
+  "officialDocs": [
+    "https://developers.convertkit.com/",
+    "https://help.convertkit.com/en/articles/2502591-getting-started-with-the-convertkit-api"
+  ],
+  "csp": {
+    "script-src": [
+      "https://convertkit.com"
+    ],
+    "connect-src": [
+      "https://api.convertkit.com"
+    ]
+  },
+  "notes": [
+    "Form embeds may require additional script sources",
+    "Landing pages hosted on separate domains"
+  ],
+  "aliases": ["ck"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "v3",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

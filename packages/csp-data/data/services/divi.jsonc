@@ -1,0 +1,29 @@
+{
+  // Divi - WordPress theme and page builder
+  "id": "divi",
+  "name": "Divi",
+  "category": "other",
+  "description": "WordPress theme and visual page builder by Elegant Themes",
+  "website": "https://www.elegantthemes.com/gallery/divi/",
+  "officialDocs": [
+    "https://www.elegantthemes.com/documentation/divi/",
+    "https://www.elegantthemes.com/blog/divi-resources/divi-developer-api"
+  ],
+  "csp": {
+    "script-src": [
+      "https://elegantthemes.com"
+    ],
+    "connect-src": [
+      "https://elegantthemes.com"
+    ]
+  },
+  "notes": [
+    "Theme updates may require additional domains",
+    "Third-party modules may need extra CSP permissions"
+  ],
+  "aliases": ["divi-theme", "elegant-themes"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "4.x",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

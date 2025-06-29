@@ -1,0 +1,31 @@
+{
+  "id": "new-relic",
+  "name": "New Relic",
+  "category": "monitoring",
+  "description": "Application performance monitoring and observability platform",
+  "website": "https://newrelic.com",
+  "officialDocs": [
+    "https://docs.newrelic.com/docs/browser/browser-monitoring/installation/install-browser-monitoring-agent/",
+    "https://docs.newrelic.com/docs/browser/browser-monitoring/troubleshooting/content-security-policy-affecting-browser-monitoring/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://js-agent.newrelic.com"
+        ],
+        "connect-src": [
+          "https://bam.nr-data.net",
+          "https://js-agent.newrelic.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": true,
+      "notes": "New Relic Browser agent for performance monitoring"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["newrelic", "nr"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

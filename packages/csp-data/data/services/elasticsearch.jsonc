@@ -1,0 +1,29 @@
+{
+  // Elasticsearch - Search and analytics engine
+  "id": "elasticsearch",
+  "name": "Elasticsearch",
+  "category": "other",
+  "description": "Distributed search and analytics engine",
+  "website": "https://www.elastic.co/elasticsearch/",
+  "officialDocs": [
+    "https://www.elastic.co/guide/en/elasticsearch/reference/current/security-settings.html",
+    "https://www.elastic.co/guide/index.html"
+  ],
+  "csp": {
+    "script-src": [
+      "https://elastic.co"
+    ],
+    "connect-src": [
+      "https://*.elastic.co"
+    ]
+  },
+  "notes": [
+    "Self-hosted instances require custom domain configuration",
+    "Elastic Cloud instances use cluster-specific subdomains"
+  ],
+  "aliases": ["elastic-search"],
+  "lastUpdated": "2024-06-29T00:00:00.000Z",
+  "version": "8.x",
+  "requiresDynamic": false,
+  "requiresNonce": false
+}

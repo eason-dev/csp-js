@@ -1,0 +1,39 @@
+{
+  "id": "zendesk",
+  "name": "Zendesk",
+  "category": "chat",
+  "description": "Customer service platform with support ticketing and live chat",
+  "website": "https://zendesk.com",
+  "officialDocs": [
+    "https://developer.zendesk.com/documentation/zendesk-web-widget-sdks/sdks/web/csp/",
+    "https://developer.zendesk.com/api-reference/ticketing/introduction/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://static.zdassets.com"
+        ],
+        "frame-src": [
+          "https://widget.zendesk.com"
+        ],
+        "connect-src": [
+          "wss://widget.zendesk.com"
+        ],
+        "img-src": [
+          "https://v2assets.zopim.io"
+        ],
+        "font-src": [
+          "https://static.zdassets.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Zendesk Web Widget for customer support"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["zendesk-chat", "zendesk-widget"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

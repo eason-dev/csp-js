@@ -1,0 +1,34 @@
+{
+  "id": "tiktok",
+  "name": "TikTok",
+  "category": "social",
+  "description": "TikTok social media platform with video embeds and tracking",
+  "website": "https://tiktok.com",
+  "officialDocs": [
+    "https://developers.tiktok.com/doc/web-ads-api-getting-started",
+    "https://business-api.tiktok.com/portal/docs"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://sf16-website-login.neutral.ttwstatic.com",
+          "https://analytics.tiktok.com"
+        ],
+        "frame-src": [
+          "https://www.tiktok.com"
+        ],
+        "connect-src": [
+          "https://analytics.tiktok.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "TikTok embeds and analytics pixel"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["tiktok-pixel"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

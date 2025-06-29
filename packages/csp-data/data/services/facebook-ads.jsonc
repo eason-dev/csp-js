@@ -1,0 +1,31 @@
+{
+  // Facebook Ads
+  "name": "Facebook Ads",
+  "category": "advertising",
+  "description": "Facebook's advertising and marketing platform",
+  "website": "https://www.facebook.com/business/ads",
+  "officialDocs": [
+    "https://developers.facebook.com/docs/marketing-api/",
+    "https://developers.facebook.com/docs/facebook-pixel/"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2007-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://connect.facebook.net"
+        ],
+        "connect-src": [
+          "https://facebook.com",
+          "https://www.facebook.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Facebook Pixel and advertising conversion tracking"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["fb-ads", "facebook-pixel"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "snapchat",
+  "name": "Snapchat",
+  "category": "social",
+  "description": "Snapchat social media platform with Snap Pixel and embeds",
+  "website": "https://snapchat.com",
+  "officialDocs": [
+    "https://businesshelp.snapchat.com/s/article/snap-pixel-about",
+    "https://developers.snap.com/docs/snap-pixel"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://sc-static.net"
+        ],
+        "frame-src": [
+          "https://snapchat.com"
+        ],
+        "connect-src": [
+          "https://tr.snapchat.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Snapchat Pixel and social embeds"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["snapchat-pixel", "snap-pixel"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z"
+}

@@ -1,0 +1,31 @@
+{
+  // Percy Visual Testing
+  "name": "Percy",
+  "category": "testing",
+  "description": "Visual testing and review platform for web applications",
+  "website": "https://percy.io",
+  "officialDocs": [
+    "https://docs.percy.io/",
+    "https://docs.percy.io/docs/percy-web"
+  ],
+  "versions": {
+    "current": {
+      "validFrom": "2016-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://percy.io"
+        ],
+        "connect-src": [
+          "https://percy.io",
+          "https://api.percy.io"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Percy visual testing and screenshot comparison service"
+    }
+  },
+  "defaultVersion": "current",
+  "aliases": ["percy-visual"],
+  "lastUpdated": "2025-06-29T00:00:00Z"
+}
