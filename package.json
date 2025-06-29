@@ -23,6 +23,12 @@
     "turbo": "^2.5.4",
     "typescript": "5.8.2"
   },
+  "pnpm": {
+    "overrides": {
+      "esbuild": ">=0.25.0",
+      "brace-expansion": ">=2.0.2"
+    }
+  },
   "packageManager": "pnpm@10.12.4",
   "engines": {
     "node": ">=22"
