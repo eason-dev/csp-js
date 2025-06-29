@@ -24,7 +24,10 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint . --max-warnings 0",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "prepare": "npm run build",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run lint && npm run check-types"
   },
   "keywords": [
     "csp",
@@ -35,6 +38,24 @@
   ],
   "author": "Eason",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/easonz/csp-js.git",
+    "directory": "packages/csp-cli"
+  },
+  "bugs": {
+    "url": "https://github.com/easonz/csp-js/issues"
+  },
+  "homepage": "https://csp-js.dev",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/easonz"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "provenance": true
+  },
   "dependencies": {
     "@csp-js/data": "workspace:*",
     "commander": "^12.0.0",

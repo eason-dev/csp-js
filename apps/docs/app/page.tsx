@@ -1,89 +1,96 @@
-import Image, { type ImageProps } from 'next/image';
+import Link from 'next/link';
 import { Button } from '@repo/ui/button';
 import styles from './page.module.css';
-
-type Props = Omit<ImageProps, 'src'> & {
-  srcLight: string;
-  srcDark: string;
-};
-
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
-  return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
 
 export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>apps/docs/app/page.tsx</code>
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+        <div className={styles.hero}>
+          <h1 className={styles.title}>
+            CSP-JS Documentation
+          </h1>
+          <p className={styles.description}>
+            Comprehensive documentation for CSP-JS - Generate Content Security Policy headers for popular web services
+          </p>
+        </div>
 
-        <div className={styles.ctas}>
+        <div className={styles.grid}>
+          <Link href="/guides" className={styles.card}>
+            <h2>📚 Guides</h2>
+            <p>Learn how to use CSP-JS effectively with step-by-step guides and examples.</p>
+          </Link>
+
+          <Link href="/api" className={styles.card}>
+            <h2>📋 API Reference</h2>
+            <p>Complete API documentation for all CSP-JS packages and methods.</p>
+          </Link>
+
+          <Link href="/services" className={styles.card}>
+            <h2>🛠️ Service Definitions</h2>
+            <p>Browse all supported services and their CSP requirements.</p>
+          </Link>
+
+          <Link href="/contributing" className={styles.card}>
+            <h2>🤝 Contributing</h2>
+            <p>Learn how to contribute service definitions and improve the library.</p>
+          </Link>
+        </div>
+
+        <div className={styles.quickStart}>
+          <h2>Quick Start</h2>
+          <div className={styles.codeBlock}>
+            <pre><code>{`npm install csp-js
+
+import { generateCSP } from 'csp-js';
+
+const result = generateCSP([
+  'google-analytics',
+  'stripe',
+  'youtube'
+]);
+
+console.log(result.header);
+// Content-Security-Policy: script-src 'self' https://www.googletagmanager.com...`}</code></pre>
+          </div>
+        </div>
+
+        <div className={styles.links}>
           <a
-            className={styles.primary}
-            href="https://vercel.com/new/clone?demo-description=Learn+to+implement+a+monorepo+with+a+two+Next.js+sites+that+has+installed+three+local+packages.&demo-image=%2F%2Fimages.ctfassets.net%2Fe5382hct74si%2F4K8ZISWAzJ8X1504ca0zmC%2F0b21a1c6246add355e55816278ef54bc%2FBasic.png&demo-title=Monorepo+with+Turborepo&demo-url=https%3A%2F%2Fexamples-basic-web.vercel.sh%2F&from=templates&project-name=Monorepo+with+Turborepo&repository-name=monorepo-turborepo&repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fturborepo%2Ftree%2Fmain%2Fexamples%2Fbasic&root-directory=apps%2Fdocs&skippable-integrations=1&teamSlug=vercel&utm_source=create-turbo"
+            href="https://github.com/easonz/csp-js"
             target="_blank"
             rel="noopener noreferrer"
+            className={styles.link}
           >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            🔗 GitHub Repository
           </a>
           <a
-            href="https://turborepo.com/docs?utm_source"
+            href="https://www.npmjs.com/package/csp-js"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.secondary}
+            className={styles.link}
           >
-            Read our docs
+            📦 NPM Package
+          </a>
+          <a
+            href="https://csp-js.dev"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.link}
+          >
+            🌐 Web Interface
           </a>
         </div>
-        <Button appName="docs" className={styles.secondary}>
-          Open alert
-        </Button>
       </main>
+
       <footer className={styles.footer}>
-        <a
-          href="https://vercel.com/templates?search=turborepo&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/window.svg" alt="Window icon" width={16} height={16} />
-          Examples
-        </a>
-        <a
-          href="https://turborepo.com?utm_source=create-turbo"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image aria-hidden src="/globe.svg" alt="Globe icon" width={16} height={16} />
-          Go to turborepo.com →
-        </a>
+        <p>Built with ❤️ for web security</p>
+        <div className={styles.footerLinks}>
+          <a href="/guides/architecture">Architecture</a>
+          <a href="/guides/service-definitions">Service Definitions</a>
+          <a href="/guides/maintainer-guide">Maintainer Guide</a>
+          <a href="/guides/release-process">Release Process</a>
+        </div>
       </footer>
     </div>
   );

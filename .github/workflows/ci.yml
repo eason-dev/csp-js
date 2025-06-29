@@ -1,0 +1,233 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint code
+        run: pnpm lint
+
+      - name: Type check
+        run: pnpm check-types
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v3
+        if: success()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
+
+  build-matrix:
+    name: Build Matrix Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: ['18', '20', '22']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Test basic functionality
+        run: |
+          cd packages/csp-js
+          node -e "const {generateCSP} = require('./dist/index.js'); console.log(generateCSP(['google-analytics']).header)"
+
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run security audit
+        run: pnpm audit
+
+      - name: Check for vulnerable dependencies
+        run: |
+          # Fail if high or critical vulnerabilities found
+          pnpm audit --audit-level high
+
+  validate-services:
+    name: Validate Service Definitions
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Validate service definitions
+        run: |
+          # Validate all service files
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const { services } = require('./packages/csp-data/dist/index.js');
+            
+            console.log('Validating', Object.keys(services).length, 'services...');
+            
+            let errors = 0;
+            for (const [id, service] of Object.entries(services)) {
+              if (!service.versions || Object.keys(service.versions).length === 0) {
+                console.error('❌ Service', id, 'has no versions');
+                errors++;
+                continue;
+              }
+              
+              if (!service.defaultVersion || !service.versions[service.defaultVersion]) {
+                console.error('❌ Service', id, 'has invalid defaultVersion');
+                errors++;
+                continue;
+              }
+              
+              console.log('✅ Service', id, 'is valid');
+            }
+            
+            if (errors > 0) {
+              console.error('❌ Found', errors, 'validation errors');
+              process.exit(1);
+            } else {
+              console.log('✅ All services validated successfully');
+            }
+          "
+
+  bundle-size:
+    name: Bundle Size Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Check bundle sizes
+        run: |
+          echo "## Bundle Sizes" >> $GITHUB_STEP_SUMMARY
+          echo "| Package | Size | Gzipped |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|------|---------|" >> $GITHUB_STEP_SUMMARY
+          
+          for pkg in packages/*/dist/index.js; do
+            if [ -f "$pkg" ]; then
+              name=$(echo $pkg | cut -d'/' -f2)
+              size=$(stat -c%s "$pkg" | numfmt --to=iec)
+              gzipped=$(gzip -c "$pkg" | wc -c | numfmt --to=iec)
+              echo "| $name | $size | $gzipped |" >> $GITHUB_STEP_SUMMARY
+              
+              # Fail if main package is too large (>100KB)
+              if [ "$name" = "csp-js" ]; then
+                actual_size=$(stat -c%s "$pkg")
+                if [ $actual_size -gt 102400 ]; then
+                  echo "❌ Bundle size too large: $size (limit: 100KB)"
+                  exit 1
+                fi
+              fi
+            fi
+          done

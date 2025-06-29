@@ -23,7 +23,10 @@
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",
     "test": "vitest",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "prepare": "npm run build",
+    "prepack": "npm run build && npm run test",
+    "prepublishOnly": "npm run lint && npm run check-types"
   },
   "keywords": [
     "csp",
@@ -45,7 +48,16 @@
   "bugs": {
     "url": "https://github.com/easonz/csp-js/issues"
   },
-  "homepage": "https://github.com/easonz/csp-js#readme",
+  "homepage": "https://csp-js.dev",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/easonz"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "provenance": true
+  },
   "dependencies": {
     "@csp-js/data": "workspace:*"
   },

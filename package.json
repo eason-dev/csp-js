@@ -8,7 +8,14 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
     "test": "turbo run test",
-    "test:coverage": "turbo run test:coverage"
+    "test:coverage": "turbo run test:coverage",
+    "publish:all": "pnpm build && pnpm publish:packages",
+    "publish:packages": "pnpm --recursive --filter='./packages/*' publish",
+    "version:patch": "pnpm --recursive --filter='./packages/*' version patch",
+    "version:minor": "pnpm --recursive --filter='./packages/*' version minor",
+    "version:major": "pnpm --recursive --filter='./packages/*' version major",
+    "changeset": "changeset",
+    "release": "changeset publish"
   },
   "devDependencies": {
     "prettier": "^3.6.0",
