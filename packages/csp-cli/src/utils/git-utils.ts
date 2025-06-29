@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
 import chalk from 'chalk';
 import type { GitOperationResult } from '../types.js';
 
@@ -133,7 +133,7 @@ export function pushBranch(branchName: string): GitOperationResult {
 export function createPullRequest(
   title: string,
   body: string,
-  baseBranch: string = 'main'
+  baseBranch = 'main'
 ): GitOperationResult {
   try {
     // Check if gh CLI is available

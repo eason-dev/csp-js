@@ -105,7 +105,7 @@ export default function CSPGenerator() {
       setSelectedServices(prev => [...prev, serviceId]);
       // Set default version when service is selected
       const service = services[serviceId];
-      if (service && service.defaultVersion) {
+      if (service?.defaultVersion) {
         setServiceVersions(prev => ({
           ...prev,
           [serviceId]: service.defaultVersion
