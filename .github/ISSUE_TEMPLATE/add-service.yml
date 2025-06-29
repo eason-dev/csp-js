@@ -1,0 +1,147 @@
+name: 🆕 Add New Service
+description: Request addition of a new service to the CSP database
+title: "[Service Request] Add support for [SERVICE_NAME]"
+labels: ["service-request", "enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to request a new service! This helps make CSP configuration easier for everyone.
+        
+        Before submitting, please:
+        - Search existing issues to avoid duplicates
+        - Check if the service is already supported
+        - Gather as much information as possible about the service's CSP requirements
+
+  - type: input
+    id: service-name
+    attributes:
+      label: Service Name
+      description: What is the name of the service?
+      placeholder: e.g., Google Analytics, Stripe, Intercom
+    validations:
+      required: true
+
+  - type: input
+    id: service-website
+    attributes:
+      label: Official Website
+      description: What is the official website URL?
+      placeholder: https://example.com
+    validations:
+      required: true
+
+  - type: dropdown
+    id: service-category
+    attributes:
+      label: Service Category
+      description: What category does this service belong to?
+      options:
+        - Analytics
+        - Advertising
+        - Social
+        - Payment
+        - Forms
+        - Chat
+        - CDN
+        - Fonts
+        - Maps
+        - Video
+        - Testing
+        - Monitoring
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: service-description
+    attributes:
+      label: Service Description
+      description: Briefly describe what this service does
+      placeholder: A brief description of the service and its primary function
+    validations:
+      required: true
+
+  - type: textarea
+    id: csp-requirements
+    attributes:
+      label: CSP Requirements
+      description: |
+        List the CSP directives and sources required for this service.
+        If you're not sure, describe how the service is typically integrated.
+      placeholder: |
+        script-src: https://example.com
+        img-src: https://cdn.example.com
+        connect-src: https://api.example.com
+        
+        Or describe integration method:
+        - JavaScript SDK loaded from example.com
+        - Makes API calls to api.example.com
+        - Loads images from cdn.example.com
+    validations:
+      required: true
+
+  - type: textarea
+    id: documentation-links
+    attributes:
+      label: Official Documentation
+      description: Links to official CSP documentation or integration guides
+      placeholder: |
+        - https://docs.example.com/security/csp
+        - https://support.example.com/integration-guide
+    validations:
+      required: false
+
+  - type: textarea
+    id: test-urls
+    attributes:
+      label: Test URLs
+      description: URLs that can be used to test the service's CSP requirements
+      placeholder: |
+        - https://example.com/demo
+        - https://cdn.example.com/sdk.js
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Check all that apply
+      options:
+        - label: This service requires nonce for inline scripts
+          required: false
+        - label: This service dynamically injects scripts
+          required: false
+        - label: This service has version-specific CSP requirements
+          required: false
+        - label: I can help test the CSP rules
+          required: false
+        - label: I have access to official documentation
+          required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other information that would help implement support for this service
+      placeholder: Special configuration requirements, known issues, version differences, etc.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## What happens next?
+        
+        1. **Review**: Maintainers will review your request and may ask for additional information
+        2. **Implementation**: If approved, the service will be added to the database
+        3. **Testing**: CSP rules will be tested against the provided URLs
+        4. **Release**: The service will be included in the next release
+        
+        You can also contribute by:
+        - Using `@csp-js/cli add --interactive` to create the service definition
+        - Submitting a pull request with the service configuration
+        - Helping test the CSP rules with your application

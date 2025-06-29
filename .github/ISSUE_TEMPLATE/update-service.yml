@@ -1,0 +1,168 @@
+name: 🔄 Update Existing Service
+description: Request updates to an existing service's CSP requirements
+title: "[Service Update] Update [SERVICE_NAME] CSP requirements"
+labels: ["service-update", "enhancement"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping keep our service definitions up to date! 
+        
+        This template is for reporting changes to existing services' CSP requirements.
+        If the service isn't supported yet, please use the "Add New Service" template instead.
+
+  - type: dropdown
+    id: existing-service
+    attributes:
+      label: Existing Service
+      description: Which service needs to be updated?
+      options:
+        - google-analytics
+        - microsoft-clarity
+        - typeform
+        - google-tag-manager
+        - google-fonts
+        - youtube
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: input
+    id: other-service
+    attributes:
+      label: Other Service Name
+      description: If you selected "Other" above, specify the service name
+      placeholder: service-id or service name
+    validations:
+      required: false
+
+  - type: dropdown
+    id: update-type
+    attributes:
+      label: Type of Update
+      description: What kind of update is needed?
+      options:
+        - New version with additional CSP requirements
+        - Existing version CSP requirements changed
+        - Remove deprecated version
+        - Fix incorrect CSP rules
+        - Update documentation links
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Which version does this update affect? (leave blank if not version-specific)
+      placeholder: e.g., 1.2.0, 2024-01-15, latest
+    validations:
+      required: false
+
+  - type: textarea
+    id: current-csp
+    attributes:
+      label: Current CSP Requirements
+      description: What are the current CSP requirements that need to be changed?
+      placeholder: |
+        script-src: https://old.example.com
+        img-src: https://cdn.example.com
+    validations:
+      required: false
+
+  - type: textarea
+    id: new-csp
+    attributes:
+      label: New/Updated CSP Requirements
+      description: What should the CSP requirements be changed to?
+      placeholder: |
+        script-src: https://new.example.com, https://old.example.com
+        img-src: https://cdn.example.com, https://assets.example.com
+        connect-src: https://api.example.com
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: breaking-change
+    attributes:
+      label: Breaking Change
+      description: Is this a breaking change?
+      options:
+        - label: This is a breaking change (old CSP rules will no longer work)
+          required: false
+        - label: This is backward compatible (old rules still work)
+          required: false
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence/Source
+      description: |
+        How did you discover these changes? Please provide evidence or sources.
+      placeholder: |
+        - Official documentation: https://docs.example.com/csp-changes
+        - Browser console errors when using current rules
+        - Service provider notification
+        - Testing with latest version
+    validations:
+      required: true
+
+  - type: textarea
+    id: test-urls
+    attributes:
+      label: Test URLs
+      description: URLs that can be used to verify the new CSP requirements
+      placeholder: |
+        - https://example.com/new-integration
+        - https://demo.example.com/latest
+    validations:
+      required: false
+
+  - type: input
+    id: effective-date
+    attributes:
+      label: Effective Date
+      description: When do/did these changes take effect? (if known)
+      placeholder: YYYY-MM-DD
+    validations:
+      required: false
+
+  - type: textarea
+    id: migration-notes
+    attributes:
+      label: Migration Notes
+      description: Any special considerations for users migrating to the new requirements?
+      placeholder: |
+        - Remove old domains after testing
+        - Update nonce implementation
+        - Check for console errors
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information about this update
+      placeholder: Version compatibility, gradual rollout information, etc.
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: |
+        ## What happens next?
+        
+        1. **Verification**: Maintainers will verify the reported changes
+        2. **Testing**: New CSP requirements will be tested
+        3. **Update**: Service definition will be updated with new version/requirements
+        4. **Documentation**: Changelog and migration notes will be updated
+        5. **Release**: Changes will be included in the next release
+        
+        You can also help by:
+        - Using `@csp-js/cli update <service-id> --interactive` to create the update
+        - Submitting a pull request with the updated service configuration
+        - Testing the new requirements in your application

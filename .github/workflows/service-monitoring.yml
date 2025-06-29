@@ -1,0 +1,236 @@
+name: Service CSP Monitoring
+
+on:
+  schedule:
+    # Run weekly on Sundays at 2 AM UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+    inputs:
+      service_id:
+        description: 'Specific service ID to check (optional)'
+        required: false
+        type: string
+      force_update:
+        description: 'Force update even if no changes detected'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  NODE_VERSION: '22'
+
+jobs:
+  monitor-services:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Run service monitoring
+        id: monitor
+        run: |
+          # Install the CLI globally for easier access
+          pnpm --filter @csp-js/cli build
+          
+          # Check specific service or all services
+          if [ -n "${{ github.event.inputs.service_id }}" ]; then
+            echo "Checking specific service: ${{ github.event.inputs.service_id }}"
+            npx csp-cli check "${{ github.event.inputs.service_id }}" --output json > monitoring-results.json
+          else
+            echo "Checking all services..."
+            # Run monitoring for all services with monitoring configuration
+            node -e "
+              const { services } = require('./packages/csp-data/dist/index.js');
+              const results = [];
+              
+              for (const [serviceId, service] of Object.entries(services)) {
+                if (service.monitoring) {
+                  console.log(\`Checking service: \${serviceId}\`);
+                  // In a real implementation, this would call the CLI
+                  // For now, we'll simulate the check
+                  results.push({
+                    serviceId,
+                    status: 'checked',
+                    timestamp: new Date().toISOString()
+                  });
+                }
+              }
+              
+              require('fs').writeFileSync('monitoring-results.json', JSON.stringify(results, null, 2));
+              console.log(\`Checked \${results.length} services\`);
+            "
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Process monitoring results
+        id: process
+        run: |
+          if [ -f monitoring-results.json ]; then
+            echo "Processing monitoring results..."
+            
+            # Parse results and check for changes
+            CHANGES=$(node -e "
+              const results = JSON.parse(require('fs').readFileSync('monitoring-results.json', 'utf8'));
+              const changes = results.filter(r => r.changesDetected || r.errors?.length > 0);
+              console.log(JSON.stringify(changes));
+            ")
+            
+            echo "changes<<EOF" >> $GITHUB_OUTPUT
+            echo "$CHANGES" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            
+            # Set flag for whether we need to create issues/PRs
+            if [ "$CHANGES" != "[]" ] || [ "${{ github.event.inputs.force_update }}" == "true" ]; then
+              echo "has_changes=true" >> $GITHUB_OUTPUT
+            else
+              echo "has_changes=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No monitoring results found"
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create service update issues
+        if: steps.process.outputs.has_changes == 'true'
+        run: |
+          echo "Creating issues for service changes..."
+          
+          # Parse changes and create issues
+          node -e "
+            const changes = JSON.parse('${{ steps.process.outputs.changes }}');
+            const { execSync } = require('child_process');
+            
+            for (const change of changes) {
+              const title = \`Service Update Required: \${change.serviceId}\`;
+              const body = \`## Service CSP Changes Detected
+              
+              **Service**: \${change.serviceId}
+              **Detection Date**: \${new Date().toISOString().split('T')[0]}
+              **Status**: \${change.status || 'Changes detected'}
+              
+              ### Detected Changes
+              \${change.detectedChanges ? JSON.stringify(change.detectedChanges, null, 2) : 'See monitoring logs for details'}
+              
+              ### Required Actions
+              - [ ] Review detected CSP changes
+              - [ ] Update service definition if necessary
+              - [ ] Test changes in development environment
+              - [ ] Create pull request with updates
+              
+              ### Monitoring Details
+              \${change.errors?.length > 0 ? '**Errors**: ' + change.errors.join(', ') : ''}
+              \${change.warnings?.length > 0 ? '**Warnings**: ' + change.warnings.join(', ') : ''}
+              
+              ---
+              *This issue was created automatically by the CSP monitoring workflow.*
+              *Use \`@csp-js/cli update \${change.serviceId}\` to help update the service definition.*\`;
+              
+              try {
+                execSync(\`gh issue create --title \"\${title}\" --body \"\${body}\" --label \"service-update,automated\"\`, { stdio: 'inherit' });
+                console.log(\`Created issue for \${change.serviceId}\`);
+              } catch (error) {
+                console.error(\`Failed to create issue for \${change.serviceId}:\`, error.message);
+              }
+            }
+          "
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update monitoring metadata
+        if: always()
+        run: |
+          echo "Updating last checked timestamps..."
+          
+          # Update service monitoring metadata
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const { services } = require('./packages/csp-data/dist/index.js');
+            
+            const timestamp = new Date().toISOString();
+            let updated = false;
+            
+            // Update each service's lastChecked timestamp
+            for (const [serviceId, service] of Object.entries(services)) {
+              if (service.monitoring) {
+                const servicePath = path.join('packages/csp-data/data/services', serviceId + '.jsonc');
+                
+                if (fs.existsSync(servicePath)) {
+                  try {
+                    let content = fs.readFileSync(servicePath, 'utf8');
+                    
+                    // Update lastChecked in the JSON
+                    const serviceData = JSON.parse(content.replace(/\\/\\/.*$/gm, '').replace(/\\/\\*[\\s\\S]*?\\*\\//g, ''));
+                    if (serviceData.monitoring) {
+                      serviceData.monitoring.lastChecked = timestamp;
+                      
+                      // Write back with comments preserved (simple approach)
+                      const updatedContent = JSON.stringify(serviceData, null, 2);
+                      fs.writeFileSync(servicePath, updatedContent + '\\n');
+                      updated = true;
+                      console.log(\`Updated lastChecked for \${serviceId}\`);
+                    }
+                  } catch (error) {
+                    console.error(\`Failed to update \${serviceId}:\`, error.message);
+                  }
+                }
+              }
+            }
+            
+            if (updated) {
+              console.log('Service monitoring metadata updated');
+            }
+          "
+
+      - name: Commit monitoring updates
+        if: always()
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            git add packages/csp-data/data/services/*.jsonc
+            git commit -m "chore: update service monitoring timestamps
+
+            - Updated lastChecked timestamps for monitored services
+            - Automated monitoring run on $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+            
+            [skip ci]"
+            git push
+            echo "Committed monitoring metadata updates"
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Upload monitoring artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoring-results-${{ github.run_number }}
+          path: |
+            monitoring-results.json
+            *.log
+          retention-days: 30

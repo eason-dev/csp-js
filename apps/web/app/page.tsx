@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { generateCSP, type ServiceCategory, services, searchServices } from 'csp-js';
+import { generateCSP, services, searchServices } from 'csp-js';
 import {
   Copy,
   Check,
@@ -22,12 +22,6 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 import { Separator } from '@/components/ui/separator';
 
 export default function CSPGenerator() {
@@ -93,17 +87,6 @@ export default function CSPGenerator() {
 
   // Filter services based on search
   const filteredServices = searchQuery ? searchServices(searchQuery) : Object.values(services);
-
-  // Group services by category
-  const servicesByCategory = filteredServices.reduce(
-    (acc, service) => {
-      const category = service.category;
-      if (!acc[category]) acc[category] = [];
-      acc[category].push(service);
-      return acc;
-    },
-    {} as Record<ServiceCategory, (typeof services)[string][]>
-  );
 
   const renderServiceDocs = (service: (typeof services)[string]) => (
     <Card className="mt-4">
@@ -257,62 +240,54 @@ export default function CSPGenerator() {
                   </div>
                 )}
 
-                {/* Service Categories */}
-                <Accordion type="single" collapsible className="w-full">
-                  {Object.entries(servicesByCategory).map(([category, categoryServices]) => (
-                    <AccordionItem key={category} value={category}>
-                      <AccordionTrigger className="text-left">
-                        <span className="font-medium capitalize">
-                          {category.replace('_', ' ')} ({categoryServices.length})
-                        </span>
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-3">
-                          {categoryServices.map(service => (
-                            <div
-                              key={service.id}
-                              className="hover:bg-muted/50 flex items-start gap-3 rounded-lg p-3"
-                            >
-                              <Checkbox
-                                checked={selectedServices.includes(service.id)}
-                                onCheckedChange={(checked: boolean) => {
-                                  if (checked) {
-                                    setSelectedServices(prev => [...prev, service.id]);
-                                  } else {
-                                    setSelectedServices(prev =>
-                                      prev.filter(id => id !== service.id)
-                                    );
-                                  }
-                                }}
-                              />
-                              <div className="flex-1">
-                                <div className="font-medium">{service.name}</div>
-                                <div className="text-muted-foreground text-sm">
-                                  {service.description}
-                                </div>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="text-primary mt-1 h-auto p-0 text-xs hover:bg-transparent"
-                                  onClick={() =>
-                                    setSelectedServiceForDocs(
-                                      selectedServiceForDocs === service.id ? null : service.id
-                                    )
-                                  }
-                                >
-                                  {selectedServiceForDocs === service.id ? 'Hide' : 'Show'}{' '}
-                                  Documentation
-                                </Button>
-                                {selectedServiceForDocs === service.id &&
-                                  renderServiceDocs(service)}
-                              </div>
-                            </div>
-                          ))}
+                {/* All Services */}
+                <div className="space-y-3">
+                  {filteredServices.map(service => (
+                    <div
+                      key={service.id}
+                      className="hover:bg-muted/50 flex items-start gap-3 rounded-lg border p-4"
+                    >
+                      <Checkbox
+                        checked={selectedServices.includes(service.id)}
+                        onCheckedChange={(checked: boolean) => {
+                          if (checked) {
+                            setSelectedServices(prev => [...prev, service.id]);
+                          } else {
+                            setSelectedServices(prev =>
+                              prev.filter(id => id !== service.id)
+                            );
+                          }
+                        }}
+                      />
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="font-medium">{service.name}</div>
+                          <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
+                            {service.category.replace('_', ' ')}
+                          </span>
                         </div>
-                      </AccordionContent>
-                    </AccordionItem>
+                        <div className="text-muted-foreground text-sm mb-2">
+                          {service.description}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-primary h-auto p-0 text-xs hover:bg-transparent"
+                          onClick={() =>
+                            setSelectedServiceForDocs(
+                              selectedServiceForDocs === service.id ? null : service.id
+                            )
+                          }
+                        >
+                          {selectedServiceForDocs === service.id ? 'Hide' : 'Show'}{' '}
+                          Documentation
+                        </Button>
+                        {selectedServiceForDocs === service.id &&
+                          renderServiceDocs(service)}
+                      </div>
+                    </div>
                   ))}
-                </Accordion>
+                </div>
 
                 <div className="flex justify-end">
                   <Button
