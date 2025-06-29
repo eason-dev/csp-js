@@ -120,7 +120,7 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
   "description": "Clear, concise description (50-150 chars)",
   "website": "https://official-website.com",
   "officialDocs": ["https://official-csp-docs.com"],
-  
+
   // Version management - must support versioning
   "versions": {
     "1.0.0": {
@@ -132,7 +132,7 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
     }
   },
   "defaultVersion": "1.0.0",
-  
+
   // Optional but recommended
   "aliases": ["common-aliases"],
   "monitoring": {
@@ -155,7 +155,7 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
 **Update Process:**
 
 1. **Verify Change**: Confirm CSP requirement changes
-2. **Version Strategy**: 
+2. **Version Strategy**:
    - Patch: Bug fixes, clarifications
    - Minor: New optional CSP rules
    - Major: Breaking changes to CSP rules
@@ -203,13 +203,15 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
 ### Versioning Strategy
 
 **Package Versioning:**
+
 - **Major**: Breaking API changes, removed features
 - **Minor**: New features, service additions, backward compatible changes
 - **Patch**: Bug fixes, service updates, documentation
 
 **Release Schedule:**
+
 - **Patch**: As needed for bugs and service updates
-- **Minor**: Monthly for new features and services  
+- **Minor**: Monthly for new features and services
 - **Major**: Quarterly or as needed for breaking changes
 
 ### Release Checklist
@@ -217,6 +219,7 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
 **Pre-Release:**
 
 1. [ ] **Code Quality**
+
    ```bash
    pnpm lint           # Zero warnings
    pnpm check-types    # No TypeScript errors
@@ -238,29 +241,34 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
 **Release Process:**
 
 1. **Create Release Branch**
+
    ```bash
    git checkout -b release/v1.2.0
    ```
 
 2. **Update Version Numbers**
+
    ```bash
    # Update package.json files
    pnpm version:update 1.2.0
    ```
 
 3. **Final Testing**
+
    ```bash
    pnpm test:all
    pnpm test:integration
    ```
 
 4. **Create Release PR**
+
    ```bash
    # Use conventional commit format
    git commit -m "chore(release): v1.2.0"
    ```
 
 5. **Merge and Tag**
+
    ```bash
    git tag v1.2.0
    git push origin v1.2.0
@@ -283,12 +291,14 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
 ### GitHub Actions Workflows
 
 **Service Monitoring** (`.github/workflows/service-monitoring.yml`):
+
 - **Schedule**: Weekly on Sundays
 - **Function**: Check services for CSP changes
 - **Output**: Creates issues for detected changes
 - **Manual Trigger**: Support for specific service checks
 
 **CI/CD Pipeline**:
+
 - **On PR**: Run tests, lint, build
 - **On Merge**: Deploy documentation, run integration tests
 - **On Release**: Publish packages, update distributions
@@ -348,22 +358,27 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
 ## [1.2.0] - 2024-06-29
 
 ### Added
+
 - New service support: Stripe Checkout v2
 - Version selection UI in web interface
 - Service deprecation warnings
 
 ### Changed
+
 - Updated Google Analytics to v4.1.0
 - Improved error messages for invalid CSP
 
 ### Fixed
+
 - Fixed nonce generation in server environments
 - Corrected Typeform CSP requirements
 
 ### Deprecated
+
 - Google Analytics v4.0.0 (migrate to v4.1.0)
 
 ### Security
+
 - Updated dependencies with security patches
 ```
 
@@ -372,10 +387,11 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
 ### Security Practices
 
 1. **Dependency Management**
+
    ```bash
    # Regular security audits
    pnpm audit
-   
+
    # Automated dependency updates
    # Configure Dependabot or Renovate
    ```
@@ -399,7 +415,7 @@ CSP-JS follows a data-package separation approach inspired by browserslist:
 pnpm lint           # ESLint with zero warnings
 pnpm lint:fix       # Auto-fix linting issues
 
-# Type Checking  
+# Type Checking
 pnpm check-types    # TypeScript strict mode
 
 # Testing
@@ -420,6 +436,7 @@ pnpm format         # Prettier formatting
 ### Quality Gates
 
 **PR Requirements:**
+
 - [ ] All tests pass
 - [ ] Zero ESLint warnings
 - [ ] TypeScript compilation successful
@@ -427,6 +444,7 @@ pnpm format         # Prettier formatting
 - [ ] Documentation updated
 
 **Release Requirements:**
+
 - [ ] Full test suite passes
 - [ ] Security audit clean
 - [ ] Performance regression check
@@ -463,14 +481,16 @@ pnpm format         # Prettier formatting
 ## Contact Information
 
 **Current Maintainers:**
+
 - Primary: [maintainer1@csp-js.eason.ch](mailto:maintainer1@csp-js.eason.ch)
 - Secondary: [maintainer2@csp-js.eason.ch](mailto:maintainer2@csp-js.eason.ch)
 
 **Emergency Contact:**
+
 - Security: [security@csp-js.eason.ch](mailto:security@csp-js.eason.ch)
 - Infrastructure: [infrastructure@csp-js.eason.ch](mailto:infrastructure@csp-js.eason.ch)
 
 ---
 
-*Last Updated: 2024-06-29*
-*Version: 1.0.0*
+_Last Updated: 2024-06-29_
+_Version: 1.0.0_

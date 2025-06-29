@@ -5,102 +5,111 @@
 We now support **106+ popular web services** across all major categories. Here are some highlighted services by category:
 
 ### Analytics Services (12)
-| Service | Versions | Auto-Monitoring |
-|---------|----------|----------------|
-| Google Analytics | 4.0.0, 4.1.0 | ✅ |
-| Microsoft Clarity | 1.0.0 | ✅ |
-| Google Tag Manager | 1.0.0 | ✅ |
-| Hotjar | current | ✅ |
-| Mixpanel | current | ✅ |
-| Amplitude | current | ✅ |
-| Segment | current | ✅ |
-| Adobe Analytics | current | ✅ |
-| Cloudflare Analytics | current | ✅ |
-| Plausible Analytics | current | ✅ |
-| Fathom Analytics | current | ✅ |
+
+| Service              | Versions     | Auto-Monitoring |
+| -------------------- | ------------ | --------------- |
+| Google Analytics     | 4.0.0, 4.1.0 | ✅              |
+| Microsoft Clarity    | 1.0.0        | ✅              |
+| Google Tag Manager   | 1.0.0        | ✅              |
+| Hotjar               | current      | ✅              |
+| Mixpanel             | current      | ✅              |
+| Amplitude            | current      | ✅              |
+| Segment              | current      | ✅              |
+| Adobe Analytics      | current      | ✅              |
+| Cloudflare Analytics | current      | ✅              |
+| Plausible Analytics  | current      | ✅              |
+| Fathom Analytics     | current      | ✅              |
 
 ### Payment Services (8)
-| Service | Versions | Auto-Monitoring |
-|---------|----------|----------------|
-| Stripe | v3 | ✅ |
-| PayPal | current | ✅ |
-| Square | current | ✅ |
-| Shopify | current | ✅ |
-| WooCommerce | current | ✅ |
-| Apple Pay | current | ✅ |
-| Google Pay | current | ✅ |
+
+| Service     | Versions | Auto-Monitoring |
+| ----------- | -------- | --------------- |
+| Stripe      | v3       | ✅              |
+| PayPal      | current  | ✅              |
+| Square      | current  | ✅              |
+| Shopify     | current  | ✅              |
+| WooCommerce | current  | ✅              |
+| Apple Pay   | current  | ✅              |
+| Google Pay  | current  | ✅              |
 
 ### Social Media (11)
-| Service | Versions | Auto-Monitoring |
-|---------|----------|----------------|
-| Facebook | current | ✅ |
-| Twitter | current | ✅ |
-| LinkedIn | current | ✅ |
-| Instagram | current | ✅ |
-| Pinterest | current | ✅ |
-| TikTok | current | ✅ |
-| Snapchat | current | ✅ |
-| Discord | current | ✅ |
-| Slack | current | ✅ |
-| WhatsApp | current | ✅ |
+
+| Service   | Versions | Auto-Monitoring |
+| --------- | -------- | --------------- |
+| Facebook  | current  | ✅              |
+| Twitter   | current  | ✅              |
+| LinkedIn  | current  | ✅              |
+| Instagram | current  | ✅              |
+| Pinterest | current  | ✅              |
+| TikTok    | current  | ✅              |
+| Snapchat  | current  | ✅              |
+| Discord   | current  | ✅              |
+| Slack     | current  | ✅              |
+| WhatsApp  | current  | ✅              |
 
 ### Video & Communication (8)
-| Service | Versions | Auto-Monitoring |
-|---------|----------|----------------|
-| YouTube | 1.0.0 | ✅ |
-| Vimeo | current | ✅ |
-| Twitch | current | ✅ |
-| Zoom | current | ✅ |
-| Microsoft Teams | current | ✅ |
-| Google Meet | current | ✅ |
-| Jitsi Meet | current | ✅ |
-| BigBlueButton | current | ✅ |
+
+| Service         | Versions | Auto-Monitoring |
+| --------------- | -------- | --------------- |
+| YouTube         | 1.0.0    | ✅              |
+| Vimeo           | current  | ✅              |
+| Twitch          | current  | ✅              |
+| Zoom            | current  | ✅              |
+| Microsoft Teams | current  | ✅              |
+| Google Meet     | current  | ✅              |
+| Jitsi Meet      | current  | ✅              |
+| BigBlueButton   | current  | ✅              |
 
 ### Chat & Support (6)
-| Service | Versions | Auto-Monitoring |
-|---------|----------|----------------|
-| Drift | current | ✅ |
-| Intercom | current | ✅ |
-| Zendesk | current | ✅ |
-| Tawk.to | current | ✅ |
-| Freshchat | current | ✅ |
-| Crisp Chat | current | ✅ |
+
+| Service    | Versions | Auto-Monitoring |
+| ---------- | -------- | --------------- |
+| Drift      | current  | ✅              |
+| Intercom   | current  | ✅              |
+| Zendesk    | current  | ✅              |
+| Tawk.to    | current  | ✅              |
+| Freshchat  | current  | ✅              |
+| Crisp Chat | current  | ✅              |
 
 ### CDN Providers (8)
-| Service | Versions | Auto-Monitoring |
-|---------|----------|----------------|
-| jsDelivr | current | ✅ |
-| cdnjs | current | ✅ |
-| unpkg | current | ✅ |
-| AWS CloudFront | current | ✅ |
-| Azure CDN | current | ✅ |
-| KeyCDN | current | ✅ |
-| MaxCDN | current | ✅ |
-| Fastly | current | ✅ |
+
+| Service        | Versions | Auto-Monitoring |
+| -------------- | -------- | --------------- |
+| jsDelivr       | current  | ✅              |
+| cdnjs          | current  | ✅              |
+| unpkg          | current  | ✅              |
+| AWS CloudFront | current  | ✅              |
+| Azure CDN      | current  | ✅              |
+| KeyCDN         | current  | ✅              |
+| MaxCDN         | current  | ✅              |
+| Fastly         | current  | ✅              |
 
 ### Forms & Marketing (9)
-| Service | Versions | Auto-Monitoring |
-|---------|----------|----------------|
-| Typeform | 1.0.0 | ✅ |
-| Calendly | current | ✅ |
-| HubSpot | current | ✅ |
-| Mailchimp | current | ✅ |
-| Mailgun | current | ✅ |
-| SendGrid | current | ✅ |
-| Constant Contact | current | ✅ |
-| Campaign Monitor | current | ✅ |
-| ConvertKit | current | ✅ |
+
+| Service          | Versions | Auto-Monitoring |
+| ---------------- | -------- | --------------- |
+| Typeform         | 1.0.0    | ✅              |
+| Calendly         | current  | ✅              |
+| HubSpot          | current  | ✅              |
+| Mailchimp        | current  | ✅              |
+| Mailgun          | current  | ✅              |
+| SendGrid         | current  | ✅              |
+| Constant Contact | current  | ✅              |
+| Campaign Monitor | current  | ✅              |
+| ConvertKit       | current  | ✅              |
 
 ### Maps & Location (3)
-| Service | Versions | Auto-Monitoring |
-|---------|----------|----------------|
-| Google Maps | current | ✅ |
-| Mapbox | current | ✅ |
-| OpenStreetMap/Leaflet | current | ✅ |
+
+| Service               | Versions | Auto-Monitoring |
+| --------------------- | -------- | --------------- |
+| Google Maps           | current  | ✅              |
+| Mapbox                | current  | ✅              |
+| OpenStreetMap/Leaflet | current  | ✅              |
 
 **And many more services across categories including:**
+
 - Testing & Development (5 services)
-- Advertising Platforms (5 services) 
+- Advertising Platforms (5 services)
 - Authentication Services (5 services)
 - Website Builders (5 services)
 - E-Learning Platforms (5 services)

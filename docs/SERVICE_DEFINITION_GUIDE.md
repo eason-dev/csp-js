@@ -17,6 +17,7 @@ This guide explains how to create and maintain service definitions for CSP-JS. S
 ### What is a Service Definition?
 
 A service definition is a JSON document that describes:
+
 - **Service Identity**: Name, description, category
 - **CSP Requirements**: Required CSP directives for each version
 - **Version History**: Different implementations over time
@@ -110,7 +111,7 @@ Each service has its own `.jsonc` file (JSON with comments) containing the compl
   "defaultVersion": "4.1.0",
   "aliases": ["ga4", "gtag", "google-gtag"],
   "lastUpdated": "2024-06-28T00:00:00.000Z",
-  
+
   // Monitoring Configuration
   "monitoring": {
     "testUrls": [
@@ -128,30 +129,31 @@ Each service has its own `.jsonc` file (JSON with comments) containing the compl
 
 ### Required Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Unique kebab-case identifier |
-| `name` | string | Human-readable service name |
-| `category` | string | Service category (see categories below) |
-| `description` | string | Brief description (50-150 characters) |
-| `website` | string | Official service website URL |
-| `officialDocs` | string[] | Links to official CSP documentation |
-| `versions` | object | Version-specific configurations |
-| `defaultVersion` | string | Default version to use |
-| `lastUpdated` | string | ISO timestamp of last update |
+| Field            | Type     | Description                             |
+| ---------------- | -------- | --------------------------------------- |
+| `id`             | string   | Unique kebab-case identifier            |
+| `name`           | string   | Human-readable service name             |
+| `category`       | string   | Service category (see categories below) |
+| `description`    | string   | Brief description (50-150 characters)   |
+| `website`        | string   | Official service website URL            |
+| `officialDocs`   | string[] | Links to official CSP documentation     |
+| `versions`       | object   | Version-specific configurations         |
+| `defaultVersion` | string   | Default version to use                  |
+| `lastUpdated`    | string   | ISO timestamp of last update            |
 
 ### Optional Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `aliases` | string[] | Alternative service identifiers |
-| `monitoring` | object | Automated monitoring configuration |
+| Field        | Type     | Description                        |
+| ------------ | -------- | ---------------------------------- |
+| `aliases`    | string[] | Alternative service identifiers    |
+| `monitoring` | object   | Automated monitoring configuration |
 
 ## Version Management
 
 ### Version Numbering
 
 **Semantic Versioning** (Recommended for library integrations):
+
 ```
 1.0.0 - Initial implementation
 1.1.0 - New optional features/domains
@@ -159,6 +161,7 @@ Each service has its own `.jsonc` file (JSON with comments) containing the compl
 ```
 
 **Date-based Versioning** (For infrastructure changes):
+
 ```
 2024-01-15 - Service update on specific date
 2024-06-01 - Major infrastructure change
@@ -168,14 +171,14 @@ Each service has its own `.jsonc` file (JSON with comments) containing the compl
 
 ```typescript
 interface ServiceVersion {
-  csp: CSPDirectives;           // Required CSP rules
-  validFrom: string;            // Date when version became valid
-  deprecatedFrom?: string;      // When version was deprecated
-  notes?: string[];             // Implementation notes
-  breaking?: boolean;           // Is this a breaking change?
-  requiresDynamic?: boolean;    // Requires dynamic script injection
-  requiresNonce?: boolean;      // Requires nonce for inline scripts
-  issues?: string[];            // Known issues or limitations
+  csp: CSPDirectives; // Required CSP rules
+  validFrom: string; // Date when version became valid
+  deprecatedFrom?: string; // When version was deprecated
+  notes?: string[]; // Implementation notes
+  breaking?: boolean; // Is this a breaking change?
+  requiresDynamic?: boolean; // Requires dynamic script injection
+  requiresNonce?: boolean; // Requires nonce for inline scripts
+  issues?: string[]; // Known issues or limitations
 }
 ```
 
@@ -215,24 +218,25 @@ interface ServiceVersion {
 
 ```typescript
 interface CSPDirectives {
-  'script-src'?: string[];      // JavaScript sources
-  'style-src'?: string[];       // CSS sources  
-  'img-src'?: string[];         // Image sources
-  'connect-src'?: string[];     // Fetch/XHR/WebSocket sources
-  'frame-src'?: string[];       // Frame/iframe sources
-  'font-src'?: string[];        // Font sources
-  'form-action'?: string[];     // Form submission targets
-  'object-src'?: string[];      // Plugin sources (flash, etc.)
-  'media-src'?: string[];       // Audio/video sources
-  'child-src'?: string[];       // Web workers and frames
-  'worker-src'?: string[];      // Web workers only
-  'manifest-src'?: string[];    // Web app manifests
+  'script-src'?: string[]; // JavaScript sources
+  'style-src'?: string[]; // CSS sources
+  'img-src'?: string[]; // Image sources
+  'connect-src'?: string[]; // Fetch/XHR/WebSocket sources
+  'frame-src'?: string[]; // Frame/iframe sources
+  'font-src'?: string[]; // Font sources
+  'form-action'?: string[]; // Form submission targets
+  'object-src'?: string[]; // Plugin sources (flash, etc.)
+  'media-src'?: string[]; // Audio/video sources
+  'child-src'?: string[]; // Web workers and frames
+  'worker-src'?: string[]; // Web workers only
+  'manifest-src'?: string[]; // Web app manifests
 }
 ```
 
 ### CSP Source Guidelines
 
 **Specific Domains** (Preferred):
+
 ```json
 {
   "script-src": ["https://cdn.service.com"]
@@ -240,6 +244,7 @@ interface CSPDirectives {
 ```
 
 **Avoid Wildcards** unless necessary:
+
 ```json
 // Avoid if possible
 {
@@ -256,6 +261,7 @@ interface CSPDirectives {
 ```
 
 **Special Values**:
+
 - `'self'` - Same origin (added automatically by csp-js)
 - `'unsafe-inline'` - Avoid! Use nonce instead
 - `'unsafe-eval'` - Avoid! Security risk
@@ -294,17 +300,18 @@ curl -s "https://docs.newservice.com" | grep -i "content security policy\|csp"
 
 ```typescript
 interface ServiceMonitoring {
-  testUrls?: string[];          // URLs to test for CSP violations
-  checkInterval: string;        // 'daily' | 'weekly' | 'monthly'
-  alertOnBreaking: boolean;     // Create issues for breaking changes
-  lastChecked?: string;         // ISO timestamp of last check
-  notes?: string[];             // Monitoring-specific notes
+  testUrls?: string[]; // URLs to test for CSP violations
+  checkInterval: string; // 'daily' | 'weekly' | 'monthly'
+  alertOnBreaking: boolean; // Create issues for breaking changes
+  lastChecked?: string; // ISO timestamp of last check
+  notes?: string[]; // Monitoring-specific notes
 }
 ```
 
 ### Test URL Guidelines
 
 **Good Test URLs**:
+
 - Service demo pages
 - Documentation examples
 - CDN endpoint checks
@@ -313,14 +320,15 @@ interface ServiceMonitoring {
 ```json
 {
   "testUrls": [
-    "https://service.com/demo",           // Live demo
-    "https://cdn.service.com/sdk.js",     // CDN health
-    "https://api.service.com/health"      // API health
+    "https://service.com/demo", // Live demo
+    "https://cdn.service.com/sdk.js", // CDN health
+    "https://api.service.com/health" // API health
   ]
 }
 ```
 
 **Avoid**:
+
 - URLs requiring authentication
 - URLs with rate limiting
 - Internal/private endpoints
@@ -338,7 +346,7 @@ interface ServiceMonitoring {
 Service definitions are automatically validated for:
 
 1. **JSON Schema**: Correct structure and required fields
-2. **URL Validation**: Valid website and documentation URLs  
+2. **URL Validation**: Valid website and documentation URLs
 3. **CSP Syntax**: Valid CSP directive format
 4. **Version Logic**: Proper version numbering and relationships
 5. **Monitoring URLs**: Accessible test endpoints
@@ -348,9 +356,10 @@ Service definitions are automatically validated for:
 Before submitting a service definition:
 
 1. **Test CSP Rules**:
+
    ```javascript
    import { generateCSP } from 'csp-js';
-   
+
    const result = generateCSP(['your-service']);
    console.log(result.header);
    // Test this header with actual service integration
@@ -370,6 +379,7 @@ Before submitting a service definition:
 ### Common Validation Errors
 
 **Missing Required Fields**:
+
 ```typescript
 // ❌ Invalid - missing required fields
 {
@@ -393,6 +403,7 @@ Before submitting a service definition:
 ```
 
 **Invalid CSP Directives**:
+
 ```typescript
 // ❌ Invalid - CSP values must be arrays
 {
@@ -410,6 +421,7 @@ Before submitting a service definition:
 ```
 
 **Version Consistency**:
+
 ```typescript
 // ❌ Invalid - defaultVersion doesn't exist in versions
 {
@@ -442,15 +454,17 @@ Before submitting a service definition:
 ### Naming Conventions
 
 **Service IDs**: Use kebab-case
+
 ```
 ✅ google-analytics
-✅ microsoft-clarity  
+✅ microsoft-clarity
 ✅ stripe-checkout
 ❌ GoogleAnalytics
 ❌ microsoft_clarity
 ```
 
 **Aliases**: Include common variations
+
 ```json
 {
   "id": "google-analytics",
@@ -461,6 +475,7 @@ Before submitting a service definition:
 ### Documentation Standards
 
 **Notes**: Include implementation details
+
 ```json
 {
   "notes": [
@@ -472,6 +487,7 @@ Before submitting a service definition:
 ```
 
 **Official Docs**: Link to CSP-specific documentation
+
 ```json
 {
   "officialDocs": [
@@ -502,6 +518,7 @@ Use appropriate categories from `ServiceCategory` enum:
 ### Performance Considerations
 
 **Bundle Size**: Keep service definitions concise
+
 ```json
 // ✅ Concise but complete
 {
@@ -515,6 +532,7 @@ Use appropriate categories from `ServiceCategory` enum:
 ```
 
 **Load Time**: Optimize for fast parsing
+
 - Use efficient JSON structure
 - Avoid deeply nested objects
 - Keep arrays reasonably sized
@@ -562,4 +580,4 @@ console.log('Available versions:', versions);
 
 ---
 
-*Last Updated: 2024-06-29*
+_Last Updated: 2024-06-29_

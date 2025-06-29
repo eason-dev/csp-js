@@ -34,6 +34,7 @@ npm token create --type=automation
 ### Repository Permissions
 
 Ensure you have:
+
 - **Write access** to the GitHub repository
 - **Admin access** to NPM packages
 - **Maintainer role** for @csp-js organization
@@ -72,11 +73,7 @@ Each package includes only necessary files:
 
 ```json
 {
-  "files": [
-    "dist",
-    "README.md",
-    "CHANGELOG.md"
-  ]
+  "files": ["dist", "README.md", "CHANGELOG.md"]
 }
 ```
 
@@ -140,6 +137,7 @@ pnpm version:major   # 1.1.0 → 2.0.0
 The preferred method is using GitHub Actions for automated publishing:
 
 1. **Create Release Tag**:
+
    ```bash
    git tag v1.0.0
    git push origin v1.0.0
@@ -213,12 +211,14 @@ For manual releases, use the publishing script:
 If the script fails, you can publish manually:
 
 1. **Pre-flight Checks**:
+
    ```bash
    # Validate everything is ready
    node scripts/validate-release.js
    ```
 
 2. **Update Versions**:
+
    ```bash
    # Update package versions
    cd packages/csp-data && npm version 1.0.0 --no-git-tag-version
@@ -227,26 +227,28 @@ If the script fails, you can publish manually:
    ```
 
 3. **Build Packages**:
+
    ```bash
    pnpm build
    ```
 
 4. **Publish in Order**:
+
    ```bash
    # Publish csp-data first
    cd packages/csp-data
    npm publish --access public --provenance
-   
+
    # Wait for NPM propagation
    sleep 30
-   
+
    # Publish csp-js
    cd ../csp-js
    npm publish --access public --provenance
-   
+
    # Wait for NPM propagation
    sleep 30
-   
+
    # Publish csp-cli
    cd ../csp-cli
    npm publish --access public --provenance
@@ -267,23 +269,25 @@ If the script fails, you can publish manually:
 After publishing, verify the release:
 
 1. **NPM Package Availability**:
+
    ```bash
    # Check packages are available
    npm view csp-js
    npm view @csp-js/data
    npm view @csp-js/cli
-   
+
    # Check specific version
    npm view csp-js@1.0.0
    ```
 
 2. **Installation Test**:
+
    ```bash
    # Test installation in clean environment
    mkdir test-install && cd test-install
    npm init -y
    npm install csp-js@1.0.0
-   
+
    # Test functionality
    node -e "
      const { generateCSP } = require('csp-js');
@@ -292,6 +296,7 @@ After publishing, verify the release:
    ```
 
 3. **CLI Test**:
+
    ```bash
    # Test global CLI installation
    npm install -g @csp-js/cli@1.0.0
@@ -426,5 +431,5 @@ After each release:
 
 ---
 
-*Last Updated: 2024-06-29*
-*Guide Version: 1.0.0*
+_Last Updated: 2024-06-29_
+_Guide Version: 1.0.0_

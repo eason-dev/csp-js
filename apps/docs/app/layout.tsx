@@ -13,7 +13,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: 'CSP-JS Documentation',
-  description: 'Comprehensive documentation for CSP-JS - Generate Content Security Policy headers for popular web services',
+  description:
+    'Comprehensive documentation for CSP-JS - Generate Content Security Policy headers for popular web services',
   keywords: ['CSP', 'Content Security Policy', 'Web Security', 'JavaScript', 'TypeScript'],
   authors: [{ name: 'Eason Chang' }],
   openGraph: {

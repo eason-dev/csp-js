@@ -65,10 +65,10 @@ const result = generateCSP({
   nonce: true,
   customRules: {
     'script-src': ['https://my-custom-domain.com'],
-    'img-src': ['data:', 'blob:']
+    'img-src': ['data:', 'blob:'],
   },
   reportUri: 'https://my-site.com/csp-report',
-  includeSelf: true
+  includeSelf: true,
 });
 
 console.log(result);
@@ -85,17 +85,20 @@ console.log(result);
 ### Core Concepts
 
 #### Service-Based Configuration
+
 Instead of manually specifying CSP directives, you specify the services you use:
 
 ```javascript
 // Traditional approach ❌
-const csp = "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; img-src 'self' https://www.google-analytics.com";
+const csp =
+  "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; img-src 'self' https://www.google-analytics.com";
 
 // CSP-JS approach ✅
 const result = generateCSP(['google-analytics', 'stripe']);
 ```
 
 #### Version Management
+
 Services support versioning for different implementation approaches:
 
 ```javascript
@@ -112,44 +115,47 @@ generateCSP(['google-analytics']); // same as above
 #### `generateCSP(options)`
 
 **Parameters:**
+
 - `options` (string[] | CSPOptions): Services array or configuration object
 
 **CSPOptions:**
+
 ```typescript
 interface CSPOptions {
-  services: string[];           // Array of service identifiers
-  nonce?: boolean | string;     // Generate nonce or use provided
-  customRules?: CSPDirectives;  // Additional CSP rules
-  reportUri?: string;           // CSP violation reporting endpoint
-  includeSelf?: boolean;        // Include 'self' directive (default: true)
-  unsafeInline?: boolean;       // Allow unsafe-inline (not recommended)
-  unsafeEval?: boolean;         // Allow unsafe-eval (not recommended)
+  services: string[]; // Array of service identifiers
+  nonce?: boolean | string; // Generate nonce or use provided
+  customRules?: CSPDirectives; // Additional CSP rules
+  reportUri?: string; // CSP violation reporting endpoint
+  includeSelf?: boolean; // Include 'self' directive (default: true)
+  unsafeInline?: boolean; // Allow unsafe-inline (not recommended)
+  unsafeEval?: boolean; // Allow unsafe-eval (not recommended)
 }
 ```
 
 **Returns:**
+
 ```typescript
 interface CSPResult {
-  header: string;               // Complete CSP header string
-  directives: CSPDirectives;    // CSP directives as object
-  reportOnlyHeader: string;     // Report-only version
-  includedServices: string[];   // Successfully included services
-  unknownServices: string[];    // Services not found
-  warnings: string[];           // Deprecation and other warnings
-  nonce?: string;              // Generated nonce (if requested)
+  header: string; // Complete CSP header string
+  directives: CSPDirectives; // CSP directives as object
+  reportOnlyHeader: string; // Report-only version
+  includedServices: string[]; // Successfully included services
+  unknownServices: string[]; // Services not found
+  warnings: string[]; // Deprecation and other warnings
+  nonce?: string; // Generated nonce (if requested)
 }
 ```
 
 #### Other Functions
 
 ```javascript
-import { 
-  generateCSPHeader,        // Returns only header string
-  generateReportOnlyCSP,    // Returns report-only header
-  generateNonce,            // Generate cryptographic nonce
-  getService,              // Get service definition
-  searchServices,          // Search services by name/description
-  getServiceVersions       // Get available versions for service
+import {
+  generateCSPHeader, // Returns only header string
+  generateReportOnlyCSP, // Returns report-only header
+  generateNonce, // Generate cryptographic nonce
+  getService, // Get service definition
+  searchServices, // Search services by name/description
+  getServiceVersions, // Get available versions for service
 } from 'csp-js';
 ```
 
@@ -206,9 +212,10 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) a
 
 ## 📋 Service Support
 
-CSP-JS supports 50+ popular services including Google Analytics, Stripe, Typeform, YouTube, and more. 
+CSP-JS supports 50+ popular services including Google Analytics, Stripe, Typeform, YouTube, and more.
 
 See [SERVICE_SUPPORT.md](SERVICE_SUPPORT.md) for:
+
 - Complete list of supported services with versions
 - Service categories (Analytics, Payment, Social, etc.)
 - How to request new services

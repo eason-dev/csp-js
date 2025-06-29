@@ -12,7 +12,7 @@ export async function checkServiceCSP(
   options: { url?: string; version?: string } = {}
 ): Promise<ServiceCheckResult> {
   const service = getService(serviceId);
-  
+
   if (!service) {
     return {
       serviceId,
@@ -25,7 +25,7 @@ export async function checkServiceCSP(
 
   const version = options.version || service.defaultVersion;
   const serviceVersion = service.versions[version];
-  
+
   if (!serviceVersion) {
     return {
       serviceId,
@@ -46,9 +46,7 @@ export async function checkServiceCSP(
 
   try {
     // Use provided URL or service monitoring URLs
-    const testUrls = options.url 
-      ? [options.url] 
-      : (service.monitoring?.testUrls || []);
+    const testUrls = options.url ? [options.url] : service.monitoring?.testUrls || [];
 
     if (testUrls.length === 0) {
       result.warnings.push('No test URLs available for checking');
@@ -57,11 +55,11 @@ export async function checkServiceCSP(
 
     // Check each URL and collect CSP requirements
     const detectedCSP: Record<string, Set<string>> = {};
-    
+
     for (const url of testUrls) {
       try {
         console.log(chalk.blue(`Checking ${url}...`));
-        
+
         const response = await got(url, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (compatible; CSP-JS-CLI/1.0)',
@@ -72,7 +70,7 @@ export async function checkServiceCSP(
         });
 
         const $ = load(response.body);
-        
+
         // Analyze scripts
         $('script[src]').each((_, element) => {
           const src = $(element).attr('src');
@@ -137,9 +135,10 @@ export async function checkServiceCSP(
             }
           }
         }
-
       } catch (error) {
-        result.warnings.push(`Failed to check URL ${url}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        result.warnings.push(
+          `Failed to check URL ${url}: ${error instanceof Error ? error.message : 'Unknown error'}`
+        );
       }
     }
 
@@ -158,14 +157,15 @@ export async function checkServiceCSP(
     if (Object.keys(result.comparisonResult.missing).length > 0) {
       result.warnings.push('Some expected CSP directives were not detected');
     }
-    
+
     if (Object.keys(result.comparisonResult.extra).length > 0) {
       result.warnings.push('Additional CSP requirements detected');
     }
-
   } catch (error) {
     result.success = false;
-    result.errors.push(`Failed to check service: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    result.errors.push(
+      `Failed to check service: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
   }
 
   return result;
@@ -222,11 +222,11 @@ function compareCSP(
     const detectedSources = detected[directive] || [];
     const missingSources = expectedSources.filter(source => !detectedSources.includes(source));
     const matchingSources = expectedSources.filter(source => detectedSources.includes(source));
-    
+
     if (missingSources.length > 0) {
       missing[directive] = missingSources;
     }
-    
+
     if (matchingSources.length > 0) {
       matches[directive] = matchingSources;
     }
@@ -236,7 +236,7 @@ function compareCSP(
   for (const [directive, detectedSources] of Object.entries(detected)) {
     const expectedSources = expected[directive] || [];
     const extraSources = detectedSources.filter(source => !expectedSources.includes(source));
-    
+
     if (extraSources.length > 0) {
       extra[directive] = extraSources;
     }

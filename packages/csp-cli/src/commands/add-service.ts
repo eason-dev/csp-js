@@ -4,11 +4,11 @@ import semver from 'semver';
 import { ServiceCategory, getService } from '@csp-js/data';
 import type { ServiceDefinition } from '@csp-js/data';
 import type { AddServiceOptions } from '../types.js';
-import { 
-  readJsonFile, 
-  writeJsoncFile, 
-  getServiceFilePath, 
-  validateServiceDefinition 
+import {
+  readJsonFile,
+  writeJsoncFile,
+  getServiceFilePath,
+  validateServiceDefinition,
 } from '../utils/file-utils.js';
 import { createServiceUpdatePR } from '../utils/git-utils.js';
 
@@ -42,16 +42,18 @@ export async function addServiceCommand(options: AddServiceOptions): Promise<voi
     // Check if service already exists
     const existingService = getService(serviceDefinition.id);
     if (existingService) {
-      console.error(chalk.red(`Service '${serviceDefinition.id}' already exists. Use 'update' command instead.`));
+      console.error(
+        chalk.red(`Service '${serviceDefinition.id}' already exists. Use 'update' command instead.`)
+      );
       process.exit(1);
     }
 
     // Write service file
     const filePath = getServiceFilePath(serviceDefinition.id);
     console.log(chalk.blue(`Writing service definition to ${filePath}...`));
-    
+
     await writeJsoncFile(
-      filePath, 
+      filePath,
       serviceDefinition,
       `Service definition for ${serviceDefinition.name}`
     );
@@ -71,24 +73,27 @@ export async function addServiceCommand(options: AddServiceOptions): Promise<voi
     if (createPR) {
       await createAddServicePR(serviceDefinition, filePath);
     }
-
   } catch (error) {
-    console.error(chalk.red('Failed to add service:'), error instanceof Error ? error.message : 'Unknown error');
+    console.error(
+      chalk.red('Failed to add service:'),
+      error instanceof Error ? error.message : 'Unknown error'
+    );
     process.exit(1);
   }
 }
 
 async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
   console.log(chalk.yellow('Interactive service creation mode'));
-  
+
   const basicInfo = await inquirer.prompt([
     {
       type: 'input',
       name: 'id',
       message: 'Service ID (kebab-case):',
-      validate: (input) => {
+      validate: input => {
         if (!input) return 'Service ID is required';
-        if (!/^[a-z0-9-]+$/.test(input)) return 'Service ID must be kebab-case (lowercase, numbers, hyphens only)';
+        if (!/^[a-z0-9-]+$/.test(input))
+          return 'Service ID must be kebab-case (lowercase, numbers, hyphens only)';
         if (getService(input)) return 'Service ID already exists';
         return true;
       },
@@ -97,7 +102,7 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
       type: 'input',
       name: 'name',
       message: 'Service name:',
-      validate: (input) => input ? true : 'Service name is required',
+      validate: input => (input ? true : 'Service name is required'),
     },
     {
       type: 'list',
@@ -109,13 +114,13 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
       type: 'input',
       name: 'description',
       message: 'Service description:',
-      validate: (input) => input ? true : 'Description is required',
+      validate: input => (input ? true : 'Description is required'),
     },
     {
       type: 'input',
       name: 'website',
       message: 'Official website URL:',
-      validate: (input) => {
+      validate: input => {
         if (!input) return 'Website URL is required';
         try {
           new URL(input);
@@ -130,15 +135,16 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
   // Collect official docs
   const officialDocs: string[] = [];
   let addMoreDocs = true;
-  
+
   while (addMoreDocs) {
     const { docUrl, addAnother } = await inquirer.prompt([
       {
         type: 'input',
         name: 'docUrl',
         message: `Official documentation URL ${officialDocs.length + 1}:`,
-        validate: (input) => {
-          if (!input) return officialDocs.length > 0 ? true : 'At least one documentation URL is required';
+        validate: input => {
+          if (!input)
+            return officialDocs.length > 0 ? true : 'At least one documentation URL is required';
           try {
             new URL(input);
             return true;
@@ -152,7 +158,7 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
         name: 'addAnother',
         message: 'Add another documentation URL?',
         default: false,
-        when: (answers) => !!answers.docUrl,
+        when: answers => !!answers.docUrl,
       },
     ]);
 
@@ -169,7 +175,7 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
       name: 'version',
       message: 'Initial version (e.g., 1.0.0 or 2024-01-15):',
       default: '1.0.0',
-      validate: (input) => {
+      validate: input => {
         if (!input) return 'Version is required';
         // Allow semantic versions or date-based versions
         if (semver.valid(input) || /^\\d{4}-\\d{2}-\\d{2}$/.test(input)) {
@@ -183,7 +189,7 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
       name: 'validFrom',
       message: 'Valid from date (YYYY-MM-DD):',
       default: () => new Date().toISOString().slice(0, 10),
-      validate: (input) => {
+      validate: input => {
         if (!input) return 'Valid from date is required';
         if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(input)) return 'Date must be in YYYY-MM-DD format';
         return true;
@@ -192,12 +198,12 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
   ]);
 
   // Collect CSP directives
-  console.log(chalk.yellow('\nNow let\'s define the CSP requirements...'));
+  console.log(chalk.yellow("\nNow let's define the CSP requirements..."));
   const csp: Record<string, string[]> = {};
-  
+
   const cspDirectives = [
     'script-src',
-    'style-src', 
+    'style-src',
     'img-src',
     'connect-src',
     'frame-src',
@@ -227,8 +233,11 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
             type: 'input',
             name: 'source',
             message: `${directive} source ${sources.length + 1}:`,
-            validate: (input) => {
-              if (!input) return sources.length > 0 ? true : 'At least one source is required for this directive';
+            validate: input => {
+              if (!input)
+                return sources.length > 0
+                  ? true
+                  : 'At least one source is required for this directive';
               return true;
             },
           },
@@ -237,7 +246,7 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
             name: 'addAnother',
             message: `Add another ${directive} source?`,
             default: false,
-            when: (answers) => !!answers.source,
+            when: answers => !!answers.source,
           },
         ]);
 
@@ -274,8 +283,11 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
     },
   ]);
 
-  const aliases = metadata.aliases 
-    ? metadata.aliases.split(',').map((alias: string) => alias.trim()).filter(Boolean)
+  const aliases = metadata.aliases
+    ? metadata.aliases
+        .split(',')
+        .map((alias: string) => alias.trim())
+        .filter(Boolean)
     : undefined;
 
   // Build service definition
@@ -313,7 +325,7 @@ async function createAddServicePR(service: ServiceDefinition, filePath: string):
 Generated with @csp-js/cli`;
 
   const prTitle = `feat: Add ${service.name} service`;
-  
+
   const prBody = `## Summary
 Add new service definition for **${service.name}**.
 

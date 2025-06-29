@@ -397,7 +397,7 @@ export function getServiceWithVersion(
 ): { service: ServiceDefinition; version: string } | undefined {
   const { id, version: parsedVersion } = parseServiceIdentifier(identifier);
   const requestedVersion = version || parsedVersion;
-  
+
   const service = getService(id);
   if (!service) {
     return undefined;

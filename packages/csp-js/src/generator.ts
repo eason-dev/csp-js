@@ -1,8 +1,4 @@
-import { 
-  getServiceWithVersion, 
-  getDeprecationWarning,
-  type CSPDirectives 
-} from '@csp-js/data';
+import { getServiceWithVersion, getDeprecationWarning, type CSPDirectives } from '@csp-js/data';
 import type { CSPOptions, CSPResult } from './types.js';
 import {
   generateNonce,
@@ -42,21 +38,23 @@ export function generateCSP(input: string[] | CSPOptions): CSPResult {
     if (serviceWithVersion) {
       const { service, version } = serviceWithVersion;
       includedServices.push(`${service.id}@${version}`);
-      
+
       // Get CSP rules for the specific version
       const serviceVersion = service.versions[version];
       if (serviceVersion) {
         serviceDirectives.push(serviceVersion.csp);
-        
+
         // Check for deprecation warnings
         const deprecationWarning = getDeprecationWarning(service.id, version);
         if (deprecationWarning) {
           warnings.push(deprecationWarning);
         }
-        
+
         // Add version-specific notes as warnings if breaking changes
         if (serviceVersion.breaking) {
-          warnings.push(`${service.id}@${version} contains breaking changes. Review implementation.`);
+          warnings.push(
+            `${service.id}@${version} contains breaking changes. Review implementation.`
+          );
         }
       }
     } else {

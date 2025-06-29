@@ -22,6 +22,7 @@ This document outlines the complete release process for CSP-JS, including versio
 **Frequency**: As needed (typically weekly)
 
 **Examples**:
+
 - Fix CSP generation bug
 - Update service CSP requirements
 - Correct documentation errors
@@ -36,6 +37,7 @@ This document outlines the complete release process for CSP-JS, including versio
 **Frequency**: Monthly
 
 **Examples**:
+
 - Add new service support
 - New API methods or options
 - Enhanced CLI functionality
@@ -50,6 +52,7 @@ This document outlines the complete release process for CSP-JS, including versio
 **Frequency**: Quarterly or as needed
 
 **Examples**:
+
 - Breaking API changes
 - Remove deprecated features
 - Major architecture refactoring
@@ -78,9 +81,15 @@ Service definitions use **independent versioning**:
 ```json
 {
   "versions": {
-    "1.0.0": { /* initial version */ },
-    "1.1.0": { /* added features */ },
-    "2.0.0": { /* breaking changes */ }
+    "1.0.0": {
+      /* initial version */
+    },
+    "1.1.0": {
+      /* added features */
+    },
+    "2.0.0": {
+      /* breaking changes */
+    }
   }
 }
 ```
@@ -88,10 +97,10 @@ Service definitions use **independent versioning**:
 ### Cross-Package Compatibility
 
 | csp-js | csp-data | csp-cli | Compatibility |
-|--------|----------|---------|---------------|
-| 1.x.x  | 1.x.x    | 1.x.x   | ✅ Full |
-| 1.x.x  | 2.x.x    | 1.x.x   | ⚠️ Limited |
-| 2.x.x  | 1.x.x    | 1.x.x   | ❌ None |
+| ------ | -------- | ------- | ------------- |
+| 1.x.x  | 1.x.x    | 1.x.x   | ✅ Full       |
+| 1.x.x  | 2.x.x    | 1.x.x   | ⚠️ Limited    |
+| 2.x.x  | 1.x.x    | 1.x.x   | ❌ None       |
 
 ## Release Schedule
 
@@ -122,16 +131,19 @@ Week 4: Release Preparation & Deployment
 ### Code Quality
 
 - [ ] **All tests pass**
+
   ```bash
   pnpm test
   ```
 
 - [ ] **Zero linting warnings**
+
   ```bash
   pnpm lint
   ```
 
 - [ ] **TypeScript compilation successful**
+
   ```bash
   pnpm check-types
   ```
@@ -144,11 +156,13 @@ Week 4: Release Preparation & Deployment
 ### Service Validation
 
 - [ ] **Service definitions validated**
+
   ```bash
   csp-cli validate
   ```
 
 - [ ] **Service CSP requirements tested**
+
   ```bash
   pnpm test:services
   ```
@@ -165,6 +179,7 @@ Week 4: Release Preparation & Deployment
 ### Security
 
 - [ ] **Dependency audit clean**
+
   ```bash
   pnpm audit
   ```
@@ -183,6 +198,7 @@ Week 4: Release Preparation & Deployment
 ### 1. Preparation Phase
 
 **Create Release Branch**:
+
 ```bash
 git checkout main
 git pull origin main
@@ -190,6 +206,7 @@ git checkout -b release/v1.2.0
 ```
 
 **Update Version Numbers**:
+
 ```bash
 # Update package.json files
 pnpm version 1.2.0
@@ -199,6 +216,7 @@ pnpm update:workspace-versions
 ```
 
 **Update Documentation**:
+
 ```bash
 # Generate CHANGELOG.md entry
 pnpm changelog:generate
@@ -210,11 +228,12 @@ pnpm docs:update-badges
 ### 2. Testing Phase
 
 **Run Full Test Suite**:
+
 ```bash
 # Unit tests
 pnpm test
 
-# Integration tests  
+# Integration tests
 pnpm test:integration
 
 # E2E tests
@@ -225,6 +244,7 @@ pnpm test:services
 ```
 
 **Manual Testing**:
+
 - [ ] Web interface functionality
 - [ ] CLI commands work correctly
 - [ ] NPM package installation
@@ -233,6 +253,7 @@ pnpm test:services
 ### 3. Review Phase
 
 **Create Release PR**:
+
 ```bash
 git add .
 git commit -m "chore(release): v1.2.0"
@@ -243,6 +264,7 @@ gh pr create --template release.md
 ```
 
 **Review Requirements**:
+
 - [ ] Code review completed
 - [ ] Changelog reviewed
 - [ ] Breaking changes documented
@@ -251,12 +273,14 @@ gh pr create --template release.md
 ### 4. Release Phase
 
 **Merge Release PR**:
+
 ```bash
 # After approval, merge to main
 gh pr merge release/v1.2.0 --squash
 ```
 
 **Tag and Release**:
+
 ```bash
 git checkout main
 git pull origin main
@@ -273,6 +297,7 @@ gh release create v1.2.0 \
 ```
 
 **Publish to NPM**:
+
 ```bash
 # Build packages
 pnpm build
@@ -289,6 +314,7 @@ npm info @csp-js/cli
 ### 5. Deployment Phase
 
 **Web App Deployment**:
+
 ```bash
 # Trigger deployment (automatic via Vercel/Netlify)
 # Or manual deployment
@@ -296,12 +322,14 @@ pnpm deploy:web
 ```
 
 **Documentation Update**:
+
 ```bash
 # Update documentation site
 pnpm deploy:docs
 ```
 
 **CDN Purge**:
+
 ```bash
 # Purge CDN caches for updated assets
 pnpm cdn:purge
@@ -347,6 +375,7 @@ pnpm cdn:purge
 ### Security Issues
 
 **Process**:
+
 1. **Private disclosure** received
 2. **Impact assessment** (CVSS scoring)
 3. **Fix development** in private branch
@@ -354,6 +383,7 @@ pnpm cdn:purge
 5. **Coordinated disclosure** with fix
 
 **Timeline**:
+
 - Critical (CVSS 9.0+): 4 hours
 - High (CVSS 7.0-8.9): 24 hours
 - Medium (CVSS 4.0-6.9): 72 hours
@@ -361,12 +391,14 @@ pnpm cdn:purge
 ### Critical Bug Fixes
 
 **Criteria**:
+
 - Service completely broken
 - Data corruption risk
 - Build/installation failures
 - Major functionality regression
 
 **Process**:
+
 1. **Immediate hotfix** branch
 2. **Minimal fix** with tests
 3. **Fast-track review** (single approver)
@@ -375,11 +407,13 @@ pnpm cdn:purge
 ### Service Outages
 
 **Common Scenarios**:
+
 - Service changes CSP requirements suddenly
 - Major service provider updates
 - Security-related service changes
 
 **Response**:
+
 1. **Rapid service definition update**
 2. **Community notification** of temporary fix
 3. **Full update** in next regular release
@@ -389,6 +423,7 @@ pnpm cdn:purge
 ### NPM Package Rollback
 
 **Deprecate Problematic Version**:
+
 ```bash
 # Deprecate specific version
 npm deprecate csp-js@1.2.0 "Critical bug - use 1.1.9 instead"
@@ -401,6 +436,7 @@ pnpm publish
 ### Web App Rollback
 
 **Vercel/Netlify Rollback**:
+
 ```bash
 # Rollback to previous deployment
 vercel --prod rollback
@@ -409,6 +445,7 @@ netlify deploy:rollback
 ```
 
 **Manual Rollback**:
+
 ```bash
 # Deploy previous version
 git checkout v1.1.9
@@ -419,6 +456,7 @@ pnpm deploy:web
 ### Service Data Rollback
 
 **Revert Service Changes**:
+
 ```bash
 # Create hotfix branch
 git checkout -b hotfix/revert-service-update
@@ -439,36 +477,42 @@ pnpm publish
 ## [1.2.0] - 2024-06-29
 
 ### Added
+
 - New service support: Stripe Checkout v2
 - Version selection UI in web interface
 - CLI command for batch service updates
 
 ### Changed
+
 - Updated Google Analytics to v4.1.0
 - Improved CSP generation performance by 15%
 - Enhanced error messages with suggestions
 
 ### Fixed
+
 - Fixed nonce generation in server environments
 - Corrected Microsoft Clarity CSP requirements
 - Resolved CLI hanging on Windows
 
 ### Deprecated
+
 - Google Analytics v4.0.0 (use v4.1.0+)
 - Legacy API methods (migrate by v2.0.0)
 
 ### Security
+
 - Updated dependencies with security patches
 - Improved CSP validation to prevent XSS
 
 ### Breaking Changes (Major releases only)
+
 - Removed deprecated `generateCSPString` method
 - Changed minimum Node.js version to 18+
 ```
 
 ### Community Announcement Template
 
-```markdown
+````markdown
 # 🎉 CSP-JS v1.2.0 Released!
 
 We're excited to announce the release of CSP-JS v1.2.0! This release includes several new features and improvements.
@@ -488,6 +532,7 @@ None in this release! Fully backward compatible.
 ```bash
 npm update csp-js
 ```
+````
 
 ## 🐛 Bug Reports
 
@@ -496,13 +541,15 @@ Found an issue? Please report it: https://github.com/eason-dev/csp-js/issues
 ## 🙏 Contributors
 
 Thanks to all contributors who made this release possible!
+
 ```
 
 ### Social Media Templates
 
 **Twitter/X**:
 ```
-🛡️ CSP-JS v1.2.0 is live! 
+
+🛡️ CSP-JS v1.2.0 is live!
 
 ✨ New: Stripe Checkout v2 support
 🎯 Enhanced: Version selection UI
@@ -511,6 +558,7 @@ Thanks to all contributors who made this release possible!
 Generate Content Security Policies from service names in seconds!
 
 #WebSecurity #CSP #OpenSource
+
 ```
 
 ---
@@ -548,3 +596,4 @@ All releases must pass:
 
 *Last Updated: 2024-06-29*
 *Process Version: 1.0.0*
+```

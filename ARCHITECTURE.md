@@ -59,33 +59,37 @@ pnpm --filter @csp-js/cli build  # Build CLI only
 ### Quick Contribution Setup
 
 1. **Fork & Clone**
+
    ```bash
    git clone https://github.com/yourusername/csp-js.git
    cd csp-js
    ```
 
 2. **Install Dependencies**
+
    ```bash
    pnpm install
    ```
 
 3. **Development Setup**
+
    ```bash
    # Build all packages
    pnpm build
-   
+
    # Run tests
    pnpm test
-   
+
    # Start development servers
    pnpm dev
    ```
 
 4. **Add New Services**
+
    ```bash
    # Interactive service addition
    pnpm cli add --interactive
-   
+
    # Or manually edit packages/csp-data/data/services/
    ```
 

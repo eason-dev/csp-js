@@ -108,7 +108,7 @@ export default function CSPGenerator() {
       if (service?.defaultVersion) {
         setServiceVersions(prev => ({
           ...prev,
-          [serviceId]: service.defaultVersion
+          [serviceId]: service.defaultVersion,
         }));
       }
     } else {
@@ -126,7 +126,7 @@ export default function CSPGenerator() {
   const handleVersionChange = (serviceId: string, version: string) => {
     setServiceVersions(prev => ({
       ...prev,
-      [serviceId]: version
+      [serviceId]: version,
     }));
   };
 
@@ -165,18 +165,20 @@ export default function CSPGenerator() {
         <div>
           <Label className="text-sm font-medium">CSP Requirements</Label>
           <div className="mt-2 space-y-2">
-            {Object.entries(service.versions[service.defaultVersion]?.csp || {}).map(([directive, sources]) => (
-              <div key={directive} className="text-sm">
-                <span className="text-primary font-mono">{directive}:</span>
-                <div className="text-muted-foreground ml-4">
-                  {(sources as string[]).map((source: string) => (
-                    <div key={source} className="font-mono">
-                      • {source}
-                    </div>
-                  ))}
+            {Object.entries(service.versions[service.defaultVersion]?.csp || {}).map(
+              ([directive, sources]) => (
+                <div key={directive} className="text-sm">
+                  <span className="text-primary font-mono">{directive}:</span>
+                  <div className="text-muted-foreground ml-4">
+                    {(sources as string[]).map((source: string) => (
+                      <div key={source} className="font-mono">
+                        • {source}
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </div>
         </div>
       </CardContent>
@@ -263,16 +265,19 @@ export default function CSPGenerator() {
                       {selectedServices.map(serviceId => {
                         const service = services[serviceId];
                         const availableVersions = getServiceVersions(serviceId);
-                        const currentVersion = serviceVersions[serviceId] || service?.defaultVersion;
-                        
+                        const currentVersion =
+                          serviceVersions[serviceId] || service?.defaultVersion;
+
                         return (
                           <div
                             key={serviceId}
                             className="bg-muted/50 flex items-center justify-between gap-3 rounded-lg border p-3"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="font-medium text-sm">{service?.name || serviceId}</span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-sm font-medium">
+                                {service?.name || serviceId}
+                              </span>
+                              <span className="text-muted-foreground text-xs">
                                 v{currentVersion}
                               </span>
                             </div>
@@ -280,9 +285,9 @@ export default function CSPGenerator() {
                               {availableVersions.length > 1 && (
                                 <Select
                                   value={currentVersion}
-                                  onValueChange={(version) => handleVersionChange(serviceId, version)}
+                                  onValueChange={version => handleVersionChange(serviceId, version)}
                                 >
-                                  <SelectTrigger className="w-24 h-6 text-xs">
+                                  <SelectTrigger className="h-6 w-24 text-xs">
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
@@ -297,7 +302,7 @@ export default function CSPGenerator() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                className="hover:bg-destructive/20 h-6 w-6 p-0 text-destructive"
+                                className="hover:bg-destructive/20 text-destructive h-6 w-6 p-0"
                                 onClick={() => handleServiceSelection(serviceId, false)}
                               >
                                 ×
@@ -319,25 +324,27 @@ export default function CSPGenerator() {
                     >
                       <Checkbox
                         checked={selectedServices.includes(service.id)}
-                        onCheckedChange={(checked: boolean) => 
+                        onCheckedChange={(checked: boolean) =>
                           handleServiceSelection(service.id, checked)
                         }
                       />
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
+                        <div className="mb-1 flex items-center gap-2">
                           <div className="font-medium">{service.name}</div>
                           <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
                             {service.category.replace('_', ' ')}
                           </span>
                           <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10">
-                            {getServiceVersions(service.id).length} version{getServiceVersions(service.id).length !== 1 ? 's' : ''}
+                            {getServiceVersions(service.id).length} version
+                            {getServiceVersions(service.id).length !== 1 ? 's' : ''}
                           </span>
                         </div>
-                        <div className="text-muted-foreground text-sm mb-2">
+                        <div className="text-muted-foreground mb-2 text-sm">
                           {service.description}
                         </div>
-                        <div className="text-xs text-muted-foreground mb-2">
-                          Default: v{service.defaultVersion} • Available: {getServiceVersions(service.id).join(', ')}
+                        <div className="text-muted-foreground mb-2 text-xs">
+                          Default: v{service.defaultVersion} • Available:{' '}
+                          {getServiceVersions(service.id).join(', ')}
                         </div>
                         <Button
                           variant="ghost"
@@ -349,11 +356,9 @@ export default function CSPGenerator() {
                             )
                           }
                         >
-                          {selectedServiceForDocs === service.id ? 'Hide' : 'Show'}{' '}
-                          Documentation
+                          {selectedServiceForDocs === service.id ? 'Hide' : 'Show'} Documentation
                         </Button>
-                        {selectedServiceForDocs === service.id &&
-                          renderServiceDocs(service)}
+                        {selectedServiceForDocs === service.id && renderServiceDocs(service)}
                       </div>
                     </div>
                   ))}

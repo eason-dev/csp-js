@@ -50,10 +50,10 @@ program
 
 // Error handling
 program.configureOutput({
-  writeErr: (str) => process.stderr.write(chalk.red(str)),
+  writeErr: str => process.stderr.write(chalk.red(str)),
 });
 
-program.exitOverride((err) => {
+program.exitOverride(err => {
   if (err.code === 'commander.help') {
     process.exit(0);
   }

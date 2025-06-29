@@ -16,22 +16,26 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 ### Quick Start
 
 1. **Fork & Clone**
+
    ```bash
    git clone https://github.com/yourusername/csp-js.git
    cd csp-js
    ```
 
 2. **Install Dependencies**
+
    ```bash
    pnpm install
    ```
 
 3. **Build Packages**
+
    ```bash
    pnpm build
    ```
 
 4. **Run Tests**
+
    ```bash
    pnpm test
    ```
@@ -69,6 +73,7 @@ csp-js/
 ### Making Changes
 
 1. **Create a Branch**
+
    ```bash
    git checkout -b feature/your-feature-name
    # or
@@ -81,6 +86,7 @@ csp-js/
    - Update documentation if needed
 
 3. **Test Your Changes**
+
    ```bash
    pnpm test           # Run all tests
    pnpm lint           # Check code style
@@ -89,6 +95,7 @@ csp-js/
    ```
 
 4. **Commit Your Changes**
+
    ```bash
    git add .
    git commit -m "feat: add new service support for example-service"
@@ -117,11 +124,13 @@ csp-cli update service-id --version 2.0.0
 ### Manual Process
 
 1. **Create Service File**
+
    ```bash
    # Create file: packages/csp-data/data/services/your-service.jsonc
    ```
 
 2. **Service Definition Structure**
+
    ```typescript
    {
      "id": "your-service",
@@ -186,8 +195,9 @@ csp-cli update service-id --version 2.0.0
 ### Categories
 
 Available categories (see `ServiceCategory` enum):
+
 - `analytics` - Analytics and tracking services
-- `advertising` - Ad networks and marketing platforms  
+- `advertising` - Ad networks and marketing platforms
 - `social` - Social media widgets and plugins
 - `payment` - Payment processors and financial services
 - `forms` - Form builders and survey tools
@@ -222,17 +232,20 @@ Available categories (see `ServiceCategory` enum):
 ## Testing
 
 ### Unit Tests
+
 ```bash
 pnpm test                    # All packages
 pnpm test --filter csp-js    # Specific package
 ```
 
 ### Integration Tests
+
 ```bash
 pnpm test:integration
 ```
 
 ### Service Validation
+
 ```bash
 # Test specific service CSP requirements
 csp-cli check google-analytics --url https://example.com
@@ -248,8 +261,9 @@ csp-cli check google-analytics --url https://example.com
 ## Issue Templates
 
 Use our issue templates for:
+
 - 🆕 **Add Service**: Request new service support
-- 🔄 **Update Service**: Report CSP requirement changes  
+- 🔄 **Update Service**: Report CSP requirement changes
 - 🐛 **Bug Report**: Report bugs or issues
 - 💡 **Feature Request**: Suggest new features
 
