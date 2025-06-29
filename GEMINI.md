@@ -3,6 +3,7 @@
 - Always use `pnpm` as package manager.
 - Always use `Context7 MCP` when working with libraries. Use it to get latest documentation for a library, such as Next.js, React, TailwindCSS, etc.
 - Always use `eslint` and `prettier` to format your code.
+- Don't auto commit and auto push unless I ask you to.
 
 ## Writing Tests
 

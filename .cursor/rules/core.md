@@ -11,6 +11,7 @@
 - Always use `Context7 MCP` when working with libraries to get the latest documentation
 - Use Context7 MCP for libraries like Next.js, React, TailwindCSS, TypeScript, and other dependencies
 - Verify API compatibility and best practices through official documentation before implementation
+- Don't auto commit and auto push unless I ask you to.
 
 ## Code Quality & Formatting
 
