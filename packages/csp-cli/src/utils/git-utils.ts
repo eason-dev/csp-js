@@ -1,13 +1,15 @@
 import { execSync } from 'node:child_process';
 import chalk from 'chalk';
+import { quote } from 'shell-quote';
 import type { GitOperationResult } from '../types.js';
 
 /**
  * Execute git command and return output
  */
-function execGit(command: string): string {
+function execGit(command: string, args: string[] = []): string {
   try {
-    return execSync(`git ${command}`, {
+    const gitArgs = [command, ...args];
+    return execSync(`git ${quote(gitArgs)}`, {
       encoding: 'utf-8',
       stdio: ['pipe', 'pipe', 'pipe'],
     })
@@ -56,7 +58,7 @@ export function isWorkingDirectoryClean(): boolean {
  */
 export function createBranch(branchName: string): GitOperationResult {
   try {
-    execGit(`checkout -b ${branchName}`);
+    execGit('checkout', ['-b', branchName]);
     return {
       success: true,
       message: `Created and switched to branch '${branchName}'`,
@@ -75,7 +77,7 @@ export function createBranch(branchName: string): GitOperationResult {
  */
 export function addFiles(files: string[]): GitOperationResult {
   try {
-    execGit(`add ${files.join(' ')}`);
+    execGit('add', files);
     return {
       success: true,
       message: `Added ${files.length} file(s) to staging`,
@@ -113,7 +115,7 @@ export function commit(): GitOperationResult {
  */
 export function pushBranch(branchName: string): GitOperationResult {
   try {
-    execGit(`push -u origin ${branchName}`);
+    execGit('push', ['-u', 'origin', branchName]);
     return {
       success: true,
       message: `Pushed branch '${branchName}' to remote`,
@@ -149,7 +151,7 @@ export function createPullRequest(
 
     // Create PR
     const output = execSync(
-      `gh pr create --title "${title.replace(/"/g, '\\\\"')}" --body "${body.replace(/"/g, '\\\\"')}" --base ${baseBranch}`,
+      quote(['gh', 'pr', 'create', '--title', title, '--body', body, '--base', baseBranch]),
       {
         encoding: 'utf-8',
         stdio: ['pipe', 'pipe', 'pipe'],
@@ -184,7 +186,7 @@ export function generateBranchName(
   version?: string
 ): string {
   const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-  const versionSuffix = version ? `-${version.replace(/\\./g, '-')}` : '';
+  const versionSuffix = version ? `-${version.replace(/\./g, '-')}` : '';
   return `${action}-service/${serviceId}${versionSuffix}-${timestamp}`;
 }
 
