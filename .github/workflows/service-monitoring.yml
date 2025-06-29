@@ -16,9 +16,6 @@ on:
         type: boolean
         default: false
 
-env:
-  NODE_VERSION: '22'
-
 jobs:
   monitor-services:
     runs-on: ubuntu-latest
@@ -34,7 +31,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 22
           cache: 'npm'
 
       - name: Install pnpm

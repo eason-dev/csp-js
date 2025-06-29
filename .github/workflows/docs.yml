@@ -17,9 +17,6 @@ on:
         required: false
         default: 'latest'
 
-env:
-  NODE_VERSION: '22'
-
 permissions:
   contents: read
   pages: write
@@ -44,7 +41,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 22
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
