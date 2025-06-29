@@ -289,10 +289,10 @@ Use our issue templates for:
 
 ## Getting Help
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/easonz/csp-js/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/easonz/csp-js/discussions)
-- 📧 **Maintainers**: [maintainers@csp-js.dev](mailto:maintainers@csp-js.dev)
-- 📖 **Documentation**: [csp-js.dev/docs](https://csp-js.dev/docs)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/eason-dev/csp-js/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/eason-dev/csp-js/discussions)
+- 📧 **Maintainers**: [maintainers@csp-js.eason.ch](mailto:maintainers@csp-js.eason.ch)
+- 📖 **Documentation**: [csp-js.eason.ch/docs](https://csp-js.eason.ch/docs)
 
 ## Code of Conduct
 

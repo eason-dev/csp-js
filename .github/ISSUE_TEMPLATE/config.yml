@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
   - name: 💬 Discussions
-    url: https://github.com/easonz/csp-js/discussions
+    url: https://github.com/eason-dev/csp-js/discussions
     about: Ask questions, share ideas, and discuss CSP best practices
   - name: 📖 Documentation
-    url: https://csp-js.dev/docs
+    url: https://csp-js.eason.ch/docs
     about: Check our comprehensive documentation and guides
   - name: 🔧 CLI Help
-    url: https://github.com/easonz/csp-js/blob/main/packages/csp-cli/README.md
+    url: https://github.com/eason-dev/csp-js/blob/main/packages/csp-cli/README.md
     about: Get help with the CSP CLI tool

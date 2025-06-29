@@ -1,9 +1,9 @@
 # CSP-JS 🛡️
 
 [![NPM Version](https://img.shields.io/npm/v/csp-js)](https://www.npmjs.com/package/csp-js)
-[![GitHub License](https://img.shields.io/github/license/easonz/csp-js)](https://github.com/easonz/csp-js/blob/main/LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/easonz/csp-js/ci.yml)](https://github.com/easonz/csp-js/actions)
-[![Coverage](https://img.shields.io/codecov/c/github/easonz/csp-js)](https://codecov.io/gh/easonz/csp-js)
+[![GitHub License](https://img.shields.io/github/license/eason-dev/csp-js)](https://github.com/eason-dev/csp-js/blob/main/LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/eason-dev/csp-js/ci.yml)](https://github.com/eason-dev/csp-js/actions)
+[![Coverage](https://img.shields.io/codecov/c/github/eason-dev/csp-js)](https://codecov.io/gh/eason-dev/csp-js)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
 
 > **Modern Content Security Policy (CSP) generator for popular web services and libraries**
@@ -18,7 +18,7 @@ CSP-JS automatically generates Content Security Policy headers by analyzing the 
 - 🤖 **Automated Monitoring**: GitHub Actions integration to detect service changes
 - 🌐 **Multiple Formats**: Generate headers, meta tags, or JSON configurations
 - 🔐 **Nonce Support**: Built-in nonce generation for secure inline scripts
-- 📱 **Web Interface**: Interactive CSP generator at [csp-js.dev](https://csp-js.dev)
+- 📱 **Web Interface**: Interactive CSP generator at [csp-js.eason.ch](https://csp-js.eason.ch)
 - 🛠️ **CLI Tools**: Command-line tools for automation and service management
 - 📖 **TypeScript Ready**: Full TypeScript support with comprehensive types
 
@@ -189,7 +189,7 @@ csp-cli check google-analytics --url https://example.com
 
 ## 🌐 Web Interface
 
-Use our interactive web interface at [csp-js.dev](https://csp-js.dev) to:
+Use our interactive web interface at [csp-js.eason.ch](https://csp-js.eason.ch) to:
 
 - Browse available services
 - Generate CSP policies visually
@@ -303,7 +303,7 @@ pnpm --filter @csp-js/cli build  # Build CLI only
 
 We're always adding new services! To request support for a service:
 
-1. [Create an issue](https://github.com/easonz/csp-js/issues/new?template=add-service.yml) using our service request template
+1. [Create an issue](https://github.com/eason-dev/csp-js/issues/new?template=add-service.yml) using our service request template
 2. Use the CLI: `csp-cli add --interactive`
 3. Submit a pull request with the service definition
 
@@ -328,7 +328,7 @@ Services are automatically monitored for CSP requirement changes:
 
 ### Reporting Security Issues
 
-Please report security vulnerabilities to [security@csp-js.dev](mailto:security@csp-js.dev) or through [GitHub Security Advisories](https://github.com/easonz/csp-js/security/advisories/new).
+Please report security vulnerabilities to [security@csp-js.eason.ch](mailto:security@csp-js.eason.ch) or through [GitHub Security Advisories](https://github.com/eason-dev/csp-js/security/advisories/new).
 
 ## 📈 Roadmap
 
@@ -358,10 +358,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/easonz/csp-js/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/easonz/csp-js/discussions)
-- 📖 **Documentation**: [csp-js.dev/docs](https://csp-js.dev/docs)
-- 📧 **Email**: [hello@csp-js.dev](mailto:hello@csp-js.dev)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/eason-dev/csp-js/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/eason-dev/csp-js/discussions)
+- 📖 **Documentation**: [csp-js.eason.ch/docs](https://csp-js.eason.ch/docs)
+- 📧 **Email**: [hello@csp-js.eason.ch](mailto:hello@csp-js.eason.ch)
 
 ---
 

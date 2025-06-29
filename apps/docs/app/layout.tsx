@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   title: 'CSP-JS Documentation',
   description: 'Comprehensive documentation for CSP-JS - Generate Content Security Policy headers for popular web services',
   keywords: ['CSP', 'Content Security Policy', 'Web Security', 'JavaScript', 'TypeScript'],
-  authors: [{ name: 'Eason' }],
+  authors: [{ name: 'Eason Chang' }],
   openGraph: {
     title: 'CSP-JS Documentation',
     description: 'Generate Content Security Policy headers for popular web services',

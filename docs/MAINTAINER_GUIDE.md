@@ -463,12 +463,12 @@ pnpm format         # Prettier formatting
 ## Contact Information
 
 **Current Maintainers:**
-- Primary: [maintainer1@csp-js.dev](mailto:maintainer1@csp-js.dev)
-- Secondary: [maintainer2@csp-js.dev](mailto:maintainer2@csp-js.dev)
+- Primary: [maintainer1@csp-js.eason.ch](mailto:maintainer1@csp-js.eason.ch)
+- Secondary: [maintainer2@csp-js.eason.ch](mailto:maintainer2@csp-js.eason.ch)
 
 **Emergency Contact:**
-- Security: [security@csp-js.dev](mailto:security@csp-js.dev)
-- Infrastructure: [infrastructure@csp-js.dev](mailto:infrastructure@csp-js.dev)
+- Security: [security@csp-js.eason.ch](mailto:security@csp-js.eason.ch)
+- Infrastructure: [infrastructure@csp-js.eason.ch](mailto:infrastructure@csp-js.eason.ch)
 
 ---
 

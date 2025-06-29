@@ -491,7 +491,7 @@ npm update csp-js
 
 ## 🐛 Bug Reports
 
-Found an issue? Please report it: https://github.com/easonz/csp-js/issues
+Found an issue? Please report it: https://github.com/eason-dev/csp-js/issues
 
 ## 🙏 Contributors
 

@@ -107,7 +107,7 @@ jobs:
             <h2>Links</h2>
             <ul class="guide-list">
               <li><a href="/">🏠 Main Site</a></li>
-              <li><a href="https://github.com/easonz/csp-js">📦 GitHub Repository</a></li>
+              <li><a href="https://github.com/eason-dev/csp-js">📦 GitHub Repository</a></li>
               <li><a href="https://www.npmjs.com/package/csp-js">📡 NPM Package</a></li>
             </ul>
           </body>

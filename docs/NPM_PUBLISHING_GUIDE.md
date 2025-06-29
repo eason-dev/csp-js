@@ -55,7 +55,7 @@ All packages are configured with proper NPM publishing settings:
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/easonz/csp-js.git",
+    "url": "https://github.com/eason-dev/csp-js.git",
     "directory": "packages/csp-js"
   },
   "scripts": {
@@ -146,7 +146,7 @@ The preferred method is using GitHub Actions for automated publishing:
    ```
 
 2. **Monitor Release**:
-   - Go to [Actions tab](https://github.com/easonz/csp-js/actions)
+   - Go to [Actions tab](https://github.com/eason-dev/csp-js/actions)
    - Watch the "Release" workflow
    - Check for any failures
 
@@ -397,7 +397,7 @@ git push
 
 If you encounter issues:
 
-1. **Check GitHub Issues**: [Issues page](https://github.com/easonz/csp-js/issues)
+1. **Check GitHub Issues**: [Issues page](https://github.com/eason-dev/csp-js/issues)
 2. **NPM Support**: [NPM Support](https://www.npmjs.com/support)
 3. **Contact Maintainers**: Create issue with `@maintainer` tag
 

@@ -574,11 +574,11 @@ export default function CSPGenerator() {
         <footer className="text-muted-foreground mt-12 text-center text-sm">
           <p>
             Powered by{' '}
-            <a href="https://github.com/easonz/csp-js" className="text-primary hover:underline">
+            <a href="https://github.com/eason-dev/csp-js" className="text-primary hover:underline">
               csp-js
             </a>
             {' • '}
-            <a href="https://github.com/easonz/csp-js" className="text-primary hover:underline">
+            <a href="https://github.com/eason-dev/csp-js" className="text-primary hover:underline">
               GitHub
             </a>
             {' • '}
