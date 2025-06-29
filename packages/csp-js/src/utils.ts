@@ -6,24 +6,24 @@ import { NonceOptions } from './types.js';
  */
 export function generateNonce(options: NonceOptions = {}): string {
   const { length = 16, encoding = 'base64' } = options;
-  
+
   // Try to use different crypto APIs based on environment
   if (typeof globalThis !== 'undefined' && globalThis.crypto?.getRandomValues) {
     // Browser or modern runtime environment
     const bytes = new Uint8Array(length);
     globalThis.crypto.getRandomValues(bytes);
-    
+
     if (encoding === 'hex') {
       return Array.from(bytes)
         .map(b => b.toString(16).padStart(2, '0'))
         .join('');
     }
-    
+
     // Base64 encoding
     const binary = String.fromCharCode(...bytes);
     return btoa(binary);
   }
-  
+
   // Try Node.js crypto (check if in Node.js environment)
   if (typeof process !== 'undefined' && process.versions?.node) {
     try {
@@ -37,7 +37,7 @@ export function generateNonce(options: NonceOptions = {}): string {
       // Continue to fallback
     }
   }
-  
+
   // Fallback for environments without crypto
   console.warn('No secure random number generator available. Using fallback.');
   return generateInsecureNonce(length, encoding);
@@ -46,7 +46,9 @@ export function generateNonce(options: NonceOptions = {}): string {
 /**
  * Get Node.js crypto module if available
  */
-function getNodeCrypto(): { randomBytes: (size: number) => { toString: (encoding: string) => string } } | null {
+function getNodeCrypto(): {
+  randomBytes: (size: number) => { toString: (encoding: string) => string };
+} | null {
   try {
     // This will be replaced by bundlers with undefined in browser environments
     // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -60,15 +62,16 @@ function getNodeCrypto(): { randomBytes: (size: number) => { toString: (encoding
  * Fallback nonce generation (not cryptographically secure)
  */
 function generateInsecureNonce(length: number, encoding: 'base64' | 'hex'): string {
-  const chars = encoding === 'hex' 
-    ? '0123456789abcdef'
-    : 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-  
+  const chars =
+    encoding === 'hex'
+      ? '0123456789abcdef'
+      : 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
   let result = '';
   for (let i = 0; i < length * 2; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-  
+
   return result;
 }
 
@@ -77,23 +80,23 @@ function generateInsecureNonce(length: number, encoding: 'base64' | 'hex'): stri
  */
 export function mergeCSPDirectives(...directives: CSPDirectives[]): CSPDirectives {
   const merged: CSPDirectives = {};
-  
+
   for (const directive of directives) {
     for (const [key, values] of Object.entries(directive)) {
       if (!values || values.length === 0) continue;
-      
+
       const directiveKey = key as keyof CSPDirectives;
       if (!merged[directiveKey]) {
         merged[directiveKey] = [];
       }
-      
+
       // Merge arrays and remove duplicates
       const existing = merged[directiveKey] || [];
       const combined = [...existing, ...values];
       merged[directiveKey] = [...new Set(combined)];
     }
   }
-  
+
   return merged;
 }
 
@@ -102,17 +105,17 @@ export function mergeCSPDirectives(...directives: CSPDirectives[]): CSPDirective
  */
 export function addNonceToDirectives(directives: CSPDirectives, nonce: string): CSPDirectives {
   const result = { ...directives };
-  
+
   // Add nonce to script-src if it exists
   if (result['script-src']) {
     result['script-src'] = [...result['script-src'], `'nonce-${nonce}'`];
   }
-  
+
   // Add nonce to style-src if it exists
   if (result['style-src']) {
     result['style-src'] = [...result['style-src'], `'nonce-${nonce}'`];
   }
-  
+
   return result;
 }
 
@@ -121,7 +124,7 @@ export function addNonceToDirectives(directives: CSPDirectives, nonce: string): 
  */
 export function directivesToHeader(directives: CSPDirectives): string {
   const parts: string[] = [];
-  
+
   // Define the order of directives for consistent output
   const directiveOrder: Array<keyof CSPDirectives> = [
     'script-src',
@@ -137,7 +140,7 @@ export function directivesToHeader(directives: CSPDirectives): string {
     'manifest-src',
     'form-action',
   ];
-  
+
   for (const directive of directiveOrder) {
     const values = directives[directive];
     if (values && values.length > 0) {
@@ -145,7 +148,7 @@ export function directivesToHeader(directives: CSPDirectives): string {
       parts.push(`${directiveName} ${values.join(' ')}`);
     }
   }
-  
+
   return parts.join('; ');
 }
 
@@ -154,7 +157,7 @@ export function directivesToHeader(directives: CSPDirectives): string {
  */
 export function addSelfDirective(directives: CSPDirectives): CSPDirectives {
   const result = { ...directives };
-  
+
   const selfDirectives: Array<keyof CSPDirectives> = [
     'script-src',
     'style-src',
@@ -162,7 +165,7 @@ export function addSelfDirective(directives: CSPDirectives): CSPDirectives {
     'connect-src',
     'font-src',
   ];
-  
+
   for (const directive of selfDirectives) {
     if (result[directive]) {
       // Add 'self' at the beginning if not already present
@@ -171,7 +174,7 @@ export function addSelfDirective(directives: CSPDirectives): CSPDirectives {
       }
     }
   }
-  
+
   return result;
 }
 
@@ -180,33 +183,33 @@ export function addSelfDirective(directives: CSPDirectives): CSPDirectives {
  */
 export function validateDirectives(directives: CSPDirectives): string[] {
   const warnings: string[] = [];
-  
+
   // Check for unsafe directives
   for (const [directive, values] of Object.entries(directives)) {
     if (!values) continue;
-    
+
     if (values.includes("'unsafe-inline'")) {
       warnings.push(`${directive} contains 'unsafe-inline' which reduces security`);
     }
-    
+
     if (values.includes("'unsafe-eval'")) {
       warnings.push(`${directive} contains 'unsafe-eval' which reduces security`);
     }
-    
+
     // Check for wildcards
     if (values.some((v: string) => v.includes('*'))) {
       warnings.push(`${directive} contains wildcards which may be overly permissive`);
     }
   }
-  
+
   // Check for missing important directives
   if (!directives['script-src']) {
     warnings.push('No script-src directive specified');
   }
-  
+
   if (!directives['style-src']) {
     warnings.push('No style-src directive specified');
   }
-  
+
   return warnings;
 }

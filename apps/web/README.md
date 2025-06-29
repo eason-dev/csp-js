@@ -16,7 +16,7 @@ A modern web application for generating Content Security Policy headers using th
 This application uses TailwindCSS v4, which requires modern browsers:
 
 - ✅ Safari 16.4+ (March 2023)
-- ✅ Chrome 111+ (March 2023)  
+- ✅ Chrome 111+ (March 2023)
 - ✅ Firefox 128+ (July 2024)
 - ✅ Edge 111+ (March 2023)
 

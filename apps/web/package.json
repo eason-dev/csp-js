@@ -8,6 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
+    "lint:fix": "next lint --fix --max-warnings 0",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,json}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,md,json}\"",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {

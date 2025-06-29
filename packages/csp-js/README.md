@@ -5,7 +5,7 @@ A simple and powerful JavaScript library to generate Content Security Policy (CS
 ## Features
 
 - 🚀 **Universal**: Works in any JavaScript environment (Node.js, Deno, Edge Runtime, Browser)
-- 🛡️ **Secure**: Generate secure CSP headers for popular services  
+- 🛡️ **Secure**: Generate secure CSP headers for popular services
 - 📦 **Zero Dependencies**: Lightweight and fast
 - 🎯 **Service-Aware**: Built-in support for Google Analytics, Microsoft Clarity, Typeform, and more
 - 🔧 **Customizable**: Easy to extend with custom rules
@@ -17,7 +17,7 @@ A simple and powerful JavaScript library to generate Content Security Policy (CS
 npm install csp-js
 # or
 yarn add csp-js
-# or  
+# or
 pnpm add csp-js
 ```
 
@@ -57,17 +57,17 @@ import { generateCSP, generateNonce } from 'csp-js';
 // With custom options
 const result = generateCSP({
   services: ['google-analytics'],
-  nonce: true,                    // Generate nonce for inline scripts
+  nonce: true, // Generate nonce for inline scripts
   customRules: {
     'script-src': ['https://my-domain.com'],
-    'img-src': ['data:', 'blob:']
+    'img-src': ['data:', 'blob:'],
   },
-  reportUri: 'https://my-site.com/csp-report'
+  reportUri: 'https://my-site.com/csp-report',
 });
 
-console.log(result.header);     // Complete CSP header
-console.log(result.nonce);      // Generated nonce value
-console.log(result.warnings);   // Security warnings
+console.log(result.header); // Complete CSP header
+console.log(result.nonce); // Generated nonce value
+console.log(result.warnings); // Security warnings
 ```
 
 ### Service Aliases
@@ -83,7 +83,7 @@ generateCSP(['gtag']);
 
 - **Analytics**: Google Analytics 4, Microsoft Clarity, Google Tag Manager
 - **Forms**: Typeform
-- **Fonts**: Google Fonts  
+- **Fonts**: Google Fonts
 - **Video**: YouTube
 - And more...
 
@@ -94,29 +94,32 @@ generateCSP(['gtag']);
 Generate a complete CSP configuration.
 
 **Parameters:**
+
 - `input` - String array of service names OR options object
 
 **Options:**
+
 ```typescript
 interface CSPOptions {
-  services: string[];           // Service names to include
-  nonce?: boolean | string;     // Generate/use nonce
-  customRules?: CSPDirectives;  // Additional CSP rules
-  reportOnly?: boolean;         // Generate report-only policy
-  reportUri?: string;          // CSP violation report URI
-  includeSelf?: boolean;       // Include 'self' (default: true)
+  services: string[]; // Service names to include
+  nonce?: boolean | string; // Generate/use nonce
+  customRules?: CSPDirectives; // Additional CSP rules
+  reportOnly?: boolean; // Generate report-only policy
+  reportUri?: string; // CSP violation report URI
+  includeSelf?: boolean; // Include 'self' (default: true)
 }
 ```
 
 **Returns:**
+
 ```typescript
 interface CSPResult {
-  header: string;              // Complete CSP header
-  directives: CSPDirectives;   // CSP rules object
-  includedServices: string[];  // Successfully included services  
-  unknownServices: string[];   // Services not found
-  warnings: string[];          // Security warnings
-  nonce?: string;             // Generated nonce (if requested)
+  header: string; // Complete CSP header
+  directives: CSPDirectives; // CSP rules object
+  includedServices: string[]; // Successfully included services
+  unknownServices: string[]; // Services not found
+  warnings: string[]; // Security warnings
+  nonce?: string; // Generated nonce (if requested)
 }
 ```
 
@@ -149,7 +152,7 @@ csp-js works in all JavaScript environments:
 
 - ✅ Node.js (18+)
 - ✅ Deno
-- ✅ Cloudflare Workers  
+- ✅ Cloudflare Workers
 - ✅ Vercel Edge Runtime
 - ✅ Browser (ES modules & CommonJS)
 

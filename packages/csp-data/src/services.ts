@@ -21,10 +21,7 @@ export const services: Record<string, ServiceDefinition> = {
         'https://www.google-analytics.com',
         'https://ssl.google-analytics.com',
       ],
-      'img-src': [
-        'https://www.google-analytics.com',
-        'https://www.googletagmanager.com',
-      ],
+      'img-src': ['https://www.google-analytics.com', 'https://www.googletagmanager.com'],
       'connect-src': [
         'https://www.google-analytics.com',
         'https://analytics.google.com',
@@ -42,7 +39,7 @@ export const services: Record<string, ServiceDefinition> = {
     requiresDynamic: true,
     requiresNonce: false,
   },
-  
+
   'microsoft-clarity': {
     id: 'microsoft-clarity',
     name: 'Microsoft Clarity',
@@ -92,16 +89,14 @@ export const services: Record<string, ServiceDefinition> = {
       'Future-proof approach: use *.clarity.ms if wildcards are acceptable',
       'Avoid unsafe-inline to maintain security',
     ],
-    issues: [
-      'Font loading via data URLs may cause CSP violations if not properly configured',
-    ],
+    issues: ['Font loading via data URLs may cause CSP violations if not properly configured'],
     aliases: ['clarity', 'ms-clarity'],
     lastUpdated: '2024-06-28T00:00:00.000Z',
     requiresDynamic: true,
     requiresNonce: false,
   },
-  
-  'typeform': {
+
+  typeform: {
     id: 'typeform',
     name: 'Typeform',
     category: ServiceCategory.FORMS,
@@ -113,10 +108,7 @@ export const services: Record<string, ServiceDefinition> = {
     csp: {
       'script-src': ['https://embed.typeform.com'],
       'frame-src': ['https://form.typeform.com', 'https://embed.typeform.com'],
-      'form-action': [
-        'https://form.typeform.com',
-        'https://intercom-integration.typeform.com',
-      ],
+      'form-action': ['https://form.typeform.com', 'https://intercom-integration.typeform.com'],
       'connect-src': ['https://api.typeform.com', 'https://form.typeform.com'],
       'img-src': ['https://images.typeform.com'],
     },
@@ -130,7 +122,7 @@ export const services: Record<string, ServiceDefinition> = {
     requiresDynamic: false,
     requiresNonce: false,
   },
-  
+
   'google-tag-manager': {
     id: 'google-tag-manager',
     name: 'Google Tag Manager',
@@ -157,7 +149,7 @@ export const services: Record<string, ServiceDefinition> = {
     requiresDynamic: true,
     requiresNonce: true,
   },
-  
+
   'google-fonts': {
     id: 'google-fonts',
     name: 'Google Fonts',
@@ -179,8 +171,8 @@ export const services: Record<string, ServiceDefinition> = {
     requiresDynamic: false,
     requiresNonce: false,
   },
-  
-  'youtube': {
+
+  youtube: {
     id: 'youtube',
     name: 'YouTube',
     category: ServiceCategory.VIDEO,
@@ -213,11 +205,7 @@ export const services: Record<string, ServiceDefinition> = {
  * Service categories mapping
  */
 export const categories: Record<ServiceCategory, string[]> = {
-  [ServiceCategory.ANALYTICS]: [
-    'google-analytics',
-    'microsoft-clarity',
-    'google-tag-manager',
-  ],
+  [ServiceCategory.ANALYTICS]: ['google-analytics', 'microsoft-clarity', 'google-tag-manager'],
   [ServiceCategory.ADVERTISING]: [],
   [ServiceCategory.SOCIAL]: [],
   [ServiceCategory.PAYMENT]: [],
@@ -250,14 +238,14 @@ export function getService(identifier: string): ServiceDefinition | undefined {
   if (services[identifier]) {
     return services[identifier];
   }
-  
+
   // Alias lookup
   for (const service of Object.values(services)) {
     if (service.aliases?.includes(identifier)) {
       return service;
     }
   }
-  
+
   return undefined;
 }
 
@@ -266,7 +254,9 @@ export function getService(identifier: string): ServiceDefinition | undefined {
  */
 export function getServicesByCategory(category: ServiceCategory): ServiceDefinition[] {
   const serviceIds = categories[category] || [];
-  return serviceIds.map(id => services[id]).filter((service): service is ServiceDefinition => Boolean(service));
+  return serviceIds
+    .map(id => services[id])
+    .filter((service): service is ServiceDefinition => Boolean(service));
 }
 
 /**
@@ -274,10 +264,11 @@ export function getServicesByCategory(category: ServiceCategory): ServiceDefinit
  */
 export function searchServices(query: string): ServiceDefinition[] {
   const lowerQuery = query.toLowerCase();
-  return Object.values(services).filter(service =>
-    service.name.toLowerCase().includes(lowerQuery) ||
-    service.description.toLowerCase().includes(lowerQuery) ||
-    service.id.includes(lowerQuery) ||
-    service.aliases?.some(alias => alias.includes(lowerQuery))
+  return Object.values(services).filter(
+    service =>
+      service.name.toLowerCase().includes(lowerQuery) ||
+      service.description.toLowerCase().includes(lowerQuery) ||
+      service.id.includes(lowerQuery) ||
+      service.aliases?.some(alias => alias.includes(lowerQuery))
   );
 }

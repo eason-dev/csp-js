@@ -6,11 +6,11 @@ export { generateNonce } from './utils.js';
 export type { CSPOptions, CSPResult, NonceOptions } from './types.js';
 
 // Re-export from data package for convenience
-export type { 
-  ServiceDefinition, 
-  ServiceCategory, 
+export type {
+  ServiceDefinition,
+  ServiceCategory,
   CSPDirectives,
-  ServiceRegistry
+  ServiceRegistry,
 } from '@csp-js/data';
 
 export {

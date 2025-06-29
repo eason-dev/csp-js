@@ -43,43 +43,43 @@ export interface CSPDirectives {
 export interface ServiceDefinition {
   /** Unique identifier for the service */
   id: string;
-  
+
   /** Display name of the service */
   name: string;
-  
+
   /** Service category */
   category: ServiceCategory;
-  
+
   /** Short description of what the service does */
   description: string;
-  
+
   /** Official website URL */
   website: string;
-  
+
   /** Official CSP documentation URLs */
   officialDocs: string[];
-  
+
   /** CSP directives required for this service */
   csp: CSPDirectives;
-  
+
   /** Additional implementation notes */
   notes?: string[];
-  
+
   /** Known issues or limitations */
   issues?: string[];
-  
+
   /** Alternative service IDs (aliases) */
   aliases?: string[];
-  
+
   /** Last updated timestamp (ISO string) */
   lastUpdated: string;
-  
+
   /** Service API/SDK version if applicable */
   version?: string;
-  
+
   /** Whether this service requires dynamic CSP (script injection) */
   requiresDynamic?: boolean;
-  
+
   /** Nonce requirements */
   requiresNonce?: boolean;
 }

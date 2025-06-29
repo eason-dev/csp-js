@@ -1,8 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { generateCSP, ServiceCategory, services, searchServices } from 'csp-js';
-import { Copy, Check, Search, Shield, AlertTriangle, Settings, FileText, ChevronRight, ChevronLeft, ExternalLink, BookOpen } from 'lucide-react';
+import { generateCSP, type ServiceCategory, services, searchServices } from 'csp-js';
+import {
+  Copy,
+  Check,
+  Search,
+  Shield,
+  AlertTriangle,
+  Settings,
+  FileText,
+  ChevronRight,
+  ChevronLeft,
+  ExternalLink,
+  BookOpen,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,7 +22,12 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { Separator } from '@/components/ui/separator';
 
 export default function CSPGenerator() {
@@ -54,11 +71,11 @@ export default function CSPGenerator() {
       setResult(cspResult);
     } catch (error) {
       console.error('Error generating CSP:', error);
-      setResult({ 
+      setResult({
         header: 'Error: Invalid custom rules JSON',
         warnings: ['Please check your custom rules format'],
         includedServices: [],
-        unknownServices: selectedServices
+        unknownServices: selectedServices,
       });
     }
   };
@@ -75,19 +92,20 @@ export default function CSPGenerator() {
   };
 
   // Filter services based on search
-  const filteredServices = searchQuery 
-    ? searchServices(searchQuery)
-    : Object.values(services);
+  const filteredServices = searchQuery ? searchServices(searchQuery) : Object.values(services);
 
   // Group services by category
-  const servicesByCategory = filteredServices.reduce((acc, service) => {
-    const category = service.category;
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(service);
-    return acc;
-  }, {} as Record<ServiceCategory, typeof services[string][]>);
+  const servicesByCategory = filteredServices.reduce(
+    (acc, service) => {
+      const category = service.category;
+      if (!acc[category]) acc[category] = [];
+      acc[category].push(service);
+      return acc;
+    },
+    {} as Record<ServiceCategory, (typeof services)[string][]>
+  );
 
-  const renderServiceDocs = (service: typeof services[string]) => (
+  const renderServiceDocs = (service: (typeof services)[string]) => (
     <Card className="mt-4">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
@@ -100,14 +118,14 @@ export default function CSPGenerator() {
         {service.officialDocs?.length > 0 && (
           <div>
             <Label className="text-sm font-medium">Official Documentation</Label>
-            <div className="space-y-1 mt-1">
-              {service.officialDocs.map((docUrl, idx) => (
-                <a 
-                  key={idx}
+            <div className="mt-1 space-y-1">
+              {service.officialDocs.map(docUrl => (
+                <a
+                  key={docUrl}
                   href={docUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline flex items-center gap-1 text-sm"
+                  className="flex items-center gap-1 text-sm text-blue-600 hover:underline"
                 >
                   View Docs <ExternalLink className="h-3 w-3" />
                 </a>
@@ -115,16 +133,18 @@ export default function CSPGenerator() {
             </div>
           </div>
         )}
-        
+
         <div>
           <Label className="text-sm font-medium">CSP Requirements</Label>
           <div className="mt-2 space-y-2">
             {Object.entries(service.csp).map(([directive, sources]) => (
               <div key={directive} className="text-sm">
-                <span className="font-mono text-primary">{directive}:</span>
-                <div className="ml-4 text-muted-foreground">
-                  {sources.map((source: string, idx: number) => (
-                    <div key={idx} className="font-mono">• {source}</div>
+                <span className="text-primary font-mono">{directive}:</span>
+                <div className="text-muted-foreground ml-4">
+                  {sources.map((source: string) => (
+                    <div key={source} className="font-mono">
+                      • {source}
+                    </div>
                   ))}
                 </div>
               </div>
@@ -136,40 +156,44 @@ export default function CSPGenerator() {
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Shield className="h-8 w-8 text-primary" />
+        <div className="mb-8 text-center">
+          <div className="mb-4 flex items-center justify-center gap-2">
+            <Shield className="text-primary h-8 w-8" />
             <h1 className="text-4xl font-bold">CSP Generator</h1>
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Generate Content Security Policy headers for popular web services and libraries.
-            Secure your website with just a few clicks.
+          <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
+            Generate Content Security Policy headers for popular web services and libraries. Secure
+            your website with just a few clicks.
           </p>
         </div>
 
         {/* Step Indicator */}
-        <div className="flex items-center justify-center mb-8">
+        <div className="mb-8 flex items-center justify-center">
           <div className="flex items-center space-x-4">
             {steps.map((step, index) => {
               const Icon = step.icon;
               const isActive = index === currentStep;
               const isCompleted = index < currentStep;
-              
+
               return (
                 <div key={step.id} className="flex items-center">
-                  <div className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                    isActive ? 'bg-primary text-primary-foreground' :
-                    isCompleted ? 'bg-secondary text-secondary-foreground' :
-                    'bg-muted text-muted-foreground'
-                  }`}>
+                  <div
+                    className={`flex items-center gap-2 rounded-lg px-4 py-2 transition-colors ${
+                      isActive
+                        ? 'bg-primary text-primary-foreground'
+                        : isCompleted
+                          ? 'bg-secondary text-secondary-foreground'
+                          : 'bg-muted text-muted-foreground'
+                    }`}
+                  >
                     <Icon className="h-5 w-5" />
                     <span className="font-medium">{step.title}</span>
                   </div>
                   {index < steps.length - 1 && (
-                    <ChevronRight className="h-5 w-5 mx-2 text-muted-foreground" />
+                    <ChevronRight className="text-muted-foreground mx-2 h-5 w-5" />
                   )}
                 </div>
               );
@@ -178,7 +202,7 @@ export default function CSPGenerator() {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-4xl mx-auto">
+        <div className="mx-auto max-w-4xl">
           {currentStep === 0 && (
             <Card>
               <CardHeader>
@@ -190,35 +214,39 @@ export default function CSPGenerator() {
               <CardContent className="space-y-6">
                 {/* Search */}
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform" />
                   <Input
                     placeholder="Search services..."
                     className="pl-10"
                     value={searchQuery}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setSearchQuery(e.target.value)
+                    }
                   />
                 </div>
 
                 {/* Selected Services */}
                 {selectedServices.length > 0 && (
                   <div>
-                    <Label className="text-sm font-medium mb-2 block">
+                    <Label className="mb-2 block text-sm font-medium">
                       Selected Services ({selectedServices.length})
                     </Label>
                     <div className="flex flex-wrap gap-2">
-                      {selectedServices.map((serviceId) => {
+                      {selectedServices.map(serviceId => {
                         const service = services[serviceId];
                         return (
                           <div
                             key={serviceId}
-                            className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                            className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm"
                           >
                             {service?.name || serviceId}
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-4 w-4 p-0 hover:bg-primary/20"
-                              onClick={() => setSelectedServices(prev => prev.filter(id => id !== serviceId))}
+                              className="hover:bg-primary/20 h-4 w-4 p-0"
+                              onClick={() =>
+                                setSelectedServices(prev => prev.filter(id => id !== serviceId))
+                              }
                             >
                               ×
                             </Button>
@@ -234,40 +262,49 @@ export default function CSPGenerator() {
                   {Object.entries(servicesByCategory).map(([category, categoryServices]) => (
                     <AccordionItem key={category} value={category}>
                       <AccordionTrigger className="text-left">
-                        <span className="capitalize font-medium">
+                        <span className="font-medium capitalize">
                           {category.replace('_', ' ')} ({categoryServices.length})
                         </span>
                       </AccordionTrigger>
                       <AccordionContent>
                         <div className="space-y-3">
-                          {categoryServices.map((service) => (
-                            <div key={service.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50">
+                          {categoryServices.map(service => (
+                            <div
+                              key={service.id}
+                              className="hover:bg-muted/50 flex items-start gap-3 rounded-lg p-3"
+                            >
                               <Checkbox
                                 checked={selectedServices.includes(service.id)}
                                 onCheckedChange={(checked: boolean) => {
                                   if (checked) {
                                     setSelectedServices(prev => [...prev, service.id]);
                                   } else {
-                                    setSelectedServices(prev => prev.filter(id => id !== service.id));
+                                    setSelectedServices(prev =>
+                                      prev.filter(id => id !== service.id)
+                                    );
                                   }
                                 }}
                               />
                               <div className="flex-1">
                                 <div className="font-medium">{service.name}</div>
-                                <div className="text-sm text-muted-foreground">
+                                <div className="text-muted-foreground text-sm">
                                   {service.description}
                                 </div>
                                 <Button
                                   variant="ghost"
                                   size="sm"
-                                  className="h-auto p-0 mt-1 text-xs text-primary hover:bg-transparent"
-                                  onClick={() => setSelectedServiceForDocs(
-                                    selectedServiceForDocs === service.id ? null : service.id
-                                  )}
+                                  className="text-primary mt-1 h-auto p-0 text-xs hover:bg-transparent"
+                                  onClick={() =>
+                                    setSelectedServiceForDocs(
+                                      selectedServiceForDocs === service.id ? null : service.id
+                                    )
+                                  }
                                 >
-                                  {selectedServiceForDocs === service.id ? 'Hide' : 'Show'} Documentation
+                                  {selectedServiceForDocs === service.id ? 'Hide' : 'Show'}{' '}
+                                  Documentation
                                 </Button>
-                                {selectedServiceForDocs === service.id && renderServiceDocs(service)}
+                                {selectedServiceForDocs === service.id &&
+                                  renderServiceDocs(service)}
                               </div>
                             </div>
                           ))}
@@ -278,7 +315,7 @@ export default function CSPGenerator() {
                 </Accordion>
 
                 <div className="flex justify-end">
-                  <Button 
+                  <Button
                     onClick={() => setCurrentStep(1)}
                     disabled={selectedServices.length === 0}
                     className="flex items-center gap-2"
@@ -301,10 +338,7 @@ export default function CSPGenerator() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-center space-x-2">
-                  <Switch
-                    checked={useNonce}
-                    onCheckedChange={setUseNonce}
-                  />
+                  <Switch checked={useNonce} onCheckedChange={setUseNonce} />
                   <Label>Generate nonce for inline scripts</Label>
                 </div>
 
@@ -315,9 +349,11 @@ export default function CSPGenerator() {
                     type="url"
                     placeholder="https://your-site.com/csp-report"
                     value={reportUri}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setReportUri(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setReportUri(e.target.value)
+                    }
                   />
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-muted-foreground text-xs">
                     CSP violations will be reported to this endpoint
                   </div>
                 </div>
@@ -327,17 +363,17 @@ export default function CSPGenerator() {
                   <textarea
                     id="custom-rules"
                     placeholder='{"script-src": ["https://custom-domain.com"]}'
-                    className="w-full min-h-[100px] px-3 py-2 border border-input rounded-md bg-background text-sm font-mono"
+                    className="border-input bg-background min-h-[100px] w-full rounded-md border px-3 py-2 font-mono text-sm"
                     value={customRules}
-                    onChange={(e) => setCustomRules(e.target.value)}
+                    onChange={e => setCustomRules(e.target.value)}
                   />
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-muted-foreground text-xs">
                     Add custom CSP directives in JSON format
                   </div>
                 </div>
 
                 <div className="flex justify-between">
-                  <Button 
+                  <Button
                     variant="outline"
                     onClick={() => setCurrentStep(0)}
                     className="flex items-center gap-2"
@@ -345,7 +381,7 @@ export default function CSPGenerator() {
                     <ChevronLeft className="h-4 w-4" />
                     Back
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => {
                       generateCurrentCSP();
                       setCurrentStep(2);
@@ -364,9 +400,7 @@ export default function CSPGenerator() {
             <Card>
               <CardHeader>
                 <CardTitle>Generated CSP</CardTitle>
-                <CardDescription>
-                  Your Content Security Policy is ready to use
-                </CardDescription>
+                <CardDescription>Your Content Security Policy is ready to use</CardDescription>
               </CardHeader>
               <CardContent>
                 {result ? (
@@ -376,10 +410,10 @@ export default function CSPGenerator() {
                       <TabsTrigger value="details">Details</TabsTrigger>
                       <TabsTrigger value="usage">How to Use</TabsTrigger>
                     </TabsList>
-                    
+
                     <TabsContent value="header" className="space-y-4">
                       <div>
-                        <div className="flex items-center justify-between mb-2">
+                        <div className="mb-2 flex items-center justify-between">
                           <Label>CSP Header</Label>
                           <Button
                             variant="outline"
@@ -391,7 +425,7 @@ export default function CSPGenerator() {
                             {copied ? 'Copied' : 'Copy'}
                           </Button>
                         </div>
-                        <div className="bg-muted rounded-lg p-3 font-mono text-sm break-all">
+                        <div className="bg-muted break-all rounded-lg p-3 font-mono text-sm">
                           {result.header}
                         </div>
                       </div>
@@ -408,13 +442,16 @@ export default function CSPGenerator() {
 
                     <TabsContent value="details" className="space-y-4">
                       {result.warnings?.length > 0 && (
-                        <div className="border border-orange-200 bg-orange-50 dark:bg-orange-950 rounded-lg p-4">
-                          <div className="flex items-center gap-2 mb-2">
+                        <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 dark:bg-orange-950">
+                          <div className="mb-2 flex items-center gap-2">
                             <AlertTriangle className="h-4 w-4 text-orange-600" />
                             <Label className="text-orange-800 dark:text-orange-200">Warnings</Label>
                           </div>
-                          {result.warnings.map((warning: string, index: number) => (
-                            <div key={index} className="text-sm text-orange-700 dark:text-orange-300">
+                          {result.warnings.map((warning: string) => (
+                            <div
+                              key={warning}
+                              className="text-sm text-orange-700 dark:text-orange-300"
+                            >
                               • {warning}
                             </div>
                           ))}
@@ -423,7 +460,7 @@ export default function CSPGenerator() {
 
                       <div>
                         <Label className="mb-2 block">Services</Label>
-                        <div className="text-sm space-y-1">
+                        <div className="space-y-1 text-sm">
                           <div className="text-green-600 dark:text-green-400">
                             ✓ Included: {result.includedServices?.join(', ') || 'None'}
                           </div>
@@ -447,16 +484,17 @@ export default function CSPGenerator() {
                       <div>
                         <Label className="mb-2 block font-medium">HTML Meta Tag</Label>
                         <div className="bg-muted rounded-lg p-3">
-                          <code className="text-sm break-all">
-                            &lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;{result.header}&quot;&gt;
+                          <code className="break-all text-sm">
+                            &lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;
+                            {result.header}&quot;&gt;
                           </code>
                         </div>
                       </div>
                     </TabsContent>
                   </Tabs>
                 ) : (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <Shield className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <div className="text-muted-foreground py-12 text-center">
+                    <Shield className="mx-auto mb-3 h-12 w-12 opacity-50" />
                     <p>Generating your CSP header...</p>
                   </div>
                 )}
@@ -464,7 +502,7 @@ export default function CSPGenerator() {
                 <Separator className="my-6" />
 
                 <div className="flex justify-between">
-                  <Button 
+                  <Button
                     variant="outline"
                     onClick={() => setCurrentStep(1)}
                     className="flex items-center gap-2"
@@ -472,7 +510,7 @@ export default function CSPGenerator() {
                     <ChevronLeft className="h-4 w-4" />
                     Back to Options
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => {
                       setCurrentStep(0);
                       setResult(null);
@@ -488,7 +526,7 @@ export default function CSPGenerator() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-12 text-center text-sm text-muted-foreground">
+        <footer className="text-muted-foreground mt-12 text-center text-sm">
           <p>
             Powered by{' '}
             <a href="https://github.com/easonz/csp-js" className="text-primary hover:underline">
