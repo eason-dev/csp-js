@@ -1,7 +1,5 @@
 import { 
-  getService, 
   getServiceWithVersion, 
-  parseServiceIdentifier,
   getDeprecationWarning,
   type CSPDirectives 
 } from '@csp-js/data';

@@ -83,7 +83,7 @@ jobs:
           version: 10.12.4
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --no-frozen-lockfile --ignore-engines
 
       - name: Build packages
         run: pnpm build
