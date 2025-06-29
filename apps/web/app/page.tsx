@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { generateCSP, services, searchServices } from 'csp-js';
+import { generateCSP, services, searchServices, getServiceVersions } from 'csp-js';
 import {
   Copy,
   Check,
@@ -23,9 +23,17 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 export default function CSPGenerator() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const [serviceVersions, setServiceVersions] = useState<Record<string, string>>({});
   const [customRules, setCustomRules] = useState('');
   const [reportUri, setReportUri] = useState('');
   const [useNonce, setUseNonce] = useState(false);
@@ -55,8 +63,14 @@ export default function CSPGenerator() {
         customRulesObj = JSON.parse(customRules);
       }
 
+      // Build service array with versions
+      const servicesWithVersions = selectedServices.map(serviceId => {
+        const version = serviceVersions[serviceId];
+        return version ? `${serviceId}@${version}` : serviceId;
+      });
+
       const cspResult = generateCSP({
-        services: selectedServices,
+        services: servicesWithVersions,
         nonce: useNonce,
         customRules: customRulesObj,
         reportUri: reportUri || undefined,
@@ -83,6 +97,37 @@ export default function CSPGenerator() {
     } catch (err) {
       console.error('Failed to copy:', err);
     }
+  };
+
+  // Handle service selection with version management
+  const handleServiceSelection = (serviceId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedServices(prev => [...prev, serviceId]);
+      // Set default version when service is selected
+      const service = services[serviceId];
+      if (service && service.defaultVersion) {
+        setServiceVersions(prev => ({
+          ...prev,
+          [serviceId]: service.defaultVersion
+        }));
+      }
+    } else {
+      setSelectedServices(prev => prev.filter(id => id !== serviceId));
+      // Remove version when service is deselected
+      setServiceVersions(prev => {
+        const newVersions = { ...prev };
+        delete newVersions[serviceId];
+        return newVersions;
+      });
+    }
+  };
+
+  // Handle version change for a service
+  const handleVersionChange = (serviceId: string, version: string) => {
+    setServiceVersions(prev => ({
+      ...prev,
+      [serviceId]: version
+    }));
   };
 
   // Filter services based on search
@@ -214,25 +259,50 @@ export default function CSPGenerator() {
                     <Label className="mb-2 block text-sm font-medium">
                       Selected Services ({selectedServices.length})
                     </Label>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="space-y-2">
                       {selectedServices.map(serviceId => {
                         const service = services[serviceId];
+                        const availableVersions = getServiceVersions(serviceId);
+                        const currentVersion = serviceVersions[serviceId] || service?.defaultVersion;
+                        
                         return (
                           <div
                             key={serviceId}
-                            className="bg-primary/10 text-primary inline-flex items-center gap-1 rounded-full px-3 py-1 text-sm"
+                            className="bg-muted/50 flex items-center justify-between gap-3 rounded-lg border p-3"
                           >
-                            {service?.name || serviceId}
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="hover:bg-primary/20 h-4 w-4 p-0"
-                              onClick={() =>
-                                setSelectedServices(prev => prev.filter(id => id !== serviceId))
-                              }
-                            >
-                              ×
-                            </Button>
+                            <div className="flex items-center gap-2">
+                              <span className="font-medium text-sm">{service?.name || serviceId}</span>
+                              <span className="text-xs text-muted-foreground">
+                                v{currentVersion}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              {availableVersions.length > 1 && (
+                                <Select
+                                  value={currentVersion}
+                                  onValueChange={(version) => handleVersionChange(serviceId, version)}
+                                >
+                                  <SelectTrigger className="w-24 h-6 text-xs">
+                                    <SelectValue />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    {availableVersions.map(version => (
+                                      <SelectItem key={version} value={version} className="text-xs">
+                                        {version}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="hover:bg-destructive/20 h-6 w-6 p-0 text-destructive"
+                                onClick={() => handleServiceSelection(serviceId, false)}
+                              >
+                                ×
+                              </Button>
+                            </div>
                           </div>
                         );
                       })}
@@ -249,15 +319,9 @@ export default function CSPGenerator() {
                     >
                       <Checkbox
                         checked={selectedServices.includes(service.id)}
-                        onCheckedChange={(checked: boolean) => {
-                          if (checked) {
-                            setSelectedServices(prev => [...prev, service.id]);
-                          } else {
-                            setSelectedServices(prev =>
-                              prev.filter(id => id !== service.id)
-                            );
-                          }
-                        }}
+                        onCheckedChange={(checked: boolean) => 
+                          handleServiceSelection(service.id, checked)
+                        }
                       />
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
@@ -265,9 +329,15 @@ export default function CSPGenerator() {
                           <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">
                             {service.category.replace('_', ' ')}
                           </span>
+                          <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-700/10">
+                            {getServiceVersions(service.id).length} version{getServiceVersions(service.id).length !== 1 ? 's' : ''}
+                          </span>
                         </div>
                         <div className="text-muted-foreground text-sm mb-2">
                           {service.description}
+                        </div>
+                        <div className="text-xs text-muted-foreground mb-2">
+                          Default: v{service.defaultVersion} • Available: {getServiceVersions(service.id).join(', ')}
                         </div>
                         <Button
                           variant="ghost"
