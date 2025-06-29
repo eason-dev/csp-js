@@ -3,7 +3,6 @@
 ## Package Management & Dependencies
 
 - Always use `pnpm` as package manager for this monorepo
-- Never run `pnpm dev` to validate your changes - use proper build/test commands instead
 - Use `pnpm install` to add dependencies, respecting workspace configurations in [pnpm-workspace.yaml](mdc:pnpm-workspace.yaml)
 - When adding dependencies, consider if they belong in the root, specific apps, or shared packages
 
