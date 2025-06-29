@@ -1,4 +1,10 @@
-import { getService, type CSPDirectives } from '@csp-js/data';
+import { 
+  getService, 
+  getServiceWithVersion, 
+  parseServiceIdentifier,
+  getDeprecationWarning,
+  type CSPDirectives 
+} from '@csp-js/data';
 import type { CSPOptions, CSPResult } from './types.js';
 import {
   generateNonce,
@@ -30,13 +36,31 @@ export function generateCSP(input: string[] | CSPOptions): CSPResult {
   const includedServices: string[] = [];
   const unknownServices: string[] = [];
   const serviceDirectives: CSPDirectives[] = [];
+  const warnings: string[] = [];
 
   // Process each service
   for (const serviceName of services) {
-    const service = getService(serviceName);
-    if (service) {
-      includedServices.push(service.id);
-      serviceDirectives.push(service.csp);
+    const serviceWithVersion = getServiceWithVersion(serviceName);
+    if (serviceWithVersion) {
+      const { service, version } = serviceWithVersion;
+      includedServices.push(`${service.id}@${version}`);
+      
+      // Get CSP rules for the specific version
+      const serviceVersion = service.versions[version];
+      if (serviceVersion) {
+        serviceDirectives.push(serviceVersion.csp);
+        
+        // Check for deprecation warnings
+        const deprecationWarning = getDeprecationWarning(service.id, version);
+        if (deprecationWarning) {
+          warnings.push(deprecationWarning);
+        }
+        
+        // Add version-specific notes as warnings if breaking changes
+        if (serviceVersion.breaking) {
+          warnings.push(`${service.id}@${version} contains breaking changes. Review implementation.`);
+        }
+      }
     } else {
       unknownServices.push(serviceName);
     }
@@ -76,8 +100,9 @@ export function generateCSP(input: string[] | CSPOptions): CSPResult {
     mergedDirectives['report-uri'] = [reportUri];
   }
 
-  // Generate warnings
-  const warnings = validateDirectives(mergedDirectives);
+  // Generate validation warnings and merge with existing warnings
+  const validationWarnings = validateDirectives(mergedDirectives);
+  warnings.push(...validationWarnings);
 
   if (unknownServices.length > 0) {
     warnings.push(`Unknown services: ${unknownServices.join(', ')}`);

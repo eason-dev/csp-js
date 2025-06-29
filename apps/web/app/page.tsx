@@ -137,11 +137,11 @@ export default function CSPGenerator() {
         <div>
           <Label className="text-sm font-medium">CSP Requirements</Label>
           <div className="mt-2 space-y-2">
-            {Object.entries(service.csp).map(([directive, sources]) => (
+            {Object.entries(service.versions[service.defaultVersion]?.csp || {}).map(([directive, sources]) => (
               <div key={directive} className="text-sm">
                 <span className="text-primary font-mono">{directive}:</span>
                 <div className="text-muted-foreground ml-4">
-                  {sources.map((source: string) => (
+                  {(sources as string[]).map((source: string) => (
                     <div key={source} className="font-mono">
                       • {source}
                     </div>

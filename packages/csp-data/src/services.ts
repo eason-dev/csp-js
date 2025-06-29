@@ -15,29 +15,66 @@ export const services: Record<string, ServiceDefinition> = {
       'https://developers.google.com/tag-platform/security/guides/csp',
       'https://content-security-policy.com/examples/google-analytics/',
     ],
-    csp: {
-      'script-src': [
-        'https://www.googletagmanager.com',
-        'https://www.google-analytics.com',
-        'https://ssl.google-analytics.com',
-      ],
-      'img-src': ['https://www.google-analytics.com', 'https://www.googletagmanager.com'],
-      'connect-src': [
-        'https://www.google-analytics.com',
-        'https://analytics.google.com',
-        'https://stats.g.doubleclick.net',
-      ],
+    versions: {
+      '4.0.0': {
+        csp: {
+          'script-src': [
+            'https://www.googletagmanager.com',
+            'https://www.google-analytics.com',
+            'https://ssl.google-analytics.com',
+          ],
+          'img-src': ['https://www.google-analytics.com', 'https://www.googletagmanager.com'],
+          'connect-src': [
+            'https://www.google-analytics.com',
+            'https://analytics.google.com',
+            'https://stats.g.doubleclick.net',
+          ],
+        },
+        validFrom: '2023-01-01',
+        notes: [
+          'Standard GA4 implementation with gtag.js',
+          'For Google Signals (cross-device tracking), additional domains may be required',
+          'Consider using nonce-based approach for inline scripts',
+        ],
+        requiresDynamic: true,
+        requiresNonce: false,
+      },
+      '4.1.0': {
+        csp: {
+          'script-src': [
+            'https://www.googletagmanager.com',
+            'https://www.google-analytics.com',
+            'https://ssl.google-analytics.com',
+          ],
+          'img-src': ['https://www.google-analytics.com', 'https://www.googletagmanager.com'],
+          'connect-src': [
+            'https://www.google-analytics.com',
+            'https://analytics.google.com',
+            'https://stats.g.doubleclick.net',
+            'https://region1.google-analytics.com',
+          ],
+        },
+        validFrom: '2024-01-15',
+        notes: [
+          'Added regional analytics endpoint support',
+          'Enhanced data collection capabilities',
+          'gtag.js automatically handles most CSP requirements',
+        ],
+        breaking: false,
+        requiresDynamic: true,
+        requiresNonce: false,
+      },
     },
-    notes: [
-      'For Google Signals (cross-device tracking), additional domains may be required',
-      'gtag.js automatically handles most CSP requirements',
-      'Consider using nonce-based approach for inline scripts',
-    ],
+    defaultVersion: '4.1.0',
     aliases: ['ga4', 'gtag', 'google-gtag'],
     lastUpdated: '2024-06-28T00:00:00.000Z',
-    version: 'GA4',
-    requiresDynamic: true,
-    requiresNonce: false,
+    monitoring: {
+      testUrls: ['https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID'],
+      checkInterval: 'weekly',
+      alertOnBreaking: true,
+      lastChecked: '2024-06-28T00:00:00.000Z',
+      notes: ['Monitor for new regional endpoints and gtag.js updates'],
+    },
   },
 
   'microsoft-clarity': {
@@ -50,50 +87,63 @@ export const services: Record<string, ServiceDefinition> = {
       'https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-csp',
       'https://github.com/microsoft/clarity/issues/688',
     ],
-    csp: {
-      'script-src': ['https://www.clarity.ms'],
-      'connect-src': [
-        'https://a.clarity.ms',
-        'https://b.clarity.ms',
-        'https://c.clarity.ms',
-        'https://d.clarity.ms',
-        'https://e.clarity.ms',
-        'https://f.clarity.ms',
-        'https://g.clarity.ms',
-        'https://h.clarity.ms',
-        'https://i.clarity.ms',
-        'https://j.clarity.ms',
-        'https://k.clarity.ms',
-        'https://l.clarity.ms',
-        'https://m.clarity.ms',
-        'https://n.clarity.ms',
-        'https://o.clarity.ms',
-        'https://p.clarity.ms',
-        'https://q.clarity.ms',
-        'https://r.clarity.ms',
-        'https://s.clarity.ms',
-        'https://t.clarity.ms',
-        'https://u.clarity.ms',
-        'https://v.clarity.ms',
-        'https://w.clarity.ms',
-        'https://x.clarity.ms',
-        'https://y.clarity.ms',
-        'https://z.clarity.ms',
-        'https://c.bing.com',
-      ],
-      'font-src': ["'data:'"],
+    versions: {
+      '1.0.0': {
+        csp: {
+          'script-src': ['https://www.clarity.ms'],
+          'connect-src': [
+            'https://a.clarity.ms',
+            'https://b.clarity.ms',
+            'https://c.clarity.ms',
+            'https://d.clarity.ms',
+            'https://e.clarity.ms',
+            'https://f.clarity.ms',
+            'https://g.clarity.ms',
+            'https://h.clarity.ms',
+            'https://i.clarity.ms',
+            'https://j.clarity.ms',
+            'https://k.clarity.ms',
+            'https://l.clarity.ms',
+            'https://m.clarity.ms',
+            'https://n.clarity.ms',
+            'https://o.clarity.ms',
+            'https://p.clarity.ms',
+            'https://q.clarity.ms',
+            'https://r.clarity.ms',
+            'https://s.clarity.ms',
+            'https://t.clarity.ms',
+            'https://u.clarity.ms',
+            'https://v.clarity.ms',
+            'https://w.clarity.ms',
+            'https://x.clarity.ms',
+            'https://y.clarity.ms',
+            'https://z.clarity.ms',
+            'https://c.bing.com',
+          ],
+          'font-src': ["'data:'"],
+        },
+        validFrom: '2024-01-01',
+        notes: [
+          'Clarity uses load balancing across multiple subdomains (a-z.clarity.ms)',
+          'Font loading via data URLs requires data: in font-src',
+          'Future-proof approach: use *.clarity.ms if wildcards are acceptable',
+          'Avoid unsafe-inline to maintain security',
+        ],
+        issues: ['Font loading via data URLs may cause CSP violations if not properly configured'],
+        requiresDynamic: true,
+        requiresNonce: false,
+      },
     },
-    notes: [
-      'Clarity uses load balancing across multiple subdomains (a-z.clarity.ms)',
-      'Font loading via data URLs requires data: in font-src',
-      'Future-proof approach: use *.clarity.ms if wildcards are acceptable',
-      'Avoid unsafe-inline to maintain security',
-    ],
-    issues: ['Font loading via data URLs may cause CSP violations if not properly configured'],
+    defaultVersion: '1.0.0',
     aliases: ['clarity', 'ms-clarity'],
     lastUpdated: '2024-06-28T00:00:00.000Z',
-    requiresDynamic: true,
-    requiresNonce: false,
+    monitoring: {
+      testUrls: ['https://www.clarity.ms/tag'],
+      checkInterval: 'weekly',
+      alertOnBreaking: true,
+      lastChecked: '2024-06-28T00:00:00.000Z',
+      notes: ['Monitor for changes in subdomain structure and data URL policies'],
+    },
   },
 
   typeform: {
@@ -105,22 +155,35 @@ export const services: Record<string, ServiceDefinition> = {
     officialDocs: [
       'https://community.typeform.com/integrate-your-typeform-43/csp-allowing-form-submissions-to-typeform-via-intercom-integration-9338',
     ],
-    csp: {
-      'script-src': ['https://embed.typeform.com'],
-      'frame-src': ['https://form.typeform.com', 'https://embed.typeform.com'],
-      'form-action': ['https://form.typeform.com', 'https://intercom-integration.typeform.com'],
-      'connect-src': ['https://api.typeform.com', 'https://form.typeform.com'],
-      'img-src': ['https://images.typeform.com'],
+    versions: {
+      '1.0.0': {
+        csp: {
+          'script-src': ['https://embed.typeform.com'],
+          'frame-src': ['https://form.typeform.com', 'https://embed.typeform.com'],
+          'form-action': ['https://form.typeform.com', 'https://intercom-integration.typeform.com'],
+          'connect-src': ['https://api.typeform.com', 'https://form.typeform.com'],
+          'img-src': ['https://images.typeform.com'],
+        },
+        validFrom: '2024-01-01',
+        notes: [
+          'Embedded forms require frame-src permissions',
+          'Intercom integration requires additional form-action permissions',
+          'API integration requires connect-src permissions',
+        ],
+        requiresDynamic: false,
+        requiresNonce: false,
+      },
     },
-    notes: [
-      'Embedded forms require frame-src permissions',
-      'Intercom integration requires additional form-action permissions',
-      'API integration requires connect-src permissions',
-    ],
+    defaultVersion: '1.0.0',
     aliases: ['typeform-embed'],
     lastUpdated: '2024-06-28T00:00:00.000Z',
-    requiresDynamic: false,
-    requiresNonce: false,
+    monitoring: {
+      testUrls: ['https://embed.typeform.com/next/embed.js'],
+      checkInterval: 'monthly',
+      alertOnBreaking: true,
+      lastChecked: '2024-06-28T00:00:00.000Z',
+      notes: ['Monitor embed script and API endpoint changes'],
+    },
   },
 
   'google-tag-manager': {
@@ -133,21 +196,34 @@ export const services: Record<string, ServiceDefinition> = {
       'https://developers.google.com/tag-platform/security/guides/csp',
       'https://www.simoahava.com/analytics/google-tag-manager-content-security-policy/',
     ],
-    csp: {
-      'script-src': ['https://www.googletagmanager.com'],
-      'img-src': ['https://www.googletagmanager.com'],
-      'connect-src': ['https://www.googletagmanager.com'],
+    versions: {
+      '1.0.0': {
+        csp: {
+          'script-src': ['https://www.googletagmanager.com'],
+          'img-src': ['https://www.googletagmanager.com'],
+          'connect-src': ['https://www.googletagmanager.com'],
+        },
+        validFrom: '2024-01-01',
+        notes: [
+          'GTM requires nonce implementation for secure inline script execution',
+          'Preview mode may require additional permissions',
+          'Tags within GTM may require additional CSP rules',
+          'Consider using nonce-based approach for optimal security',
+        ],
+        requiresDynamic: true,
+        requiresNonce: true,
+      },
     },
-    notes: [
-      'GTM requires nonce implementation for secure inline script execution',
-      'Preview mode may require additional permissions',
-      'Tags within GTM may require additional CSP rules',
-      'Consider using nonce-based approach for optimal security',
-    ],
+    defaultVersion: '1.0.0',
     aliases: ['gtm', 'google-gtm'],
     lastUpdated: '2024-06-28T00:00:00.000Z',
-    requiresDynamic: true,
-    requiresNonce: true,
+    monitoring: {
+      testUrls: ['https://www.googletagmanager.com/gtm.js?id=GTM-XXXXXX'],
+      checkInterval: 'weekly',
+      alertOnBreaking: true,
+      lastChecked: '2024-06-28T00:00:00.000Z',
+      notes: ['Monitor GTM script changes and nonce requirements'],
+    },
   },
 
   'google-fonts': {
@@ -157,19 +233,32 @@ export const services: Record<string, ServiceDefinition> = {
     description: 'Free web font service with hundreds of font families',
     website: 'https://fonts.google.com/',
     officialDocs: ['https://developers.google.com/fonts/docs/getting_started'],
-    csp: {
-      'style-src': ['https://fonts.googleapis.com'],
-      'font-src': ['https://fonts.gstatic.com'],
+    versions: {
+      '1.0.0': {
+        csp: {
+          'style-src': ['https://fonts.googleapis.com'],
+          'font-src': ['https://fonts.gstatic.com'],
+        },
+        validFrom: '2024-01-01',
+        notes: [
+          'fonts.googleapis.com serves CSS files',
+          'fonts.gstatic.com serves the actual font files',
+          'Both domains are required for Google Fonts to work properly',
+        ],
+        requiresDynamic: false,
+        requiresNonce: false,
+      },
     },
-    notes: [
-      'fonts.googleapis.com serves CSS files',
-      'fonts.gstatic.com serves the actual font files',
-      'Both domains are required for Google Fonts to work properly',
-    ],
+    defaultVersion: '1.0.0',
     aliases: ['gfonts'],
     lastUpdated: '2024-06-28T00:00:00.000Z',
-    requiresDynamic: false,
-    requiresNonce: false,
+    monitoring: {
+      testUrls: ['https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap'],
+      checkInterval: 'monthly',
+      alertOnBreaking: true,
+      lastChecked: '2024-06-28T00:00:00.000Z',
+      notes: ['Monitor for changes in font delivery domains'],
+    },
   },
 
   youtube: {
@@ -179,25 +268,38 @@ export const services: Record<string, ServiceDefinition> = {
     description: 'Video hosting and embedding service',
     website: 'https://www.youtube.com/',
     officialDocs: ['https://developers.google.com/youtube/iframe_api_reference'],
-    csp: {
-      'frame-src': ['https://www.youtube.com', 'https://www.youtube-nocookie.com'],
-      'script-src': ['https://www.youtube.com', 'https://s.ytimg.com'],
-      'img-src': [
-        'https://i.ytimg.com',
-        'https://i9.ytimg.com',
-        'https://ytimg.googleusercontent.com',
-      ],
-      'connect-src': ['https://www.youtube.com'],
+    versions: {
+      '1.0.0': {
+        csp: {
+          'frame-src': ['https://www.youtube.com', 'https://www.youtube-nocookie.com'],
+          'script-src': ['https://www.youtube.com', 'https://s.ytimg.com'],
+          'img-src': [
+            'https://i.ytimg.com',
+            'https://i9.ytimg.com',
+            'https://ytimg.googleusercontent.com',
+          ],
+          'connect-src': ['https://www.youtube.com'],
+        },
+        validFrom: '2024-01-01',
+        notes: [
+          'youtube-nocookie.com is the privacy-enhanced mode',
+          'iframe API requires script-src permissions',
+          'Thumbnail images are served from ytimg.com domains',
+        ],
+        requiresDynamic: false,
+        requiresNonce: false,
+      },
     },
-    notes: [
-      'youtube-nocookie.com is the privacy-enhanced mode',
-      'iframe API requires script-src permissions',
-      'Thumbnail images are served from ytimg.com domains',
-    ],
+    defaultVersion: '1.0.0',
     aliases: ['youtube-embed', 'yt'],
     lastUpdated: '2024-06-28T00:00:00.000Z',
-    requiresDynamic: false,
-    requiresNonce: false,
+    monitoring: {
+      testUrls: ['https://www.youtube.com/iframe_api'],
+      checkInterval: 'monthly',
+      alertOnBreaking: true,
+      lastChecked: '2024-06-28T00:00:00.000Z',
+      notes: ['Monitor iframe API and thumbnail domain changes'],
+    },
   },
 };
 
@@ -227,7 +329,8 @@ export const serviceRegistry: ServiceRegistry = {
   services,
   categories,
   lastUpdated: '2024-06-28T00:00:00.000Z',
-  version: '0.1.0',
+  version: '2024.06.28',
+  schemaVersion: '1.0.0',
 };
 
 /**
@@ -271,4 +374,88 @@ export function searchServices(query: string): ServiceDefinition[] {
       service.id.includes(lowerQuery) ||
       service.aliases?.some(alias => alias.includes(lowerQuery))
   );
+}
+
+/**
+ * Parse service identifier with optional version
+ * Examples: 'google-analytics', 'google-analytics@4.1.0', 'google-analytics@latest'
+ */
+export function parseServiceIdentifier(identifier: string): { id: string; version?: string } {
+  const parts = identifier.split('@');
+  if (parts.length === 1) {
+    return { id: parts[0]! };
+  }
+  return { id: parts[0]!, version: parts[1] };
+}
+
+/**
+ * Get service with specific version
+ */
+export function getServiceWithVersion(
+  identifier: string,
+  version?: string
+): { service: ServiceDefinition; version: string } | undefined {
+  const { id, version: parsedVersion } = parseServiceIdentifier(identifier);
+  const requestedVersion = version || parsedVersion;
+  
+  const service = getService(id);
+  if (!service) {
+    return undefined;
+  }
+
+  // Determine which version to use
+  let targetVersion = requestedVersion;
+  if (!targetVersion || targetVersion === 'latest') {
+    targetVersion = service.defaultVersion;
+  }
+
+  // Check if version exists
+  if (!service.versions[targetVersion]) {
+    return undefined;
+  }
+
+  return { service, version: targetVersion };
+}
+
+/**
+ * Get available versions for a service
+ */
+export function getServiceVersions(identifier: string): string[] {
+  const service = getService(identifier);
+  if (!service) {
+    return [];
+  }
+
+  return Object.keys(service.versions);
+}
+
+/**
+ * Check if a service version is deprecated
+ */
+export function isServiceVersionDeprecated(identifier: string, version: string): boolean {
+  const service = getService(identifier);
+  if (!service || !service.versions[version]) {
+    return false;
+  }
+
+  const serviceVersion = service.versions[version];
+  return Boolean(serviceVersion.deprecatedFrom);
+}
+
+/**
+ * Get deprecation warning for a service version
+ */
+export function getDeprecationWarning(identifier: string, version: string): string | undefined {
+  const service = getService(identifier);
+  if (!service || !service.versions[version]) {
+    return undefined;
+  }
+
+  const serviceVersion = service.versions[version];
+  if (!serviceVersion.deprecatedFrom) {
+    return undefined;
+  }
+
+  const latestVersion = service.defaultVersion;
+  return `⚠️  ${identifier}@${version} is deprecated since ${serviceVersion.deprecatedFrom}. Consider upgrading to ${identifier}@${latestVersion}`;
 }

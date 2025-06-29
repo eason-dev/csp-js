@@ -20,6 +20,11 @@ export {
   getService,
   getServicesByCategory,
   searchServices,
+  parseServiceIdentifier,
+  getServiceWithVersion,
+  getServiceVersions,
+  isServiceVersionDeprecated,
+  getDeprecationWarning,
 } from '@csp-js/data';
 
 // Default export for simple usage

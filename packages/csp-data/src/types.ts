@@ -38,7 +38,56 @@ export interface CSPDirectives {
 }
 
 /**
- * Service definition interface
+ * Version-specific CSP rules and metadata
+ */
+export interface ServiceVersion {
+  /** CSP directives required for this version */
+  csp: CSPDirectives;
+
+  /** Date this version was first valid (ISO string) */
+  validFrom: string;
+
+  /** Date this version was deprecated (ISO string, optional) */
+  deprecatedFrom?: string;
+
+  /** Implementation notes for this version */
+  notes?: string[];
+
+  /** Whether this is a breaking change from previous version */
+  breaking?: boolean;
+
+  /** Whether this service requires dynamic CSP (script injection) */
+  requiresDynamic?: boolean;
+
+  /** Nonce requirements */
+  requiresNonce?: boolean;
+
+  /** Known issues or limitations for this version */
+  issues?: string[];
+}
+
+/**
+ * Service monitoring configuration
+ */
+export interface ServiceMonitoring {
+  /** URLs to test for CSP violations */
+  testUrls?: string[];
+
+  /** How often to check for changes */
+  checkInterval: 'daily' | 'weekly' | 'monthly';
+
+  /** Whether to create alerts for breaking changes */
+  alertOnBreaking: boolean;
+
+  /** Last time this service was checked */
+  lastChecked?: string;
+
+  /** Additional monitoring notes */
+  notes?: string[];
+}
+
+/**
+ * Service definition interface with versioning support
  */
 export interface ServiceDefinition {
   /** Unique identifier for the service */
@@ -59,14 +108,11 @@ export interface ServiceDefinition {
   /** Official CSP documentation URLs */
   officialDocs: string[];
 
-  /** CSP directives required for this service */
-  csp: CSPDirectives;
+  /** Version-specific CSP rules */
+  versions: Record<string, ServiceVersion>;
 
-  /** Additional implementation notes */
-  notes?: string[];
-
-  /** Known issues or limitations */
-  issues?: string[];
+  /** Default version to use when no version specified */
+  defaultVersion: string;
 
   /** Alternative service IDs (aliases) */
   aliases?: string[];
@@ -74,14 +120,18 @@ export interface ServiceDefinition {
   /** Last updated timestamp (ISO string) */
   lastUpdated: string;
 
-  /** Service API/SDK version if applicable */
-  version?: string;
+  /** Monitoring configuration */
+  monitoring?: ServiceMonitoring;
+}
 
-  /** Whether this service requires dynamic CSP (script injection) */
-  requiresDynamic?: boolean;
-
-  /** Nonce requirements */
-  requiresNonce?: boolean;
+/**
+ * Service with version specification
+ */
+export interface ServiceWithVersion {
+  /** Service ID */
+  id: string;
+  /** Version string (semantic version, date, or 'latest') */
+  version: string;
 }
 
 /**
@@ -91,5 +141,24 @@ export interface ServiceRegistry {
   services: Record<string, ServiceDefinition>;
   categories: Record<ServiceCategory, string[]>;
   lastUpdated: string;
+  /** Data package version (date-based: YYYY.MM.DD) */
   version: string;
+  /** Schema version for backward compatibility */
+  schemaVersion: string;
+}
+
+/**
+ * Version change information for changelog
+ */
+export interface VersionChange {
+  /** Version identifier */
+  version: string;
+  /** Date of change */
+  date: string;
+  /** List of changes */
+  changes: string[];
+  /** Whether this is a breaking change */
+  breaking: boolean;
+  /** Type of change */
+  type: 'added' | 'changed' | 'deprecated' | 'removed' | 'fixed' | 'security';
 }
