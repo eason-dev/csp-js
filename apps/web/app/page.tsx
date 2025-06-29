@@ -2,8 +2,16 @@
 
 import { useState } from 'react';
 import { generateCSP, ServiceCategory, services, searchServices } from 'csp-js';
-import { Copy, Check, Search, Shield, AlertTriangle, Info } from 'lucide-react';
-import { Button } from '@repo/ui/button';
+import { Copy, Check, Search, Shield, AlertTriangle, Settings, FileText, ChevronRight, ChevronLeft, ExternalLink, BookOpen } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Separator } from '@/components/ui/separator';
 
 export default function CSPGenerator() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
@@ -12,6 +20,8 @@ export default function CSPGenerator() {
   const [useNonce, setUseNonce] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [copied, setCopied] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [selectedServiceForDocs, setSelectedServiceForDocs] = useState<string | null>(null);
   const [result, setResult] = useState<{
     header: string;
     warnings: string[];
@@ -19,6 +29,12 @@ export default function CSPGenerator() {
     unknownServices: string[];
     nonce?: string;
   } | null>(null);
+
+  const steps = [
+    { id: 'services', title: 'Select Services', icon: Shield },
+    { id: 'configure', title: 'Configure Options', icon: Settings },
+    { id: 'generate', title: 'Generate & Use', icon: FileText },
+  ];
 
   // Generate CSP when services change
   const generateCurrentCSP = () => {
@@ -71,279 +87,419 @@ export default function CSPGenerator() {
     return acc;
   }, {} as Record<ServiceCategory, typeof services[string][]>);
 
+  const renderServiceDocs = (service: typeof services[string]) => (
+    <Card className="mt-4">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <BookOpen className="h-5 w-5" />
+          {service.name} Documentation
+        </CardTitle>
+        <CardDescription>{service.description}</CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {service.officialDocs?.length > 0 && (
+          <div>
+            <Label className="text-sm font-medium">Official Documentation</Label>
+            <div className="space-y-1 mt-1">
+              {service.officialDocs.map((docUrl, idx) => (
+                <a 
+                  key={idx}
+                  href={docUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline flex items-center gap-1 text-sm"
+                >
+                  View Docs <ExternalLink className="h-3 w-3" />
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+        
+        <div>
+          <Label className="text-sm font-medium">CSP Requirements</Label>
+          <div className="mt-2 space-y-2">
+            {Object.entries(service.csp).map(([directive, sources]) => (
+              <div key={directive} className="text-sm">
+                <span className="font-mono text-primary">{directive}:</span>
+                <div className="ml-4 text-muted-foreground">
+                  {sources.map((source: string, idx: number) => (
+                    <div key={idx} className="font-mono">• {source}</div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Shield className="h-8 w-8 text-blue-600" />
-            <h1 className="text-4xl font-bold text-gray-900 dark:text-white">
-              CSP Generator
-            </h1>
+            <Shield className="h-8 w-8 text-primary" />
+            <h1 className="text-4xl font-bold">CSP Generator</h1>
           </div>
-          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Generate Content Security Policy headers for popular web services and libraries.
             Secure your website with just a few clicks.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left Panel - Service Selection */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
-              Select Services
-            </h2>
-
-            {/* Search */}
-            <div className="relative mb-6">
-              <Search className="absolute left-3 top-1/2 transform -y-1/2 h-4 w-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search services..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-
-            {/* Selected Services */}
-            {selectedServices.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Selected ({selectedServices.length})
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {selectedServices.map((serviceId) => {
-                    const service = services[serviceId];
-                    return (
-                      <span
-                        key={serviceId}
-                        className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
-                      >
-                        {service?.name || serviceId}
-                        <button
-                          onClick={() => setSelectedServices(prev => prev.filter(id => id !== serviceId))}
-                          className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5"
-                        >
-                          ×
-                        </button>
-                      </span>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-
-            {/* Service Categories */}
-            <div className="space-y-4 max-h-96 overflow-y-auto">
-              {Object.entries(servicesByCategory).map(([category, categoryServices]) => (
-                <div key={category}>
-                  <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 capitalize">
-                    {category.replace('_', ' ')}
-                  </h3>
-                  <div className="space-y-1">
-                    {categoryServices.map((service) => (
-                      <label
-                        key={service.id}
-                        className="flex items-center gap-2 p-2 hover:bg-gray-50 dark:hover:bg-gray-700 rounded cursor-pointer"
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selectedServices.includes(service.id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedServices(prev => [...prev, service.id]);
-                            } else {
-                              setSelectedServices(prev => prev.filter(id => id !== service.id));
-                            }
-                          }}
-                          className="h-4 w-4 text-blue-600"
-                        />
-                        <div>
-                          <div className="text-sm font-medium text-gray-900 dark:text-white">
-                            {service.name}
-                          </div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">
-                            {service.description}
-                          </div>
-                        </div>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Options */}
-            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-600">
-              <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                Options
-              </h3>
+        {/* Step Indicator */}
+        <div className="flex items-center justify-center mb-8">
+          <div className="flex items-center space-x-4">
+            {steps.map((step, index) => {
+              const Icon = step.icon;
+              const isActive = index === currentStep;
+              const isCompleted = index < currentStep;
               
-              <label className="flex items-center gap-2 mb-3">
-                <input
-                  type="checkbox"
-                  checked={useNonce}
-                  onChange={(e) => setUseNonce(e.target.checked)}
-                  className="h-4 w-4 text-blue-600"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-300">
-                  Generate nonce for inline scripts
-                </span>
-              </label>
-
-              <div className="mb-3">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Report URI (optional)
-                </label>
-                <input
-                  type="url"
-                  placeholder="https://your-site.com/csp-report"
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
-                  value={reportUri}
-                  onChange={(e) => setReportUri(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Custom Rules (JSON)
-                </label>
-                <textarea
-                  placeholder='{&quot;script-src&quot;: [&quot;https://custom-domain.com&quot;]}'
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm font-mono"
-                  rows={3}
-                  value={customRules}
-                  onChange={(e) => setCustomRules(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <Button
-              onClick={generateCurrentCSP}
-              className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white"
-              appName="web"
-            >
-              Generate CSP Header
-            </Button>
-          </div>
-
-          {/* Right Panel - Results */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6">
-            <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">
-              Generated CSP
-            </h2>
-
-            {result ? (
-              <div className="space-y-4">
-                {/* CSP Header */}
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      CSP Header
-                    </label>
-                    <button
-                      onClick={() => copyToClipboard(result.header)}
-                      className="flex items-center gap-1 px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded"
-                    >
-                      {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                      {copied ? 'Copied' : 'Copy'}
-                    </button>
+              return (
+                <div key={step.id} className="flex items-center">
+                  <div className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                    isActive ? 'bg-primary text-primary-foreground' :
+                    isCompleted ? 'bg-secondary text-secondary-foreground' :
+                    'bg-muted text-muted-foreground'
+                  }`}>
+                    <Icon className="h-5 w-5" />
+                    <span className="font-medium">{step.title}</span>
                   </div>
-                  <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 font-mono text-sm break-all">
-                    {result.header}
-                  </div>
+                  {index < steps.length - 1 && (
+                    <ChevronRight className="h-5 w-5 mx-2 text-muted-foreground" />
+                  )}
                 </div>
-
-                {/* Nonce */}
-                {result.nonce && (
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                      Generated Nonce
-                    </label>
-                    <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 font-mono text-sm">
-                      {result.nonce}
-                    </div>
-                  </div>
-                )}
-
-                {/* Warnings */}
-                {result.warnings?.length > 0 && (
-                  <div>
-                    <div className="flex items-center gap-1 mb-2">
-                      <AlertTriangle className="h-4 w-4 text-orange-500" />
-                      <label className="text-sm font-medium text-orange-700 dark:text-orange-300">
-                        Warnings
-                      </label>
-                    </div>
-                    <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-3">
-                      {result.warnings.map((warning: string, index: number) => (
-                        <div key={index} className="text-sm text-orange-700 dark:text-orange-300">
-                          • {warning}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Service Info */}
-                <div>
-                  <div className="flex items-center gap-1 mb-2">
-                    <Info className="h-4 w-4 text-blue-500" />
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Services
-                    </label>
-                  </div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">
-                    ✓ Included: {result.includedServices?.join(', ') || 'None'}
-                    {result.unknownServices?.length > 0 && (
-                      <div className="text-red-600 dark:text-red-400">
-                        ✗ Unknown: {result.unknownServices.join(', ')}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Usage Instructions */}
-                <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4">
-                  <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
-                    How to use this CSP header:
-                  </h3>
-                  <div className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
-                    <div><strong>HTTP Header:</strong></div>
-                    <div className="font-mono bg-blue-100 dark:bg-blue-900 p-2 rounded text-xs">
-                      Content-Security-Policy: {result.header}
-                    </div>
-                    <div><strong>HTML Meta Tag:</strong></div>
-                    <div className="font-mono bg-blue-100 dark:bg-blue-900 p-2 rounded text-xs break-all">
-                      &lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;{result.header}&quot;&gt;
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                <Shield className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                <p>Select services and click &quot;Generate CSP Header&quot; to get started.</p>
-              </div>
-            )}
+              );
+            })}
           </div>
         </div>
 
+        {/* Main Content */}
+        <div className="max-w-4xl mx-auto">
+          {currentStep === 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Select Services</CardTitle>
+                <CardDescription>
+                  Choose the web services and libraries you&apos;re using on your website
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search services..."
+                    className="pl-10"
+                    value={searchQuery}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+
+                {/* Selected Services */}
+                {selectedServices.length > 0 && (
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">
+                      Selected Services ({selectedServices.length})
+                    </Label>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedServices.map((serviceId) => {
+                        const service = services[serviceId];
+                        return (
+                          <div
+                            key={serviceId}
+                            className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
+                          >
+                            {service?.name || serviceId}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-4 w-4 p-0 hover:bg-primary/20"
+                              onClick={() => setSelectedServices(prev => prev.filter(id => id !== serviceId))}
+                            >
+                              ×
+                            </Button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Service Categories */}
+                <Accordion type="single" collapsible className="w-full">
+                  {Object.entries(servicesByCategory).map(([category, categoryServices]) => (
+                    <AccordionItem key={category} value={category}>
+                      <AccordionTrigger className="text-left">
+                        <span className="capitalize font-medium">
+                          {category.replace('_', ' ')} ({categoryServices.length})
+                        </span>
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-3">
+                          {categoryServices.map((service) => (
+                            <div key={service.id} className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50">
+                              <Checkbox
+                                checked={selectedServices.includes(service.id)}
+                                onCheckedChange={(checked: boolean) => {
+                                  if (checked) {
+                                    setSelectedServices(prev => [...prev, service.id]);
+                                  } else {
+                                    setSelectedServices(prev => prev.filter(id => id !== service.id));
+                                  }
+                                }}
+                              />
+                              <div className="flex-1">
+                                <div className="font-medium">{service.name}</div>
+                                <div className="text-sm text-muted-foreground">
+                                  {service.description}
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-auto p-0 mt-1 text-xs text-primary hover:bg-transparent"
+                                  onClick={() => setSelectedServiceForDocs(
+                                    selectedServiceForDocs === service.id ? null : service.id
+                                  )}
+                                >
+                                  {selectedServiceForDocs === service.id ? 'Hide' : 'Show'} Documentation
+                                </Button>
+                                {selectedServiceForDocs === service.id && renderServiceDocs(service)}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+
+                <div className="flex justify-end">
+                  <Button 
+                    onClick={() => setCurrentStep(1)}
+                    disabled={selectedServices.length === 0}
+                    className="flex items-center gap-2"
+                  >
+                    Next: Configure Options
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {currentStep === 1 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Configure Options</CardTitle>
+                <CardDescription>
+                  Customize your CSP with additional security options
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    checked={useNonce}
+                    onCheckedChange={setUseNonce}
+                  />
+                  <Label>Generate nonce for inline scripts</Label>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="report-uri">Report URI (optional)</Label>
+                  <Input
+                    id="report-uri"
+                    type="url"
+                    placeholder="https://your-site.com/csp-report"
+                    value={reportUri}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setReportUri(e.target.value)}
+                  />
+                  <div className="text-xs text-muted-foreground">
+                    CSP violations will be reported to this endpoint
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="custom-rules">Custom Rules (JSON)</Label>
+                  <textarea
+                    id="custom-rules"
+                    placeholder='{"script-src": ["https://custom-domain.com"]}'
+                    className="w-full min-h-[100px] px-3 py-2 border border-input rounded-md bg-background text-sm font-mono"
+                    value={customRules}
+                    onChange={(e) => setCustomRules(e.target.value)}
+                  />
+                  <div className="text-xs text-muted-foreground">
+                    Add custom CSP directives in JSON format
+                  </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <Button 
+                    variant="outline"
+                    onClick={() => setCurrentStep(0)}
+                    className="flex items-center gap-2"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Back
+                  </Button>
+                  <Button 
+                    onClick={() => {
+                      generateCurrentCSP();
+                      setCurrentStep(2);
+                    }}
+                    className="flex items-center gap-2"
+                  >
+                    Generate CSP
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {currentStep === 2 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Generated CSP</CardTitle>
+                <CardDescription>
+                  Your Content Security Policy is ready to use
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {result ? (
+                  <Tabs defaultValue="header" className="w-full">
+                    <TabsList className="grid w-full grid-cols-3">
+                      <TabsTrigger value="header">CSP Header</TabsTrigger>
+                      <TabsTrigger value="details">Details</TabsTrigger>
+                      <TabsTrigger value="usage">How to Use</TabsTrigger>
+                    </TabsList>
+                    
+                    <TabsContent value="header" className="space-y-4">
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <Label>CSP Header</Label>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => copyToClipboard(result.header)}
+                            className="flex items-center gap-1"
+                          >
+                            {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                            {copied ? 'Copied' : 'Copy'}
+                          </Button>
+                        </div>
+                        <div className="bg-muted rounded-lg p-3 font-mono text-sm break-all">
+                          {result.header}
+                        </div>
+                      </div>
+
+                      {result.nonce && (
+                        <div>
+                          <Label className="mb-2 block">Generated Nonce</Label>
+                          <div className="bg-muted rounded-lg p-3 font-mono text-sm">
+                            {result.nonce}
+                          </div>
+                        </div>
+                      )}
+                    </TabsContent>
+
+                    <TabsContent value="details" className="space-y-4">
+                      {result.warnings?.length > 0 && (
+                        <div className="border border-orange-200 bg-orange-50 dark:bg-orange-950 rounded-lg p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <AlertTriangle className="h-4 w-4 text-orange-600" />
+                            <Label className="text-orange-800 dark:text-orange-200">Warnings</Label>
+                          </div>
+                          {result.warnings.map((warning: string, index: number) => (
+                            <div key={index} className="text-sm text-orange-700 dark:text-orange-300">
+                              • {warning}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div>
+                        <Label className="mb-2 block">Services</Label>
+                        <div className="text-sm space-y-1">
+                          <div className="text-green-600 dark:text-green-400">
+                            ✓ Included: {result.includedServices?.join(', ') || 'None'}
+                          </div>
+                          {result.unknownServices?.length > 0 && (
+                            <div className="text-red-600 dark:text-red-400">
+                              ✗ Unknown: {result.unknownServices.join(', ')}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="usage" className="space-y-4">
+                      <div>
+                        <Label className="mb-2 block font-medium">HTTP Header</Label>
+                        <div className="bg-muted rounded-lg p-3">
+                          <code className="text-sm">Content-Security-Policy: {result.header}</code>
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label className="mb-2 block font-medium">HTML Meta Tag</Label>
+                        <div className="bg-muted rounded-lg p-3">
+                          <code className="text-sm break-all">
+                            &lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;{result.header}&quot;&gt;
+                          </code>
+                        </div>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                ) : (
+                  <div className="text-center py-12 text-muted-foreground">
+                    <Shield className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                    <p>Generating your CSP header...</p>
+                  </div>
+                )}
+
+                <Separator className="my-6" />
+
+                <div className="flex justify-between">
+                  <Button 
+                    variant="outline"
+                    onClick={() => setCurrentStep(1)}
+                    className="flex items-center gap-2"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Back to Options
+                  </Button>
+                  <Button 
+                    onClick={() => {
+                      setCurrentStep(0);
+                      setResult(null);
+                    }}
+                    variant="outline"
+                  >
+                    Start Over
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+
         {/* Footer */}
-        <footer className="mt-12 text-center text-sm text-gray-600 dark:text-gray-400">
+        <footer className="mt-12 text-center text-sm text-muted-foreground">
           <p>
             Powered by{' '}
-            <a href="https://github.com/easonz/csp-js" className="text-blue-600 hover:underline">
+            <a href="https://github.com/easonz/csp-js" className="text-primary hover:underline">
               csp-js
             </a>
             {' • '}
-            <a href="https://github.com/easonz/csp-js" className="text-blue-600 hover:underline">
+            <a href="https://github.com/easonz/csp-js" className="text-primary hover:underline">
               GitHub
             </a>
             {' • '}
-            <a href="/docs" className="text-blue-600 hover:underline">
+            <a href="/docs" className="text-primary hover:underline">
               Documentation
             </a>
           </p>
