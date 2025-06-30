@@ -51,9 +51,9 @@ function bold(text) {
 
 // Package definitions
 const packages = [
-  { name: 'csp-js', path: 'packages/csp-js', npmName: 'csp-js' },
-  { name: 'csp-data', path: 'packages/csp-data', npmName: '@csp-js/data' },
-  { name: 'csp-cli', path: 'packages/csp-cli', npmName: '@csp-js/cli' }
+  { name: 'generator', path: 'packages/generator', npmName: '@csp-kit/generator' },
+  { name: 'data', path: 'packages/data', npmName: '@csp-kit/data' },
+  { name: 'cli', path: 'packages/cli', npmName: '@csp-kit/cli' }
 ];
 
 // Validation functions
@@ -161,7 +161,7 @@ async function validateDependencies() {
     // Check workspace dependencies
     if (pkgJson.dependencies) {
       for (const [depName, depVersion] of Object.entries(pkgJson.dependencies)) {
-        if (depName.startsWith('@csp-js/') && depVersion !== 'workspace:*') {
+        if (depName.startsWith('@csp-kit/') && depVersion !== 'workspace:*') {
           warning(`${pkg.name}: Dependency ${depName} should use 'workspace:*', got: ${depVersion}`);
         }
       }
@@ -273,7 +273,7 @@ async function validateTypeChecking() {
 
 // Main validation function
 async function runValidation() {
-  console.log(`${colors.bold}CSP-JS Release Validation${colors.reset}\n`);
+  console.log(`${colors.bold}CSP-Kit Release Validation${colors.reset}\n`);
   
   const validations = [
     { name: 'Git Status', fn: validateGitStatus },
@@ -338,7 +338,7 @@ async function runValidation() {
 const args = process.argv.slice(2);
 if (args.includes('--help') || args.includes('-h')) {
   console.log(`
-${colors.bold}CSP-JS Release Validation${colors.reset}
+${colors.bold}CSP-Kit Release Validation${colors.reset}
 
 This script validates that packages are ready for release.
 

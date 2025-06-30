@@ -176,10 +176,10 @@ jobs:
       - name: Run package tests
         run: |
           # Test that packages can be required/imported
-          cd packages/csp-js
+          cd packages/generator
           node -e "
             const pkg = require('./dist/index.js');
-            console.log('✅ csp-js can be required');
+            console.log('✅ @csp-kit/generator can be required');
             console.log('Available exports:', Object.keys(pkg));
             
             const result = pkg.generateCSP(['google-analytics']);
@@ -187,10 +187,10 @@ jobs:
             console.log('✅ generateCSP works');
           "
           
-          cd ../csp-data
+          cd ../data
           node -e "
             const pkg = require('./dist/index.js');
-            console.log('✅ csp-data can be required');
+            console.log('✅ @csp-kit/data can be required');
             console.log('Services count:', Object.keys(pkg.services).length);
             
             if (Object.keys(pkg.services).length === 0) {

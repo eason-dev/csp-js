@@ -95,7 +95,7 @@ jobs:
 
       - name: Test basic functionality
         run: |
-          cd packages/csp-js
+          cd packages/generator
           node -e "const {generateCSP} = require('./dist/index.js'); console.log(generateCSP(['google-analytics']).header)"
 
   security:
@@ -161,7 +161,7 @@ jobs:
           node -e "
             const fs = require('fs');
             const path = require('path');
-            const { services } = require('./packages/csp-data/dist/index.js');
+            const { services } = require('./packages/data/dist/index.js');
             
             console.log('Validating', Object.keys(services).length, 'services...');
             
@@ -230,7 +230,7 @@ jobs:
               echo "| $name | $size | $gzipped |" >> $GITHUB_STEP_SUMMARY
               
               # Fail if main package is too large (>100KB)
-              if [ "$name" = "csp-js" ]; then
+              if [ "$name" = "@csp-kit/generator" ]; then
                 actual_size=$(stat -c%s "$pkg")
                 if [ $actual_size -gt 102400 ]; then
                   echo "❌ Bundle size too large: $size (limit: 100KB)"

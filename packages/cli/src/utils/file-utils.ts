@@ -105,7 +105,7 @@ export async function writeJsoncFile(
  * Get service file path
  */
 export function getServiceFilePath(serviceId: string): string {
-  return `packages/csp-data/data/services/${serviceId}.jsonc`;
+  return `packages/data/data/services/${serviceId}.jsonc`;
 }
 
 /**

@@ -20,10 +20,10 @@ body:
     attributes:
       label: Component
       description: Which component is affected?
-      options:
-        - csp-js (core library)
-        - csp-data (service definitions)
-        - csp-cli (command line tool)
+              options:
+          - @csp-kit/generator (core library)
+          - @csp-kit/data (service definitions)
+          - @csp-kit/cli (command line tool)
         - Web interface
         - Documentation
         - Other
@@ -76,8 +76,8 @@ body:
       label: Code Example
       description: If applicable, provide a minimal code example that demonstrates the issue
       render: javascript
-      placeholder: |
-        import { generateCSP } from 'csp-js';
+              placeholder: |
+          import { generateCSP } from '@csp-kit/generator';
         
         const result = generateCSP(['google-analytics']);
         console.log(result.header);

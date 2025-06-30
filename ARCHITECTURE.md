@@ -90,7 +90,7 @@ pnpm --filter @csp-kit/cli build    # Build CLI only
    # Interactive service addition
    pnpm cli add --interactive
 
-   # Or manually edit packages/csp-data/data/services/
+   # Or manually edit packages/data/data/services/
    ```
 
 ## Security Considerations

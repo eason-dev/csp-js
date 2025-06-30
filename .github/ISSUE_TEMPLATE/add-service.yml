@@ -1,7 +1,7 @@
 name: 🆕 Add New Service
 description: Request addition of a new service to the CSP database
-title: "[Service Request] Add support for [SERVICE_NAME]"
-labels: ["service-request", "enhancement"]
+title: '[Service Request] Add support for [SERVICE_NAME]'
+labels: ['service-request', 'enhancement']
 assignees: []
 
 body:
@@ -9,7 +9,7 @@ body:
     attributes:
       value: |
         Thanks for taking the time to request a new service! This helps make CSP configuration easier for everyone.
-        
+
         Before submitting, please:
         - Search existing issues to avoid duplicates
         - Check if the service is already supported
@@ -75,7 +75,7 @@ body:
         script-src: https://example.com
         img-src: https://cdn.example.com
         connect-src: https://api.example.com
-        
+
         Or describe integration method:
         - JavaScript SDK loaded from example.com
         - Makes API calls to api.example.com
@@ -135,13 +135,13 @@ body:
     attributes:
       value: |
         ## What happens next?
-        
+
         1. **Review**: Maintainers will review your request and may ask for additional information
         2. **Implementation**: If approved, the service will be added to the database
         3. **Testing**: CSP rules will be tested against the provided URLs
         4. **Release**: The service will be included in the next release
-        
+
         You can also contribute by:
-        - Using `@csp-js/cli add --interactive` to create the service definition
+        - Using `@csp-kit/cli add --interactive` to create the service definition
         - Submitting a pull request with the service configuration
         - Helping test the CSP rules with your application

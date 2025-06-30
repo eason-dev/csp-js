@@ -322,7 +322,7 @@ async function createAddServicePR(service: ServiceDefinition, filePath: string):
 - Default version: ${service.defaultVersion}
 - CSP directives: ${Object.keys(service.versions[service.defaultVersion]?.csp || {}).join(', ')}
 
-Generated with @csp-js/cli`;
+Generated with @csp-kit/cli`;
 
   const prTitle = `feat: Add ${service.name} service`;
 
@@ -344,7 +344,7 @@ ${Object.entries(service.versions[service.defaultVersion]?.csp || {})
 ${service.officialDocs.map(url => `- ${url}`).join('\\n')}
 
 ---
-*This PR was created automatically using @csp-js/cli*`;
+*This PR was created automatically using @csp-kit/cli*`;
 
   const result = await createServiceUpdatePR(
     service.id,

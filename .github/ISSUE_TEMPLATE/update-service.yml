@@ -1,7 +1,7 @@
 name: 🔄 Update Existing Service
 description: Request updates to an existing service's CSP requirements
-title: "[Service Update] Update [SERVICE_NAME] CSP requirements"
-labels: ["service-update", "enhancement"]
+title: '[Service Update] Update [SERVICE_NAME] CSP requirements'
+labels: ['service-update', 'enhancement']
 assignees: []
 
 body:
@@ -9,7 +9,7 @@ body:
     attributes:
       value: |
         Thanks for helping keep our service definitions up to date! 
-        
+
         This template is for reporting changes to existing services' CSP requirements.
         If the service isn't supported yet, please use the "Add New Service" template instead.
 
@@ -155,14 +155,14 @@ body:
     attributes:
       value: |
         ## What happens next?
-        
+
         1. **Verification**: Maintainers will verify the reported changes
         2. **Testing**: New CSP requirements will be tested
         3. **Update**: Service definition will be updated with new version/requirements
         4. **Documentation**: Changelog and migration notes will be updated
         5. **Release**: Changes will be included in the next release
-        
+
         You can also help by:
-        - Using `@csp-js/cli update <service-id> --interactive` to create the update
+        - Using `@csp-kit/cli update <service-id> --interactive` to create the update
         - Submitting a pull request with the updated service configuration
         - Testing the new requirements in your application

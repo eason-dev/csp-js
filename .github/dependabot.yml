@@ -1,186 +1,186 @@
 version: 2
 updates:
   # Enable version updates for npm packages
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'UTC'
     reviewers:
-      - "eason-dev"
+      - 'eason-dev'
     assignees:
-      - "eason-dev"
+      - 'eason-dev'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "npm"
+      - 'dependencies'
+      - 'npm'
     pull-request-branch-name:
-      separator: "/"
+      separator: '/'
     open-pull-requests-limit: 10
     ignore:
       # Ignore major version updates for these stable packages
-      - dependency-name: "typescript"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "node"
-        update-types: ["version-update:semver-major"]
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'node'
+        update-types: ['version-update:semver-major']
 
   # Enable version updates for package ecosystems in subdirectories
-  - package-ecosystem: "npm"
-    directory: "/packages/csp-js"
+  - package-ecosystem: 'npm'
+    directory: '/packages/generator'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'UTC'
     reviewers:
-      - "eason-dev"
+      - 'eason-dev'
     assignees:
-      - "eason-dev"
+      - 'eason-dev'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "npm"
-      - "csp-js"
+      - 'dependencies'
+      - 'npm'
+      - 'generator'
     pull-request-branch-name:
-      separator: "/"
+      separator: '/'
     open-pull-requests-limit: 5
 
-  - package-ecosystem: "npm"
-    directory: "/packages/csp-data"
+  - package-ecosystem: 'npm'
+    directory: '/packages/data'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'UTC'
     reviewers:
-      - "eason-dev"
+      - 'eason-dev'
     assignees:
-      - "eason-dev"
+      - 'eason-dev'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "npm"
-      - "csp-data"
+      - 'dependencies'
+      - 'npm'
+      - 'data'
     pull-request-branch-name:
-      separator: "/"
+      separator: '/'
     open-pull-requests-limit: 5
 
-  - package-ecosystem: "npm"
-    directory: "/packages/csp-cli"
+  - package-ecosystem: 'npm'
+    directory: '/packages/cli'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'UTC'
     reviewers:
-      - "eason-dev"
+      - 'eason-dev'
     assignees:
-      - "eason-dev"
+      - 'eason-dev'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "npm"
-      - "csp-cli"
+      - 'dependencies'
+      - 'npm'
+      - 'cli'
     pull-request-branch-name:
-      separator: "/"
+      separator: '/'
     open-pull-requests-limit: 5
 
-  - package-ecosystem: "npm"
-    directory: "/packages/ui"
+  - package-ecosystem: 'npm'
+    directory: '/packages/ui'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'UTC'
     reviewers:
-      - "eason-dev"
+      - 'eason-dev'
     assignees:
-      - "eason-dev"
+      - 'eason-dev'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "npm"
-      - "ui"
+      - 'dependencies'
+      - 'npm'
+      - 'ui'
     pull-request-branch-name:
-      separator: "/"
+      separator: '/'
     open-pull-requests-limit: 5
 
   # Enable version updates for Next.js apps
-  - package-ecosystem: "npm"
-    directory: "/apps/web"
+  - package-ecosystem: 'npm'
+    directory: '/apps/web'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'UTC'
     reviewers:
-      - "eason-dev"
+      - 'eason-dev'
     assignees:
-      - "eason-dev"
+      - 'eason-dev'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "npm"
-      - "web-app"
+      - 'dependencies'
+      - 'npm'
+      - 'web-app'
     pull-request-branch-name:
-      separator: "/"
+      separator: '/'
     open-pull-requests-limit: 5
 
-  - package-ecosystem: "npm"
-    directory: "/apps/docs"
+  - package-ecosystem: 'npm'
+    directory: '/apps/docs'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'UTC'
     reviewers:
-      - "eason-dev"
+      - 'eason-dev'
     assignees:
-      - "eason-dev"
+      - 'eason-dev'
     commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "npm"
-      - "docs-app"
+      - 'dependencies'
+      - 'npm'
+      - 'docs-app'
     pull-request-branch-name:
-      separator: "/"
+      separator: '/'
     open-pull-requests-limit: 5
 
   # Enable version updates for GitHub Actions
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "UTC"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'UTC'
     reviewers:
-      - "eason-dev"
+      - 'eason-dev'
     assignees:
-      - "eason-dev"
+      - 'eason-dev'
     commit-message:
-      prefix: "chore(ci)"
-      include: "scope"
+      prefix: 'chore(ci)'
+      include: 'scope'
     labels:
-      - "dependencies"
-      - "github-actions"
-      - "ci"
+      - 'dependencies'
+      - 'github-actions'
+      - 'ci'
     pull-request-branch-name:
-      separator: "/"
+      separator: '/'
     open-pull-requests-limit: 5

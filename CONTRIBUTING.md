@@ -126,7 +126,7 @@ csp-cli update service-id --version 2.0.0
 1. **Create Service File**
 
    ```bash
-   # Create file: packages/csp-data/data/services/your-service.jsonc
+   # Create file: packages/data/data/services/your-service.jsonc
    ```
 
 2. **Service Definition Structure**
@@ -165,7 +165,7 @@ csp-cli update service-id --version 2.0.0
    ```
 
 3. **Add to Services Index**
-   Update `packages/csp-data/src/services.ts` to include your service.
+   Update `packages/data/src/services.ts` to include your service.
 
 4. **Update Categories**
    Add your service to the appropriate category in the `categories` object.

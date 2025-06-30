@@ -62,7 +62,7 @@ export async function checkServiceCSP(
 
         const response = await got(url, {
           headers: {
-            'User-Agent': 'Mozilla/5.0 (compatible; CSP-JS-CLI/1.0)',
+            'User-Agent': 'Mozilla/5.0 (compatible; CSP-Kit-CLI/1.0)',
           },
           timeout: {
             request: 10000,

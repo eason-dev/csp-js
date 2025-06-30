@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# CSP-JS Publishing Script
+# CSP-Kit Publishing Script
 # This script handles versioning and publishing of all packages
 
 set -e
@@ -124,14 +124,14 @@ else
 fi
 
 # Get current versions
-CURRENT_CSP_JS_VERSION=$(node -p "require('./packages/csp-js/package.json').version")
-CURRENT_CSP_DATA_VERSION=$(node -p "require('./packages/csp-data/package.json').version")
-CURRENT_CSP_CLI_VERSION=$(node -p "require('./packages/csp-cli/package.json').version")
+CURRENT_GENERATOR_VERSION=$(node -p "require('./packages/generator/package.json').version")
+CURRENT_DATA_VERSION=$(node -p "require('./packages/data/package.json').version")
+CURRENT_CLI_VERSION=$(node -p "require('./packages/cli/package.json').version")
 
 log "Current versions:"
-log "  csp-js: $CURRENT_CSP_JS_VERSION"
-log "  @csp-js/data: $CURRENT_CSP_DATA_VERSION"
-log "  @csp-js/cli: $CURRENT_CSP_CLI_VERSION"
+log "  @csp-kit/generator: $CURRENT_GENERATOR_VERSION"
+log "  @csp-kit/data: $CURRENT_DATA_VERSION"
+log "  @csp-kit/cli: $CURRENT_CLI_VERSION"
 
 # Calculate new versions (simplified semver increment)
 calculate_new_version() {
@@ -156,7 +156,7 @@ calculate_new_version() {
     esac
 }
 
-NEW_VERSION=$(calculate_new_version "$CURRENT_CSP_JS_VERSION" "$RELEASE_TYPE")
+NEW_VERSION=$(calculate_new_version "$CURRENT_GENERATOR_VERSION" "$RELEASE_TYPE")
 
 log "New version will be: $NEW_VERSION"
 
@@ -173,18 +173,18 @@ fi
 # Update package versions
 log "Updating package versions..."
 if [ "$DRY_RUN" = false ]; then
-    # Update csp-data first (no dependencies)
-    cd packages/csp-data
+    # Update data first (no dependencies)
+    cd packages/data
     npm version "$NEW_VERSION" --no-git-tag-version
     cd ../..
     
-    # Update csp-js (depends on csp-data)
-    cd packages/csp-js
+    # Update generator (depends on data)
+    cd packages/generator
     npm version "$NEW_VERSION" --no-git-tag-version
     cd ../..
     
-    # Update csp-cli (depends on csp-data)
-    cd packages/csp-cli
+    # Update cli (depends on data)
+    cd packages/cli
     npm version "$NEW_VERSION" --no-git-tag-version
     cd ../..
 else
@@ -204,27 +204,27 @@ fi
 # Publish packages
 log "Publishing packages to NPM..."
 if [ "$DRY_RUN" = false ]; then
-    # Publish csp-data first (no dependencies)
-    log "Publishing @csp-js/data..."
-    cd packages/csp-data
+    # Publish data first (no dependencies)
+    log "Publishing @csp-kit/data..."
+    cd packages/data
     npm publish --access public --provenance
     cd ../..
     
     # Wait a moment for NPM to process
     sleep 5
     
-    # Publish csp-js (depends on csp-data)
-    log "Publishing csp-js..."
-    cd packages/csp-js
+    # Publish generator (depends on data)
+    log "Publishing @csp-kit/generator..."
+    cd packages/generator
     npm publish --access public --provenance
     cd ../..
     
     # Wait a moment for NPM to process
     sleep 5
     
-    # Publish csp-cli (depends on csp-data)
-    log "Publishing @csp-js/cli..."
-    cd packages/csp-cli
+    # Publish cli (depends on data)
+    log "Publishing @csp-kit/cli..."
+    cd packages/cli
     npm publish --access public --provenance
     cd ../..
 else
@@ -246,22 +246,22 @@ if [ "$DRY_RUN" = false ]; then
     sleep 30  # Wait for NPM to propagate
     
     # Check if packages are available
-    if npm view "csp-js@$NEW_VERSION" version > /dev/null 2>&1; then
-        success "csp-js@$NEW_VERSION is available on NPM"
+    if npm view "@csp-kit/generator@$NEW_VERSION" version > /dev/null 2>&1; then
+        success "@csp-kit/generator@$NEW_VERSION is available on NPM"
     else
-        warning "csp-js@$NEW_VERSION is not yet available on NPM"
+        warning "@csp-kit/generator@$NEW_VERSION is not yet available on NPM"
     fi
     
-    if npm view "@csp-js/data@$NEW_VERSION" version > /dev/null 2>&1; then
-        success "@csp-js/data@$NEW_VERSION is available on NPM"
+    if npm view "@csp-kit/data@$NEW_VERSION" version > /dev/null 2>&1; then
+        success "@csp-kit/data@$NEW_VERSION is available on NPM"
     else
-        warning "@csp-js/data@$NEW_VERSION is not yet available on NPM"
+        warning "@csp-kit/data@$NEW_VERSION is not yet available on NPM"
     fi
     
-    if npm view "@csp-js/cli@$NEW_VERSION" version > /dev/null 2>&1; then
-        success "@csp-js/cli@$NEW_VERSION is available on NPM"
+    if npm view "@csp-kit/cli@$NEW_VERSION" version > /dev/null 2>&1; then
+        success "@csp-kit/cli@$NEW_VERSION is available on NPM"
     else
-        warning "@csp-js/cli@$NEW_VERSION is not yet available on NPM"
+        warning "@csp-kit/cli@$NEW_VERSION is not yet available on NPM"
     fi
 fi
 

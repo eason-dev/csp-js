@@ -262,7 +262,7 @@ interface CSPDirectives {
 
 **Special Values**:
 
-- `'self'` - Same origin (added automatically by csp-js)
+- `'self'` - Same origin (added automatically by @csp-kit/generator)
 - `'unsafe-inline'` - Avoid! Use nonce instead
 - `'unsafe-eval'` - Avoid! Security risk
 - `data:` - Data URLs (use sparingly)

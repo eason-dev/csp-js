@@ -49,7 +49,7 @@ jobs:
         id: monitor
         run: |
           # Install the CLI globally for easier access
-          pnpm --filter @csp-js/cli build
+          pnpm --filter @csp-kit/cli build
           
           # Check specific service or all services
           if [ -n "${{ github.event.inputs.service_id }}" ]; then
@@ -59,7 +59,7 @@ jobs:
             echo "Checking all services..."
             # Run monitoring for all services with monitoring configuration
             node -e "
-              const { services } = require('./packages/csp-data/dist/index.js');
+              const { services } = require('./packages/data/dist/index.js');
               const results = [];
               
               for (const [serviceId, service] of Object.entries(services)) {
@@ -143,7 +143,7 @@ jobs:
               
               ---
               *This issue was created automatically by the CSP monitoring workflow.*
-              *Use \`@csp-js/cli update \${change.serviceId}\` to help update the service definition.*\`;
+                              *Use \`@csp-kit/cli update \${change.serviceId}\` to help update the service definition.*\`;
               
               try {
                 execSync(\`gh issue create --title \"\${title}\" --body \"\${body}\" --label \"service-update,automated\"\`, { stdio: 'inherit' });
@@ -165,7 +165,7 @@ jobs:
           node -e "
             const fs = require('fs');
             const path = require('path');
-            const { services } = require('./packages/csp-data/dist/index.js');
+            const { services } = require('./packages/data/dist/index.js');
             
             const timestamp = new Date().toISOString();
             let updated = false;
@@ -173,7 +173,7 @@ jobs:
             // Update each service's lastChecked timestamp
             for (const [serviceId, service] of Object.entries(services)) {
               if (service.monitoring) {
-                const servicePath = path.join('packages/csp-data/data/services', serviceId + '.jsonc');
+                const servicePath = path.join('packages/data/data/services', serviceId + '.jsonc');
                 
                 if (fs.existsSync(servicePath)) {
                   try {
@@ -209,7 +209,7 @@ jobs:
           git config --local user.name "GitHub Action"
           
           if [ -n "$(git status --porcelain)" ]; then
-            git add packages/csp-data/data/services/*.jsonc
+            git add packages/data/data/services/*.jsonc
             git commit -m "chore: update service monitoring timestamps
 
             - Updated lastChecked timestamps for monitored services
