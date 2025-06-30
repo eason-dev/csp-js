@@ -1,8 +1,8 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import semver from 'semver';
-import { ServiceCategory, getService } from '@csp-js/data';
-import type { ServiceDefinition } from '@csp-js/data';
+import { ServiceCategory, getService } from '@csp-kit/data';
+import type { ServiceDefinition } from '@csp-kit/data';
 import type { AddServiceOptions } from '../types.js';
 import {
   readJsonFile,

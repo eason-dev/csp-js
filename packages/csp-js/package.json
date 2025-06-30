@@ -58,7 +58,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@csp-js/data": "workspace:*"
+    "@csp-kit/data": "workspace:*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

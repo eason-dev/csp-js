@@ -1,5 +1,5 @@
 {
-  "name": "@csp-js/data",
+  "name": "@csp-kit/data",
   "version": "0.1.0",
   "description": "Service definitions and CSP mappings database for csp-js",
   "type": "module",

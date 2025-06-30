@@ -1,7 +1,7 @@
 import { readFile, writeFile, access } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { mkdir } from 'node:fs/promises';
-import type { ServiceDefinition } from '@csp-js/data';
+import type { ServiceDefinition } from '@csp-kit/data';
 
 /**
  * Check if file exists

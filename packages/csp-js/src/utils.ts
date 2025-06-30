@@ -1,4 +1,4 @@
-import { CSPDirectives } from '@csp-js/data';
+import { CSPDirectives } from '@csp-kit/data';
 import { NonceOptions } from './types.js';
 
 /**

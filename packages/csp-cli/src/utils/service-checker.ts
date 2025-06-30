@@ -2,7 +2,7 @@ import got from 'got';
 import { load } from 'cheerio';
 import chalk from 'chalk';
 import type { ServiceCheckResult } from '../types.js';
-import { getService } from '@csp-js/data';
+import { getService } from '@csp-kit/data';
 
 /**
  * Check a service's CSP requirements by analyzing its scripts and resources
