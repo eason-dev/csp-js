@@ -1,0 +1,33 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "apps/web/package.json",
+      "use": "@vercel/next",
+      "config": {
+        "buildCommand": "cd ../.. && pnpm turbo build --filter=web",
+        "outputDirectory": "apps/web/.next",
+        "installCommand": "cd ../.. && pnpm install --frozen-lockfile"
+      }
+    },
+    {
+      "src": "apps/docs/package.json", 
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "cd ../.. && pnpm turbo build --filter=docs",
+        "outputDirectory": "apps/docs/build",
+        "installCommand": "cd ../.. && pnpm install --frozen-lockfile"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/docs/(.*)",
+      "dest": "/apps/docs/build/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/apps/web/.next/$1"
+    }
+  ]
+}
