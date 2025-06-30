@@ -93,7 +93,7 @@ const config = {
               },
               {
                 label: 'NPM',
-                href: 'https://www.npmjs.com/package/csp-js',
+                href: 'https://www.npmjs.com/package/@csp-kit/generator',
               },
             ],
           },

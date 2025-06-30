@@ -24,5 +24,5 @@ CSP Kit is a comprehensive toolkit for Content Security Policy management in Jav
 ## Quick Links
 
 - [GitHub Repository](https://github.com/eason-dev/csp-kit)
-- [NPM Package](https://www.npmjs.com/package/csp-js)
+- [NPM Package](https://www.npmjs.com/package/@csp-kit/generator)
 - [Main Website](https://csp-kit.eason.ch)

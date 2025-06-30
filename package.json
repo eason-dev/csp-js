@@ -1,5 +1,5 @@
 {
-  "name": "csp-js",
+  "name": "csp-kit",
   "private": true,
   "scripts": {
     "build": "turbo run build",

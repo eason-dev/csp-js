@@ -20,8 +20,8 @@ This is a Turborepo monorepo with TypeScript and React/Next.js applications. The
   - `ui/` - React component library shared across apps
   - `eslint-config/` - ESLint configurations
   - `typescript-config/` - TypeScript configurations
-  - `csp-js/` - Core CSP functionality (package structure incomplete)
-  - `csp-data/` - CSP data handling (package structure incomplete)
+  - `generator/` - Core CSP functionality (@csp-kit/generator)
+  - `data/` - CSP data handling (@csp-kit/data)
 
 ## Development Commands
 

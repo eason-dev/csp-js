@@ -148,7 +148,7 @@ const header = generateCSPHeader(['google-analytics']);
 
 ## Environment Support
 
-csp-js works in all JavaScript environments:
+csp-kit works in all JavaScript environments:
 
 - ✅ Node.js (18+)
 - ✅ Deno

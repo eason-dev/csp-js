@@ -580,7 +580,7 @@ export default function CSPGenerator() {
           <p>
             Powered by{' '}
             <a href="https://github.com/eason-dev/csp-kit" className="text-primary hover:underline">
-              csp-js
+              csp-kit
             </a>
             {' • '}
             <a href="https://github.com/eason-dev/csp-kit" className="text-primary hover:underline">
