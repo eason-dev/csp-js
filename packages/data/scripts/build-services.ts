@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'jsonc-parser';
@@ -37,38 +37,248 @@ const categoryMap: Record<string, ServiceCategory> = {
   website_builder: ServiceCategory.OTHER,
 };
 
-async function loadServiceFromJSONC(filePath: string): Promise<ServiceDefinition | null> {
+interface ValidationError {
+  file: string;
+  field: string;
+  message: string;
+  severity: 'error' | 'warning';
+}
+
+async function validateServiceFromJSONC(filePath: string): Promise<{
+  service: ServiceDefinition | null;
+  errors: ValidationError[];
+}> {
+  const errors: ValidationError[] = [];
+  const fileName = filePath.split('/').pop() || '';
+
   try {
     const content = await readFile(filePath, 'utf-8');
+
     // Parse JSONC content
-    const serviceData = parse(content);
+    let serviceData: unknown;
+    try {
+      serviceData = parse(content);
+    } catch (parseError) {
+      errors.push({
+        file: fileName,
+        field: 'json',
+        message: `Failed to parse JSONC: ${String(parseError)}`,
+        severity: 'error',
+      });
+      return { service: null, errors };
+    }
+
+    // Type guard for service data
+    if (!serviceData || typeof serviceData !== 'object' || Array.isArray(serviceData)) {
+      errors.push({
+        file: fileName,
+        field: 'root',
+        message: 'Service data must be an object',
+        severity: 'error',
+      });
+      return { service: null, errors };
+    }
+
+    const data = serviceData as Record<string, unknown>;
 
     // Generate ID from filename if not present
     const filename = filePath.split('/').pop()?.replace('.jsonc', '') || '';
-    const serviceId = serviceData.id || filename;
+    const serviceId = (data.id as string) || filename;
 
-    // Skip if no ID could be determined
+    // Validate required fields
     if (!serviceId) {
-      console.error(`Skipping service ${filePath}: No ID found`);
-      return null;
+      errors.push({
+        file: fileName,
+        field: 'id',
+        message: 'Service ID is required',
+        severity: 'error',
+      });
     }
 
-    // Handle different JSONC formats
+    if (!data.name) {
+      errors.push({
+        file: fileName,
+        field: 'name',
+        message: 'Service name is required',
+        severity: 'error',
+      });
+    }
+
+    if (!data.description) {
+      errors.push({
+        file: fileName,
+        field: 'description',
+        message: 'Service description is required',
+        severity: 'error',
+      });
+    }
+
+    if (!data.website) {
+      errors.push({
+        file: fileName,
+        field: 'website',
+        message: 'Service website is required',
+        severity: 'error',
+      });
+    }
+
+    if (!data.category) {
+      errors.push({
+        file: fileName,
+        field: 'category',
+        message: 'Service category is required',
+        severity: 'error',
+      });
+    } else if (!categoryMap[data.category as string]) {
+      errors.push({
+        file: fileName,
+        field: 'category',
+        message: `Invalid category "${data.category}". Valid categories: ${Object.keys(categoryMap).join(', ')}`,
+        severity: 'error',
+      });
+    }
+
+    // Validate CSP structure
     let cspRules: Record<string, unknown> = {};
     let versionKey = '1.0.0';
 
     if (serviceData.csp) {
-      // Format 1: Direct csp object (youtube, google-analytics)
+      // Format 1: Direct csp object
       cspRules = serviceData.csp;
+      if (typeof cspRules !== 'object' || Array.isArray(cspRules)) {
+        errors.push({
+          file: fileName,
+          field: 'csp',
+          message: 'CSP rules must be an object',
+          severity: 'error',
+        });
+      }
     } else if (serviceData.versions) {
-      // Format 2: versions object (stripe, facebook)
+      // Format 2: versions object
       const firstVersion = Object.keys(serviceData.versions)[0];
-      versionKey = firstVersion;
-      const versionData = serviceData.versions[firstVersion];
-      cspRules = versionData.cspDirectives || versionData.csp || {};
+      if (!firstVersion) {
+        errors.push({
+          file: fileName,
+          field: 'versions',
+          message: 'At least one version must be defined',
+          severity: 'error',
+        });
+      } else {
+        versionKey = firstVersion;
+        const versionData = serviceData.versions[firstVersion];
+        cspRules = versionData?.cspDirectives || versionData?.csp || {};
+
+        if (typeof cspRules !== 'object' || Array.isArray(cspRules)) {
+          errors.push({
+            file: fileName,
+            field: `versions.${versionKey}.csp`,
+            message: 'CSP rules must be an object',
+            severity: 'error',
+          });
+        }
+      }
+    } else {
+      errors.push({
+        file: fileName,
+        field: 'csp',
+        message: 'Either direct "csp" object or "versions" with CSP rules is required',
+        severity: 'error',
+      });
     }
 
-    // Convert JSONC format to ServiceDefinition format
+    // Validate CSP directive formats
+    const validDirectives = [
+      'script-src',
+      'style-src',
+      'img-src',
+      'font-src',
+      'connect-src',
+      'frame-src',
+      'media-src',
+      'object-src',
+      'child-src',
+      'worker-src',
+      'manifest-src',
+      'form-action',
+      'frame-ancestors',
+      'base-uri',
+    ];
+
+    Object.entries(cspRules).forEach(([directive, values]) => {
+      if (!validDirectives.includes(directive)) {
+        errors.push({
+          file: fileName,
+          field: `csp.${directive}`,
+          message: `"${directive}" is not a valid CSP directive`,
+          severity: 'warning',
+        });
+      }
+
+      if (!Array.isArray(values)) {
+        errors.push({
+          file: fileName,
+          field: `csp.${directive}`,
+          message: `CSP directive "${directive}" must be an array of strings`,
+          severity: 'error',
+        });
+      } else {
+        values.forEach((value, index) => {
+          if (typeof value !== 'string') {
+            errors.push({
+              file: fileName,
+              field: `csp.${directive}[${index}]`,
+              message: `CSP value must be a string, got ${typeof value}`,
+              severity: 'error',
+            });
+          }
+        });
+      }
+    });
+
+    // Validate URLs
+    if (serviceData.website) {
+      try {
+        new URL(serviceData.website);
+      } catch {
+        errors.push({
+          file: fileName,
+          field: 'website',
+          message: 'Website must be a valid URL',
+          severity: 'error',
+        });
+      }
+    }
+
+    if (serviceData.officialDocs && Array.isArray(serviceData.officialDocs)) {
+      serviceData.officialDocs.forEach((doc: any, index: number) => {
+        if (typeof doc !== 'string') {
+          errors.push({
+            file: fileName,
+            field: `officialDocs[${index}]`,
+            message: 'Official docs must be strings',
+            severity: 'error',
+          });
+        } else {
+          try {
+            new URL(doc);
+          } catch {
+            errors.push({
+              file: fileName,
+              field: `officialDocs[${index}]`,
+              message: 'Official doc must be a valid URL',
+              severity: 'error',
+            });
+          }
+        }
+      });
+    }
+
+    // If there are errors, don't create the service object
+    if (errors.some(error => error.severity === 'error')) {
+      return { service: null, errors };
+    }
+
+    // Convert to ServiceDefinition format
     const notes = serviceData.notes || serviceData.versions?.[versionKey]?.notes || [];
     const normalizedNotes = Array.isArray(notes) ? notes : [notes].filter(Boolean);
 
@@ -97,208 +307,149 @@ async function loadServiceFromJSONC(filePath: string): Promise<ServiceDefinition
       lastUpdated: serviceData.lastUpdated || new Date().toISOString(),
     };
 
-    return service;
+    return { service, errors };
   } catch (error) {
-    console.error(`Error loading service from ${filePath}:`, error);
-    return null;
+    errors.push({
+      file: fileName,
+      field: 'file',
+      message: `Error reading file: ${error}`,
+      severity: 'error',
+    });
+    return { service: null, errors };
   }
 }
 
-function generateServicesCode(services: Record<string, ServiceDefinition>): string {
-  const entries = Object.entries(services).map(([key, service]) => {
-    // Convert service to code string with proper enum handling
-    const serviceCode = JSON.stringify(service, null, 2).replace(
-      /"category":\s*"([^"]+)"/g,
-      (match, categoryValue) => {
-        // Find the enum key by looking up the value
-        const enumKey = Object.keys(ServiceCategory).find(
-          key => ServiceCategory[key as keyof typeof ServiceCategory] === categoryValue
-        );
-        return `"category": ServiceCategory.${enumKey || 'OTHER'}`;
-      }
-    );
-
-    return `  "${key}": ${serviceCode}`;
-  });
-
-  return `{\n${entries.join(',\n')}\n}`;
-}
-
-async function buildServices() {
+async function validateServices() {
   const servicesDir = join(__dirname, '../data/services');
-  const outputPath = join(__dirname, '../src/services.ts');
 
-  console.log('Loading services from:', servicesDir);
+  console.log('🔍 Validating services from:', servicesDir);
 
   try {
     const files = await readdir(servicesDir);
     const jsoncFiles = files.filter(file => file.endsWith('.jsonc'));
 
-    console.log(`Found ${jsoncFiles.length} JSONC files`);
+    console.log(`📁 Found ${jsoncFiles.length} JSONC files`);
 
     const services: Record<string, ServiceDefinition> = {};
+    const allErrors: ValidationError[] = [];
+    let validServices = 0;
+    let invalidServices = 0;
 
     for (const file of jsoncFiles) {
       const filePath = join(servicesDir, file);
-      const service = await loadServiceFromJSONC(filePath);
+      console.log(`🔄 Validating ${file}...`);
+
+      const { service, errors } = await validateServiceFromJSONC(filePath);
+
+      allErrors.push(...errors);
+
       if (service) {
         services[service.id] = service;
-        console.log(`Loaded service: ${service.id}`);
+        validServices++;
+        console.log(`✅ ${service.id} - valid`);
+      } else {
+        invalidServices++;
+        console.log(`❌ ${file} - invalid`);
       }
     }
 
-    console.log(`Successfully loaded ${Object.keys(services).length} services`);
+    // Report results
+    console.log('\n📊 Validation Summary:');
+    console.log(`✅ Valid services: ${validServices}`);
+    console.log(`❌ Invalid services: ${invalidServices}`);
+    console.log(`⚠️  Total warnings: ${allErrors.filter(e => e.severity === 'warning').length}`);
+    console.log(`🚨 Total errors: ${allErrors.filter(e => e.severity === 'error').length}`);
 
-    // Generate the services.ts file content with proper enum handling
-    const servicesCode = generateServicesCode(services);
+    // Group errors by file
+    if (allErrors.length > 0) {
+      console.log('\n📋 Validation Details:');
+      const errorsByFile = allErrors.reduce(
+        (acc, error) => {
+          if (!acc[error.file]) acc[error.file] = [];
+          acc[error.file].push(error);
+          return acc;
+        },
+        {} as Record<string, ValidationError[]>
+      );
 
-    const fileContent = `import { ServiceDefinition, ServiceRegistry, ServiceCategory } from './types.js';
-
-/**
- * Service definitions - loaded from JSONC files
- * This file is auto-generated by scripts/build-services.ts
- * Do not edit manually - your changes will be overwritten
- */
-export const services: Record<string, ServiceDefinition> = ${servicesCode};
-
-/**
- * Service registry for organized access
- */
-export const serviceRegistry: ServiceRegistry = {
-  services,
-  categories: Object.values(ServiceCategory).reduce((acc, category) => {
-    acc[category] = Object.values(services).filter(service => service.category === category).map(service => service.id);
-    return acc;
-  }, {} as Record<ServiceCategory, string[]>),
-  lastUpdated: new Date().toISOString(),
-  version: new Date().toISOString().split('T')[0]!.replace(/-/g, '.'),
-  schemaVersion: '1.0.0',
-};
-
-/**
- * All available service categories
- */
-export const categories = Object.values(ServiceCategory);
-
-/**
- * Get a service by its ID or alias
- */
-export function getService(identifier: string): ServiceDefinition | undefined {
-  // Try direct ID lookup first
-  if (services[identifier]) {
-    return services[identifier];
-  }
-
-  // Search by alias
-  for (const service of Object.values(services)) {
-    if (service.aliases?.includes(identifier)) {
-      return service;
+      Object.entries(errorsByFile).forEach(([file, fileErrors]) => {
+        console.log(`\n📄 ${file}:`);
+        fileErrors.forEach(error => {
+          const icon = error.severity === 'error' ? '🚨' : '⚠️';
+          console.log(`  ${icon} ${error.field}: ${error.message}`);
+        });
+      });
     }
-  }
 
-  return undefined;
-}
+    // Check for duplicate IDs and aliases
+    console.log('\n🔍 Checking for duplicates...');
+    const serviceIds = Object.keys(services);
+    const aliases = Object.values(services).flatMap(s => s.aliases || []);
 
-/**
- * Get services by category
- */
-export function getServicesByCategory(category: ServiceCategory): ServiceDefinition[] {
-  return Object.values(services).filter(service => service.category === category);
-}
+    // Check for duplicate service IDs
+    const idCounts = serviceIds.reduce(
+      (acc, id) => {
+        acc[id] = (acc[id] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-/**
- * Search services by name, description, or aliases
- */
-export function searchServices(query: string): ServiceDefinition[] {
-  const lowercaseQuery = query.toLowerCase();
-  return Object.values(services).filter(service => 
-    service.name.toLowerCase().includes(lowercaseQuery) ||
-    service.description.toLowerCase().includes(lowercaseQuery) ||
-    service.aliases?.some(alias => alias.toLowerCase().includes(lowercaseQuery))
-  );
-}
+    const duplicateIds = Object.entries(idCounts).filter(([, count]) => count > 1);
+    if (duplicateIds.length > 0) {
+      console.log('🚨 Duplicate service IDs found:');
+      duplicateIds.forEach(([id, count]) => {
+        console.log(`  - "${id}" appears ${count} times`);
+      });
+    }
 
-/**
- * Parse service identifier (serviceId@version)
- */
-export function parseServiceIdentifier(identifier: string): { id: string; version?: string } {
-  const parts = identifier.split('@');
-  return {
-    id: parts[0] || '',
-    version: parts[1],
-  };
-}
+    // Check for alias conflicts with service IDs
+    const aliasConflicts = aliases.filter(alias => serviceIds.includes(alias));
+    if (aliasConflicts.length > 0) {
+      console.log('🚨 Alias conflicts with service IDs:');
+      aliasConflicts.forEach(alias => {
+        console.log(`  - "${alias}" is both a service ID and an alias`);
+      });
+    }
 
-/**
- * Get service with specific version
- */
-export function getServiceWithVersion(
-  identifier: string,
-  version?: string
-): { service: ServiceDefinition; version: string } | undefined {
-  const { id, version: parsedVersion } = parseServiceIdentifier(identifier);
-  const targetVersion = version || parsedVersion;
-  
-  const service = getService(id);
-  if (!service) {
-    return undefined;
-  }
+    // Check for duplicate aliases
+    const aliasCounts = aliases.reduce(
+      (acc, alias) => {
+        acc[alias] = (acc[alias] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
 
-  const serviceVersion = targetVersion || service.defaultVersion;
-  
-  if (!service.versions[serviceVersion]) {
-    return undefined;
-  }
+    const duplicateAliases = Object.entries(aliasCounts).filter(([, count]) => count > 1);
+    if (duplicateAliases.length > 0) {
+      console.log('⚠️  Duplicate aliases found:');
+      duplicateAliases.forEach(([alias, count]) => {
+        console.log(`  - "${alias}" appears ${count} times`);
+      });
+    }
 
-  return {
-    service,
-    version: serviceVersion,
-  };
-}
+    const hasErrors =
+      allErrors.some(error => error.severity === 'error') ||
+      duplicateIds.length > 0 ||
+      aliasConflicts.length > 0;
 
-/**
- * Get all available versions for a service
- */
-export function getServiceVersions(identifier: string): string[] {
-  const service = getService(identifier);
-  return service ? Object.keys(service.versions) : [];
-}
-
-/**
- * Check if a service version is deprecated
- */
-export function isServiceVersionDeprecated(identifier: string, version: string): boolean {
-  const service = getService(identifier);
-  if (!service || !service.versions[version]) {
-    return false;
-  }
-
-  return !!service.versions[version].deprecatedFrom;
-}
-
-/**
- * Get deprecation warning for a service version
- */
-export function getDeprecationWarning(identifier: string, version: string): string | undefined {
-  const service = getService(identifier);
-  if (!service || !service.versions[version]) {
-    return undefined;
-  }
-
-  const versionData = service.versions[version];
-  if (versionData.deprecatedFrom) {
-    return \`This version has been deprecated since \${versionData.deprecatedFrom}\`;
-  }
-  return undefined;
-}
-`;
-
-    await writeFile(outputPath, fileContent, 'utf-8');
-    console.log(`Generated services.ts with ${Object.keys(services).length} services`);
+    if (hasErrors) {
+      console.log('\n🚨 Validation failed! Please fix the errors above.');
+      process.exit(1);
+    } else {
+      console.log('\n✅ All services are valid!');
+      console.log(`📦 Successfully validated ${validServices} services`);
+    }
   } catch (error) {
-    console.error('Error building services:', error);
+    console.error('💥 Error during validation:', error);
     process.exit(1);
   }
 }
 
-buildServices().catch(console.error);
+console.log('🛠️  CSP Kit Service Validator');
+console.log('================================');
+console.log('This script validates service definitions in data/services/');
+console.log('Services are now loaded at runtime from JSONC files.\n');
+
+validateServices().catch(console.error);
