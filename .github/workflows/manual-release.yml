@@ -1,0 +1,274 @@
+name: Manual Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 0.1.1)'
+        required: true
+        type: string
+      prerelease:
+        description: 'Is this a prerelease?'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  validate-input:
+    name: Validate Release Input
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      version: ${{ steps.validate.outputs.version }}
+      is-prerelease: ${{ steps.validate.outputs.is-prerelease }}
+    
+    steps:
+      - name: Validate version format
+        id: validate
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+          
+          # Validate semantic version format
+          if [[ ! $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.-]+)?$ ]]; then
+            echo "❌ Invalid version format: $VERSION"
+            echo "Version must follow semantic versioning (e.g., 1.0.0, 1.0.0-beta.1)"
+            exit 1
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "is-prerelease=${{ github.event.inputs.prerelease }}" >> $GITHUB_OUTPUT
+          
+          echo "✅ Version validated: $VERSION"
+          echo "Is prerelease: ${{ github.event.inputs.prerelease }}"
+
+  test:
+    name: Run Full Test Suite
+    runs-on: ubuntu-latest
+    needs: validate-input
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.12.4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Type check
+        run: pnpm check-types
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Security audit
+        run: pnpm audit --audit-level moderate
+
+  update-versions:
+    name: Update Package Versions
+    runs-on: ubuntu-latest
+    needs: [validate-input, test]
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.12.4
+
+      - name: Update package versions
+        run: |
+          VERSION="${{ needs.validate-input.outputs.version }}"
+          
+          # Update csp-js version
+          cd packages/csp-js
+          npm version $VERSION --no-git-tag-version
+          
+          # Update csp-data version
+          cd ../csp-data
+          npm version $VERSION --no-git-tag-version
+          
+          echo "✅ Updated package versions to $VERSION"
+
+      - name: Commit version updates
+        run: |
+          VERSION="${{ needs.validate-input.outputs.version }}"
+          
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          git add packages/*/package.json
+          git commit -m "chore: bump version to $VERSION"
+          
+          # Create and push tag
+          git tag "v$VERSION"
+          git push origin main
+          git push origin "v$VERSION"
+
+  build-and-publish:
+    name: Build and Publish
+    runs-on: ubuntu-latest
+    needs: [validate-input, update-versions]
+    permissions:
+      contents: write
+      id-token: write  # for npm provenance
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: v${{ needs.validate-input.outputs.version }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10.12.4
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
+
+      - name: Verify package contents
+        run: |
+          echo "## Package Contents" >> $GITHUB_STEP_SUMMARY
+          for pkg in packages/*/package.json; do
+            dir=$(dirname "$pkg")
+            name=$(jq -r '.name' "$pkg")
+            echo "### $name" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            find "$dir/dist" -type f 2>/dev/null | head -10 >> $GITHUB_STEP_SUMMARY || echo "No dist files found" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          done
+
+      - name: Run package tests
+        run: |
+          # Test that packages can be required/imported
+          cd packages/csp-js
+          node -e "
+            const pkg = require('./dist/index.js');
+            console.log('✅ csp-js can be required');
+            console.log('Available exports:', Object.keys(pkg));
+            
+            const result = pkg.generateCSP(['google-analytics']);
+            if (!result.header) throw new Error('generateCSP failed');
+            console.log('✅ generateCSP works');
+          "
+          
+          cd ../csp-data
+          node -e "
+            const pkg = require('./dist/index.js');
+            console.log('✅ csp-data can be required');
+            console.log('Services count:', Object.keys(pkg.services).length);
+            
+            if (Object.keys(pkg.services).length === 0) {
+              throw new Error('No services found');
+            }
+            console.log('✅ Services loaded');
+          "
+
+      - name: Publish to NPM
+        run: |
+          # Configure npm authentication
+          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
+          
+          VERSION=${{ needs.validate-input.outputs.version }}
+          IS_PRERELEASE=${{ needs.validate-input.outputs.is-prerelease }}
+          
+          # Determine npm tag
+          if [ "$IS_PRERELEASE" = "true" ]; then
+            NPM_TAG="beta"
+          else
+            NPM_TAG="latest"
+          fi
+          
+          echo "Publishing with tag: $NPM_TAG"
+          
+          # Publish packages
+          cd packages/csp-data
+          npm publish --tag $NPM_TAG --provenance --access public
+          
+          cd ../csp-js
+          npm publish --tag $NPM_TAG --provenance --access public
+          
+          echo "✅ All packages published successfully"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ needs.validate-input.outputs.version }}
+          name: v${{ needs.validate-input.outputs.version }}
+          prerelease: ${{ needs.validate-input.outputs.is-prerelease }}
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  verify-release:
+    name: Verify Release
+    runs-on: ubuntu-latest
+    needs: [validate-input, build-and-publish]
+    permissions:
+      contents: read
+    
+    steps:
+      - name: Wait for NPM propagation
+        run: sleep 60
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify NPM packages
+        run: |
+          VERSION=${{ needs.validate-input.outputs.version }}
+          
+          # Test installation from NPM
+          npm install csp-js@$VERSION
+          npm install @csp-js/data@$VERSION
+          
+          echo "✅ Packages installed successfully"
+          
+          # Test basic functionality
+          node -e "
+            const { generateCSP } = require('csp-js');
+            const result = generateCSP(['google-analytics']);
+            if (!result.header.includes('google-analytics')) {
+              throw new Error('CSP generation failed');
+            }
+            console.log('✅ Package functionality verified');
+          "
