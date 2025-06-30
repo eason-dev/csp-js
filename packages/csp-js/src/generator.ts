@@ -1,4 +1,4 @@
-import { getServiceWithVersion, getDeprecationWarning, type CSPDirectives } from '@csp-js/data';
+import { getServiceWithVersion, getDeprecationWarning, type CSPDirectives } from '@csp-kit/data';
 import type { CSPOptions, CSPResult } from './types.js';
 import {
   generateNonce,

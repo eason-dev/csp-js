@@ -11,7 +11,7 @@ export type {
   ServiceCategory,
   CSPDirectives,
   ServiceRegistry,
-} from '@csp-js/data';
+} from '@csp-kit/data';
 
 export {
   services,
@@ -25,7 +25,7 @@ export {
   getServiceVersions,
   isServiceVersionDeprecated,
   getDeprecationWarning,
-} from '@csp-js/data';
+} from '@csp-kit/data';
 
 // Default export for simple usage
 export { generateCSP as default } from './generator.js';

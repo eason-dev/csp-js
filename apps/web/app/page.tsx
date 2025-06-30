@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { generateCSP, services, searchServices, getServiceVersions } from 'csp-js';
+import { generateCSP, services, searchServices, getServiceVersions } from '@csp-kit/generator';
 import {
   Copy,
   Check,

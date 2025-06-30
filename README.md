@@ -1,14 +1,14 @@
-# CSP-JS 🛡️
+# CSP Kit 🛡️
 
-[![NPM Version](https://img.shields.io/npm/v/csp-js)](https://www.npmjs.com/package/csp-js)
-[![GitHub License](https://img.shields.io/github/license/eason-dev/csp-js)](https://github.com/eason-dev/csp-js/blob/main/LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/eason-dev/csp-js/ci.yml)](https://github.com/eason-dev/csp-js/actions)
-[![Coverage](https://img.shields.io/codecov/c/github/eason-dev/csp-js)](https://codecov.io/gh/eason-dev/csp-js)
+[![NPM Version](https://img.shields.io/npm/v/@csp-kit/generator)](https://www.npmjs.com/package/@csp-kit/generator)
+[![GitHub License](https://img.shields.io/github/license/eason-dev/csp-kit)](https://github.com/eason-dev/csp-kit/blob/main/LICENSE)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/eason-dev/csp-kit/ci.yml)](https://github.com/eason-dev/csp-kit/actions)
+[![Coverage](https://img.shields.io/codecov/c/github/eason-dev/csp-kit)](https://codecov.io/gh/eason-dev/csp-kit)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
 
 > **Modern Content Security Policy (CSP) generator for popular web services and libraries**
 
-CSP-JS automatically generates Content Security Policy headers by analyzing the services and libraries you use. Say goodbye to manual CSP configuration and hello to automatic, version-aware security policies.
+CSP Kit automatically generates Content Security Policy headers by analyzing the services and libraries you use. Say goodbye to manual CSP configuration and hello to automatic, version-aware security policies.
 
 ## ✨ Features
 
@@ -18,7 +18,7 @@ CSP-JS automatically generates Content Security Policy headers by analyzing the 
 - 🤖 **Automated Monitoring**: GitHub Actions integration to detect service changes
 - 🌐 **Multiple Formats**: Generate headers, meta tags, or JSON configurations
 - 🔐 **Nonce Support**: Built-in nonce generation for secure inline scripts
-- 📱 **Web Interface**: Interactive CSP generator at [csp-js.eason.ch](https://csp-js.eason.ch)
+- 📱 **Web Interface**: Interactive CSP generator at [csp-kit.eason.ch](https://csp-kit.eason.ch)
 - 🛠️ **CLI Tools**: Command-line tools for automation and service management
 - 📖 **TypeScript Ready**: Full TypeScript support with comprehensive types
 
@@ -28,19 +28,19 @@ CSP-JS automatically generates Content Security Policy headers by analyzing the 
 
 ```bash
 # Using npm
-npm install csp-js
+npm install @csp-kit/generator
 
 # Using yarn
-yarn add csp-js
+yarn add @csp-kit/generator
 
 # Using pnpm
-pnpm add csp-js
+pnpm add @csp-kit/generator
 ```
 
 ### Basic Usage
 
 ```javascript
-import { generateCSP } from 'csp-js';
+import { generateCSP } from '@csp-kit/generator';
 
 // Generate CSP for multiple services
 const result = generateCSP(['google-analytics', 'stripe', 'google-fonts']);
@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 ### Advanced Configuration
 
 ```javascript
-import { generateCSP } from 'csp-js';
+import { generateCSP } from '@csp-kit/generator';
 
 const result = generateCSP({
   services: ['google-analytics@4.1.0', 'typeform', 'youtube'],
@@ -93,7 +93,7 @@ Instead of manually specifying CSP directives, you specify the services you use:
 const csp =
   "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; img-src 'self' https://www.google-analytics.com";
 
-// CSP-JS approach ✅
+// CSP Kit approach ✅
 const result = generateCSP(['google-analytics', 'stripe']);
 ```
 
@@ -156,7 +156,7 @@ import {
   getService, // Get service definition
   searchServices, // Search services by name/description
   getServiceVersions, // Get available versions for service
-} from 'csp-js';
+} from '@csp-kit/generator';
 ```
 
 ## 🛠️ CLI Tools
@@ -164,7 +164,7 @@ import {
 Install the CLI for advanced service management:
 
 ```bash
-npm install -g @csp-js/cli
+npm install -g @csp-kit/cli
 ```
 
 ### Available Commands
@@ -185,7 +185,7 @@ csp-cli check google-analytics --url https://example.com
 
 ## 🌐 Web Interface
 
-Use our interactive web interface at [csp-js.eason.ch](https://csp-js.eason.ch) to:
+Use our interactive web interface at [csp-kit.eason.ch](https://csp-kit.eason.ch) to:
 
 - Browse available services
 - Generate CSP policies visually
@@ -197,14 +197,14 @@ Use our interactive web interface at [csp-js.eason.ch](https://csp-js.eason.ch) 
 
 ### Security Considerations
 
-- **Conservative Defaults**: CSP-JS uses strict defaults and warns about insecure configurations
+- **Conservative Defaults**: CSP Kit uses strict defaults and warns about insecure configurations
 - **Nonce Support**: Built-in nonce generation for secure inline script execution
 - **Regular Updates**: Service definitions are actively monitored and updated
 - **Community Driven**: Security issues are quickly addressed through community involvement
 
 ### Reporting Security Issues
 
-Please report security vulnerabilities through [GitHub Security Advisories](https://github.com/eason-dev/csp-js/security/advisories/new).
+Please report security vulnerabilities through [GitHub Security Advisories](https://github.com/eason-dev/csp-kit/security/advisories/new).
 
 ## 🤝 Contributing
 
@@ -212,7 +212,7 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) a
 
 ## 📋 Service Support
 
-CSP-JS supports 50+ popular services including Google Analytics, Stripe, Typeform, YouTube, and more.
+CSP Kit supports 50+ popular services including Google Analytics, Stripe, Typeform, YouTube, and more.
 
 See [SERVICE_SUPPORT.md](SERVICE_SUPPORT.md) for:
 
@@ -237,13 +237,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/eason-dev/csp-js/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/eason-dev/csp-js/discussions)
-- 📖 **Documentation**: [csp-js.eason.ch/docs](https://csp-js.eason.ch/docs)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/eason-dev/csp-kit/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions)
+- 📖 **Documentation**: [csp-kit.eason.ch/docs](https://csp-kit.eason.ch/docs)
 
 ---
 
 <p align="center">
-  <strong>Made with ❤️ by the CSP-JS team</strong><br>
+  <strong>Made with ❤️ by the CSP Kit team</strong><br>
   <em>Simplifying Content Security Policy for everyone</em>
 </p>

@@ -258,14 +258,14 @@ jobs:
           VERSION=${{ needs.validate-input.outputs.version }}
           
           # Test installation from NPM
-          npm install csp-js@$VERSION
-          npm install @csp-js/data@$VERSION
+          npm install @csp-kit/generator@$VERSION
+          npm install @csp-kit/data@$VERSION
           
           echo "✅ Packages installed successfully"
           
           # Test basic functionality
           node -e "
-            const { generateCSP } = require('csp-js');
+            const { generateCSP } = require('@csp-kit/generator');
             const result = generateCSP(['google-analytics']);
             if (!result.header.includes('google-analytics')) {
               throw new Error('CSP generation failed');

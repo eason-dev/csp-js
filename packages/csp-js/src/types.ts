@@ -1,4 +1,4 @@
-import type { CSPDirectives } from '@csp-js/data';
+import type { CSPDirectives } from '@csp-kit/data';
 
 /**
  * CSP generation options

@@ -1,4 +1,4 @@
-# csp-js
+# @csp-kit/generator
 
 A simple and powerful JavaScript library to generate Content Security Policy (CSP) headers for popular web services and libraries.
 
@@ -14,17 +14,17 @@ A simple and powerful JavaScript library to generate Content Security Policy (CS
 ## Installation
 
 ```bash
-npm install csp-js
+npm install @csp-kit/generator
 # or
-yarn add csp-js
+yarn add @csp-kit/generator
 # or
-pnpm add csp-js
+pnpm add @csp-kit/generator
 ```
 
 ## Quick Start
 
 ```javascript
-import { generateCSP } from 'csp-js';
+import { generateCSP } from '@csp-kit/generator';
 
 // Generate CSP for Google Analytics
 const result = generateCSP(['google-analytics']);
@@ -40,7 +40,7 @@ response.setHeader('Content-Security-Policy', result.header);
 ### Basic Usage
 
 ```javascript
-import { generateCSP } from 'csp-js';
+import { generateCSP } from '@csp-kit/generator';
 
 // Single service
 const result = generateCSP(['google-analytics']);
@@ -52,7 +52,7 @@ const result = generateCSP(['google-analytics', 'microsoft-clarity', 'typeform']
 ### Advanced Usage
 
 ```javascript
-import { generateCSP, generateNonce } from 'csp-js';
+import { generateCSP, generateNonce } from '@csp-kit/generator';
 
 // With custom options
 const result = generateCSP({
@@ -128,7 +128,7 @@ interface CSPResult {
 Generate a cryptographically secure nonce.
 
 ```javascript
-import { generateNonce } from 'csp-js';
+import { generateNonce } from '@csp-kit/generator';
 
 const nonce = generateNonce();
 const hexNonce = generateNonce({ encoding: 'hex' });
@@ -140,7 +140,7 @@ const longNonce = generateNonce({ length: 32 });
 Convenience function that returns only the CSP header string.
 
 ```javascript
-import { generateCSPHeader } from 'csp-js';
+import { generateCSPHeader } from '@csp-kit/generator';
 
 const header = generateCSPHeader(['google-analytics']);
 // Returns: "script-src 'self' https://www.google-analytics.com; ..."

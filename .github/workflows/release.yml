@@ -117,7 +117,7 @@ jobs:
           cd packages/csp-js
           node -e "
             const pkg = require('./dist/index.js');
-            console.log('✅ csp-js can be required');
+            console.log('✅ @csp-kit/generator can be required');
             console.log('Available exports:', Object.keys(pkg));
             
             const result = pkg.generateCSP(['google-analytics']);
@@ -128,7 +128,7 @@ jobs:
           cd ../csp-data
           node -e "
             const pkg = require('./dist/index.js');
-            console.log('✅ csp-data can be required');
+            console.log('✅ @csp-kit/data can be required');
             console.log('Services count:', Object.keys(pkg.services).length);
             
             if (Object.keys(pkg.services).length === 0) {
@@ -178,9 +178,6 @@ jobs:
           cd ../csp-js
           npm publish --tag $NPM_TAG --provenance --access public
           
-          cd ../csp-cli
-          npm publish --tag $NPM_TAG --provenance --access public
-          
           echo "✅ All packages published successfully"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -227,15 +224,14 @@ jobs:
           VERSION=${{ needs.validate-tag.outputs.version }}
           
           # Test installation from NPM
-          npm install csp-js@$VERSION
-          npm install @csp-js/data@$VERSION
-          npm install @csp-js/cli@$VERSION
+          npm install @csp-kit/generator@$VERSION
+          npm install @csp-kit/data@$VERSION
           
           echo "✅ Packages installed successfully"
           
           # Test basic functionality
           node -e "
-            const { generateCSP } = require('csp-js');
+            const { generateCSP } = require('@csp-kit/generator');
             const result = generateCSP(['google-analytics']);
             if (!result.header.includes('google-analytics')) {
               throw new Error('CSP generation failed');
@@ -243,15 +239,16 @@ jobs:
             console.log('✅ Package functionality verified');
           "
 
-      - name: Test CLI installation
-        run: |
-          # Test global CLI installation
-          npm install -g @csp-js/cli@${{ needs.validate-tag.outputs.version }}
-          
-          # Test CLI functionality
-          csp-cli --version
-          
-          echo "✅ CLI installed and working"
+      # CLI package doesn't exist yet, removing this step
+      # - name: Test CLI installation
+      #   run: |
+      #     # Test global CLI installation
+      #     npm install -g @csp-kit/cli@${{ needs.validate-tag.outputs.version }}
+      #     
+      #     # Test CLI functionality
+      #     csp-cli --version
+      #     
+      #     echo "✅ CLI installed and working"
 
   notify:
     name: Notify Release
@@ -267,7 +264,7 @@ jobs:
         run: |
           VERSION=${{ needs.validate-tag.outputs.version }}
           curl -H "Content-Type: application/json" \
-            -d "{\"content\":\"🎉 CSP-JS v$VERSION has been released! 🛡️\\n\\nCheck it out: https://github.com/${{ github.repository }}/releases/tag/v$VERSION\"}" \
+            -d "{\"content\":\"🎉 CSP Kit v$VERSION has been released! 🛡️\\n\\nCheck it out: https://github.com/${{ github.repository }}/releases/tag/v$VERSION\"}" \
             $DISCORD_WEBHOOK_URL
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -275,11 +272,11 @@ jobs:
       - name: Create Twitter announcement (if configured)
         if: env.TWITTER_ENABLED == 'true'
         run: |
-          echo "🛡️ CSP-JS v${{ needs.validate-tag.outputs.version }} is live!"
+          echo "🛡️ CSP Kit v${{ needs.validate-tag.outputs.version }} is live!"
           echo ""
           echo "Generate Content Security Policies from service names in seconds!"
           echo ""
-          echo "npm install csp-js@${{ needs.validate-tag.outputs.version }}"
+          echo "npm install @csp-kit/generator@${{ needs.validate-tag.outputs.version }}"
           echo ""
           echo "#WebSecurity #CSP #OpenSource #JavaScript #TypeScript"
           echo ""
