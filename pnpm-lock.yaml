@@ -76,6 +76,9 @@ importers:
       '@csp-kit/data':
         specifier: workspace:*
         version: link:../../packages/data
+      '@csp-kit/generator':
+        specifier: workspace:*
+        version: link:../../packages/generator
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.59.0(react@19.1.0))
