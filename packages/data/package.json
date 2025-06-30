@@ -24,7 +24,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsup",
+    "build-services": "tsx scripts/build-services.ts",
+    "build": "npm run build-services && tsup",
     "dev": "tsup --watch",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",
@@ -65,6 +66,7 @@
     "@types/node": "^22.15.3",
     "eslint": "^9.29.0",
     "tsup": "^8.0.0",
+    "tsx": "^4.19.2",
     "typescript": "5.8.2"
   },
   "engines": {
