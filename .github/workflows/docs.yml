@@ -1,12 +1,15 @@
-name: Documentation
+name: Documentation Build Check
 
 on:
   push:
     branches: [ main ]
     paths: 
       - 'docs/**'
-      - 'README.md'
-      - 'CONTRIBUTING.md'
+      - 'apps/docs/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'docs/**'
       - 'apps/docs/**'
   repository_dispatch:
     types: [docs-update]
@@ -19,13 +22,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
 
 jobs:
   build-docs:
@@ -54,115 +50,8 @@ jobs:
       - name: Build packages
         run: pnpm build
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
       - name: Build documentation site
         run: |
           cd apps/docs
           pnpm build
-          
-          # Create additional documentation structure
-          mkdir -p out/api
-          mkdir -p out/guides
-          
-          # Copy markdown docs to the site
-          cp -r ../../docs/* out/guides/
-          
-          # Generate API documentation (if we had typedoc)
-          # pnpm exec typedoc --out out/api
-          
-          # Create a simple index page for guides
-          cat > out/guides/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>CSP-JS Documentation</title>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style>
-              body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 40px; }
-              h1 { color: #333; }
-              a { color: #0066cc; text-decoration: none; }
-              a:hover { text-decoration: underline; }
-              .guide-list { list-style: none; padding: 0; }
-              .guide-list li { margin: 10px 0; }
-            </style>
-          </head>
-          <body>
-            <h1>CSP-JS Documentation</h1>
-            <p>Comprehensive guides for maintainers and contributors.</p>
-            
-            <h2>Guides</h2>
-            <ul class="guide-list">
-              <li><a href="ARCHITECTURE.md">🏗️ Architecture Overview</a></li>
-              <li><a href="SERVICE_DEFINITION_GUIDE.md">📋 Service Definition Guide</a></li>
-              <li><a href="MAINTAINER_GUIDE.md">👥 Maintainer Guide</a></li>
-              <li><a href="RELEASE_PROCESS.md">🚀 Release Process</a></li>
-            </ul>
-            
-            <h2>Links</h2>
-            <ul class="guide-list">
-              <li><a href="/">🏠 Main Site</a></li>
-              <li><a href="https://github.com/eason-dev/csp-kit">📦 GitHub Repository</a></li>
-              <li><a href="https://www.npmjs.com/package/csp-js">📡 NPM Package</a></li>
-            </ul>
-          </body>
-          </html>
-          EOF
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./apps/docs/out
-
-  deploy-docs:
-    name: Deploy to GitHub Pages
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build-docs
-    
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-  update-readme-links:
-    name: Update Documentation Links
-    runs-on: ubuntu-latest
-    needs: deploy-docs
-    if: github.event_name == 'repository_dispatch' && github.event.action == 'docs-update'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Update documentation links
-        run: |
-          # Update README.md with latest documentation links
-          VERSION="${{ github.event.client_payload.version }}"
-          
-          # Update any version-specific links in documentation
-          if [ "$VERSION" != "" ]; then
-            echo "Updating documentation for version $VERSION"
-            
-            # Add any version-specific documentation updates here
-            sed -i "s/version-placeholder/$VERSION/g" README.md || true
-          fi
-
-      - name: Commit documentation updates
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          
-          if git diff --quiet; then
-            echo "No documentation changes to commit"
-          else
-            git add README.md
-            git commit -m "docs: update documentation links for release" || exit 0
-            git push
-          fi

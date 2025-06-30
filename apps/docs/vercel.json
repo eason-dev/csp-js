@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd ../.. && pnpm turbo build --filter=docs",
+  "outputDirectory": "build",
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

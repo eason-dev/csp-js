@@ -13,8 +13,9 @@
 /.next/
 /out/
 
-# production
+# docusaurus
 /build
+/.docusaurus
 
 # misc
 .DS_Store
@@ -33,4 +34,3 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
