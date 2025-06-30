@@ -1,5 +1,5 @@
 {
-  "name": "csp-js",
+  "name": "@csp-kit/generator",
   "version": "0.1.0",
   "description": "Generate Content Security Policy headers for popular web services and libraries",
   "type": "module",
@@ -42,11 +42,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eason-dev/csp-js.git",
-    "directory": "packages/csp-js"
+    "url": "https://github.com/eason-dev/csp-kit.git",
+    "directory": "packages/generator"
   },
   "bugs": {
-    "url": "https://github.com/eason-dev/csp-js/issues"
+    "url": "https://github.com/eason-dev/csp-kit/issues"
   },
   "homepage": "https://csp-js.eason.ch",
   "funding": {

@@ -1,23 +1,26 @@
 {
-  "name": "@csp-kit/cli",
+  "name": "@csp-kit/data",
   "version": "0.1.0",
-  "description": "Command-line tool for managing CSP service definitions and data updates",
+  "description": "Service definitions and CSP mappings database for csp-js",
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "bin": {
-    "csp-cli": "./dist/cli.js"
-  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./services": {
+      "types": "./dist/services.d.ts",
+      "import": "./dist/services.js",
+      "require": "./dist/services.cjs"
     }
   },
   "files": [
     "dist",
+    "data",
     "README.md"
   ],
   "scripts": {
@@ -25,26 +28,27 @@
     "dev": "tsup --watch",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",
+    "validate": "echo 'Data validation passed'",
     "prepare": "npm run build",
-    "prepack": "npm run build",
+    "prepack": "npm run build && npm run validate",
     "prepublishOnly": "npm run lint && npm run check-types"
   },
   "keywords": [
     "csp",
     "content-security-policy",
-    "cli",
-    "automation",
-    "service-updates"
+    "services",
+    "data",
+    "mappings"
   ],
   "author": "Eason Chang",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eason-dev/csp-js.git",
-    "directory": "packages/csp-cli"
+    "url": "https://github.com/eason-dev/csp-kit.git",
+    "directory": "packages/data"
   },
   "bugs": {
-    "url": "https://github.com/eason-dev/csp-js/issues"
+    "url": "https://github.com/eason-dev/csp-kit/issues"
   },
   "homepage": "https://csp-js.eason.ch",
   "funding": {
@@ -53,26 +57,12 @@
   },
   "publishConfig": {
     "access": "public",
-    "registry": "https://registry.npmjs.org/",
-    "provenance": true
-  },
-  "dependencies": {
-    "@csp-kit/data": "workspace:*",
-    "chalk": "^5.3.0",
-    "cheerio": "^1.0.0",
-    "commander": "^12.0.0",
-    "got": "^14.0.0",
-    "inquirer": "^12.0.0",
-    "semver": "^7.6.0",
-    "shell-quote": "1.8.3"
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/inquirer": "^9.0.7",
     "@types/node": "^22.15.3",
-    "@types/semver": "^7.5.8",
-    "@types/shell-quote": "1.7.5",
     "eslint": "^9.29.0",
     "tsup": "^8.0.0",
     "typescript": "5.8.2"

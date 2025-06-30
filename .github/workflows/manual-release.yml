@@ -105,12 +105,12 @@ jobs:
         run: |
           VERSION="${{ needs.validate-input.outputs.version }}"
           
-          # Update csp-js version
-          cd packages/csp-js
+          # Update generator version
+          cd packages/generator
           npm version $VERSION --no-git-tag-version
           
-          # Update csp-data version
-          cd ../csp-data
+          # Update data version
+          cd ../data
           npm version $VERSION --no-git-tag-version
           
           echo "✅ Updated package versions to $VERSION"
@@ -217,10 +217,10 @@ jobs:
           echo "Publishing with tag: $NPM_TAG"
           
           # Publish packages
-          cd packages/csp-data
+          cd packages/data
           npm publish --tag $NPM_TAG --provenance --access public
           
-          cd ../csp-js
+          cd ../generator
           npm publish --tag $NPM_TAG --provenance --access public
           
           echo "✅ All packages published successfully"

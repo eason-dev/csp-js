@@ -66,7 +66,7 @@ importers:
     dependencies:
       '@csp-kit/data':
         specifier: workspace:*
-        version: link:../../packages/csp-data
+        version: link:../../packages/data
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.59.0(react@19.1.0))
@@ -117,7 +117,7 @@ importers:
         version: 2.1.1
       csp-js:
         specifier: workspace:*
-        version: link:../../packages/csp-js
+        version: link:../..
       lucide-react:
         specifier: ^0.468.0
         version: 0.468.0(react@19.1.0)
@@ -174,11 +174,11 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
-  packages/csp-cli:
+  packages/cli:
     dependencies:
       '@csp-kit/data':
         specifier: workspace:*
-        version: link:../csp-data
+        version: link:../data
       chalk:
         specifier: ^5.3.0
         version: 5.4.1
@@ -229,7 +229,7 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
-  packages/csp-data:
+  packages/data:
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -249,37 +249,6 @@ importers:
       typescript:
         specifier: 5.8.2
         version: 5.8.2
-
-  packages/csp-js:
-    dependencies:
-      '@csp-kit/data':
-        specifier: workspace:*
-        version: link:../csp-data
-    devDependencies:
-      '@repo/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@repo/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
-      '@types/node':
-        specifier: ^22.15.3
-        version: 22.15.34
-      '@vitest/coverage-v8':
-        specifier: ^2.0.0
-        version: 2.1.9(vitest@2.1.9(@types/node@22.15.34))
-      eslint:
-        specifier: ^9.29.0
-        version: 9.30.0(jiti@1.21.7)
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.0(jiti@1.21.7)(postcss@8.5.6)(typescript@5.8.2)(yaml@2.8.0)
-      typescript:
-        specifier: 5.8.2
-        version: 5.8.2
-      vitest:
-        specifier: ^2.0.0
-        version: 2.1.9(@types/node@22.15.34)
 
   packages/eslint-config:
     devDependencies:
@@ -316,6 +285,37 @@ importers:
       typescript-eslint:
         specifier: ^8.34.0
         version: 8.35.0(eslint@9.30.0(jiti@1.21.7))(typescript@5.8.2)
+
+  packages/generator:
+    dependencies:
+      '@csp-kit/data':
+        specifier: workspace:*
+        version: link:../data
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.34
+      '@vitest/coverage-v8':
+        specifier: ^2.0.0
+        version: 2.1.9(vitest@2.1.9(@types/node@22.15.34))
+      eslint:
+        specifier: ^9.29.0
+        version: 9.30.0(jiti@1.21.7)
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.0(jiti@1.21.7)(postcss@8.5.6)(typescript@5.8.2)(yaml@2.8.0)
+      typescript:
+        specifier: 5.8.2
+        version: 5.8.2
+      vitest:
+        specifier: ^2.0.0
+        version: 2.1.9(@types/node@22.15.34)
 
   packages/typescript-config: {}
 

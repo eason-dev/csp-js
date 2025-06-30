@@ -114,7 +114,7 @@ jobs:
       - name: Run package tests
         run: |
           # Test that packages can be required/imported
-          cd packages/csp-js
+          cd packages/generator
           node -e "
             const pkg = require('./dist/index.js');
             console.log('✅ @csp-kit/generator can be required');
@@ -125,7 +125,7 @@ jobs:
             console.log('✅ generateCSP works');
           "
           
-          cd ../csp-data
+          cd ../data
           node -e "
             const pkg = require('./dist/index.js');
             console.log('✅ @csp-kit/data can be required');
@@ -172,10 +172,10 @@ jobs:
           echo "Publishing with tag: $NPM_TAG"
           
           # Publish packages
-          cd packages/csp-data
+          cd packages/data
           npm publish --tag $NPM_TAG --provenance --access public
           
-          cd ../csp-js
+          cd ../generator
           npm publish --tag $NPM_TAG --provenance --access public
           
           echo "✅ All packages published successfully"
