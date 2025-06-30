@@ -2,5 +2,11 @@
   "buildCommand": "cd ../.. && pnpm turbo build --filter=web",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "installCommand": "cd ../.. && pnpm install --frozen-lockfile"
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
+  "rewrites": [
+    {
+      "source": "/docs/(.*)",
+      "destination": "https://csp-kit-docs.vercel.app/$1"
+    }
+  ]
 }
