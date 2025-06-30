@@ -1,6 +1,6 @@
 # Release Process
 
-This document outlines the complete release process for CSP-JS, including versioning strategy, testing procedures, and deployment steps.
+This document outlines the complete release process for CSP Kit, including versioning strategy, testing procedures, and deployment steps.
 
 ## Table of Contents
 
@@ -64,7 +64,7 @@ This document outlines the complete release process for CSP-JS, including versio
 
 ### Package Versioning
 
-CSP-JS follows **Semantic Versioning (SemVer)**:
+CSP Kit follows **Semantic Versioning (SemVer)**:
 
 ```
 MAJOR.MINOR.PATCH
@@ -96,7 +96,7 @@ Service definitions use **independent versioning**:
 
 ### Cross-Package Compatibility
 
-| csp-js | csp-data | csp-cli | Compatibility |
+| @csp-kit/generator | @csp-kit/data | @csp-kit/cli | Compatibility |
 | ------ | -------- | ------- | ------------- |
 | 1.x.x  | 1.x.x    | 1.x.x   | ✅ Full       |
 | 1.x.x  | 2.x.x    | 1.x.x   | ⚠️ Limited    |
@@ -158,7 +158,7 @@ Week 4: Release Preparation & Deployment
 - [ ] **Service definitions validated**
 
   ```bash
-  csp-cli validate
+  @csp-kit/cli validate
   ```
 
 - [ ] **Service CSP requirements tested**
@@ -306,9 +306,9 @@ pnpm build
 pnpm publish:all
 
 # Verify publication
-npm info csp-js
-npm info @csp-js/data
-npm info @csp-js/cli
+npm info @csp-kit/generator
+npm info @csp-kit/data
+npm info @csp-kit/cli
 ```
 
 ### 5. Deployment Phase
@@ -342,7 +342,7 @@ pnpm cdn:purge
 - [ ] **Verify NPM packages published correctly**
 - [ ] **Test installation from NPM**
   ```bash
-  npm install csp-js@latest
+  npm install @csp-kit/generator@latest
   ```
 - [ ] **Check web app deployment**
 - [ ] **Monitor error tracking** for new issues
@@ -426,7 +426,7 @@ pnpm cdn:purge
 
 ```bash
 # Deprecate specific version
-npm deprecate csp-js@1.2.0 "Critical bug - use 1.1.9 instead"
+npm deprecate @csp-kit/generator@1.2.0 "Critical bug - use 1.1.9 instead"
 
 # Publish patch release if possible
 pnpm version 1.2.1
@@ -513,9 +513,9 @@ pnpm publish
 ### Community Announcement Template
 
 ````markdown
-# 🎉 CSP-JS v1.2.0 Released!
+# 🎉 CSP Kit v1.2.0 Released!
 
-We're excited to announce the release of CSP-JS v1.2.0! This release includes several new features and improvements.
+We're excited to announce the release of CSP Kit v1.2.0! This release includes several new features and improvements.
 
 ## 🆕 What's New
 
@@ -530,7 +530,7 @@ None in this release! Fully backward compatible.
 ## 📈 Upgrade Instructions
 
 ```bash
-npm update csp-js
+npm update @csp-kit/generator
 ```
 ````
 
@@ -549,7 +549,7 @@ Thanks to all contributors who made this release possible!
 **Twitter/X**:
 ```
 
-🛡️ CSP-JS v1.2.0 is live!
+🛡️ CSP Kit v1.2.0 is live!
 
 ✨ New: Stripe Checkout v2 support
 🎯 Enhanced: Version selection UI

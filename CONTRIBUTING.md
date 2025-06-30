@@ -1,6 +1,6 @@
-# Contributing to CSP-JS
+# Contributing to CSP Kit
 
-We love your input! We want to make contributing to CSP-JS as easy and transparent as possible, whether it's:
+We love your input! We want to make contributing to CSP Kit as easy and transparent as possible, whether it's:
 
 - Reporting a bug
 - Discussing the current state of the code
@@ -18,8 +18,8 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 1. **Fork & Clone**
 
    ```bash
-   git clone https://github.com/yourusername/csp-js.git
-   cd csp-js
+   git clone https://github.com/yourusername/csp-kit.git
+   cd csp-kit
    ```
 
 2. **Install Dependencies**
@@ -48,11 +48,11 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 ## Project Structure
 
 ```
-csp-js/
+csp-kit/
 ├── packages/
-│   ├── csp-js/          # Core library - CSP generation logic
-│   ├── csp-data/        # Service definitions database
-│   ├── csp-cli/         # Command-line tools
+│   ├── generator/       # Core library - CSP generation logic
+│   ├── data/            # Service definitions database
+│   ├── cli/             # Command-line tools
 │   ├── ui/              # Shared UI components
 │   └── typescript-config/ # Shared TypeScript configurations
 ├── apps/
@@ -112,7 +112,7 @@ csp-js/
 
 ```bash
 # Install CLI globally
-npm install -g @csp-js/cli
+npm install -g @csp-kit/cli
 
 # Add new service interactively
 csp-cli add --interactive
@@ -172,8 +172,8 @@ csp-cli update service-id --version 2.0.0
 
 5. **Test Your Service**
    ```bash
-   pnpm test --filter @csp-js/data
-   pnpm test --filter csp-js
+   pnpm test --filter @csp-kit/data
+   pnpm test --filter @csp-kit/generator
    ```
 
 ## Service Definition Guidelines
@@ -235,7 +235,7 @@ Available categories (see `ServiceCategory` enum):
 
 ```bash
 pnpm test                    # All packages
-pnpm test --filter csp-js    # Specific package
+pnpm test --filter @csp-kit/generator # Specific package
 ```
 
 ### Integration Tests

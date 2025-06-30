@@ -1,6 +1,6 @@
 # Service Definition Guide
 
-This guide explains how to create and maintain service definitions for CSP-JS. Service definitions are the core data that powers CSP generation for popular web services.
+This guide explains how to create and maintain service definitions for CSP Kit. Service definitions are the core data that powers CSP generation for popular web services.
 
 ## Table of Contents
 
@@ -27,7 +27,7 @@ A service definition is a JSON document that describes:
 ### File Structure
 
 ```
-packages/csp-data/data/services/
+packages/data/data/services/
 ├── google-analytics.jsonc
 ├── microsoft-clarity.jsonc
 ├── stripe.jsonc
@@ -358,7 +358,7 @@ Before submitting a service definition:
 1. **Test CSP Rules**:
 
    ```javascript
-   import { generateCSP } from 'csp-js';
+   import { generateCSP } from '@csp-kit/generator';
 
    const result = generateCSP(['your-service']);
    console.log(result.header);
@@ -373,7 +373,7 @@ Before submitting a service definition:
 3. **Test Monitoring**:
    ```bash
    # Test monitoring URLs
-   csp-cli check your-service --url https://your-test-url.com
+   @csp-kit/cli check your-service --url https://your-test-url.com
    ```
 
 ### Common Validation Errors
@@ -545,23 +545,23 @@ Use appropriate categories from `ServiceCategory` enum:
 
 ```bash
 # Add new service interactively
-csp-cli add --interactive
+@csp-kit/cli add --interactive
 
 # Update existing service
-csp-cli update service-id --version 2.0.0
+@csp-kit/cli update service-id --version 2.0.0
 
 # Validate service definition
-csp-cli validate --service service-id
+@csp-kit/cli validate --service service-id
 
 # Check service for changes
-csp-cli check service-id --url https://test-url.com
+@csp-kit/cli check service-id --url https://test-url.com
 ```
 
 ### Testing Tools
 
 ```javascript
 // Test CSP generation
-import { generateCSP, getServiceVersions } from 'csp-js';
+import { generateCSP, getServiceVersions } from '@csp-kit/generator';
 
 const result = generateCSP(['your-service@1.0.0']);
 console.log('CSP Header:', result.header);

@@ -1,6 +1,6 @@
 # Maintainer Guide
 
-This guide is for CSP-JS maintainers and covers advanced topics for project maintenance, release management, and community engagement.
+This guide is for CSP Kit maintainers and covers advanced topics for project maintenance, release management, and community engagement.
 
 ## Table of Contents
 
@@ -16,11 +16,11 @@ This guide is for CSP-JS maintainers and covers advanced topics for project main
 
 ### Architecture
 
-CSP-JS follows a data-package separation approach inspired by browserslist:
+CSP Kit follows a data-package separation approach inspired by browserslist:
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   csp-js        │    │   csp-data      │    │   csp-cli       │
+│   generator     │    │   data          │    │   cli           │
 │                 │    │                 │    │                 │
 │ • Core API      │───►│ • Service DB    │◄───│ • Management    │
 │ • CSP Generator │    │ • Versioning    │    │ • Automation    │

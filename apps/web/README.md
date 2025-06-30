@@ -1,6 +1,6 @@
 # CSP Generator Web App
 
-A modern web application for generating Content Security Policy headers using the csp-js library.
+A modern web application for generating Content Security Policy headers using the csp-kit library.
 
 ## Features
 
@@ -58,7 +58,7 @@ pnpm check-types
 - **Icons**: Lucide React
 - **Fonts**: Geist Sans & Geist Mono
 - **TypeScript**: Full type safety
-- **Library**: csp-js for CSP generation
+- **Library**: @csp-kit/generator for CSP generation
 
 ## Deploy on Vercel
 

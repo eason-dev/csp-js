@@ -1,6 +1,6 @@
-# CSP-JS Architecture
+# CSP Kit Architecture
 
-This document provides a comprehensive overview of the CSP-JS ecosystem architecture, design decisions, and implementation details.
+This document provides a comprehensive overview of the CSP Kit ecosystem architecture, design decisions, and implementation details.
 
 ## Table of Contents
 
@@ -16,13 +16,13 @@ This document provides a comprehensive overview of the CSP-JS ecosystem architec
 
 ### Core Concept
 
-CSP-JS revolutionizes Content Security Policy management by introducing a **service-first approach**. Instead of manually crafting CSP directives, developers specify the services they use, and CSP-JS automatically generates the appropriate security policies.
+CSP Kit revolutionizes Content Security Policy management by introducing a **service-first approach**. Instead of manually crafting CSP directives, developers specify the services they use, and CSP Kit automatically generates the appropriate security policies.
 
 ```
 Traditional Approach:
 Developer → Manual CSP Rules → Security Policy
 
-CSP-JS Approach:
+CSP Kit Approach:
 Developer → Service Specifications → Auto-Generated CSP → Security Policy
 ```
 
@@ -84,14 +84,14 @@ graph TB
 
 ### Monorepo Structure
 
-CSP-JS follows a **data-package separation** architecture inspired by browserslist:
+CSP Kit follows a **data-package separation** architecture inspired by browserslist:
 
 ```
-csp-js/
+csp-kit/
 ├── packages/
-│   ├── csp-js/              # Core CSP generation library
-│   ├── csp-data/            # Service definitions database
-│   ├── csp-cli/             # Command-line interface
+│   ├── generator/            # Core CSP generation library
+│   ├── data/                # Service definitions database
+│   ├── cli/                 # Command-line interface
 │   ├── ui/                  # Shared UI components
 │   ├── eslint-config/       # Shared ESLint configuration
 │   └── typescript-config/   # Shared TypeScript configuration
@@ -106,9 +106,9 @@ csp-js/
 ```mermaid
 graph LR
     subgraph "Packages"
-        CSP[csp-js]
-        DATA[csp-data]
-        CLI[csp-cli]
+        CSP[generator]
+        DATA[data]
+        CLI[cli]
         UI[ui]
     end
 
@@ -130,7 +130,7 @@ graph LR
 
 ### Core Packages
 
-#### 1. `csp-js` - Core Library
+#### 1. `@csp-kit/generator` - Core Library
 
 **Purpose**: CSP generation engine and public API
 
@@ -144,8 +144,8 @@ export function generateCSP(options: CSPOptions): CSPResult;
 export function generateNonce(): string;
 export function mergeCSPDirectives(...directives: CSPDirectives[]): CSPDirectives;
 
-// Re-exports from csp-data for convenience
-export { getService, searchServices, getServiceVersions } from '@csp-js/data';
+// Re-exports from data package for convenience
+export { getService, searchServices, getServiceVersions } from '@csp-kit/data';
 ```
 
 **Design Principles**:
@@ -155,7 +155,7 @@ export { getService, searchServices, getServiceVersions } from '@csp-js/data';
 - **Framework Agnostic**: Works with any Node.js or browser environment
 - **TypeScript First**: Full TypeScript support with comprehensive types
 
-#### 2. `csp-data` - Service Database
+#### 2. `@csp-kit/data` - Service Database
 
 **Purpose**: Centralized database of service CSP requirements
 
@@ -193,7 +193,7 @@ interface ServiceDefinition {
 }
 ```
 
-#### 3. `csp-cli` - Command Line Interface
+#### 3. `@csp-kit/cli` - Command Line Interface
 
 **Purpose**: Automation and service management tools
 
@@ -222,7 +222,7 @@ interface ServiceDefinition {
 ```mermaid
 sequenceDiagram
     participant User
-    participant API as CSP-JS API
+    participant API as CSP Kit API
     participant Data as Service Database
     participant Generator as CSP Generator
     participant Validator as Validator
@@ -251,7 +251,7 @@ sequenceDiagram
 sequenceDiagram
     participant Monitor as GitHub Actions
     participant Service as External Service
-    participant CLI as CSP-CLI
+    participant CLI as CSP Kit CLI
     participant Repo as GitHub Repository
     participant Community as Community
 
@@ -326,13 +326,13 @@ const result = generateCSP(['stripe', 'google-analytics']);
 
 ```typescript
 // Core generation
-import { generateCSP } from 'csp-js';
+import { generateCSP } from '@csp-kit/generator';
 
 // Optional utilities
-import { generateNonce, validateDirectives } from 'csp-js/utils';
+import { generateNonce, validateDirectives } from '@csp-kit/generator/utils';
 
 // Framework integrations (future)
-import { nextjsPlugin } from 'csp-js/plugins/nextjs';
+import { nextjsPlugin } from '@csp-kit/generator/plugins/nextjs';
 ```
 
 ### 5. Community-Driven Updates
@@ -363,10 +363,10 @@ import { nextjsPlugin } from 'csp-js/plugins/nextjs';
 ### Runtime Dependencies
 
 ```json
-// Minimal runtime dependencies for csp-js
+// Minimal runtime dependencies for @csp-kit/generator
 {
   "dependencies": {
-    "@csp-js/data": "workspace:*"
+    "@csp-kit/data": "workspace:*"
   }
 }
 
@@ -398,9 +398,9 @@ import { nextjsPlugin } from 'csp-js/plugins/nextjs';
 
 ```typescript
 // Only import what you need
-import { generateCSP } from 'csp-js';
+import { generateCSP } from '@csp-kit/generator';
 // vs
-import { generateCSP, generateNonce, validateDirectives } from 'csp-js';
+import { generateCSP, generateNonce, validateDirectives } from '@csp-kit/generator';
 ```
 
 **Data Package Separation**:

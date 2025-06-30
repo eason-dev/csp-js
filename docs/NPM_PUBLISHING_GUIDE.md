@@ -1,6 +1,6 @@
 # NPM Publishing Guide
 
-This guide explains how to publish CSP-JS packages to NPM, including setup, versioning, and release procedures.
+This guide explains how to publish CSP Kit packages to NPM, including setup, versioning, and release procedures.
 
 ## Table of Contents
 
@@ -37,7 +37,7 @@ Ensure you have:
 
 - **Write access** to the GitHub repository
 - **Admin access** to NPM packages
-- **Maintainer role** for @csp-js organization
+- **Maintainer role** for @csp-kit organization
 
 ## Package Configuration
 
@@ -47,7 +47,7 @@ All packages are configured with proper NPM publishing settings:
 
 ```json
 {
-  "name": "csp-js",
+  "name": "@csp-kit/generator",
   "version": "1.0.0",
   "publishConfig": {
     "access": "public",
@@ -57,7 +57,7 @@ All packages are configured with proper NPM publishing settings:
   "repository": {
     "type": "git",
     "url": "https://github.com/eason-dev/csp-kit.git",
-    "directory": "packages/csp-js"
+    "directory": "packages/generator"
   },
   "scripts": {
     "prepare": "npm run build",
@@ -110,19 +110,19 @@ auto-install-peers=true
 
 Packages must be published in dependency order:
 
-1. **@csp-js/data** (no dependencies)
-2. **csp-js** (depends on @csp-js/data)
-3. **@csp-js/cli** (depends on @csp-js/data)
+1. **@csp-kit/data** (no dependencies)
+2. **@csp-kit/generator** (depends on @csp-kit/data)
+3. **@csp-kit/cli** (depends on @csp-kit/data)
 
 ### Version Management
 
-CSP-JS uses **synchronized versioning** - all packages share the same version number:
+CSP Kit uses **synchronized versioning** - all packages share the same version number:
 
 ```bash
 # Check current versions
-node -p "require('./packages/csp-js/package.json').version"
-node -p "require('./packages/csp-data/package.json').version"
-node -p "require('./packages/csp-cli/package.json').version"
+node -p "require('./packages/generator/package.json').version"
+node -p "require('./packages/data/package.json').version"
+node -p "require('./packages/cli/package.json').version"
 
 # Update all package versions
 pnpm version:patch   # 1.0.0 → 1.0.1
@@ -149,7 +149,7 @@ The preferred method is using GitHub Actions for automated publishing:
    - Check for any failures
 
 3. **Verify Publication**:
-   - Check [NPM packages](https://www.npmjs.com/package/csp-js)
+   - Check [NPM packages](https://www.npmjs.com/package/@csp-kit/generator)
    - Verify GitHub release created
    - Test installation
 
@@ -221,9 +221,9 @@ If the script fails, you can publish manually:
 
    ```bash
    # Update package versions
-   cd packages/csp-data && npm version 1.0.0 --no-git-tag-version
-   cd ../csp-js && npm version 1.0.0 --no-git-tag-version
-   cd ../csp-cli && npm version 1.0.0 --no-git-tag-version
+   cd packages/data && npm version 1.0.0 --no-git-tag-version
+   cd ../generator && npm version 1.0.0 --no-git-tag-version
+   cd ../cli && npm version 1.0.0 --no-git-tag-version
    ```
 
 3. **Build Packages**:
@@ -235,22 +235,22 @@ If the script fails, you can publish manually:
 4. **Publish in Order**:
 
    ```bash
-   # Publish csp-data first
-   cd packages/csp-data
+   # Publish data first
+   cd packages/data
    npm publish --access public --provenance
 
    # Wait for NPM propagation
    sleep 30
 
-   # Publish csp-js
-   cd ../csp-js
+   # Publish generator
+   cd ../generator
    npm publish --access public --provenance
 
    # Wait for NPM propagation
    sleep 30
 
-   # Publish csp-cli
-   cd ../csp-cli
+   # Publish cli
+   cd ../cli
    npm publish --access public --provenance
    ```
 
@@ -272,12 +272,12 @@ After publishing, verify the release:
 
    ```bash
    # Check packages are available
-   npm view csp-js
-   npm view @csp-js/data
-   npm view @csp-js/cli
+   npm view @csp-kit/generator
+   npm view @csp-kit/data
+   npm view @csp-kit/cli
 
    # Check specific version
-   npm view csp-js@1.0.0
+   npm view @csp-kit/generator@1.0.0
    ```
 
 2. **Installation Test**:
@@ -286,11 +286,11 @@ After publishing, verify the release:
    # Test installation in clean environment
    mkdir test-install && cd test-install
    npm init -y
-   npm install csp-js@1.0.0
+   npm install @csp-kit/generator@1.0.0
 
    # Test functionality
    node -e "
-     const { generateCSP } = require('csp-js');
+     const { generateCSP } = require('@csp-kit/generator');
      console.log(generateCSP(['google-analytics']).header);
    "
    ```
@@ -299,9 +299,9 @@ After publishing, verify the release:
 
    ```bash
    # Test global CLI installation
-   npm install -g @csp-js/cli@1.0.0
-   csp-cli --version
-   csp-cli generate google-analytics
+   npm install -g @csp-kit/cli@1.0.0
+   @csp-kit/cli --version
+   @csp-kit/cli generate google-analytics
    ```
 
 4. **Documentation Verification**:
@@ -315,12 +315,12 @@ Monitor package health after release:
 
 ```bash
 # Check download stats
-npm view csp-js dist-tags
-npm view csp-js time
+npm view @csp-kit/generator dist-tags
+npm view @csp-kit/generator time
 
 # Monitor for issues
-npm audit csp-js
-npm outdated csp-js
+npm audit @csp-kit/generator
+npm outdated @csp-kit/generator
 ```
 
 ## Troubleshooting
@@ -380,10 +380,10 @@ npm cache clean --force
 
 ```bash
 # Unpublish specific version (within 24 hours)
-npm unpublish csp-js@1.0.0
+npm unpublish @csp-kit/generator@1.0.0
 
 # Deprecate version (after 24 hours)
-npm deprecate csp-js@1.0.0 "Critical bug - use 1.0.1 instead"
+npm deprecate @csp-kit/generator@1.0.0 "Critical bug - use 1.0.1 instead"
 ```
 
 #### Rollback Release

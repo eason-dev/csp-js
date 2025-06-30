@@ -95,7 +95,7 @@ pnpm --filter @csp-kit/cli build    # Build CLI only
 
 ## Security Considerations
 
-- **Conservative Defaults**: CSP-JS uses strict defaults and warns about insecure configurations
+- **Conservative Defaults**: CSP Kit uses strict defaults and warns about insecure configurations
 - **Nonce Support**: Built-in nonce generation for secure inline script execution
 - **Regular Updates**: Service definitions are actively monitored and updated
 - **Community Driven**: Security issues are quickly addressed through community involvement
