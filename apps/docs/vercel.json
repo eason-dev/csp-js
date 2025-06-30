@@ -1,5 +1,5 @@
 {
   "buildCommand": "cd ../.. && pnpm turbo build --filter=docs",
-  "outputDirectory": "build",
+  "outputDirectory": "../../apps/docs/build",
   "installCommand": "cd ../.. && pnpm install --frozen-lockfile"
 }
