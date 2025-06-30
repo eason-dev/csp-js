@@ -1,9 +1,5 @@
 {
-  "version": 2,
-  "rewrites": [
-    {
-      "source": "/docs/(.*)",
-      "destination": "https://csp-kit-docs.vercel.app/$1"
-    }
-  ]
+  "buildCommand": "turbo build --filter=web",
+  "outputDirectory": "apps/web/.next",
+  "installCommand": "pnpm install --frozen-lockfile"
 }
