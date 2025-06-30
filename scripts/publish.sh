@@ -269,7 +269,7 @@ success "Release $NEW_VERSION completed successfully!"
 
 if [ "$DRY_RUN" = false ]; then
     log "Next steps:"
-    log "1. Create GitHub release: https://github.com/eason-dev/csp-js/releases/new?tag=v$NEW_VERSION"
+    log "1. Create GitHub release: https://github.com/eason-dev/csp-kit/releases/new?tag=v$NEW_VERSION"
     log "2. Update documentation if needed"
     log "3. Announce the release to the community"
 else

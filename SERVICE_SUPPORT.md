@@ -122,7 +122,7 @@ We now support **106+ popular web services** across all major categories. Here a
 
 We're always adding new services! To request support for a service:
 
-1. [Create an issue](https://github.com/eason-dev/csp-js/issues/new?template=add-service.yml) using our service request template
+1. [Create an issue](https://github.com/eason-dev/csp-kit/issues/new?template=add-service.yml) using our service request template
 2. Use the CLI: `csp-cli add --interactive`
 3. Submit a pull request with the service definition
 

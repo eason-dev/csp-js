@@ -57,7 +57,7 @@ console.log(result.header);
 
         <div className={styles.links}>
           <a
-            href="https://github.com/eason-dev/csp-js"
+            href="https://github.com/eason-dev/csp-kit"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}
@@ -73,7 +73,7 @@ console.log(result.header);
             📦 NPM Package
           </a>
           <a
-            href="https://csp-js.eason.ch"
+            href="https://csp-kit.eason.ch"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}

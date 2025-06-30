@@ -303,10 +303,10 @@ Use our issue templates for:
 
 ## Getting Help
 
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/eason-dev/csp-js/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/eason-dev/csp-js/discussions)
-- 📧 **Maintainers**: [maintainers@csp-js.eason.ch](mailto:maintainers@csp-js.eason.ch)
-- 📖 **Documentation**: [csp-js.eason.ch/docs](https://csp-js.eason.ch/docs)
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/eason-dev/csp-kit/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions)
+- 📧 **Maintainers**: [maintainers@csp-kit.eason.ch](mailto:maintainers@csp-kit.eason.ch)
+- 📖 **Documentation**: [csp-kit.eason.ch/docs](https://csp-kit.eason.ch/docs)
 
 ## Code of Conduct
 

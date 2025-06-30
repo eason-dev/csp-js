@@ -482,13 +482,13 @@ pnpm format         # Prettier formatting
 
 **Current Maintainers:**
 
-- Primary: [maintainer1@csp-js.eason.ch](mailto:maintainer1@csp-js.eason.ch)
-- Secondary: [maintainer2@csp-js.eason.ch](mailto:maintainer2@csp-js.eason.ch)
+- Primary: [maintainer1@csp-kit.eason.ch](mailto:maintainer1@csp-kit.eason.ch)
+- Secondary: [maintainer2@csp-kit.eason.ch](mailto:maintainer2@csp-kit.eason.ch)
 
 **Emergency Contact:**
 
-- Security: [security@csp-js.eason.ch](mailto:security@csp-js.eason.ch)
-- Infrastructure: [infrastructure@csp-js.eason.ch](mailto:infrastructure@csp-js.eason.ch)
+- Security: [security@csp-kit.eason.ch](mailto:security@csp-kit.eason.ch)
+- Infrastructure: [infrastructure@csp-kit.eason.ch](mailto:infrastructure@csp-kit.eason.ch)
 
 ---
 
