@@ -1,5 +1,5 @@
 import { loadServices, getServiceRegistry } from '@csp-kit/generator';
-import CSPGeneratorClient from './new-csp-generator-client';
+import CSPGeneratorClient from './redesigned-csp-generator-client';
 
 export default async function CSPGeneratorServer() {
   // Load services on the server side
