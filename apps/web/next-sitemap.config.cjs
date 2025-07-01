@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL || 'https://csp-kit.vercel.app',
+  siteUrl: process.env.SITE_URL || 'https://csp-kit.eason.ch',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
   exclude: ['/server-sitemap-index.xml'],
@@ -12,7 +12,8 @@ module.exports = {
       },
     ],
     additionalSitemaps: [
-      `${process.env.SITE_URL || 'https://csp-kit.vercel.app'}/server-sitemap-index.xml`,
+      `${process.env.SITE_URL || 'https://csp-kit.eason.ch'}/server-sitemap-index.xml`,
+      `${process.env.SITE_URL || 'https://csp-kit.eason.ch'}/docs/sitemap.xml`,
     ],
   },
   transform: async (config, path) => {

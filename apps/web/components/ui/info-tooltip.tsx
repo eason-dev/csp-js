@@ -1,18 +1,26 @@
 'use client';
 
-import { HelpCircle } from 'lucide-react';
+import { HelpCircle, ExternalLink } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
 
 interface InfoTooltipProps {
   content: string;
   className?: string;
+  referenceUrl?: string;
+  referenceText?: string;
 }
 
-export function InfoTooltip({ content, className = '' }: InfoTooltipProps) {
+export function InfoTooltip({ 
+  content, 
+  className = '', 
+  referenceUrl,
+  referenceText = 'Learn more'
+}: InfoTooltipProps) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -25,7 +33,20 @@ export function InfoTooltip({ content, className = '' }: InfoTooltipProps) {
         </button>
       </TooltipTrigger>
       <TooltipContent className="max-w-xs">
-        <p className="text-sm">{content}</p>
+        <div className="space-y-2">
+          <p className="text-sm">{content}</p>
+          {referenceUrl && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-7 text-xs w-full"
+              onClick={() => window.open(referenceUrl, '_blank', 'noopener,noreferrer')}
+            >
+              <ExternalLink className="h-3 w-3 mr-1" />
+              {referenceText}
+            </Button>
+          )}
+        </div>
       </TooltipContent>
     </Tooltip>
   );

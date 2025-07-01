@@ -1,7 +1,8 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { Shield, Package, BookOpen, Zap } from 'lucide-react';
+import { Shield, Package, BookOpen, Zap, Menu, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { ServiceCart } from '@/components/header/service-cart';
@@ -10,6 +11,12 @@ import { cn } from '@/lib/utils';
 
 export function Header() {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Close mobile menu when pathname changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const isActivePage = (path: string) => {
     if (path === '/') {
@@ -65,9 +72,57 @@ export function Header() {
           <div className="md:hidden flex items-center gap-2">
             <ServiceCart />
             <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
           </div>
         </div>
       </div>
+      
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t bg-background/95 backdrop-blur-sm">
+          <div className="container mx-auto px-4 py-4 space-y-2">
+            <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+              <Button 
+                variant={isActivePage('/') ? 'default' : 'ghost'} 
+                size="sm"
+                className={cn(
+                  'w-full justify-start',
+                  isActivePage('/') && 'bg-primary text-primary-foreground'
+                )}
+              >
+                <Zap className="h-4 w-4 mr-2" />
+                Generator
+              </Button>
+            </Link>
+            <Link href="/services" onClick={() => setMobileMenuOpen(false)}>
+              <Button 
+                variant={isActivePage('/services') ? 'default' : 'ghost'} 
+                size="sm"
+                className={cn(
+                  'w-full justify-start',
+                  isActivePage('/services') && 'bg-primary text-primary-foreground'
+                )}
+              >
+                <Package className="h-4 w-4 mr-2" />
+                All Services
+              </Button>
+            </Link>
+            <Link href="/docs" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
+              <Button variant="ghost" size="sm" className="w-full justify-start">
+                <BookOpen className="h-4 w-4 mr-2" />
+                Docs
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

@@ -79,7 +79,7 @@ export function SimpleSearch({
       .slice(0, 8);
   }, [searchQuery, fuse, services]);
 
-  const handleServiceSelect = (serviceId: string) => {
+  const handleServiceSelect = useCallback((serviceId: string) => {
     const service = services[serviceId];
     if (service && !isSelected(serviceId)) {
       addService({
@@ -91,7 +91,7 @@ export function SimpleSearch({
     setShowResults(false);
     setSearchQuery('');
     setFocusedIndex(-1);
-  };
+  }, [services, isSelected, addService]);
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {

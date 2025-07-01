@@ -2,18 +2,16 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { type ServiceRegistry, type ServiceDefinition } from '@csp-kit/generator';
 import Fuse from 'fuse.js';
 import {
   Search,
-  ExternalLink,
   Filter,
   Grid3X3,
   List,
   Plus,
   ExternalLinkIcon,
-  Check,
   Minus,
 } from 'lucide-react';
 import { useSelectedServices } from '@/contexts/selected-services-context';
@@ -28,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import Link from 'next/link';
 
 interface AllServicesPageProps {
   serviceRegistry: ServiceRegistry;
@@ -37,6 +34,7 @@ interface AllServicesPageProps {
 export default function AllServicesPage({ serviceRegistry }: AllServicesPageProps) {
   const services = serviceRegistry.services;
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { addService, removeService, isSelected } = useSelectedServices();
   
   const [searchQuery, setSearchQuery] = useState('');
@@ -126,43 +124,47 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
     const versionCount = Object.keys(service.versions).length;
     const serviceSelected = isSelected(service.id);
 
+    const handleCardClick = () => {
+      router.push(`/service/${service.id}`);
+    };
+
     if (viewMode === 'list') {
       return (
-        <div className="flex items-center justify-between border-b border-border p-4 hover:bg-muted/50">
+        <div 
+          className={`flex items-center justify-between border-b p-4 hover:bg-muted/50 cursor-pointer transition-all ${
+            serviceSelected 
+              ? 'border-l-4 border-l-primary bg-primary/5' 
+              : 'border-border'
+          }`}
+          onClick={handleCardClick}
+        >
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-2">
               <h3 className="font-medium text-lg truncate">{service.name}</h3>
               <Badge variant="outline" className="text-xs shrink-0">
                 {categoryDisplayName}
               </Badge>
-              {serviceSelected && (
-                <Badge variant="default" className="text-xs shrink-0">
-                  <Check className="h-3 w-3 mr-1" />
-                  Added
-                </Badge>
+              {versionCount > 1 && (
+                <span className="text-xs text-muted-foreground shrink-0">
+                  {versionCount} versions
+                </span>
               )}
-              <span className="text-xs text-muted-foreground shrink-0">
-                {versionCount} version{versionCount !== 1 ? 's' : ''}
-              </span>
             </div>
             <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
               {service.description}
             </p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>Updated {new Date(service.lastUpdated).toLocaleDateString()}</span>
-              {service.aliases && service.aliases.length > 0 && (
-                <>
-                  <span>•</span>
-                  <span>Also known as: {service.aliases.slice(0, 2).join(', ')}</span>
-                </>
-              )}
             </div>
           </div>
           <div className="flex items-center gap-2 ml-4">
             <Button
               variant={serviceSelected ? "outline" : "default"}
               size="sm"
-              onClick={() => handleToggleService(service)}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleService(service);
+              }}
               className="flex items-center gap-1"
             >
               {serviceSelected ? (
@@ -177,26 +179,20 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
                 </>
               )}
             </Button>
-            <Link href={`/service/${service.id}`} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="sm">
-                View Details
-              </Button>
-            </Link>
-            <a
-              href={service.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <ExternalLink className="h-4 w-4" />
-            </a>
           </div>
         </div>
       );
     }
 
     return (
-      <Card className="group hover:shadow-md transition-all">
+      <Card 
+        className={`group hover:shadow-md transition-all cursor-pointer ${
+          serviceSelected 
+            ? 'border-2 border-primary shadow-sm' 
+            : 'border'
+        }`}
+        onClick={handleCardClick}
+      >
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
@@ -205,75 +201,43 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
                 <Badge variant="outline" className="text-xs">
                   {categoryDisplayName}
                 </Badge>
-                {serviceSelected && (
-                  <Badge variant="default" className="text-xs">
-                    <Check className="h-3 w-3 mr-1" />
-                    Added
-                  </Badge>
+                {versionCount > 1 && (
+                  <span className="text-xs text-muted-foreground">
+                    {versionCount} versions
+                  </span>
                 )}
-                <span className="text-xs text-muted-foreground">
-                  {versionCount} version{versionCount !== 1 ? 's' : ''}
-                </span>
               </div>
             </div>
-            <a
-              href={service.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <ExternalLink className="h-4 w-4" />
-            </a>
           </div>
           <CardDescription className="line-clamp-2">{service.description}</CardDescription>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="flex items-center justify-between gap-2 mb-3">
+          <div className="flex items-center justify-between gap-2">
             <div className="text-xs text-muted-foreground">
               Updated {new Date(service.lastUpdated).toLocaleDateString()}
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant={serviceSelected ? "outline" : "default"}
-                size="sm"
-                onClick={() => handleToggleService(service)}
-                className="flex items-center gap-1"
-              >
-                {serviceSelected ? (
-                  <>
-                    <Minus className="h-3 w-3" />
-                    Remove
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-3 w-3" />
-                    Add
-                  </>
-                )}
-              </Button>
-              <Link href={`/service/${service.id}`} target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="sm">
-                  View Details
-                </Button>
-              </Link>
-            </div>
+            <Button
+              variant={serviceSelected ? "outline" : "default"}
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggleService(service);
+              }}
+              className="flex items-center gap-1"
+            >
+              {serviceSelected ? (
+                <>
+                  <Minus className="h-3 w-3" />
+                  Remove
+                </>
+              ) : (
+                <>
+                  <Plus className="h-3 w-3" />
+                  Add
+                </>
+              )}
+            </Button>
           </div>
-          {service.aliases && service.aliases.length > 0 && (
-            <div className="mt-2 pt-2 border-t border-border">
-              <div className="flex flex-wrap gap-1">
-                {service.aliases.slice(0, 3).map(alias => (
-                  <Badge key={alias} variant="secondary" className="text-xs">
-                    {alias}
-                  </Badge>
-                ))}
-                {service.aliases.length > 3 && (
-                  <Badge variant="secondary" className="text-xs">
-                    +{service.aliases.length - 3} more
-                  </Badge>
-                )}
-              </div>
-            </div>
-          )}
         </CardContent>
       </Card>
     );
@@ -291,7 +255,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
         </div>
 
         {/* Controls */}
-        <div className="mb-8 space-y-4">
+        <div className="mb-8 space-y-4 sticky top-16 bg-background/95 backdrop-blur-sm z-40 py-4 -mt-4">
           {/* Search and Filters */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">

@@ -8,17 +8,19 @@ import {
   Info,
   Code,
   BookOpen,
-  Copy,
-  Check,
   Plus,
   Minus,
+  ArrowLeft,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useSelectedServices } from '@/contexts/selected-services-context';
+import { ColorCodedHeader } from '@/components/csp/color-coded-header';
+import { UsageMethods } from '@/components/csp/usage-methods';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface ServicePageProps {
@@ -28,6 +30,7 @@ interface ServicePageProps {
 export default function ServicePage({ service }: ServicePageProps) {
   const [copied, setCopied] = useState(false);
   const { addService, removeService, isSelected } = useSelectedServices();
+  const router = useRouter();
   
   const serviceSelected = isSelected(service.id);
 
@@ -57,30 +60,39 @@ export default function ServicePage({ service }: ServicePageProps) {
     .replace('_', ' ')
     .replace(/\b\w/g, l => l.toUpperCase());
   const defaultVersionData = service.versions[service.defaultVersion];
+  
+  // Generate CSP header for this service
+  const generateServiceCSP = () => {
+    if (!defaultVersionData?.csp) return '';
+    return Object.entries(defaultVersionData.csp)
+      .map(([directive, sources]) => `${directive} ${(sources as string[]).join(' ')}`)
+      .join('; ');
+  };
 
-  // Generate sample code for CSP Kit usage
-  const sampleCode = `// Install CSP Kit
-npm install @csp-kit/generator
-
-// Generate CSP for ${service.name}
-import { generateCSP } from '@csp-kit/generator';
-
-const result = await generateCSP({
-  services: ['${service.id}'],
-  nonce: true, // Optional: generate nonce for inline scripts
-  customRules: {
-    // Add your custom CSP rules here
+  const cspHeader = generateServiceCSP();
+  
+  // Parse CSP into directives object for color coding
+  const directives: Record<string, string[]> = {};
+  if (defaultVersionData?.csp) {
+    Object.entries(defaultVersionData.csp).forEach(([directive, sources]) => {
+      directives[directive] = sources as string[];
+    });
   }
-});
 
-console.log(result.header);
-// ${Object.entries(defaultVersionData?.csp || {})
-    .map(([directive, sources]) => `${directive} ${(sources as string[]).join(' ')}`)
-    .join('; ')}`;
 
   return (
     <div className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl space-y-8">
+          {/* Go Back Button */}
+          <Button
+            variant="ghost"
+            onClick={() => router.back()}
+            className="flex items-center gap-2 mb-4"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to All Services
+          </Button>
+
           {/* Service Header */}
           <div className="space-y-4 text-center">
             <div className="flex flex-wrap items-center justify-center gap-3">
@@ -139,51 +151,37 @@ console.log(result.header);
                   Content Security Policy directives required for {service.name}
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                {defaultVersionData &&
-                  Object.entries(defaultVersionData.csp).map(([directive, sources]) => (
-                    <div key={directive} className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="font-mono text-xs">
-                          {directive}
-                        </Badge>
-                      </div>
-                      <div className="bg-muted space-y-1 rounded-lg p-3">
-                        {(sources as string[]).map((source, index) => (
-                          <div key={index} className="text-foreground font-mono text-sm">
-                            {source}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+              <CardContent>
+                {cspHeader && (
+                  <ColorCodedHeader
+                    header={cspHeader}
+                    directives={directives}
+                    onCopy={() => copyToClipboard(cspHeader)}
+                    copied={copied}
+                    showBreakdown={true}
+                  />
+                )}
               </CardContent>
             </Card>
 
-            {/* Quick Setup */}
+            {/* Implementation Methods */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Code className="h-5 w-5" />
-                  Quick Setup with CSP Kit
+                  Implementation Methods
                 </CardTitle>
-                <CardDescription>Generate CSP headers automatically using CSP Kit</CardDescription>
+                <CardDescription>Different ways to use this CSP configuration</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="bg-muted relative rounded-lg p-4">
-                    <pre className="overflow-x-auto text-sm">
-                      <code>{sampleCode}</code>
-                    </pre>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-2 top-2"
-                      onClick={() => copyToClipboard(sampleCode)}
-                    >
-                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                    </Button>
-                  </div>
+                <UsageMethods
+                  cspHeader={cspHeader}
+                  serviceIds={[service.id]}
+                  useNonce={false}
+                  reportUri=""
+                  customRules={{}}
+                />
+                <div className="mt-4">
                   <Link href="/">
                     <Button className="w-full">Try Interactive Generator</Button>
                   </Link>

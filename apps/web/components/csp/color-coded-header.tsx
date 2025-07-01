@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Copy, Check, Eye, EyeOff } from 'lucide-react';
+import { InfoTooltip } from '@/components/ui/info-tooltip';
 
 interface ColorCodedHeaderProps {
   header: string;
@@ -11,6 +12,10 @@ interface ColorCodedHeaderProps {
   onCopy: () => void;
   copied: boolean;
   showBreakdown?: boolean;
+  serviceTags?: {
+    serviceId: string;
+    serviceName: string;
+  }[];
 }
 
 // Accessibility-friendly color scheme with good contrast ratios
@@ -35,7 +40,67 @@ const DIRECTIVE_COLORS = {
 // Common CSP keywords that should be styled differently
 const CSP_KEYWORDS = ["'self'", "'none'", "'unsafe-inline'", "'unsafe-eval'", "'strict-dynamic'", "'nonce-", "'sha256-", "'sha384-", "'sha512-"];
 
-export function ColorCodedHeader({ header, directives, onCopy, copied, showBreakdown = false }: ColorCodedHeaderProps) {
+// CSP directive descriptions and documentation links
+const DIRECTIVE_INFO = {
+  'script-src': {
+    description: 'Controls which scripts can be executed. Protects against XSS attacks by preventing unauthorized JavaScript execution.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src'
+  },
+  'style-src': {
+    description: 'Controls which stylesheets can be loaded. Prevents CSS injection attacks and unauthorized styling.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src'
+  },
+  'img-src': {
+    description: 'Controls which images can be loaded. Prevents data exfiltration through malicious images.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src'
+  },
+  'connect-src': {
+    description: 'Controls which URLs can be loaded using script interfaces (fetch, XMLHttpRequest, WebSocket). Prevents unauthorized API calls.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src'
+  },
+  'font-src': {
+    description: 'Controls which fonts can be loaded. Prevents unauthorized font downloads that could be used for tracking.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src'
+  },
+  'frame-src': {
+    description: 'Controls which URLs can be embedded as frames. Prevents clickjacking and unauthorized iframe embedding.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-src'
+  },
+  'media-src': {
+    description: 'Controls which audio and video sources can be loaded. Prevents unauthorized media content.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src'
+  },
+  'object-src': {
+    description: 'Controls which plugins can be loaded (Flash, Java). Generally recommended to set to "none" for security.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/object-src'
+  },
+  'worker-src': {
+    description: 'Controls which URLs can be loaded as Web Workers, Shared Workers, or Service Workers.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/worker-src'
+  },
+  'child-src': {
+    description: 'Controls which URLs can be loaded as nested browsing contexts (frames) and worker execution contexts.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/child-src'
+  },
+  'manifest-src': {
+    description: 'Controls which manifest files can be loaded. Used for Progressive Web App manifests.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/manifest-src'
+  },
+  'form-action': {
+    description: 'Controls which URLs can be used as form submission targets. Prevents malicious form redirects.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/form-action'
+  },
+  'report-uri': {
+    description: 'Specifies a URL where CSP violation reports should be sent. Essential for monitoring security issues.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/report-uri'
+  },
+  'report-to': {
+    description: 'Modern replacement for report-uri. Uses the Reporting API to send CSP violation reports.',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/report-to'
+  }
+};
+
+export function ColorCodedHeader({ header, directives, onCopy, copied, showBreakdown = false, serviceTags = [] }: ColorCodedHeaderProps) {
   const [showColors, setShowColors] = useState(true);
 
   // Parse header into segments with their types
@@ -172,9 +237,24 @@ export function ColorCodedHeader({ header, directives, onCopy, copied, showBreak
       {/* Detailed Breakdown */}
       {showBreakdown && directives && Object.keys(directives).length > 0 && (
         <div className="space-y-3 mt-6">
-          <h4 className="text-sm font-medium">Directive Breakdown</h4>
+          <div className="flex items-center justify-between">
+            <h4 className="text-sm font-medium">Directive Breakdown</h4>
+            {serviceTags.length > 0 && (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <span>From:</span>
+                <div className="flex gap-1">
+                  {serviceTags.map((service) => (
+                    <Badge key={service.serviceId} variant="secondary" className="text-xs">
+                      {service.serviceName}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
           {Object.entries(directives).map(([directive, sources]) => {
             const colorClass = getDirectiveColor(directive);
+            const directiveInfo = DIRECTIVE_INFO[directive as keyof typeof DIRECTIVE_INFO];
             return (
               <div key={directive} className="space-y-2">
                 <div className="flex items-center gap-2">
@@ -184,6 +264,13 @@ export function ColorCodedHeader({ header, directives, onCopy, copied, showBreak
                   >
                     {directive}
                   </Badge>
+                  {directiveInfo && (
+                    <InfoTooltip 
+                      content={directiveInfo.description}
+                      referenceUrl={directiveInfo.url}
+                      referenceText="MDN Docs"
+                    />
+                  )}
                   <span className="text-xs text-muted-foreground">
                     {sources.length} source{sources.length !== 1 ? 's' : ''}
                   </span>

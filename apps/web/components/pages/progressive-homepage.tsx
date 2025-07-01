@@ -39,39 +39,39 @@ interface ProgressiveHomepageProps {
   serviceRegistry: ServiceRegistry;
 }
 
-// Categories with descriptions for better UX
-const CATEGORY_CARDS = [
+// Common use-case scenarios for better UX
+const SCENARIO_CARDS = [
   {
-    id: 'analytics',
-    title: 'Analytics & Tracking',
-    description: 'Google Analytics, Mixpanel, Hotjar',
+    id: 'blog-analytics',
+    title: 'Blog with Analytics',
+    description: 'Personal blog with Google Analytics tracking',
     icon: TrendingUp,
     color: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
-    services: ['google-analytics', 'google-tag-manager', 'mixpanel', 'hotjar', 'amplitude']
+    services: ['google-analytics', 'google-fonts']
   },
   {
-    id: 'payment',
-    title: 'Payment Processing',
-    description: 'Stripe, PayPal, Square',
+    id: 'ecommerce-store',
+    title: 'E-commerce Store',
+    description: 'Online store with payments and tracking',
     icon: Shield,
     color: 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800',
-    services: ['stripe', 'paypal', 'square', 'adyen']
+    services: ['stripe', 'google-analytics', 'google-tag-manager', 'facebook-pixel']
   },
   {
-    id: 'social',
-    title: 'Social Media',
-    description: 'Facebook, Twitter, LinkedIn',
+    id: 'marketing-landing',
+    title: 'Marketing Landing Page',
+    description: 'High-converting page with social tracking',
     icon: Users,
     color: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800',
-    services: ['facebook-pixel', 'twitter-widgets', 'linkedin-insights', 'pinterest']
+    services: ['facebook-pixel', 'google-analytics', 'hotjar', 'linkedin-insights']
   },
   {
-    id: 'cdn',
-    title: 'CDN & Assets',
-    description: 'Cloudflare, jsDelivr, Google Fonts',
+    id: 'saas-dashboard',
+    title: 'SaaS Dashboard',
+    description: 'Web app with user analytics and CDN',
     icon: Layers,
     color: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/20 dark:text-orange-300 dark:border-orange-800',
-    services: ['google-fonts', 'cloudflare-cdnjs', 'jsdelivr', 'unpkg']
+    services: ['mixpanel', 'amplitude', 'google-fonts']
   }
 ];
 
@@ -107,7 +107,7 @@ const USAGE_METHODS = [
 
 export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHomepageProps) {
   const services = serviceRegistry.services;
-  const { selectedServices, addService, removeService, clearServices } = useSelectedServices();
+  const { selectedServices, addService, removeService, clearServices, isSelected } = useSelectedServices();
   
   // State management
   const [useNonce, setUseNonce] = useState(false);
@@ -216,21 +216,20 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
     }
   };
 
-  const handleCategorySelect = (categoryId: string) => {
-    const category = CATEGORY_CARDS.find(c => c.id === categoryId);
-    if (category) {
-      // Add the first service from this category that exists
-      const availableService = category.services.find(serviceId => services[serviceId]);
-      if (availableService) {
-        const service = services[availableService];
-        if (service) {
+  const handleScenarioSelect = (scenarioId: string) => {
+    const scenario = SCENARIO_CARDS.find(c => c.id === scenarioId);
+    if (scenario) {
+      // Add all services from this scenario that exist
+      scenario.services.forEach(serviceId => {
+        const service = services[serviceId];
+        if (service && !isSelected(serviceId)) {
           addService({
             id: service.id,
             name: service.name,
             version: service.defaultVersion,
           });
         }
-      }
+      });
     }
   };
 
@@ -290,49 +289,51 @@ Header always set Content-Security-Policy "${result.header}"`;
         />
       </div>
 
-      {/* Quick Start Categories - Always Visible */}
-      <Card className="mb-8">
-        <CardHeader>
-          <div className="text-center">
-            <CardTitle className="flex items-center justify-center gap-2 mb-2">
-              <Bookmark className="h-5 w-5 text-primary" />
-              Quick Start by Category
-            </CardTitle>
-            <CardDescription>
-              Choose a category to get started, or search for specific services above
-            </CardDescription>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {CATEGORY_CARDS.map(category => {
-              const Icon = category.icon;
-              const categoryServices = category.services.filter(id => services[id]);
-              
-              return (
-                <div
-                  key={category.id}
-                  className={`group cursor-pointer rounded-lg border p-4 transition-all hover:shadow-lg ${category.color}`}
-                  onClick={() => handleCategorySelect(category.id)}
-                >
-                  <div className="text-center">
-                    <Icon className="h-8 w-8 mx-auto mb-3" />
-                    <h3 className="font-medium text-sm mb-2">
-                      {category.title}
-                    </h3>
-                    <p className="text-xs opacity-80 mb-3">
-                      {category.description}
-                    </p>
-                    <div className="text-xs opacity-70">
-                      {categoryServices.length} service{categoryServices.length !== 1 ? 's' : ''}
+      {/* Quick Start Scenarios - Hide when services are selected */}
+      {selectedServices.length === 0 && (
+        <Card className="mb-8">
+          <CardHeader>
+            <div className="text-center">
+              <CardTitle className="flex items-center justify-center gap-2 mb-2">
+                <Bookmark className="h-5 w-5 text-primary" />
+                Quick Start Scenarios
+              </CardTitle>
+              <CardDescription>
+                Choose a common use case to get started with the right services
+              </CardDescription>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {SCENARIO_CARDS.map(scenario => {
+                const Icon = scenario.icon;
+                const scenarioServices = scenario.services.filter(id => services[id]);
+                
+                return (
+                  <div
+                    key={scenario.id}
+                    className={`group cursor-pointer rounded-lg border p-4 transition-all hover:shadow-lg ${scenario.color}`}
+                    onClick={() => handleScenarioSelect(scenario.id)}
+                  >
+                    <div className="text-center">
+                      <Icon className="h-8 w-8 mx-auto mb-3" />
+                      <h3 className="font-medium text-sm mb-2">
+                        {scenario.title}
+                      </h3>
+                      <p className="text-xs opacity-80 mb-3">
+                        {scenario.description}
+                      </p>
+                      <div className="text-xs opacity-70">
+                        {scenarioServices.length} service{scenarioServices.length !== 1 ? 's' : ''}
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Progressive Disclosure - Only show when services are selected */}
       {hasSelectedServices && (
@@ -408,7 +409,11 @@ Header always set Content-Security-Policy "${result.header}"`;
                           <div className="space-y-0.5">
                             <div className="flex items-center gap-2">
                               <Label>Generate Nonce</Label>
-                              <InfoTooltip content="A nonce (number used once) is a cryptographic token that makes inline scripts safer by allowing only scripts with the correct nonce value to execute. Essential for secure inline JavaScript and styles." />
+                              <InfoTooltip 
+                                content="A nonce (number used once) is a cryptographic token that makes inline scripts safer by allowing only scripts with the correct nonce value to execute. Essential for secure inline JavaScript and styles."
+                                referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#nonce"
+                                referenceText="MDN: CSP Nonce"
+                              />
                             </div>
                             <p className="text-xs text-muted-foreground">
                               Generate a unique nonce for inline scripts
@@ -423,7 +428,11 @@ Header always set Content-Security-Policy "${result.header}"`;
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <Label htmlFor="report-uri">Report URI (optional)</Label>
-                            <InfoTooltip content="When CSP violations occur, the browser will send a report to this URL. Essential for monitoring security issues and debugging CSP policies in production." />
+                            <InfoTooltip 
+                              content="When CSP violations occur, the browser will send a report to this URL. Essential for monitoring security issues and debugging CSP policies in production."
+                              referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/report-uri"
+                              referenceText="MDN: CSP Reporting"
+                            />
                           </div>
                           <Input
                             id="report-uri"
@@ -443,10 +452,7 @@ Header always set Content-Security-Policy "${result.header}"`;
                   {/* Custom CSP Rules */}
                   <AccordionItem value="custom-rules">
                     <AccordionTrigger>
-                      <div className="flex items-center gap-2">
-                        Custom CSP Rules
-                        <InfoTooltip content="CSP directives control which resources (scripts, styles, images, etc.) can be loaded by your website. Each directive protects against specific types of attacks like XSS and data injection." />
-                      </div>
+                      Custom CSP Rules
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-4">
@@ -500,7 +506,11 @@ Header always set Content-Security-Policy "${result.header}"`;
                       </div>
                       <div className="flex items-center gap-2">
                         <Label htmlFor="usage-method" className="text-sm">How to use:</Label>
-                        <InfoTooltip content="Different ways to implement CSP in your application. The NPM package provides programmatic access, while HTTP headers and meta tags offer direct browser implementation." />
+                        <InfoTooltip 
+                          content="Different ways to implement CSP in your application. The NPM package provides programmatic access, while HTTP headers and meta tags offer direct browser implementation."
+                          referenceUrl="https://web.dev/csp/"
+                          referenceText="Web.dev: CSP Guide"
+                        />
                         <Select value={selectedUsageMethod} onValueChange={setSelectedUsageMethod}>
                           <SelectTrigger className="w-48">
                             <SelectValue />
@@ -553,6 +563,10 @@ Header always set Content-Security-Policy "${result.header}"`;
                       onCopy={() => copyToClipboard(result.header)}
                       copied={copied}
                       showBreakdown={true}
+                      serviceTags={selectedServices.map(service => ({
+                        serviceId: service.id,
+                        serviceName: service.name
+                      }))}
                     />
                   </CardContent>
                 </Card>
