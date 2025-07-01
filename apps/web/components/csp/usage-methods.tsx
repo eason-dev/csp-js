@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import { 
   Select,
   SelectContent,
@@ -26,27 +28,32 @@ const USAGE_METHODS = [
     id: 'npm-package',
     title: '@csp-kit/generator',
     description: 'NPM package for programmatic use',
+    language: 'javascript',
     default: true
   },
   {
     id: 'http-header',
     title: 'HTTP Header',
-    description: 'Configure in your web server'
+    description: 'Configure in your web server',
+    language: 'text'
   },
   {
     id: 'meta-tag',
     title: 'HTML Meta Tag',
-    description: 'Add directly to your HTML'
+    description: 'Add directly to your HTML',
+    language: 'html'
   },
   {
     id: 'nginx',
     title: 'Nginx Configuration',
-    description: 'Server block configuration'
+    description: 'Server block configuration',
+    language: 'nginx'
   },
   {
     id: 'apache',
     title: 'Apache Configuration',
-    description: '.htaccess or virtual host'
+    description: '.htaccess or virtual host',
+    language: 'apache'
   }
 ];
 
@@ -137,10 +144,19 @@ Header always set Content-Security-Policy "${cspHeader}"`;
         </Button>
       </div>
       
-      <div className="bg-muted rounded-lg p-4">
-        <pre className="text-sm overflow-x-auto whitespace-pre-wrap">
-          <code>{getUsageContent()}</code>
-        </pre>
+      <div className="rounded-lg overflow-hidden">
+        <SyntaxHighlighter
+          language={USAGE_METHODS.find(m => m.id === selectedUsageMethod)?.language || 'text'}
+          style={oneDark}
+          customStyle={{
+            margin: 0,
+            fontSize: '14px',
+            borderRadius: '8px',
+          }}
+          showLineNumbers={false}
+        >
+          {getUsageContent()}
+        </SyntaxHighlighter>
       </div>
     </div>
   );

@@ -13,8 +13,6 @@ import {
   TrendingUp,
   Layers,
   Bookmark,
-  Copy,
-  Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,15 +23,9 @@ import { Switch } from '@/components/ui/switch';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { SimpleSearch } from '@/components/search/simple-search';
 import { ColorCodedHeader } from '@/components/csp/color-coded-header';
+import { UsageMethods } from '@/components/csp/usage-methods';
 import { useSelectedServices } from '@/contexts/selected-services-context';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 interface ProgressiveHomepageProps {
   serviceRegistry: ServiceRegistry;
@@ -75,35 +67,6 @@ const SCENARIO_CARDS = [
   }
 ];
 
-// Usage method options
-const USAGE_METHODS = [
-  {
-    id: 'npm-package',
-    title: '@csp-kit/generator',
-    description: 'NPM package for programmatic use',
-    default: true
-  },
-  {
-    id: 'http-header',
-    title: 'HTTP Header',
-    description: 'Configure in your web server'
-  },
-  {
-    id: 'meta-tag',
-    title: 'HTML Meta Tag',
-    description: 'Add directly to your HTML'
-  },
-  {
-    id: 'nginx',
-    title: 'Nginx Configuration',
-    description: 'Server block configuration'
-  },
-  {
-    id: 'apache',
-    title: 'Apache Configuration',
-    description: '.htaccess or virtual host'
-  }
-];
 
 export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHomepageProps) {
   const services = serviceRegistry.services;
@@ -123,7 +86,6 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
     'object-src': '',
   });
   const [copied, setCopied] = useState(false);
-  const [selectedUsageMethod, setSelectedUsageMethod] = useState('npm-package');
   const [result, setResult] = useState<{
     header: string;
     warnings: string[];
@@ -233,42 +195,6 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
     }
   };
 
-  const getUsageContent = () => {
-    if (!result) return '';
-    
-    switch (selectedUsageMethod) {
-      case 'npm-package':
-        return `// Install CSP Kit
-npm install @csp-kit/generator
-
-// Generate CSP
-import { generateCSP } from '@csp-kit/generator';
-
-const result = await generateCSP({
-  services: [${selectedServices.map(s => `'${s.id}'`).join(', ')}],
-  nonce: ${useNonce},${customRules && Object.values(customRules).some(v => v.trim()) ? '\n  customRules: {\n' + Object.entries(customRules).filter(([,v]) => v.trim()).map(([k,v]) => `    '${k}': [${v.split(',').map(s => `'${s.trim()}'`).join(', ')}]`).join(',\n') + '\n  },' : ''}${reportUri ? `\n  reportUri: '${reportUri}',` : ''}
-});
-
-console.log(result.header);`;
-      
-      case 'http-header':
-        return `Content-Security-Policy: ${result.header}`;
-      
-      case 'meta-tag':
-        return `<meta http-equiv="Content-Security-Policy" content="${result.header}">`;
-      
-      case 'nginx':
-        return `# Add to your server block
-add_header Content-Security-Policy "${result.header}" always;`;
-      
-      case 'apache':
-        return `# Add to .htaccess or virtual host
-Header always set Content-Security-Policy "${result.header}"`;
-      
-      default:
-        return result.header;
-    }
-  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -362,10 +288,10 @@ Header always set Content-Security-Policy "${result.header}"`;
                   {selectedServices.map(service => (
                     <div
                       key={service.id}
-                      className="flex items-center justify-between gap-3 rounded-lg border p-3 bg-primary/5"
+                      className="flex items-center justify-between gap-3 rounded-lg border p-3 bg-primary/5 hover:bg-primary/10 transition-colors cursor-pointer group"
+                      onClick={() => window.open(`/service/${service.id}`, '_blank')}
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <div className="h-2 w-2 rounded-full bg-primary shrink-0" />
                         <span className="font-medium text-sm truncate">
                           {service.name}
                         </span>
@@ -376,8 +302,11 @@ Header always set Content-Security-Policy "${result.header}"`;
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0 hover:bg-destructive/20 text-destructive"
-                        onClick={() => removeService(service.id)}
+                        className="h-6 w-6 p-0 hover:bg-destructive/20 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeService(service.id);
+                        }}
                       >
                         <X className="h-3 w-3" />
                       </Button>
@@ -504,47 +433,19 @@ Header always set Content-Security-Policy "${result.header}"`;
                           Ready to use in your application
                         </CardDescription>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Label htmlFor="usage-method" className="text-sm">How to use:</Label>
-                        <InfoTooltip 
-                          content="Different ways to implement CSP in your application. The NPM package provides programmatic access, while HTTP headers and meta tags offer direct browser implementation."
-                          referenceUrl="https://web.dev/csp/"
-                          referenceText="Web.dev: CSP Guide"
-                        />
-                        <Select value={selectedUsageMethod} onValueChange={setSelectedUsageMethod}>
-                          <SelectTrigger className="w-48">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {USAGE_METHODS.map(method => (
-                              <SelectItem key={method.id} value={method.id}>
-                                <div className="text-left">
-                                  <div className="font-medium">{method.title}</div>
-                                  <div className="text-xs text-muted-foreground">{method.description}</div>
-                                </div>
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      <div className="bg-muted rounded-lg p-4 relative">
-                        <pre className="text-sm overflow-x-auto whitespace-pre-wrap">
-                          <code>{getUsageContent()}</code>
-                        </pre>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="absolute right-2 top-2"
-                          onClick={() => copyToClipboard(getUsageContent())}
-                        >
-                          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                        </Button>
-                      </div>
-                    </div>
+                    <UsageMethods
+                      cspHeader={result.header}
+                      serviceIds={selectedServices.map(s => s.id)}
+                      useNonce={useNonce}
+                      reportUri={reportUri}
+                      customRules={Object.fromEntries(
+                        Object.entries(customRules).filter(([, value]) => value.trim())
+                          .map(([key, value]) => [key, value.split(',').map(v => v.trim()).filter(Boolean)])
+                      )}
+                    />
                   </CardContent>
                 </Card>
 

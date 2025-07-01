@@ -2,10 +2,10 @@
 
 import { HelpCircle, ExternalLink } from 'lucide-react';
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 
 interface InfoTooltipProps {
@@ -22,8 +22,8 @@ export function InfoTooltip({
   referenceText = 'Learn more'
 }: InfoTooltipProps) {
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
+    <Popover>
+      <PopoverTrigger asChild>
         <button
           className={`inline-flex items-center justify-center w-4 h-4 rounded-full text-muted-foreground hover:text-foreground transition-colors ${className}`}
           type="button"
@@ -31,8 +31,8 @@ export function InfoTooltip({
           <HelpCircle className="h-3 w-3" />
           <span className="sr-only">More information</span>
         </button>
-      </TooltipTrigger>
-      <TooltipContent className="max-w-xs">
+      </PopoverTrigger>
+      <PopoverContent className="max-w-xs">
         <div className="space-y-2">
           <p className="text-sm">{content}</p>
           {referenceUrl && (
@@ -47,7 +47,7 @@ export function InfoTooltip({
             </Button>
           )}
         </div>
-      </TooltipContent>
-    </Tooltip>
+      </PopoverContent>
+    </Popover>
   );
 }

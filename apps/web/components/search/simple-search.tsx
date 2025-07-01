@@ -44,7 +44,7 @@ export function SimpleSearch({
   const [showResults, setShowResults] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   
-  const { addService, isSelected } = useSelectedServices();
+  const { addService, removeService, isSelected } = useSelectedServices();
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -81,17 +81,19 @@ export function SimpleSearch({
 
   const handleServiceSelect = useCallback((serviceId: string) => {
     const service = services[serviceId];
-    if (service && !isSelected(serviceId)) {
-      addService({
-        id: service.id,
-        name: service.name,
-        version: service.defaultVersion,
-      });
+    if (service) {
+      if (isSelected(serviceId)) {
+        removeService(serviceId);
+      } else {
+        addService({
+          id: service.id,
+          name: service.name,
+          version: service.defaultVersion,
+        });
+      }
     }
-    setShowResults(false);
-    setSearchQuery('');
-    setFocusedIndex(-1);
-  }, [services, isSelected, addService]);
+    // Keep popup open - don't reset search or close results
+  }, [services, isSelected, addService, removeService]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {

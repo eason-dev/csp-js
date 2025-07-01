@@ -237,21 +237,7 @@ export function ColorCodedHeader({ header, directives, onCopy, copied, showBreak
       {/* Detailed Breakdown */}
       {showBreakdown && directives && Object.keys(directives).length > 0 && (
         <div className="space-y-3 mt-6">
-          <div className="flex items-center justify-between">
-            <h4 className="text-sm font-medium">Directive Breakdown</h4>
-            {serviceTags.length > 0 && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <span>From:</span>
-                <div className="flex gap-1">
-                  {serviceTags.map((service) => (
-                    <Badge key={service.serviceId} variant="secondary" className="text-xs">
-                      {service.serviceName}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <h4 className="text-sm font-medium">Directive Breakdown</h4>
           {Object.entries(directives).map(([directive, sources]) => {
             const colorClass = getDirectiveColor(directive);
             const directiveInfo = DIRECTIVE_INFO[directive as keyof typeof DIRECTIVE_INFO];
@@ -282,6 +268,15 @@ export function ColorCodedHeader({ header, directives, onCopy, copied, showBreak
                       className="flex items-center justify-between text-xs p-2 rounded border bg-muted/50"
                     >
                       <code className="font-mono text-xs">{source}</code>
+                      {serviceTags.length > 0 && (
+                        <div className="flex gap-1 ml-2">
+                          {serviceTags.map((service) => (
+                            <Badge key={service.serviceId} variant="secondary" className="text-xs">
+                              {service.serviceName}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

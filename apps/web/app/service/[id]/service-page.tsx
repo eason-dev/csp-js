@@ -20,7 +20,6 @@ import { useSelectedServices } from '@/contexts/selected-services-context';
 import { ColorCodedHeader } from '@/components/csp/color-coded-header';
 import { UsageMethods } from '@/components/csp/usage-methods';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface ServicePageProps {
@@ -30,7 +29,6 @@ interface ServicePageProps {
 export default function ServicePage({ service }: ServicePageProps) {
   const [copied, setCopied] = useState(false);
   const { addService, removeService, isSelected } = useSelectedServices();
-  const router = useRouter();
   
   const serviceSelected = isSelected(service.id);
 
@@ -84,14 +82,15 @@ export default function ServicePage({ service }: ServicePageProps) {
     <div className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl space-y-8">
           {/* Go Back Button */}
-          <Button
-            variant="ghost"
-            onClick={() => router.back()}
-            className="flex items-center gap-2 mb-4"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to All Services
-          </Button>
+          <Link href="/services">
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 mb-4"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to All Services
+            </Button>
+          </Link>
 
           {/* Service Header */}
           <div className="space-y-4 text-center">
