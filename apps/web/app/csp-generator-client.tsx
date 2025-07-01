@@ -37,7 +37,7 @@ interface CSPGeneratorClientProps {
 
 export default function CSPGeneratorClient({ serviceRegistry }: CSPGeneratorClientProps) {
   const services = serviceRegistry.services;
-  
+
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [serviceVersions, setServiceVersions] = useState<Record<string, string>>({});
   const [customRules, setCustomRules] = useState('');

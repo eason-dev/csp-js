@@ -14,7 +14,7 @@ async function ensureServicesLoaded() {
 export async function POST(request: NextRequest) {
   try {
     await ensureServicesLoaded();
-    
+
     const body = await request.json();
     const { services, nonce, customRules, reportUri } = body;
 
@@ -28,9 +28,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error generating CSP:', error);
-    return NextResponse.json(
-      { error: 'Failed to generate CSP' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to generate CSP' }, { status: 500 });
   }
 }
