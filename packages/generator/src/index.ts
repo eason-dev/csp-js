@@ -16,15 +16,20 @@ export type {
 export {
   services,
   categories,
-  serviceRegistry,
+  getServiceRegistry,
   getService,
   getServicesByCategory,
   searchServices,
   parseServiceIdentifier,
   getServiceWithVersion,
+  getServiceWithVersionAsync,
   getServiceVersions,
   isServiceVersionDeprecated,
   getDeprecationWarning,
+  getDeprecationWarningAsync,
+  loadServices,
+  getServiceAsync,
+  clearServicesCache,
 } from '@csp-kit/data';
 
 // Default export for simple usage

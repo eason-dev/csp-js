@@ -67,6 +67,10 @@ async function loadServiceFromJSONC(filePath: string): Promise<ServiceDefinition
     } else if (serviceData.versions) {
       // Format 2: versions object (stripe, facebook)
       const firstVersion = Object.keys(serviceData.versions)[0];
+      if (!firstVersion) {
+        console.error(`Skipping service ${filePath}: No versions found`);
+        return null;
+      }
       versionKey = firstVersion;
       const versionData = serviceData.versions[firstVersion];
       cspRules = versionData.cspDirectives || versionData.csp || {};
@@ -296,9 +300,40 @@ export function parseServiceIdentifier(identifier: string): { id: string; versio
 }
 
 /**
+ * Get service with specific version (sync version - requires services to be preloaded)
+ */
+export function getServiceWithVersion(
+  identifier: string,
+  version?: string
+): { service: ServiceDefinition; version: string } | undefined {
+  if (!_servicesCache) {
+    throw new Error('Services not loaded. Call loadServices() first or use getServiceWithVersionAsync().');
+  }
+
+  const { id, version: parsedVersion } = parseServiceIdentifier(identifier);
+  const targetVersion = version || parsedVersion;
+
+  const service = getService(id);
+  if (!service) {
+    return undefined;
+  }
+
+  const serviceVersion = targetVersion || service.defaultVersion;
+
+  if (!service.versions[serviceVersion]) {
+    return undefined;
+  }
+
+  return {
+    service,
+    version: serviceVersion,
+  };
+}
+
+/**
  * Get service with specific version (async version)
  */
-export async function getServiceWithVersion(
+export async function getServiceWithVersionAsync(
   identifier: string,
   version?: string
 ): Promise<{ service: ServiceDefinition; version: string } | undefined> {
@@ -346,9 +381,32 @@ export async function isServiceVersionDeprecated(
 }
 
 /**
+ * Get deprecation warning for a service version (sync version - requires services to be preloaded)
+ */
+export function getDeprecationWarning(
+  identifier: string,
+  version: string
+): string | undefined {
+  if (!_servicesCache) {
+    throw new Error('Services not loaded. Call loadServices() first or use getDeprecationWarningAsync().');
+  }
+
+  const service = getService(identifier);
+  if (!service || !service.versions[version]) {
+    return undefined;
+  }
+
+  const versionData = service.versions[version];
+  if (versionData.deprecatedFrom) {
+    return `This version has been deprecated since ${versionData.deprecatedFrom}`;
+  }
+  return undefined;
+}
+
+/**
  * Get deprecation warning for a service version (async version)
  */
-export async function getDeprecationWarning(
+export async function getDeprecationWarningAsync(
   identifier: string,
   version: string
 ): Promise<string | undefined> {
