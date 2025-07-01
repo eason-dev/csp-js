@@ -1,6 +1,8 @@
 import { loadServices, getServiceRegistry } from '@csp-kit/generator';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
 import ServicePage from './service-page';
 
 interface ServicePageProps {
@@ -55,5 +57,13 @@ export default async function Page({ params }: ServicePageProps) {
     notFound();
   }
 
-  return <ServicePage service={service} />;
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <ServicePage service={service} />
+      </main>
+      <Footer serviceCount={Object.keys(registry.services).length} />
+    </div>
+  );
 }

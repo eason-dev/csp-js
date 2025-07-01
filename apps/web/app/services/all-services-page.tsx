@@ -1,24 +1,23 @@
 /* eslint-disable react/prop-types */
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { type ServiceRegistry, type ServiceDefinition } from '@csp-kit/generator';
 import Fuse from 'fuse.js';
 import {
   Search,
-  Shield,
   ExternalLink,
-  BookOpen,
-  ArrowLeft,
   Filter,
   Grid3X3,
   List,
+  Plus,
+  ExternalLinkIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { ThemeToggle } from '@/components/theme-toggle';
 import {
   Select,
   SelectContent,
@@ -34,9 +33,19 @@ interface AllServicesPageProps {
 
 export default function AllServicesPage({ serviceRegistry }: AllServicesPageProps) {
   const services = serviceRegistry.services;
+  const searchParams = useSearchParams();
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+
+  // Initialize category from URL params
+  useEffect(() => {
+    const category = searchParams.get('category');
+    if (category) {
+      setSelectedCategory(category);
+    }
+  }, [searchParams]);
 
   // Fuzzy search setup
   const fuse = useMemo(() => {
@@ -127,7 +136,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
             </div>
           </div>
           <div className="flex items-center gap-2 ml-4">
-            <Link href={`/service/${service.id}`}>
+            <Link href={`/service/${service.id}`} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="sm">
                 View Details
               </Button>
@@ -176,7 +185,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
             <div className="text-xs text-muted-foreground">
               Updated {new Date(service.lastUpdated).toLocaleDateString()}
             </div>
-            <Link href={`/service/${service.id}`}>
+            <Link href={`/service/${service.id}`} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="sm">
                 View Details
               </Button>
@@ -204,37 +213,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/">
-                <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Generator
-                </Button>
-              </Link>
-              <div className="flex items-center gap-2">
-                <Shield className="h-6 w-6 text-primary" />
-                <h1 className="text-xl font-bold">CSP Kit</h1>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Link href="/docs" target="_blank">
-                <Button variant="outline" size="sm">
-                  <BookOpen className="h-4 w-4 mr-2" />
-                  Docs
-                </Button>
-              </Link>
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-4">All Supported Services</h1>
@@ -320,18 +299,54 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
                 : 'No services in this category'
               }
             </p>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setSearchQuery('');
-                setSelectedCategory('all');
-              }}
-            >
-              Clear filters
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setSearchQuery('');
+                  setSelectedCategory('all');
+                }}
+              >
+                Clear filters
+              </Button>
+              <a
+                href="https://github.com/eason-dev/csp-kit/issues/new?assignees=&labels=service-request&template=service-request.md&title=Request%20Support%20for%20%5BService%20Name%5D"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="default" className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  Request Service
+                </Button>
+              </a>
+            </div>
+          </div>
+        )}
+
+        {/* Service Request Section */}
+        {filteredServices.length > 0 && (
+          <div className="mt-12 text-center">
+            <Card className="max-w-md mx-auto">
+              <CardContent className="p-6">
+                <Plus className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
+                <h3 className="font-medium mb-2">Missing a service?</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Can&apos;t find the service you&apos;re using? Request support and we&apos;ll add it to our database.
+                </p>
+                <a
+                  href="https://github.com/eason-dev/csp-kit/issues/new?assignees=&labels=service-request&template=service-request.md&title=Request%20Support%20for%20%5BService%20Name%5D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="outline" className="flex items-center gap-2 mx-auto">
+                    <ExternalLinkIcon className="h-4 w-4" />
+                    Request Service on GitHub
+                  </Button>
+                </a>
+              </CardContent>
+            </Card>
           </div>
         )}
       </div>
-    </div>
   );
 }

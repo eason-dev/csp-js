@@ -8,7 +8,6 @@ import {
   Info,
   Code,
   BookOpen,
-  ArrowLeft,
   Copy,
   Check,
 } from 'lucide-react';
@@ -16,7 +15,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { ThemeToggle } from '@/components/theme-toggle';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -63,36 +61,7 @@ console.log(result.header);
     .join('; ')}`;
 
   return (
-    <div className="bg-background min-h-screen">
-      {/* Navigation Header */}
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/">
-                <Button variant="ghost" size="sm" className="flex items-center gap-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  Back to Generator
-                </Button>
-              </Link>
-              <div className="flex items-center gap-2">
-                <Shield className="text-primary h-6 w-6" />
-                <h1 className="text-xl font-bold">CSP Kit</h1>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Link href="/docs" target="_blank">
-                <Button variant="outline" size="sm">
-                  Docs
-                </Button>
-              </Link>
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl space-y-8">
           {/* Service Header */}
           <div className="space-y-4 text-center">
@@ -341,6 +310,5 @@ console.log(result.header);
           )}
         </div>
       </div>
-    </div>
   );
 }

@@ -1,5 +1,5 @@
-import CSPGeneratorServer from './csp-generator-server';
+import ImprovedPage from './improved-page';
 
 export default function CSPGenerator() {
-  return <CSPGeneratorServer />;
+  return <ImprovedPage />;
 }

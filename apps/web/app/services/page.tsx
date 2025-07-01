@@ -1,5 +1,8 @@
 import { loadServices, getServiceRegistry } from '@csp-kit/generator';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
+import { Header } from '@/components/layout/header';
+import { Footer } from '@/components/layout/footer';
 import AllServicesPage from './all-services-page';
 
 export const metadata: Metadata = {
@@ -12,5 +15,15 @@ export default async function ServicesPage() {
   await loadServices();
   const registry = await getServiceRegistry();
 
-  return <AllServicesPage serviceRegistry={registry} />;
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Header showAllServicesLink={false} />
+      <main className="flex-1">
+        <Suspense fallback={<div className="container mx-auto px-4 py-8">Loading services...</div>}>
+          <AllServicesPage serviceRegistry={registry} />
+        </Suspense>
+      </main>
+      <Footer serviceCount={Object.keys(registry.services).length} />
+    </div>
+  );
 }
