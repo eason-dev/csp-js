@@ -10,6 +10,7 @@ interface ColorCodedHeaderProps {
   directives: Record<string, string[]>;
   onCopy: () => void;
   copied: boolean;
+  showBreakdown?: boolean;
 }
 
 // Accessibility-friendly color scheme with good contrast ratios
@@ -34,7 +35,7 @@ const DIRECTIVE_COLORS = {
 // Common CSP keywords that should be styled differently
 const CSP_KEYWORDS = ["'self'", "'none'", "'unsafe-inline'", "'unsafe-eval'", "'strict-dynamic'", "'nonce-", "'sha256-", "'sha384-", "'sha512-"];
 
-export function ColorCodedHeader({ header, directives, onCopy, copied }: ColorCodedHeaderProps) {
+export function ColorCodedHeader({ header, directives, onCopy, copied, showBreakdown = false }: ColorCodedHeaderProps) {
   const [showColors, setShowColors] = useState(true);
 
   // Parse header into segments with their types
@@ -168,38 +169,77 @@ export function ColorCodedHeader({ header, directives, onCopy, copied }: ColorCo
         )}
       </div>
 
-      {/* Color Legend */}
-      {showColors && (
-        <div className="bg-muted/30 rounded-lg p-4">
-          <h4 className="text-sm font-medium mb-3">Directive Color Guide</h4>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-xs">
-            {Object.entries(directives || {}).map(([directive]) => {
-              const colorClass = getDirectiveColor(directive);
-              return (
-                <div key={directive} className="flex items-center gap-2">
-                  <Badge
-                    variant="outline"
-                    className={`text-xs font-mono ${colorClass} shrink-0`}
+      {/* Detailed Breakdown */}
+      {showBreakdown && directives && Object.keys(directives).length > 0 && (
+        <div className="space-y-3 mt-6">
+          <h4 className="text-sm font-medium">Directive Breakdown</h4>
+          {Object.entries(directives).map(([directive, sources]) => {
+            const colorClass = getDirectiveColor(directive);
+            return (
+              <div key={directive} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Badge 
+                    variant="outline" 
+                    className={`font-mono text-xs ${showColors ? colorClass : ''}`}
                   >
                     {directive}
                   </Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {sources.length} source{sources.length !== 1 ? 's' : ''}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
-          <div className="mt-3 pt-3 border-t border-border text-xs text-muted-foreground">
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center gap-1">
-                <span className="font-semibold text-violet-700 dark:text-violet-300">Keywords</span>
-                <span>(&apos;self&apos;, &apos;none&apos;, etc.)</span>
+                <div className="grid gap-1 ml-4">
+                  {sources.map((source, index) => (
+                    <div 
+                      key={index} 
+                      className="flex items-center justify-between text-xs p-2 rounded border bg-muted/50"
+                    >
+                      <code className="font-mono text-xs">{source}</code>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="flex items-center gap-1">
-                <span className="text-blue-600 dark:text-blue-400">URLs</span>
-                <span>(domains, protocols)</span>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Color Legend - Hidden in small accordion */}
+      {showColors && !showBreakdown && (
+        <details className="bg-muted/30 rounded-lg">
+          <summary className="p-3 cursor-pointer text-sm font-medium hover:bg-muted/50 rounded-lg transition-colors">
+            Directive Color Guide
+          </summary>
+          <div className="p-4 pt-0">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-xs">
+              {Object.entries(directives || {}).map(([directive]) => {
+                const colorClass = getDirectiveColor(directive);
+                return (
+                  <div key={directive} className="flex items-center gap-2">
+                    <Badge
+                      variant="outline"
+                      className={`text-xs font-mono ${colorClass} shrink-0`}
+                    >
+                      {directive}
+                    </Badge>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-3 pt-3 border-t border-border text-xs text-muted-foreground">
+              <div className="flex flex-wrap gap-4">
+                <div className="flex items-center gap-1">
+                  <span className="font-semibold text-violet-700 dark:text-violet-300">Keywords</span>
+                  <span>(&apos;self&apos;, &apos;none&apos;, etc.)</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="text-blue-600 dark:text-blue-400">URLs</span>
+                  <span>(domains, protocols)</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </details>
       )}
     </div>
   );

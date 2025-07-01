@@ -13,7 +13,10 @@ import {
   List,
   Plus,
   ExternalLinkIcon,
+  Check,
+  Minus,
 } from 'lucide-react';
+import { useSelectedServices } from '@/contexts/selected-services-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -34,6 +37,7 @@ interface AllServicesPageProps {
 export default function AllServicesPage({ serviceRegistry }: AllServicesPageProps) {
   const services = serviceRegistry.services;
   const searchParams = useSearchParams();
+  const { addService, removeService, isSelected } = useSelectedServices();
   
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -105,9 +109,22 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
     return category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  const handleToggleService = (service: ServiceDefinition) => {
+    if (isSelected(service.id)) {
+      removeService(service.id);
+    } else {
+      addService({
+        id: service.id,
+        name: service.name,
+        version: service.defaultVersion,
+      });
+    }
+  };
+
   const ServiceCard: React.FC<{ service: ServiceDefinition }> = ({ service }) => {
     const categoryDisplayName = formatCategoryName(service.category);
     const versionCount = Object.keys(service.versions).length;
+    const serviceSelected = isSelected(service.id);
 
     if (viewMode === 'list') {
       return (
@@ -118,6 +135,12 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
               <Badge variant="outline" className="text-xs shrink-0">
                 {categoryDisplayName}
               </Badge>
+              {serviceSelected && (
+                <Badge variant="default" className="text-xs shrink-0">
+                  <Check className="h-3 w-3 mr-1" />
+                  Added
+                </Badge>
+              )}
               <span className="text-xs text-muted-foreground shrink-0">
                 {versionCount} version{versionCount !== 1 ? 's' : ''}
               </span>
@@ -136,6 +159,24 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
             </div>
           </div>
           <div className="flex items-center gap-2 ml-4">
+            <Button
+              variant={serviceSelected ? "outline" : "default"}
+              size="sm"
+              onClick={() => handleToggleService(service)}
+              className="flex items-center gap-1"
+            >
+              {serviceSelected ? (
+                <>
+                  <Minus className="h-3 w-3" />
+                  Remove
+                </>
+              ) : (
+                <>
+                  <Plus className="h-3 w-3" />
+                  Add
+                </>
+              )}
+            </Button>
             <Link href={`/service/${service.id}`} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="sm">
                 View Details
@@ -164,6 +205,12 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
                 <Badge variant="outline" className="text-xs">
                   {categoryDisplayName}
                 </Badge>
+                {serviceSelected && (
+                  <Badge variant="default" className="text-xs">
+                    <Check className="h-3 w-3 mr-1" />
+                    Added
+                  </Badge>
+                )}
                 <span className="text-xs text-muted-foreground">
                   {versionCount} version{versionCount !== 1 ? 's' : ''}
                 </span>
@@ -181,15 +228,35 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
           <CardDescription className="line-clamp-2">{service.description}</CardDescription>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2 mb-3">
             <div className="text-xs text-muted-foreground">
               Updated {new Date(service.lastUpdated).toLocaleDateString()}
             </div>
-            <Link href={`/service/${service.id}`} target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="sm">
-                View Details
+            <div className="flex items-center gap-2">
+              <Button
+                variant={serviceSelected ? "outline" : "default"}
+                size="sm"
+                onClick={() => handleToggleService(service)}
+                className="flex items-center gap-1"
+              >
+                {serviceSelected ? (
+                  <>
+                    <Minus className="h-3 w-3" />
+                    Remove
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-3 w-3" />
+                    Add
+                  </>
+                )}
               </Button>
-            </Link>
+              <Link href={`/service/${service.id}`} target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="sm">
+                  View Details
+                </Button>
+              </Link>
+            </div>
           </div>
           {service.aliases && service.aliases.length > 0 && (
             <div className="mt-2 pt-2 border-t border-border">

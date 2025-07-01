@@ -128,30 +128,3 @@ export function loadStateFromSession(): Partial<CSPState> {
   return {};
 }
 
-/**
- * Recently used services utilities
- */
-const RECENT_SERVICES_KEY = 'csp-kit-recent-services';
-const MAX_RECENT_SERVICES = 8;
-
-export function addToRecentServices(serviceId: string): void {
-  try {
-    const recent = getRecentServices();
-    const updated = [serviceId, ...recent.filter(id => id !== serviceId)].slice(0, MAX_RECENT_SERVICES);
-    sessionStorage.setItem(RECENT_SERVICES_KEY, JSON.stringify(updated));
-  } catch (e) {
-    console.warn('Failed to save recent service:', e);
-  }
-}
-
-export function getRecentServices(): string[] {
-  try {
-    const saved = sessionStorage.getItem(RECENT_SERVICES_KEY);
-    if (saved) {
-      return JSON.parse(saved);
-    }
-  } catch (e) {
-    console.warn('Failed to load recent services:', e);
-  }
-  return [];
-}

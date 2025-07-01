@@ -10,11 +10,14 @@ import {
   BookOpen,
   Copy,
   Check,
+  Plus,
+  Minus,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { useSelectedServices } from '@/contexts/selected-services-context';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -24,6 +27,21 @@ interface ServicePageProps {
 
 export default function ServicePage({ service }: ServicePageProps) {
   const [copied, setCopied] = useState(false);
+  const { addService, removeService, isSelected } = useSelectedServices();
+  
+  const serviceSelected = isSelected(service.id);
+
+  const handleToggleService = () => {
+    if (serviceSelected) {
+      removeService(service.id);
+    } else {
+      addService({
+        id: service.id,
+        name: service.name,
+        version: service.defaultVersion,
+      });
+    }
+  };
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -73,6 +91,26 @@ console.log(result.header);
             </div>
             <p className="text-muted-foreground mx-auto max-w-2xl text-xl">{service.description}</p>
             <div className="flex flex-wrap items-center justify-center gap-4">
+              <Button
+                onClick={handleToggleService}
+                variant={serviceSelected ? "outline" : "default"}
+                size="lg"
+                className="flex items-center gap-2"
+              >
+                {serviceSelected ? (
+                  <>
+                    <Minus className="h-4 w-4" />
+                    Remove from List
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4" />
+                    Add to My List
+                  </>
+                )}
+              </Button>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
               <a
                 href={service.website}
                 target="_blank"

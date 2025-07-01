@@ -17,7 +17,7 @@ export default async function ServicesPage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header showAllServicesLink={false} />
+      <Header />
       <main className="flex-1">
         <Suspense fallback={<div className="container mx-auto px-4 py-8">Loading services...</div>}>
           <AllServicesPage serviceRegistry={registry} />

@@ -1,63 +1,53 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { type ServiceDefinition } from '@csp-kit/generator';
 import Fuse from 'fuse.js';
 import {
   Search,
   ExternalLink,
   Sparkles,
-  Clock,
+  Plus,
+  Check,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { getRecentServices } from '@/lib/url-state';
+import { useSelectedServices } from '@/contexts/selected-services-context';
 import Link from 'next/link';
 
-interface EnhancedSearchProps {
+interface SimpleSearchProps {
   services: Record<string, ServiceDefinition>;
-  selectedServices: string[];
-  onServiceSelect: (serviceId: string) => void;
   placeholder?: string;
-  showRecentServices?: boolean;
   className?: string;
 }
 
-// Default popular services with actual service names
-const DEFAULT_POPULAR_SERVICES = [
+// Popular services for initial display
+const POPULAR_SERVICES = [
   'google-analytics',
   'google-fonts', 
   'stripe',
   'youtube',
   'sentry',
-  'cloudflare-analytics'
+  'cloudflare-analytics',
+  'facebook-pixel',
+  'google-tag-manager'
 ];
 
-export function EnhancedSearch({
+export function SimpleSearch({
   services,
-  selectedServices,
-  onServiceSelect,
   placeholder = 'Search services (e.g., Google Analytics, Stripe, Sentry)...',
-  showRecentServices = true,
   className = '',
-}: EnhancedSearchProps) {
+}: SimpleSearchProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [recentServices, setRecentServices] = useState<string[]>([]);
   
+  const { addService, isSelected } = useSelectedServices();
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
-
-  // Load recent services on mount
-  useEffect(() => {
-    if (showRecentServices) {
-      setRecentServices(getRecentServices());
-    }
-  }, [showRecentServices]);
 
   // Fuzzy search setup
   const fuse = useMemo(() => {
@@ -82,16 +72,26 @@ export function EnhancedSearch({
       return results.map(result => result.item);
     }
     
-    // Show recent services if available, otherwise popular services
-    const serviceIds = showRecentServices && recentServices.length > 0 
-      ? recentServices 
-      : DEFAULT_POPULAR_SERVICES;
-    
-    return serviceIds
+    // Show popular services by default
+    return POPULAR_SERVICES
       .map(id => services[id])
       .filter((service): service is ServiceDefinition => Boolean(service))
       .slice(0, 8);
-  }, [searchQuery, fuse, services, recentServices, showRecentServices]);
+  }, [searchQuery, fuse, services]);
+
+  const handleServiceSelect = (serviceId: string) => {
+    const service = services[serviceId];
+    if (service && !isSelected(serviceId)) {
+      addService({
+        id: service.id,
+        name: service.name,
+        version: service.defaultVersion,
+      });
+    }
+    setShowResults(false);
+    setSearchQuery('');
+    setFocusedIndex(-1);
+  };
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -113,10 +113,7 @@ export function EnhancedSearch({
         if (focusedIndex >= 0 && focusedIndex < displayServices.length) {
           const service = displayServices[focusedIndex];
           if (service) {
-            onServiceSelect(service.id);
-            setShowResults(false);
-            setSearchQuery('');
-            setFocusedIndex(-1);
+            handleServiceSelect(service.id);
           }
         }
         break;
@@ -126,7 +123,7 @@ export function EnhancedSearch({
         inputRef.current?.blur();
         break;
     }
-  }, [showResults, displayServices, focusedIndex, onServiceSelect]);
+  }, [showResults, displayServices, focusedIndex, handleServiceSelect]);
 
   // Handle click outside
   useEffect(() => {
@@ -153,30 +150,6 @@ export function EnhancedSearch({
 
   const formatCategoryName = (category: string) => {
     return category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-  };
-
-  const getResultsHeader = () => {
-    if (searchQuery.trim()) {
-      return {
-        icon: Search,
-        title: `${displayServices.length} search result${displayServices.length !== 1 ? 's' : ''}`,
-        subtitle: `for "${searchQuery}"`
-      };
-    }
-    
-    if (showRecentServices && recentServices.length > 0) {
-      return {
-        icon: Clock,
-        title: 'Recently Used',
-        subtitle: 'Services you\'ve used before'
-      };
-    }
-    
-    return {
-      icon: Sparkles,
-      title: 'Popular Services',
-      subtitle: 'Commonly used services'
-    };
   };
 
   return (
@@ -217,23 +190,26 @@ export function EnhancedSearch({
               {/* Results Header */}
               <div className="p-4 border-b bg-muted/30">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  {(() => {
-                    const { icon: Icon, title, subtitle } = getResultsHeader();
-                    return (
-                      <>
-                        <Icon className="h-4 w-4" />
-                        <span className="font-medium">{title}</span>
-                        <span>{subtitle}</span>
-                      </>
-                    );
-                  })()}
+                  {searchQuery.trim() ? (
+                    <>
+                      <Search className="h-4 w-4" />
+                      <span className="font-medium">{displayServices.length} search result{displayServices.length !== 1 ? 's' : ''}</span>
+                      <span>for &quot;{searchQuery}&quot;</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      <span className="font-medium">Popular Services</span>
+                      <span>Commonly used services</span>
+                    </>
+                  )}
                 </div>
               </div>
 
               {/* Service Results */}
               {displayServices.length > 0 ? (
                 displayServices.map((service, index) => {
-                  const isSelected = selectedServices.includes(service.id);
+                  const isServiceSelected = isSelected(service.id);
                   const isFocused = index === focusedIndex;
                   const categoryDisplayName = formatCategoryName(service.category);
                   
@@ -244,16 +220,11 @@ export function EnhancedSearch({
                       className={`flex items-start justify-between p-4 cursor-pointer transition-colors border-b last:border-b-0 ${
                         isFocused
                           ? 'bg-primary/10 border-primary/20'
-                          : isSelected 
+                          : isServiceSelected 
                             ? 'bg-primary/5 border-primary/10' 
                             : 'hover:bg-muted/50'
                       }`}
-                      onClick={() => {
-                        onServiceSelect(service.id);
-                        setShowResults(false);
-                        setSearchQuery('');
-                        setFocusedIndex(-1);
-                      }}
+                      onClick={() => handleServiceSelect(service.id)}
                       role="option"
                       aria-selected={isFocused}
                     >
@@ -263,9 +234,10 @@ export function EnhancedSearch({
                           <Badge variant="outline" className="text-xs shrink-0">
                             {categoryDisplayName}
                           </Badge>
-                          {isSelected && (
+                          {isServiceSelected && (
                             <Badge variant="default" className="text-xs shrink-0">
-                              Selected
+                              <Check className="h-3 w-3 mr-1" />
+                              Added
                             </Badge>
                           )}
                         </div>
@@ -274,6 +246,20 @@ export function EnhancedSearch({
                         </p>
                       </div>
                       <div className="flex items-center gap-1 shrink-0">
+                        {!isServiceSelected && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="h-8 px-2"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleServiceSelect(service.id);
+                            }}
+                          >
+                            <Plus className="h-3 w-3 mr-1" />
+                            Add
+                          </Button>
+                        )}
                         <Link
                           href={`/service/${service.id}`}
                           target="_blank"
