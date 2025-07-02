@@ -37,6 +37,11 @@ export function ServiceCart() {
     setIsOpen(false);
   };
 
+  const handleServiceClick = (serviceId: string) => {
+    setIsOpen(false);
+    router.push(`/service/${serviceId}`);
+  };
+
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
@@ -92,7 +97,8 @@ export function ServiceCart() {
                 {selectedServices.map((service) => (
                   <div
                     key={service.id}
-                    className="flex items-center justify-between p-2 rounded border bg-card"
+                    className="flex items-center justify-between p-2 rounded border bg-card hover:bg-muted/50 cursor-pointer transition-colors"
+                    onClick={() => handleServiceClick(service.id)}
                   >
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate">{service.name}</p>
@@ -103,7 +109,10 @@ export function ServiceCart() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleRemoveService(service.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveService(service.id);
+                      }}
                       className="h-6 w-6 p-0 hover:bg-destructive/20 text-destructive ml-2"
                     >
                       <X className="h-3 w-3" />

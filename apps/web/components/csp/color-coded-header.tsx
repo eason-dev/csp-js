@@ -330,7 +330,7 @@ export function ColorCodedHeader({ header, directives, onCopy, copied, showBreak
                 <div className="flex items-center gap-2">
                   <Badge 
                     variant="outline" 
-                    className={`font-mono text-xs ${showColors ? colorClass : ''}`}
+                    className={`font-mono text-xs ${colorClass}`}
                   >
                     {directive}
                   </Badge>

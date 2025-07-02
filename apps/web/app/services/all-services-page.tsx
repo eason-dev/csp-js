@@ -148,15 +148,15 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
     if (viewMode === 'list') {
       return (
         <div 
-          className={`relative flex items-center justify-between border-b p-4 hover:bg-muted/50 cursor-pointer transition-all ${
+          className={`relative border-b p-4 hover:bg-muted/50 cursor-pointer transition-all ${
             serviceSelected 
               ? 'border-l-4 border-l-primary bg-primary/5' 
               : 'border-border'
           }`}
           onClick={handleCardClick}
         >
-          <ChevronRight className="absolute top-6 right-6 h-4 w-4 text-muted-foreground" />
-          <div className="flex-1 min-w-0 pr-12">
+          <ChevronRight className="absolute top-4 right-4 h-4 w-4 text-muted-foreground" />
+          <div className="flex-1 min-w-0 pr-8">
             <div className="flex items-center gap-3 mb-2">
               <h3 className="font-medium text-lg truncate">{service.name}</h3>
               <Badge variant="outline" className="text-xs shrink-0">
@@ -175,7 +175,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
               <span>Updated {new Date(service.lastUpdated).toLocaleDateString()}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 ml-4">
+          <div className="absolute bottom-4 right-4">
             <Button
               variant={serviceSelected ? "outline" : "default"}
               size="sm"
@@ -293,7 +293,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
                           className="flex items-center gap-1 rounded border px-2 py-1 bg-background hover:bg-muted transition-colors cursor-pointer group text-xs"
                           onClick={() => router.push(`/service/${service.id}`)}
                         >
-                          <span className="font-medium truncate max-w-24">
+                          <span className="font-medium">
                             {service.name}
                           </span>
                           <Button
@@ -328,7 +328,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input
-                placeholder="Search services (e.g., Google Analytics, Stripe, React)..."
+                placeholder="Search services (e.g., Google Analytics, Stripe, Sentry)..."
                 className="pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

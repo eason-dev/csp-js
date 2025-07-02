@@ -38,36 +38,35 @@ export function Header() {
             <h1 className="text-2xl font-bold">CSP Kit</h1>
           </Link>
           
-          <nav className="hidden md:flex items-center gap-2">
-            <Link href="/">
-              <Button 
-                variant={isActivePage('/') ? 'default' : 'ghost'} 
-                size="sm"
-                className={cn(
-                  isActivePage('/') && 'bg-primary text-primary-foreground'
-                )}
-              >
-                <Zap className="h-4 w-4 mr-2" />
-                Generator
-              </Button>
+          <nav className="hidden md:flex items-center gap-6">
+            <Link 
+              href="/"
+              className={cn(
+                "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
+                isActivePage('/') ? 'text-primary' : 'text-muted-foreground'
+              )}
+            >
+              <Zap className="h-4 w-4" />
+              Generator
             </Link>
-            <Link href="/services">
-              <Button 
-                variant={isActivePage('/services') ? 'default' : 'ghost'} 
-                size="sm"
-                className={cn(
-                  isActivePage('/services') && 'bg-primary text-primary-foreground'
-                )}
-              >
-                <Package className="h-4 w-4 mr-2" />
-                All Services
-              </Button>
+            <Link 
+              href="/services"
+              className={cn(
+                "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
+                isActivePage('/services') ? 'text-primary' : 'text-muted-foreground'
+              )}
+            >
+              <Package className="h-4 w-4" />
+              All Services
             </Link>
-            <Link href="/docs" target="_blank" rel="noopener noreferrer">
-              <Button variant="ghost" size="sm">
-                <BookOpen className="h-4 w-4 mr-2" />
-                Docs
-              </Button>
+            <Link 
+              href="/docs" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              <BookOpen className="h-4 w-4" />
+              Docs
             </Link>
             <ServiceCart />
             <ThemeToggle />

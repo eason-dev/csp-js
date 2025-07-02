@@ -91,7 +91,8 @@ const result = await generateCSP({
   nonce: ${useNonce},${Object.keys(customRules).length > 0 ? '\n  customRules: {\n' + Object.entries(customRules).map(([k,v]) => `    '${k}': [${v.map(s => `'${s}'`).join(', ')}]`).join(',\n') + '\n  },' : ''}${reportUri ? `\n  reportUri: '${reportUri}',` : ''}
 });
 
-console.log(result.header);`;
+console.log(result.header);
+// Output: "${cspHeader}"`;
       
       case 'http-header':
         return `Content-Security-Policy: ${cspHeader}`;
@@ -116,7 +117,7 @@ Header always set Content-Security-Policy "${cspHeader}"`;
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-start gap-2 flex-1 min-w-0">
-          <Label htmlFor="usage-method" className="text-sm whitespace-nowrap mt-2">Method:</Label>
+          <Label htmlFor="usage-method" className="text-sm whitespace-nowrap mt-2">Usage:</Label>
           <Select value={selectedUsageMethod} onValueChange={setSelectedUsageMethod}>
             <SelectTrigger className="w-full h-auto min-h-[2.5rem] py-2 [&>span]:line-clamp-none [&>span]:whitespace-normal">
               <SelectValue />
@@ -152,25 +153,25 @@ Header always set Content-Security-Policy "${cspHeader}"`;
             margin: 0,
             fontSize: '14px',
             borderRadius: '8px',
-            whiteSpace: selectedUsageMethod === 'npm-package' ? 'pre' : 'pre-wrap',
-            wordBreak: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-all',
-            overflowWrap: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-word',
+            whiteSpace: 'pre-wrap',
+            wordBreak: 'break-word',
+            overflowWrap: 'break-word',
           }}
           showLineNumbers={false}
           wrapLines={true}
           wrapLongLines={true}
           codeTagProps={{
             style: {
-              whiteSpace: selectedUsageMethod === 'npm-package' ? 'pre' : 'pre-wrap',
-              wordBreak: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-all',
-              overflowWrap: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-word',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
             }
           }}
           preTagProps={{
             style: {
-              whiteSpace: selectedUsageMethod === 'npm-package' ? 'pre' : 'pre-wrap',
-              wordBreak: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-all',
-              overflowWrap: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-word',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              overflowWrap: 'break-word',
               overflowX: 'visible',
             }
           }}

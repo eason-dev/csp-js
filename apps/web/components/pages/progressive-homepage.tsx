@@ -85,6 +85,17 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
     'media-src': '',
     'object-src': '',
   });
+  
+  const [customRuleToggles, setCustomRuleToggles] = useState<Record<string, boolean>>({
+    'script-src': false,
+    'style-src': false,
+    'img-src': false,
+    'connect-src': false,
+    'font-src': false,
+    'frame-src': false,
+    'media-src': false,
+    'object-src': false,
+  });
   const [copied, setCopied] = useState(false);
   const [result, setResult] = useState<{
     header: string;
@@ -113,7 +124,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
       // Build custom rules object, filtering out empty values
       const customRulesObj: Record<string, string[]> = {};
       Object.entries(customRules).forEach(([directive, value]) => {
-        if (value.trim()) {
+        if (value.trim() && customRuleToggles[directive]) {
           customRulesObj[directive] = value.split(',').map(v => v.trim()).filter(Boolean);
         }
       });
@@ -302,7 +313,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0 hover:bg-destructive/20 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="h-6 w-6 p-0 hover:bg-destructive/20 text-destructive transition-opacity"
                         onClick={(e) => {
                           e.stopPropagation();
                           removeService(service.id);
@@ -331,7 +342,23 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                 <Accordion type="multiple" className="w-full">
                   {/* Security Options */}
                   <AccordionItem value="security-options">
-                    <AccordionTrigger>Security Options</AccordionTrigger>
+                    <AccordionTrigger className="[&_[data-badge]]:no-underline">
+                      <div className="flex items-center gap-2">
+                        <span>Security Options</span>
+                        <div className="flex items-center gap-2">
+                          {useNonce && (
+                            <Badge variant="secondary" className="text-xs" data-badge>
+                              Nonce
+                            </Badge>
+                          )}
+                          {reportUri && (
+                            <Badge variant="secondary" className="text-xs" data-badge>
+                              Report URI
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-4">
                         <div className="flex items-center justify-between">
@@ -380,8 +407,19 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
 
                   {/* Custom CSP Rules */}
                   <AccordionItem value="custom-rules">
-                    <AccordionTrigger>
-                      Custom CSP Rules
+                    <AccordionTrigger className="[&_[data-badge]]:no-underline">
+                      <div className="flex flex-col items-start gap-2 w-full pr-4">
+                        <span>Custom CSP Rules</span>
+                        {Object.entries(customRules).filter(([directive, value]) => value.trim() && customRuleToggles[directive]).length > 0 && (
+                          <div className="flex flex-wrap gap-1">
+                            {Object.entries(customRules).filter(([directive, value]) => value.trim() && customRuleToggles[directive]).map(([directive]) => (
+                              <Badge key={directive} variant="secondary" className="text-xs" data-badge>
+                                {directive}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-4">
@@ -425,31 +463,51 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                             }
                           };
                           const directiveInfo = directiveInfoMap[directive as keyof typeof directiveInfoMap];
+                          const isEnabled = customRuleToggles[directive];
 
                           return (
                             <div key={directive} className="space-y-2">
-                              <div className="flex items-center gap-2">
-                                <Label htmlFor={directive} className="text-sm font-mono">
-                                  {directive}
-                                </Label>
-                                {directiveInfo && (
-                                  <InfoTooltip 
-                                    content={directiveInfo.description}
-                                    referenceUrl={directiveInfo.url}
-                                    referenceText="MDN Docs"
-                                  />
-                                )}
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <Label htmlFor={directive} className="text-sm font-mono">
+                                    {directive}
+                                  </Label>
+                                  {directiveInfo && (
+                                    <InfoTooltip 
+                                      content={directiveInfo.description}
+                                      referenceUrl={directiveInfo.url}
+                                      referenceText="MDN Docs"
+                                    />
+                                  )}
+                                </div>
+                                <Switch
+                                  checked={isEnabled}
+                                  onCheckedChange={(checked) => {
+                                    setCustomRuleToggles(prev => ({
+                                      ...prev,
+                                      [directive]: checked
+                                    }));
+                                    if (checked && !value) {
+                                      setCustomRules(prev => ({
+                                        ...prev,
+                                        [directive]: 'https://example.com'
+                                      }));
+                                    }
+                                  }}
+                                />
                               </div>
-                              <Input
-                                id={directive}
-                                placeholder="https://example.com, 'self'"
-                                value={value}
-                                onChange={(e) => setCustomRules(prev => ({
-                                  ...prev,
-                                  [directive]: e.target.value
-                                }))}
-                                className="font-mono text-xs"
-                              />
+                              {isEnabled && (
+                                <Input
+                                  id={directive}
+                                  placeholder="https://example.com, 'self'"
+                                  value={value}
+                                  onChange={(e) => setCustomRules(prev => ({
+                                    ...prev,
+                                    [directive]: e.target.value
+                                  }))}
+                                  className="font-mono text-xs"
+                                />
+                              )}
                             </div>
                           );
                         })}
@@ -490,7 +548,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                       useNonce={useNonce}
                       reportUri={reportUri}
                       customRules={Object.fromEntries(
-                        Object.entries(customRules).filter(([, value]) => value.trim())
+                        Object.entries(customRules).filter(([directive, value]) => value.trim() && customRuleToggles[directive])
                           .map(([key, value]) => [key, value.split(',').map(v => v.trim()).filter(Boolean)])
                       )}
                     />
