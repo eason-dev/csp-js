@@ -250,7 +250,7 @@ async function validateServiceFromJSONC(filePath: string): Promise<{
     }
 
     if (serviceData.officialDocs && Array.isArray(serviceData.officialDocs)) {
-      serviceData.officialDocs.forEach((doc: any, index: number) => {
+      serviceData.officialDocs.forEach((doc: unknown, index: number) => {
         if (typeof doc !== 'string') {
           errors.push({
             file: fileName,

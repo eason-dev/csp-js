@@ -96,7 +96,15 @@ jobs:
       - name: Test basic functionality
         run: |
           cd packages/generator
-          node -e "const {generateCSP} = require('./dist/index.js'); console.log(generateCSP(['google-analytics']).header)"
+          node -e "
+            const { generateCSPAsync } = require('./dist/index.js');
+            generateCSPAsync(['google-analytics']).then(result => {
+              console.log(result.header);
+            }).catch(error => {
+              console.error('Error:', error);
+              process.exit(1);
+            });
+          "
 
   security:
     name: Security Audit
@@ -159,35 +167,46 @@ jobs:
         run: |
           # Validate all service files
           node -e "
-            const fs = require('fs');
-            const path = require('path');
-            const { services } = require('./packages/data/dist/index.js');
+            const { loadServices, getServiceRegistry } = require('./packages/data/dist/index.js');
             
-            console.log('Validating', Object.keys(services).length, 'services...');
-            
-            let errors = 0;
-            for (const [id, service] of Object.entries(services)) {
-              if (!service.versions || Object.keys(service.versions).length === 0) {
-                console.error('❌ Service', id, 'has no versions');
-                errors++;
-                continue;
+            async function validateServices() {
+              try {
+                await loadServices();
+                const registry = await getServiceRegistry();
+                const services = registry.services;
+                
+                console.log('Validating', Object.keys(services).length, 'services...');
+                
+                let errors = 0;
+                for (const [id, service] of Object.entries(services)) {
+                  if (!service.versions || Object.keys(service.versions).length === 0) {
+                    console.error('❌ Service', id, 'has no versions');
+                    errors++;
+                    continue;
+                  }
+                  
+                  if (!service.defaultVersion || !service.versions[service.defaultVersion]) {
+                    console.error('❌ Service', id, 'has invalid defaultVersion');
+                    errors++;
+                    continue;
+                  }
+                  
+                  console.log('✅ Service', id, 'is valid');
+                }
+                
+                if (errors > 0) {
+                  console.error('❌ Found', errors, 'validation errors');
+                  process.exit(1);
+                } else {
+                  console.log('✅ All services validated successfully');
+                }
+              } catch (error) {
+                console.error('Error loading services:', error);
+                process.exit(1);
               }
-              
-              if (!service.defaultVersion || !service.versions[service.defaultVersion]) {
-                console.error('❌ Service', id, 'has invalid defaultVersion');
-                errors++;
-                continue;
-              }
-              
-              console.log('✅ Service', id, 'is valid');
             }
             
-            if (errors > 0) {
-              console.error('❌ Found', errors, 'validation errors');
-              process.exit(1);
-            } else {
-              console.log('✅ All services validated successfully');
-            }
+            validateServices();
           "
 
   bundle-size:
