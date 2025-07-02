@@ -1,5 +1,5 @@
 // Main exports
-export { generateCSP, generateCSPHeader, generateReportOnlyCSP } from './generator.js';
+export { generateCSP, generateCSPHeader, generateReportOnlyCSP, generateCSPAsync, generateCSPHeaderAsync, generateReportOnlyCSPAsync } from './generator.js';
 export { generateNonce } from './utils.js';
 
 // Type exports

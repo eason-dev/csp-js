@@ -9,7 +9,10 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src/**/*"
+    "docusaurus.config.js",
+    "sidebars.js",
+    "src/**/*.ts",
+    "src/**/*.tsx"
   ],
   "exclude": [
     "node_modules",

@@ -1,5 +1,5 @@
 import { readdir, readFile } from 'node:fs/promises';
-import { join, dirname } from 'node:path';
+import { join, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'jsonc-parser';
 import type { ServiceDefinition, ServiceRegistry } from './types.js';
@@ -48,7 +48,7 @@ async function loadServiceFromJSONC(filePath: string): Promise<ServiceDefinition
     const serviceData = parse(content);
 
     // Generate ID from filename if not present
-    const filename = filePath.split('/').pop()?.replace('.jsonc', '') || '';
+    const filename = basename(filePath, '.jsonc');
     const serviceId = serviceData.id || filename;
 
     // Skip if no ID could be determined
