@@ -93,7 +93,7 @@ export function SimpleSearch({
       }
     }
     // Keep popup open - don't reset search or close results
-  }, [services, isSelected, addService, removeService]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [services, isSelected, addService, removeService]);
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
