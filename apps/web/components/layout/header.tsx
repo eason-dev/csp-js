@@ -22,6 +22,10 @@ export function Header() {
     if (path === '/') {
       return pathname === '/';
     }
+    // Special case: highlight "All Services" when on individual service pages
+    if (path === '/services') {
+      return pathname.startsWith('/services') || pathname.startsWith('/service/');
+    }
     return pathname.startsWith(path);
   };
 

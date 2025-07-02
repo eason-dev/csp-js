@@ -80,21 +80,22 @@ export default function ServicePage({ service }: ServicePageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8">
+        {/* Go Back Button - Aligned to left edge */}
+        <Link href="/services">
+          <Button
+            variant="ghost"
+            className="flex items-center gap-2 mb-8"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to All Services
+          </Button>
+        </Link>
+        
         <div className="mx-auto max-w-4xl space-y-8">
-          {/* Go Back Button */}
-          <Link href="/services">
-            <Button
-              variant="ghost"
-              className="flex items-center gap-2 mb-4"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to All Services
-            </Button>
-          </Link>
 
           {/* Service Header */}
           <div className="space-y-4 text-center">
-            <div className="flex flex-wrap items-center justify-center gap-3">
+            <div className="space-y-3">
               <h1 className="text-4xl font-bold">{service.name}</h1>
               <Badge variant="secondary" className="text-sm">
                 {categoryDisplayName}

@@ -14,6 +14,7 @@ import {
   ExternalLinkIcon,
   Minus,
   ChevronRight,
+  X,
 } from 'lucide-react';
 import { useSelectedServices } from '@/contexts/selected-services-context';
 import { Button } from '@/components/ui/button';
@@ -147,14 +148,15 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
     if (viewMode === 'list') {
       return (
         <div 
-          className={`flex items-center justify-between border-b p-4 hover:bg-muted/50 cursor-pointer transition-all ${
+          className={`relative flex items-center justify-between border-b p-4 hover:bg-muted/50 cursor-pointer transition-all ${
             serviceSelected 
               ? 'border-l-4 border-l-primary bg-primary/5' 
               : 'border-border'
           }`}
           onClick={handleCardClick}
         >
-          <div className="flex-1 min-w-0">
+          <ChevronRight className="absolute top-6 right-6 h-4 w-4 text-muted-foreground" />
+          <div className="flex-1 min-w-0 pr-12">
             <div className="flex items-center gap-3 mb-2">
               <h3 className="font-medium text-lg truncate">{service.name}</h3>
               <Badge variant="outline" className="text-xs shrink-0">
@@ -174,7 +176,6 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
             </div>
           </div>
           <div className="flex items-center gap-2 ml-4">
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
             <Button
               variant={serviceSelected ? "outline" : "default"}
               size="sm"
@@ -203,14 +204,15 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
 
     return (
       <Card 
-        className={`group hover:shadow-md transition-all cursor-pointer ${
+        className={`relative group hover:shadow-md transition-all cursor-pointer flex flex-col h-full ${
           serviceSelected 
             ? 'border-2 border-primary shadow-sm' 
             : 'border'
         }`}
         onClick={handleCardClick}
       >
-        <CardHeader className="pb-3">
+        <ChevronRight className="absolute top-6 right-6 h-4 w-4 text-muted-foreground" />
+        <CardHeader className="pb-3 pr-12">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
               <CardTitle className="text-lg mb-1 truncate">{service.name}</CardTitle>
@@ -226,15 +228,14 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
               </div>
             </div>
           </div>
-          <CardDescription className="line-clamp-2">{service.description}</CardDescription>
+          <CardDescription className="line-clamp-2 flex-grow">{service.description}</CardDescription>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 mt-auto">
           <div className="flex items-center justify-between gap-2">
             <div className="text-xs text-muted-foreground">
               Updated {new Date(service.lastUpdated).toLocaleDateString()}
             </div>
             <div className="flex items-center gap-2">
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
               <Button
               variant={serviceSelected ? "outline" : "default"}
               size="sm"
@@ -274,57 +275,54 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
           </p>
         </div>
 
-        {/* Selected Services Section */}
-        {selectedServices.length > 0 && (
-          <Card className="mb-8">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center gap-2">
-                  <span>Selected Services ({selectedServices.length})</span>
-                </CardTitle>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => window.open('/', '_blank')}
-                >
-                  Generate CSP
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {selectedServices.map(service => (
-                  <div
-                    key={service.id}
-                    className="flex items-center gap-2 rounded-lg border p-2 bg-primary/5 hover:bg-primary/10 transition-colors cursor-pointer group"
-                    onClick={() => router.push(`/service/${service.id}`)}
-                  >
-                    <span className="font-medium text-sm">
-                      {service.name}
-                    </span>
-                    <Badge variant="outline" className="text-xs">
-                      v{service.version}
-                    </Badge>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-4 w-4 p-0 hover:bg-destructive/20 text-destructive opacity-0 group-hover:opacity-100 transition-opacity ml-1"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeService(service.id);
-                      }}
-                    >
-                      <Minus className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Controls */}
+        {/* Controls and Selected Services - Sticky Section */}
         <div className="mb-8 space-y-4 sticky top-16 bg-background/95 backdrop-blur-sm z-40 py-4 -mt-4">
+          {/* Selected Services Section - Compact */}
+          {selectedServices.length > 0 && (
+            <Card className="border-primary/20 bg-primary/5">
+              <CardContent className="py-3">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <span className="text-sm font-medium whitespace-nowrap">
+                      Selected ({selectedServices.length}):
+                    </span>
+                    <div className="flex flex-wrap gap-1 min-w-0">
+                      {selectedServices.map(service => (
+                        <div
+                          key={service.id}
+                          className="flex items-center gap-1 rounded border px-2 py-1 bg-background hover:bg-muted transition-colors cursor-pointer group text-xs"
+                          onClick={() => router.push(`/service/${service.id}`)}
+                        >
+                          <span className="font-medium truncate max-w-24">
+                            {service.name}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-3 w-3 p-0 hover:bg-destructive/20 text-destructive"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              removeService(service.id);
+                            }}
+                          >
+                            <X className="h-2 w-2" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => router.push('/')}
+                    className="shrink-0"
+                  >
+                    View Generated CSP
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
           {/* Search and Filters */}
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="relative flex-1">

@@ -388,23 +388,71 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                         <p className="text-sm text-muted-foreground">
                           Add custom domains and rules for each CSP directive
                         </p>
-                        {Object.entries(customRules).map(([directive, value]) => (
-                          <div key={directive} className="space-y-2">
-                            <Label htmlFor={directive} className="text-sm font-mono">
-                              {directive}
-                            </Label>
-                            <Input
-                              id={directive}
-                              placeholder="https://example.com, 'self'"
-                              value={value}
-                              onChange={(e) => setCustomRules(prev => ({
-                                ...prev,
-                                [directive]: e.target.value
-                              }))}
-                              className="font-mono text-xs"
-                            />
-                          </div>
-                        ))}
+                        {Object.entries(customRules).map(([directive, value]) => {
+                          // Define directive info for CSP rules
+                          const directiveInfoMap = {
+                            'script-src': {
+                              description: 'Controls which scripts can be executed. Protects against XSS attacks by preventing unauthorized JavaScript execution.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src'
+                            },
+                            'style-src': {
+                              description: 'Controls which stylesheets can be loaded. Prevents CSS injection attacks and unauthorized styling.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src'
+                            },
+                            'img-src': {
+                              description: 'Controls which images can be loaded. Prevents data exfiltration through malicious images.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src'
+                            },
+                            'connect-src': {
+                              description: 'Controls which URLs can be loaded using script interfaces (fetch, XMLHttpRequest, WebSocket). Prevents unauthorized API calls.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src'
+                            },
+                            'font-src': {
+                              description: 'Controls which fonts can be loaded. Prevents unauthorized font downloads that could be used for tracking.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src'
+                            },
+                            'frame-src': {
+                              description: 'Controls which URLs can be embedded as frames. Prevents clickjacking and unauthorized iframe embedding.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-src'
+                            },
+                            'media-src': {
+                              description: 'Controls which audio and video sources can be loaded. Prevents unauthorized media content.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src'
+                            },
+                            'object-src': {
+                              description: 'Controls which plugins can be loaded (Flash, Java). Generally recommended to set to "none" for security.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/object-src'
+                            }
+                          };
+                          const directiveInfo = directiveInfoMap[directive as keyof typeof directiveInfoMap];
+
+                          return (
+                            <div key={directive} className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Label htmlFor={directive} className="text-sm font-mono">
+                                  {directive}
+                                </Label>
+                                {directiveInfo && (
+                                  <InfoTooltip 
+                                    content={directiveInfo.description}
+                                    referenceUrl={directiveInfo.url}
+                                    referenceText="MDN Docs"
+                                  />
+                                )}
+                              </div>
+                              <Input
+                                id={directive}
+                                placeholder="https://example.com, 'self'"
+                                value={value}
+                                onChange={(e) => setCustomRules(prev => ({
+                                  ...prev,
+                                  [directive]: e.target.value
+                                }))}
+                                className="font-mono text-xs"
+                              />
+                            </div>
+                          );
+                        })}
                         <p className="text-xs text-muted-foreground">
                           Separate multiple values with commas. Use quotes for keywords like &apos;self&apos;, &apos;unsafe-inline&apos;.
                         </p>
@@ -468,6 +516,23 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                         serviceId: service.id,
                         serviceName: service.name
                       }))}
+                      serviceDetails={selectedServices.map(service => {
+                        const serviceDefinition = services[service.id];
+                        if (!serviceDefinition) return null;
+                        
+                        const version = service.version || serviceDefinition.defaultVersion;
+                        const versionData = serviceDefinition.versions[version];
+                        
+                        return versionData ? {
+                          serviceId: service.id,
+                          serviceName: service.name,
+                          cspDirectives: versionData.csp
+                        } : null;
+                      }).filter((detail): detail is {
+                        serviceId: string;
+                        serviceName: string;
+                        cspDirectives: Record<string, string[]>;
+                      } => detail !== null)}
                     />
                   </CardContent>
                 </Card>

@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Copy, Check, Eye, EyeOff } from 'lucide-react';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
+import type { CSPDirectives } from '@csp-kit/generator';
 
 interface ColorCodedHeaderProps {
   header: string;
@@ -15,6 +16,11 @@ interface ColorCodedHeaderProps {
   serviceTags?: {
     serviceId: string;
     serviceName: string;
+  }[];
+  serviceDetails?: {
+    serviceId: string;
+    serviceName: string;
+    cspDirectives: CSPDirectives;
   }[];
 }
 
@@ -39,6 +45,28 @@ const DIRECTIVE_COLORS = {
 
 // Common CSP keywords that should be styled differently
 const CSP_KEYWORDS = ["'self'", "'none'", "'unsafe-inline'", "'unsafe-eval'", "'strict-dynamic'", "'nonce-", "'sha256-", "'sha384-", "'sha512-"];
+
+// Service URL patterns for matching URLs to their source services
+const SERVICE_URL_PATTERNS: Record<string, string[]> = {
+  'google-analytics': ['google-analytics.com', 'googletagmanager.com'],
+  'google-fonts': ['fonts.googleapis.com', 'fonts.gstatic.com'],
+  'auth0': ['cdn.auth0.com', 'auth0.com'],
+  'apple-pay': ['applepay.cdn-apple.com'],
+  'azure-cdn': ['azureedge.net', 'azure.com'],
+  'cloudflare': ['cloudflare.com', 'cf-assets.com'],
+  'stripe': ['stripe.com', 'stripe.network'],
+  'paypal': ['paypal.com', 'paypalobjects.com'],
+  'facebook': ['facebook.com', 'fbcdn.net', 'connect.facebook.net'],
+  'twitter': ['twitter.com', 'twimg.com'],
+  'linkedin': ['linkedin.com', 'licdn.com'],
+  'youtube': ['youtube.com', 'ytimg.com', 'googlevideo.com'],
+  'jsdelivr': ['jsdelivr.net', 'cdn.jsdelivr.net'],
+  'unpkg': ['unpkg.com'],
+  'cdnjs': ['cdnjs.cloudflare.com'],
+  'bootstrap': ['bootstrapcdn.com', 'getbootstrap.com'],
+  'jquery': ['jquery.com', 'code.jquery.com'],
+  'algolia': ['algolia.net', 'algolianet.com'],
+};
 
 // CSP directive descriptions and documentation links
 const DIRECTIVE_INFO = {
@@ -100,7 +128,63 @@ const DIRECTIVE_INFO = {
   }
 };
 
-export function ColorCodedHeader({ header, directives, onCopy, copied, showBreakdown = false, serviceTags = [] }: ColorCodedHeaderProps) {
+// Function to find which services match a given URL using actual CSP data
+const getServicesForUrl = (
+  url: string, 
+  availableServices: Array<{serviceId: string; serviceName: string}>, 
+  serviceDetails?: Array<{serviceId: string; serviceName: string; cspDirectives: CSPDirectives}>
+): Array<{serviceId: string; serviceName: string}> => {
+  const matchingServices: Array<{serviceId: string; serviceName: string}> = [];
+  
+  // First try to match using actual CSP directive data if available
+  if (serviceDetails) {
+    for (const service of serviceDetails) {
+      const { cspDirectives } = service;
+      let matches = false;
+      
+      // Check all CSP directives for URL matches
+      for (const [, sources] of Object.entries(cspDirectives)) {
+        if (sources && Array.isArray(sources)) {
+          for (const source of sources) {
+            // Normalize the source URL for comparison
+            const normalizedSource = source.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+            const normalizedUrl = url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+            
+            if (normalizedUrl.includes(normalizedSource) || normalizedSource.includes(normalizedUrl)) {
+              matches = true;
+              break;
+            }
+          }
+        }
+        if (matches) break;
+      }
+      
+      if (matches) {
+        matchingServices.push({
+          serviceId: service.serviceId,
+          serviceName: service.serviceName
+        });
+      }
+    }
+  }
+  
+  // Fallback to hardcoded patterns if no matches found with CSP data
+  if (matchingServices.length === 0) {
+    for (const service of availableServices) {
+      const patterns = SERVICE_URL_PATTERNS[service.serviceId];
+      if (patterns) {
+        const matches = patterns.some(pattern => url.includes(pattern));
+        if (matches) {
+          matchingServices.push(service);
+        }
+      }
+    }
+  }
+  
+  return matchingServices;
+};
+
+export function ColorCodedHeader({ header, directives, onCopy, copied, showBreakdown = false, serviceTags = [], serviceDetails }: ColorCodedHeaderProps) {
   const [showColors, setShowColors] = useState(true);
 
   // Parse header into segments with their types
@@ -268,15 +352,28 @@ export function ColorCodedHeader({ header, directives, onCopy, copied, showBreak
                       className="flex items-center justify-between text-xs p-2 rounded border bg-muted/50"
                     >
                       <code className="font-mono text-xs">{source}</code>
-                      {serviceTags.length > 0 && (
-                        <div className="flex gap-1 ml-2">
-                          {serviceTags.map((service) => (
-                            <Badge key={service.serviceId} variant="secondary" className="text-xs">
-                              {service.serviceName}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
+                      {/* Show service tags for URLs (only services that match this specific URL) */}
+                      {(() => {
+                        // Only show tags for actual URLs, not CSP keywords
+                        if (source.startsWith("'") || (!source.includes('http') && !source.includes('.'))) {
+                          return null;
+                        }
+                        
+                        const matchingServices = getServicesForUrl(source, serviceTags, serviceDetails);
+                        if (matchingServices.length === 0) {
+                          return null;
+                        }
+                        
+                        return (
+                          <div className="flex gap-1 ml-2">
+                            {matchingServices.map((service) => (
+                              <Badge key={service.serviceId} variant="secondary" className="text-xs">
+                                {service.serviceName}
+                              </Badge>
+                            ))}
+                          </div>
+                        );
+                      })()}
                     </div>
                   ))}
                 </div>

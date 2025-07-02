@@ -114,19 +114,19 @@ Header always set Content-Security-Policy "${cspHeader}"`;
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Label htmlFor="usage-method" className="text-sm">Implementation method:</Label>
+      <div className="flex items-start justify-between gap-4">
+        <div className="flex items-start gap-2 flex-1 min-w-0">
+          <Label htmlFor="usage-method" className="text-sm whitespace-nowrap mt-2">Method:</Label>
           <Select value={selectedUsageMethod} onValueChange={setSelectedUsageMethod}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-full h-auto min-h-[2.5rem] py-2 [&>span]:line-clamp-none [&>span]:whitespace-normal">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="max-w-none">
               {USAGE_METHODS.map(method => (
                 <SelectItem key={method.id} value={method.id}>
-                  <div className="text-left">
+                  <div className="text-left max-w-none">
                     <div className="font-medium">{method.title}</div>
-                    <div className="text-xs text-muted-foreground">{method.description}</div>
+                    <div className="text-xs text-muted-foreground whitespace-normal">{method.description}</div>
                   </div>
                 </SelectItem>
               ))}
@@ -137,7 +137,7 @@ Header always set Content-Security-Policy "${cspHeader}"`;
           variant="outline"
           size="sm"
           onClick={() => copyToClipboard(getUsageContent())}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 shrink-0"
         >
           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           {copied ? 'Copied' : 'Copy'}
@@ -152,8 +152,28 @@ Header always set Content-Security-Policy "${cspHeader}"`;
             margin: 0,
             fontSize: '14px',
             borderRadius: '8px',
+            whiteSpace: selectedUsageMethod === 'npm-package' ? 'pre' : 'pre-wrap',
+            wordBreak: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-all',
+            overflowWrap: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-word',
           }}
           showLineNumbers={false}
+          wrapLines={true}
+          wrapLongLines={true}
+          codeTagProps={{
+            style: {
+              whiteSpace: selectedUsageMethod === 'npm-package' ? 'pre' : 'pre-wrap',
+              wordBreak: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-all',
+              overflowWrap: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-word',
+            }
+          }}
+          preTagProps={{
+            style: {
+              whiteSpace: selectedUsageMethod === 'npm-package' ? 'pre' : 'pre-wrap',
+              wordBreak: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-all',
+              overflowWrap: selectedUsageMethod === 'npm-package' ? 'normal' : 'break-word',
+              overflowX: 'visible',
+            }
+          }}
         >
           {getUsageContent()}
         </SyntaxHighlighter>
