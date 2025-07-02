@@ -1,48 +1,48 @@
 import { describe, it, expect } from 'vitest';
-import { generateCSP, generateCSPHeader, generateReportOnlyCSP } from '../generator.js';
+import { generateCSPAsync, generateCSPHeaderAsync, generateReportOnlyCSPAsync } from '../generator.js';
 import { generateNonce } from '../utils.js';
 
 describe('generateCSP', () => {
-  it('should generate CSP for single service', () => {
-    const result = generateCSP(['google-analytics']);
+  it('should generate CSP for single service', async () => {
+    const result = await generateCSPAsync(['google-analytics']);
 
-    expect(result.includedServices).toContain('google-analytics@4.1.0');
+    expect(result.includedServices).toContain('google-analytics@1.0.0');
     expect(result.unknownServices).toHaveLength(0);
     expect(result.header).toContain('script-src');
     expect(result.header).toContain('https://www.google-analytics.com');
   });
 
-  it('should generate CSP for multiple services', () => {
-    const result = generateCSP(['google-analytics', 'microsoft-clarity']);
+  it('should generate CSP for multiple services', async () => {
+    const result = await generateCSPAsync(['google-analytics', 'microsoft-clarity']);
 
-    expect(result.includedServices).toContain('google-analytics@4.1.0');
+    expect(result.includedServices).toContain('google-analytics@1.0.0');
     expect(result.includedServices).toContain('microsoft-clarity@1.0.0');
     expect(result.header).toContain('https://www.google-analytics.com');
     expect(result.header).toContain('https://www.clarity.ms');
   });
 
-  it('should handle unknown services', () => {
-    const result = generateCSP(['unknown-service']);
+  it('should handle unknown services', async () => {
+    const result = await generateCSPAsync(['unknown-service']);
 
     expect(result.unknownServices).toContain('unknown-service');
     expect(result.warnings).toContain('Unknown services: unknown-service');
   });
 
-  it('should work with service aliases', () => {
-    const result = generateCSP(['ga4']); // alias for google-analytics
+  it('should work with service aliases', async () => {
+    const result = await generateCSPAsync(['ga4']); // alias for google-analytics
 
-    expect(result.includedServices).toContain('google-analytics@4.1.0');
+    expect(result.includedServices).toContain('google-analytics@1.0.0');
     expect(result.header).toContain('https://www.google-analytics.com');
   });
 
-  it('should include self directive by default', () => {
-    const result = generateCSP(['google-fonts']);
+  it('should include self directive by default', async () => {
+    const result = await generateCSPAsync(['google-fonts']);
 
     expect(result.header).toContain("'self'");
   });
 
-  it('should merge custom rules', () => {
-    const result = generateCSP({
+  it('should merge custom rules', async () => {
+    const result = await generateCSPAsync({
       services: ['google-fonts'],
       customRules: {
         'script-src': ['https://custom-domain.com'],
@@ -53,8 +53,8 @@ describe('generateCSP', () => {
     expect(result.header).toContain('https://fonts.googleapis.com');
   });
 
-  it('should generate nonce when requested', () => {
-    const result = generateCSP({
+  it('should generate nonce when requested', async () => {
+    const result = await generateCSPAsync({
       services: ['google-analytics'],
       nonce: true,
     });
@@ -63,9 +63,9 @@ describe('generateCSP', () => {
     expect(result.header).toContain(`'nonce-${result.nonce}'`);
   });
 
-  it('should use provided nonce', () => {
+  it('should use provided nonce', async () => {
     const customNonce = 'custom-nonce-123';
-    const result = generateCSP({
+    const result = await generateCSPAsync({
       services: ['google-analytics'],
       nonce: customNonce,
     });
@@ -76,8 +76,8 @@ describe('generateCSP', () => {
 });
 
 describe('generateCSPHeader', () => {
-  it('should return only header string', () => {
-    const header = generateCSPHeader(['google-analytics']);
+  it('should return only header string', async () => {
+    const header = await generateCSPHeaderAsync(['google-analytics']);
 
     expect(typeof header).toBe('string');
     expect(header).toContain('script-src');
@@ -85,8 +85,8 @@ describe('generateCSPHeader', () => {
 });
 
 describe('generateReportOnlyCSP', () => {
-  it('should generate report-only CSP', () => {
-    const header = generateReportOnlyCSP(['google-analytics']);
+  it('should generate report-only CSP', async () => {
+    const header = await generateReportOnlyCSPAsync(['google-analytics']);
 
     expect(typeof header).toBe('string');
     expect(header).toContain('script-src');
