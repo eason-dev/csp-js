@@ -50,7 +50,7 @@
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^22.15.3",
+    "@types/node": "^24.0.10",
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "autoprefixer": "^10.4.20",
