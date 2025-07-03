@@ -5,8 +5,21 @@ import { parse } from 'jsonc-parser';
 import type { ServiceDefinition, ServiceRegistry } from './types.js';
 import { ServiceCategory } from './types.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+// Get directory name compatible with both ESM and CJS
+let currentDir: string;
+try {
+  // Try ESM approach first
+  if (typeof import.meta !== 'undefined' && import.meta.url) {
+    currentDir = dirname(fileURLToPath(import.meta.url));
+  } else {
+    // CJS fallback - this will be handled by tsup's polyfill
+    throw new Error('Use CJS fallback');
+  }
+} catch {
+  // For CJS builds, use a relative path from dist to data
+  // This assumes the dist folder is at the same level as src
+  currentDir = __dirname || dirname(require.resolve('./types.js'));
+}
 
 // Map string categories to enum values
 const categoryMap: Record<string, ServiceCategory> = {
@@ -117,7 +130,7 @@ async function loadAllServices(): Promise<Record<string, ServiceDefinition>> {
     return _servicesCache;
   }
 
-  const servicesDir = join(__dirname, '../data/services');
+  const servicesDir = join(currentDir, '../data/services');
 
   try {
     const files = await readdir(servicesDir);
