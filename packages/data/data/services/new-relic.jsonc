@@ -17,15 +17,17 @@
         ],
         "connect-src": [
           "https://bam.nr-data.net",
+          "https://bam-cell.nr-data.net",
           "https://js-agent.newrelic.com"
         ]
       },
-      "requiresNonce": false,
+      "requiresNonce": true,
       "requiresDynamic": true,
-      "notes": "New Relic Browser agent for performance monitoring"
+      "notes": "New Relic Browser agent for application performance monitoring. Supports nonce-based CSP (v1.247.0+). Requires js-agent.newrelic.com for script loading and bam*.nr-data.net for data reporting."
     }
   },
   "defaultVersion": "current",
   "aliases": ["newrelic", "nr"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

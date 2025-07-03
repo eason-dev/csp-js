@@ -1,5 +1,6 @@
 {
   // Fastly Content Delivery Network
+  "id": "fastly",
   "name": "Fastly",
   "category": "cdn",
   "description": "Edge cloud platform and content delivery network",
@@ -27,10 +28,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Fastly CDN services and edge computing platform"
+      "notes": "Fastly CDN services and edge computing platform. Replace *.fastly.com with your specific Fastly subdomain. Supports Client-Side Protection with CSP policy management."
     }
   },
   "defaultVersion": "current",
   "aliases": ["fastly-cdn"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

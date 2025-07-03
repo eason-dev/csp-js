@@ -6,17 +6,17 @@
 ## Summary
 
 Total Services: **106**  
-Services Actually Verified: **19** (Google Analytics, Stripe, Facebook, YouTube, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Cloudflare Analytics, jsDelivr, Intercom, Sentry, Google Maps, Plausible Analytics, Zendesk, and 4 others)  
-Services with Issues: **6** (Google Analytics, Stripe, Facebook unverifiable, Hotjar, Intercom, Zendesk)  
-Services Updated: **12** (Google Analytics, Stripe, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Intercom, Google Maps, Zendesk, and 3 others)  
+Services Actually Verified: **26** (Google Analytics, Stripe, Facebook, YouTube, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Cloudflare Analytics, jsDelivr, Intercom, Sentry, Google Maps, Plausible Analytics, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Unpkg, Fastly, and 5 others)  
+Services with Issues: **8** (Google Analytics, Stripe, Facebook unverifiable, Hotjar, Intercom, Zendesk, Contentful, New Relic)  
+Services Updated: **18** (Google Analytics, Stripe, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Intercom, Google Maps, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Fastly, and 4 others)  
 Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE VERSIONS**
 
 **⚠️ IMPORTANT**: Only services that have been verified against official documentation have `verifiedAt` timestamps. Services without this field still need actual verification.
 
 ### Recent Verification Notes:
-- **Auth0**: Updated docs URLs, added CSP notes for SPA SDK and refresh tokens
-- **Datadog**: Verified RUM browser agent domains, updated notes for V5 changes  
-- **Calendly**: Verified embed widget CSP requirements, configuration confirmed correct
+- **Contentful**: Major update - added asset domains (ctfassets.net), API endpoints, frame-src for Studio
+- **New Relic**: Added bam-cell.nr-data.net domain, confirmed nonce support (v1.247.0+)
+- **Zendesk**: Comprehensive update following Google strict CSP guidelines, added regional domains
 
 ## Verification Progress Summary
 

@@ -1,5 +1,6 @@
 {
   // BigBlueButton Web Conferencing
+  "id": "bigbluebutton",
   "name": "BigBlueButton",
   "category": "video",
   "description": "Open-source web conferencing system for distance education",
@@ -24,10 +25,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "BigBlueButton web conferencing integration (replace with your server domain)"
+      "notes": "BigBlueButton open-source web conferencing integration. Replace *.bigbluebutton.org with your actual server domain. Requires SSL for WebRTC features (camera, microphone, screen sharing)."
     }
   },
   "defaultVersion": "current",
   "aliases": ["bbb"],
   "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }
