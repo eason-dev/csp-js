@@ -2,33 +2,44 @@
   "id": "stripe",
   "name": "Stripe",
   "category": "payment",
-  "description": "Online payment processing platform for internet businesses",
+  "description": "Online payment processing platform for internet businesses including Stripe.js, Checkout, Connect, and 3D Secure authentication",
   "website": "https://stripe.com",
   "officialDocs": [
     "https://stripe.com/docs/js",
-    "https://stripe.com/docs/security/guide#content-security-policy"
+    "https://stripe.com/docs/security/guide#content-security-policy",
+    "https://stripe.com/docs/security/guide"
   ],
   "versions": {
     "v3": {
       "validFrom": "2018-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://js.stripe.com"
+          "https://js.stripe.com",
+          "https://*.js.stripe.com",
+          "https://maps.googleapis.com"
         ],
         "frame-src": [
           "https://js.stripe.com",
+          "https://*.js.stripe.com",
           "https://hooks.stripe.com"
         ],
         "connect-src": [
-          "https://api.stripe.com"
+          "https://api.stripe.com",
+          "https://maps.googleapis.com",
+          "https://q.stripe.com",
+          "https://errors.stripe.com"
+        ],
+        "img-src": [
+          "https://*.stripe.com"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Stripe.js v3 library for secure payment processing"
+      "notes": "Stripe.js v3 library for secure payment processing. Includes domains for Google Maps (used in payment forms), error reporting (q.stripe.com), and wildcard subdomains for CDN delivery."
     }
   },
   "defaultVersion": "v3",
   "aliases": ["stripe-js"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "lastUpdated": "2025-07-03T00:00:00.000Z"
 }

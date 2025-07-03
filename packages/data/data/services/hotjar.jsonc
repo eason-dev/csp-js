@@ -13,28 +13,32 @@
       "validFrom": "2020-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://static.hotjar.com"
+          "https://*.hotjar.com",
+          "'unsafe-inline'"
         ],
         "connect-src": [
           "https://*.hotjar.com",
+          "https://*.hotjar.io",
           "wss://*.hotjar.com"
         ],
-        "font-src": [
-          "https://script.hotjar.com"
-        ],
         "img-src": [
-          "https://script.hotjar.com"
+          "https://*.hotjar.com"
+        ],
+        "font-src": [
+          "https://*.hotjar.com"
         ],
         "style-src": [
-          "https://script.hotjar.com"
+          "https://*.hotjar.com",
+          "'unsafe-inline'"
         ]
       },
       "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Hotjar tracking script for heatmaps and recordings"
+      "requiresDynamic": true,
+      "notes": "Hotjar tracking script for heatmaps, recordings, and user feedback. Requires 'unsafe-inline' for scripts and styles."
     }
   },
   "defaultVersion": "current",
   "aliases": ["hotjar-analytics"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

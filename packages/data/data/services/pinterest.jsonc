@@ -5,8 +5,9 @@
   "description": "Pinterest social media platform with Pin It buttons and widgets",
   "website": "https://pinterest.com",
   "officialDocs": [
-    "https://developers.pinterest.com/docs/widgets/",
-    "https://help.pinterest.com/en/business/article/save-button"
+    "https://developers.pinterest.com/docs/web-features/buttons/",
+    "https://help.pinterest.com/en/business/article/save-button",
+    "https://developers.pinterest.com/tools/widget-builder/"
   ],
   "versions": {
     "current": {
@@ -21,15 +22,20 @@
         ],
         "img-src": [
           "https://i.pinimg.com",
+          "https://assets.pinterest.com",
+          "https://s.pinimg.com"
+        ],
+        "connect-src": [
           "https://assets.pinterest.com"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Pinterest Save button and widget embeds"
+      "notes": "Pinterest Save button and widget embeds. Requires assets.pinterest.com for scripts and frames. Images must be at least 110px in one dimension."
     }
   },
   "defaultVersion": "current",
   "aliases": ["pinterest-widget"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

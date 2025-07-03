@@ -6,7 +6,7 @@
   "website": "https://mixpanel.com",
   "officialDocs": [
     "https://developer.mixpanel.com/docs/javascript",
-    "https://help.mixpanel.com/hc/en-us/articles/115004613766-Content-Security-Policy-CSP-"
+    "https://github.com/jonashaag/content-security-policy-rules/blob/master/mixpanel.md"
   ],
   "versions": {
     "current": {
@@ -16,7 +16,8 @@
           "https://cdn.mxpnl.com"
         ],
         "connect-src": [
-          "https://api.mixpanel.com"
+          "https://api.mixpanel.com",
+          "https://api-js.mixpanel.com"
         ],
         "img-src": [
           "https://cdn.mxpnl.com"
@@ -24,10 +25,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Mixpanel JavaScript library for event tracking"
+      "notes": "Mixpanel JavaScript library for event tracking. Requires api-js.mixpanel.com for SDK functionality and cdn.mxpnl.com for script loading and image tracking."
     }
   },
   "defaultVersion": "current",
   "aliases": ["mixpanel-analytics"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

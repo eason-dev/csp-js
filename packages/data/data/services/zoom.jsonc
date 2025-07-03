@@ -1,5 +1,6 @@
 {
   // Zoom Video Communications
+  "id": "zoom",
   "name": "Zoom",
   "category": "video",
   "description": "Video conferencing and communication platform",
@@ -29,5 +30,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["zoom-video"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

@@ -1,5 +1,6 @@
 {
   // Apple Pay Payment Processing
+  "id": "apple-pay",
   "name": "Apple Pay",
   "category": "payment",
   "description": "Apple's digital payment and digital wallet service",
@@ -26,5 +27,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["applepay"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

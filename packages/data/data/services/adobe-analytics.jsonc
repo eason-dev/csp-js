@@ -6,7 +6,8 @@
   "website": "https://business.adobe.com/products/analytics/adobe-analytics.html",
   "officialDocs": [
     "https://experienceleague.adobe.com/docs/analytics/implementation/js/overview.html",
-    "https://experienceleague.adobe.com/docs/analytics/technotes/security.html"
+    "https://experienceleague.adobe.com/en/docs/id-service/using/reference/csp",
+    "https://experienceleague.adobe.com/en/docs/experience-platform/tags/client-side/content-security-policy"
   ],
   "versions": {
     "current": {
@@ -16,20 +17,23 @@
           "https://assets.adobedtm.com"
         ],
         "connect-src": [
-          "https://*.112.2o7.net",
-          "https://*.omtrdc.net"
+          "https://*.2o7.net",
+          "https://*.omtrdc.net",
+          "https://*.demdex.net"
         ],
         "img-src": [
-          "https://*.112.2o7.net",
-          "https://*.omtrdc.net"
+          "https://*.2o7.net",
+          "https://*.omtrdc.net",
+          "https://*.demdex.net"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Adobe Analytics via Adobe Launch/Tags"
+      "notes": "Adobe Analytics via Adobe Launch/Tags. Requires assets.adobedtm.com for tag management, *.2o7.net and *.omtrdc.net for AppMeasurement, and *.demdex.net for Experience Cloud Identity Service and Audience Manager."
     }
   },
   "defaultVersion": "current",
   "aliases": ["adobe-launch", "adobe-tags"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

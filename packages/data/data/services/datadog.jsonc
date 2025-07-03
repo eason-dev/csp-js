@@ -6,7 +6,8 @@
   "website": "https://datadoghq.com",
   "officialDocs": [
     "https://docs.datadoghq.com/real_user_monitoring/browser/setup/",
-    "https://docs.datadoghq.com/real_user_monitoring/faq/content_security_policy/"
+    "https://docs.datadoghq.com/integrations/content_security_policy_logs/",
+    "https://docs.datadoghq.com/real_user_monitoring/browser/troubleshooting/"
   ],
   "versions": {
     "current": {
@@ -22,10 +23,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Datadog RUM (Real User Monitoring) browser agent"
+      "notes": "Datadog RUM (Real User Monitoring) browser agent. V5+ uses new intake domains. Worker compression may require additional CSP configuration."
     }
   },
   "defaultVersion": "current",
   "aliases": ["datadog-rum"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

@@ -3,35 +3,63 @@
   "id": "google-analytics",
   "name": "Google Analytics 4",
   "category": "analytics",
-  "description": "Web analytics service that tracks and reports website traffic",
+  "description": "Web analytics service that tracks and reports website traffic and user behavior",
   "website": "https://analytics.google.com/",
   "officialDocs": [
     "https://developers.google.com/tag-platform/security/guides/csp",
-    "https://content-security-policy.com/examples/google-analytics/"
+    "https://developers.google.com/analytics/devguides/collection/ga4",
+    "https://www.google.com/supported_domains"
   ],
   "csp": {
     "script-src": [
-      "https://www.googletagmanager.com",
-      "https://www.google-analytics.com",
-      "https://ssl.google-analytics.com"
+      "https://*.googletagmanager.com"
     ],
     "img-src": [
-      "https://www.google-analytics.com",
-      "https://www.googletagmanager.com"
+      "https://*.google-analytics.com",
+      "https://*.googletagmanager.com"
     ],
     "connect-src": [
-      "https://www.google-analytics.com",
-      "https://analytics.google.com",
-      "https://stats.g.doubleclick.net"
+      "https://*.google-analytics.com",
+      "https://*.analytics.google.com",
+      "https://*.googletagmanager.com"
+    ]
+  },
+  "cspExtended": {
+    "description": "Additional CSP directives required for Google Signals (cross-device tracking)",
+    "script-src": [
+      "https://*.googletagmanager.com"
+    ],
+    "img-src": [
+      "https://*.google-analytics.com",
+      "https://*.googletagmanager.com",
+      "https://*.g.doubleclick.net",
+      "https://*.google.com",
+      "https://*.google.<TLD>"
+    ],
+    "connect-src": [
+      "https://*.google-analytics.com",
+      "https://*.analytics.google.com",
+      "https://*.googletagmanager.com",
+      "https://*.g.doubleclick.net",
+      "https://*.google.com",
+      "https://*.google.<TLD>",
+      "https://pagead2.googlesyndication.com"
+    ],
+    "frame-src": [
+      "https://td.doubleclick.net",
+      "https://www.googletagmanager.com"
     ]
   },
   "notes": [
-    "For Google Signals (cross-device tracking), additional domains may be required",
-    "gtag.js automatically handles most CSP requirements",
-    "Consider using nonce-based approach for inline scripts"
+    "For Google Signals (cross-device tracking), use the extended CSP configuration",
+    "Each Google top-level domain (TLD) must be specified individually in CSP",
+    "See https://www.google.com/supported_domains for complete list of Google TLDs",
+    "Nonce-based approach is recommended for inline scripts",
+    "gtag.js automatically handles most CSP requirements"
   ],
   "aliases": ["ga4", "gtag", "google-gtag"],
   "lastUpdated": "2024-06-28T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
   "version": "GA4",
   "requiresDynamic": true,
   "requiresNonce": false

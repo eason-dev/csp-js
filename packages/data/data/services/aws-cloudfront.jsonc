@@ -1,5 +1,6 @@
 {
   // AWS CloudFront CDN
+  "id": "aws-cloudfront",
   "name": "AWS CloudFront",
   "category": "cdn",
   "description": "Amazon Web Services content delivery network",
@@ -32,5 +33,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["cloudfront"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

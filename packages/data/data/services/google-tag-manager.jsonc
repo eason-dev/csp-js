@@ -20,14 +20,44 @@
       "https://www.googletagmanager.com"
     ]
   },
+  "cspPreviewMode": {
+    "script-src": [
+      "https://www.googletagmanager.com",
+      "https://googletagmanager.com",
+      "https://tagmanager.google.com"
+    ],
+    "img-src": [
+      "https://www.googletagmanager.com",
+      "https://googletagmanager.com",
+      "https://ssl.gstatic.com",
+      "https://www.gstatic.com"
+    ],
+    "connect-src": [
+      "https://www.googletagmanager.com"
+    ],
+    "style-src": [
+      "https://googletagmanager.com",
+      "https://tagmanager.google.com",
+      "https://fonts.googleapis.com"
+    ],
+    "font-src": [
+      "https://fonts.gstatic.com",
+      "data:"
+    ]
+  },
   "notes": [
-    "GTM requires nonce implementation for secure inline script execution",
-    "Preview mode may require additional permissions",
-    "Tags within GTM may require additional CSP rules",
-    "Consider using nonce-based approach for optimal security"
+    "GTM requires nonce implementation for secure inline script execution (preferred method)",
+    "Preview mode requires additional domains - use cspPreviewMode configuration",
+    "GTM may require 'unsafe-eval' for Custom JavaScript Variables",
+    "Consider using Custom Templates instead of Custom JavaScript when possible",
+    "Tags within GTM may require additional CSP rules specific to each tag",
+    "Preview and debug panels need style-src and font-src permissions",
+    "Use nonce-based approach for optimal security instead of 'unsafe-inline'",
+    "Basic configuration is for production use, cspPreviewMode for development/debugging"
   ],
   "aliases": ["gtm", "google-gtm"],
   "lastUpdated": "2024-06-28T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
   "requiresDynamic": true,
   "requiresNonce": true
 }

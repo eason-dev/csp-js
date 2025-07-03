@@ -1,5 +1,6 @@
 {
   // Shopify E-commerce Platform
+  "id": "shopify",
   "name": "Shopify",
   "category": "payment",
   "description": "E-commerce platform with integrated payment processing",
@@ -27,5 +28,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["shopify-checkout"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }
