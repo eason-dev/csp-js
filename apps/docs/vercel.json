@@ -1,5 +1,5 @@
 {
   "buildCommand": "cd ../.. && pnpm install --frozen-lockfile && pnpm exec turbo build --filter=docs",
-  "outputDirectory": "build",
+  "outputDirectory": "apps/docs/build",
   "installCommand": "echo 'Dependencies installed in buildCommand'"
 }
