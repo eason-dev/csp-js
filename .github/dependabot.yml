@@ -20,7 +20,7 @@ updates:
       - 'npm'
     pull-request-branch-name:
       separator: '/'
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 3
     ignore:
       # Ignore major version updates for these stable packages
       - dependency-name: 'typescript'
@@ -49,7 +49,7 @@ updates:
       - 'generator'
     pull-request-branch-name:
       separator: '/'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
 
   - package-ecosystem: 'npm'
     directory: '/packages/data'
@@ -71,7 +71,7 @@ updates:
       - 'data'
     pull-request-branch-name:
       separator: '/'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
 
   - package-ecosystem: 'npm'
     directory: '/packages/cli'
@@ -93,7 +93,7 @@ updates:
       - 'cli'
     pull-request-branch-name:
       separator: '/'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
 
   - package-ecosystem: 'npm'
     directory: '/packages/ui'
@@ -115,7 +115,7 @@ updates:
       - 'ui'
     pull-request-branch-name:
       separator: '/'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
 
   # Enable version updates for Next.js apps
   - package-ecosystem: 'npm'
@@ -138,7 +138,7 @@ updates:
       - 'web-app'
     pull-request-branch-name:
       separator: '/'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
 
   - package-ecosystem: 'npm'
     directory: '/apps/docs'
@@ -160,7 +160,7 @@ updates:
       - 'docs-app'
     pull-request-branch-name:
       separator: '/'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: 'github-actions'
@@ -183,4 +183,4 @@ updates:
       - 'ci'
     pull-request-branch-name:
       separator: '/'
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 3
