@@ -1,5 +1,6 @@
 {
   // Google Pay Payment Processing
+  "id": "google-pay",
   "name": "Google Pay",
   "category": "payment",
   "description": "Google's digital payment platform and digital wallet",
@@ -26,5 +27,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["googlepay", "gpay"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

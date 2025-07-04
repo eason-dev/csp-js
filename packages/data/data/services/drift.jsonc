@@ -13,21 +13,25 @@
       "validFrom": "2019-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://js.driftt.com"
+          "https://js.driftt.com",
+          "https://widget.drift.com"
         ],
         "frame-src": [
+          "https://js.driftt.com",
           "https://widget.drift.com"
         ],
         "connect-src": [
-          "wss://customer-api.drift.com"
+          "wss://customer-api.drift.com",
+          "https://drift.com"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Drift chat widget and conversational marketing tools"
+      "notes": "Drift chat widget and conversational marketing platform. Requires js.driftt.com and widget.drift.com for both script and frame sources per official CSP documentation."
     }
   },
   "defaultVersion": "current",
   "aliases": ["drift-chat"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

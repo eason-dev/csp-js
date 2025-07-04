@@ -16,18 +16,25 @@
           "https://sc-static.net"
         ],
         "frame-src": [
-          "https://snapchat.com"
+          "https://tr.snapchat.com",
+          "https://tr-shadow.snapchat.com",
+          "https://snap.adbrn.com"
         ],
         "connect-src": [
+          "https://tr.snapchat.com",
+          "https://tr-shadow.snapchat.com"
+        ],
+        "form-action": [
           "https://tr.snapchat.com"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Snapchat Pixel and social embeds"
+      "notes": "Snapchat Pixel for conversion tracking and advertising. Requires sc-static.net for scripts, tr.snapchat.com for tracking endpoints, and additional shadow domains for enhanced tracking."
     }
   },
   "defaultVersion": "current",
   "aliases": ["snapchat-pixel", "snap-pixel"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

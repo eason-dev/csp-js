@@ -1,5 +1,6 @@
 {
   // Cypress End-to-End Testing
+  "id": "cypress",
   "name": "Cypress",
   "category": "testing",
   "description": "End-to-end testing framework for web applications",
@@ -28,4 +29,5 @@
   "defaultVersion": "current",
   "aliases": ["cy"],
   "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

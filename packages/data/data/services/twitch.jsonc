@@ -12,9 +12,12 @@
     "current": {
       "validFrom": "2020-01-01",
       "cspDirectives": {
+        "script-src": [
+          "https://player.twitch.tv"
+        ],
         "frame-src": [
           "https://player.twitch.tv",
-          "https://www.twitch.tv"
+          "https://clips.twitch.tv"
         ],
         "img-src": [
           "https://static-cdn.jtvnw.net"
@@ -26,10 +29,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Twitch embedded player and chat integration"
+      "notes": "Twitch embedded player and chat integration. Requires player.twitch.tv for scripts and frames, clips.twitch.tv for clip embeds. Parent parameter must be configured for domain verification."
     }
   },
   "defaultVersion": "current",
   "aliases": ["twitch-player"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

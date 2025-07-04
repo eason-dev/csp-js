@@ -6,7 +6,7 @@
 ## Summary
 
 Total Services: **106**  
-Services Actually Verified: **26** (Google Analytics, Stripe, Facebook, YouTube, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Cloudflare Analytics, jsDelivr, Intercom, Sentry, Google Maps, Plausible Analytics, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Unpkg, Fastly, and 5 others)  
+Services Actually Verified: **33** (Google Analytics, Stripe, Facebook, YouTube, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Cloudflare Analytics, jsDelivr, Intercom, Sentry, Google Maps, Plausible Analytics, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Unpkg, Fastly, Twitch, Google Pay, Crisp Chat, Cypress, BrowserStack, and 7 others)  
 Services with Issues: **8** (Google Analytics, Stripe, Facebook unverifiable, Hotjar, Intercom, Zendesk, Contentful, New Relic)  
 Services Updated: **18** (Google Analytics, Stripe, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Intercom, Google Maps, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Fastly, and 4 others)  
 Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE VERSIONS**
@@ -14,9 +14,11 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 **⚠️ IMPORTANT**: Only services that have been verified against official documentation have `verifiedAt` timestamps. Services without this field still need actual verification.
 
 ### Recent Verification Notes:
-- **Contentful**: Major update - added asset domains (ctfassets.net), API endpoints, frame-src for Studio
-- **New Relic**: Added bam-cell.nr-data.net domain, confirmed nonce support (v1.247.0+)
-- **Zendesk**: Comprehensive update following Google strict CSP guidelines, added regional domains
+- **Twitch**: Updated with script-src requirement for player.twitch.tv and clips.twitch.tv for frame-src
+- **Google Pay**: Fixed missing ID field, verified against official docs
+- **Crisp Chat**: Verified configuration against official docs
+- **Cypress**: Fixed missing ID field, verified for testing framework integration
+- **BrowserStack**: Fixed missing ID field, verified for cross-browser testing
 
 ## Verification Progress Summary
 

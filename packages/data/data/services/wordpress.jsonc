@@ -1,5 +1,6 @@
 {
   // WordPress Content Management System
+  "id": "wordpress",
   "name": "WordPress",
   "category": "other",
   "description": "Open-source content management system and blogging platform",
@@ -25,10 +26,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "WordPress.org resources and API endpoints"
+      "notes": "WordPress.org resources for updates and API calls. Self-hosted WordPress installations may need additional CSP configuration for themes, plugins, and admin interface. Consider using CSP plugins for complex setups."
     }
   },
   "defaultVersion": "current",
   "aliases": ["wp"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

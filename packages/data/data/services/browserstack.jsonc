@@ -1,5 +1,6 @@
 {
   // BrowserStack Cross-Browser Testing
+  "id": "browserstack",
   "name": "BrowserStack",
   "category": "testing",
   "description": "Cross-browser testing platform for web and mobile applications",
@@ -28,4 +29,5 @@
   "defaultVersion": "current",
   "aliases": ["bs"],
   "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }
