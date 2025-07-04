@@ -1,7 +1,8 @@
 {
   // Drupal Content Management System
+  "id": "drupal",
   "name": "Drupal",
-  "category": "other",
+  "category": "cms",
   "description": "Open-source content management framework",
   "website": "https://drupal.org",
   "officialDocs": [
@@ -27,5 +28,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["drupal-cms"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

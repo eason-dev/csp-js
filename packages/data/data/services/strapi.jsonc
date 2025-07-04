@@ -1,7 +1,8 @@
 {
   // Strapi Headless CMS
+  "id": "strapi",
   "name": "Strapi",
-  "category": "other",
+  "category": "cms",
   "description": "Open-source headless content management system",
   "website": "https://strapi.io",
   "officialDocs": [
@@ -26,5 +27,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["strapi-cms"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

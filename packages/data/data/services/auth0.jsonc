@@ -2,7 +2,7 @@
   // Auth0 - Identity platform for developers
   "id": "auth0",
   "name": "Auth0",
-  "category": "other",
+  "category": "authentication",
   "description": "Identity platform for developers and enterprise security",
   "website": "https://auth0.com/",
   "officialDocs": [
@@ -10,28 +10,27 @@
     "https://auth0.com/docs/libraries/auth0-single-page-app-sdk",
     "https://auth0.com/docs/get-started/auth0-overview"
   ],
-  "csp": {
-    "script-src": [
-      "https://cdn.auth0.com"
-    ],
-    "connect-src": [
-      "https://*.auth0.com"
-    ],
-    "frame-src": [
-      "https://*.auth0.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2010-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://cdn.auth0.com"
+        ],
+        "connect-src": [
+          "https://*.auth0.com"
+        ],
+        "frame-src": [
+          "https://*.auth0.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": true,
+      "notes": "Auth0 identity platform. Tenant-specific domains require wildcard permissions. Social login may require additional provider domains. Universal Login requires frame embedding. May require 'unsafe-eval' for SPA SDK functionality."
+    }
   },
-  "notes": [
-    "Tenant-specific domains require wildcard permissions",
-    "Social login may require additional provider domains",
-    "Universal Login requires frame embedding",
-    "May require 'unsafe-eval' for SPA SDK functionality",
-    "Refresh tokens may require 'blob:' for worker scripts"
-  ],
+  "defaultVersion": "current",
   "aliases": ["auth0-identity"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z",
-  "version": "9.x",
-  "requiresDynamic": true,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

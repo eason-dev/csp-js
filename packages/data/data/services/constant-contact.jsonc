@@ -2,31 +2,34 @@
   // Constant Contact - Email marketing platform
   "id": "constant-contact",
   "name": "Constant Contact",
-  "category": "other",
+  "category": "marketing",
   "description": "Email marketing and campaign management platform",
   "website": "https://www.constantcontact.com/",
   "officialDocs": [
     "https://knowledgebase.constantcontact.com/articles/KnowledgeBase/5590-getting-started-with-the-constant-contact-api-v3",
     "https://developer.constantcontact.com/"
   ],
-  "csp": {
-    "script-src": [
-      "https://imgssl.constantcontact.com"
-    ],
-    "connect-src": [
-      "https://api.constantcontact.com"
-    ],
-    "img-src": [
-      "https://imgssl.constantcontact.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "1995-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://imgssl.constantcontact.com"
+        ],
+        "connect-src": [
+          "https://api.constantcontact.com"
+        ],
+        "img-src": [
+          "https://imgssl.constantcontact.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Constant Contact email marketing platform. Email templates may require additional image domains. SSL-only image serving for security."
+    }
   },
-  "notes": [
-    "Email templates may require additional image domains",
-    "SSL-only image serving for security"
-  ],
+  "defaultVersion": "current",
   "aliases": ["constantcontact"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "v3",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

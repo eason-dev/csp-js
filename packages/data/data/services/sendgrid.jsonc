@@ -2,28 +2,31 @@
   // SendGrid - Email delivery and marketing platform
   "id": "sendgrid",
   "name": "SendGrid",
-  "category": "other",
+  "category": "marketing",
   "description": "Email delivery and marketing platform by Twilio",
   "website": "https://sendgrid.com/",
   "officialDocs": [
     "https://docs.sendgrid.com/ui/sending-email/content-security-policy",
     "https://docs.sendgrid.com/api-reference/"
   ],
-  "csp": {
-    "script-src": [
-      "https://sendgrid.com"
-    ],
-    "connect-src": [
-      "https://api.sendgrid.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2009-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://sendgrid.com"
+        ],
+        "connect-src": [
+          "https://api.sendgrid.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "SendGrid email delivery and marketing platform by Twilio. Marketing campaigns may require additional image domains. Webhook endpoints should be configured separately."
+    }
   },
-  "notes": [
-    "Marketing campaigns may require additional image domains",
-    "Webhook endpoints should be configured separately"
-  ],
+  "defaultVersion": "current",
   "aliases": ["twilio-sendgrid"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "v3",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

@@ -2,28 +2,31 @@
   // Campaign Monitor - Email marketing platform
   "id": "campaign-monitor",
   "name": "Campaign Monitor",
-  "category": "other",
+  "category": "marketing",
   "description": "Email marketing platform with design tools and automation",
   "website": "https://www.campaignmonitor.com/",
   "officialDocs": [
     "https://www.campaignmonitor.com/api/",
     "https://help.campaignmonitor.com/topic.aspx?t=206"
   ],
-  "csp": {
-    "script-src": [
-      "https://campaignmonitor.com"
-    ],
-    "connect-src": [
-      "https://api.createsend.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2004-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://campaignmonitor.com"
+        ],
+        "connect-src": [
+          "https://api.createsend.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Campaign Monitor email marketing platform. Uses CreateSend API for backend operations. Template builder may require additional domains."
+    }
   },
-  "notes": [
-    "Uses CreateSend API for backend operations",
-    "Template builder may require additional domains"
-  ],
+  "defaultVersion": "current",
   "aliases": ["createsend"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "v3.3",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

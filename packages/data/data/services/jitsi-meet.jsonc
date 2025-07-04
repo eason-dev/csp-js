@@ -1,5 +1,6 @@
 {
   // Jitsi Meet Video Conferencing
+  "id": "jitsi-meet",
   "name": "Jitsi Meet",
   "category": "video",
   "description": "Open-source video conferencing platform",
@@ -29,5 +30,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["jitsi"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

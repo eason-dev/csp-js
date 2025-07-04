@@ -1,5 +1,6 @@
 {
   // Google Meet Video Conferencing
+  "id": "google-meet",
   "name": "Google Meet",
   "category": "video",
   "description": "Google's video conferencing and online meeting platform",
@@ -29,5 +30,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["gmeet"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

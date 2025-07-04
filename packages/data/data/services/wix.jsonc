@@ -2,34 +2,37 @@
   // Wix - Website builder platform
   "id": "wix",
   "name": "Wix",
-  "category": "other",
+  "category": "cms",
   "description": "Cloud-based website development platform",
   "website": "https://www.wix.com/",
   "officialDocs": [
     "https://dev.wix.com/api/rest/getting-started/introduction",
     "https://support.wix.com/en/article/embedding-custom-code-to-your-site"
   ],
-  "csp": {
-    "script-src": [
-      "https://wix.com",
-      "https://www.wix.com",
-      "https://static.wixstatic.com"
-    ],
-    "connect-src": [
-      "https://wix.com",
-      "https://www.wix.com"
-    ],
-    "img-src": [
-      "https://static.wixstatic.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2006-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://wix.com",
+          "https://www.wix.com",
+          "https://static.wixstatic.com"
+        ],
+        "connect-src": [
+          "https://wix.com",
+          "https://www.wix.com"
+        ],
+        "img-src": [
+          "https://static.wixstatic.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Wix website builder platform. Wix apps may require additional domains. Custom code injection may need specific CSP permissions."
+    }
   },
-  "notes": [
-    "Wix apps may require additional domains",
-    "Custom code injection may need specific CSP permissions"
-  ],
+  "defaultVersion": "current",
   "aliases": ["wix-website"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "1.0",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

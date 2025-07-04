@@ -2,30 +2,33 @@
   // Notion - All-in-one workspace
   "id": "notion",
   "name": "Notion",
-  "category": "other",
+  "category": "productivity",
   "description": "All-in-one workspace for notes, docs, and collaboration",
   "website": "https://www.notion.so/",
   "officialDocs": [
     "https://developers.notion.com/",
     "https://www.notion.so/help/embed-and-connect-other-apps"
   ],
-  "csp": {
-    "script-src": [
-      "https://notion.so",
-      "https://www.notion.so"
-    ],
-    "frame-src": [
-      "https://notion.so",
-      "https://www.notion.so"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2016-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://notion.so",
+          "https://www.notion.so"
+        ],
+        "frame-src": [
+          "https://notion.so",
+          "https://www.notion.so"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Notion all-in-one workspace platform. Page embeds require frame permissions. Database embeds may require additional domains."
+    }
   },
-  "notes": [
-    "Page embeds require frame permissions",
-    "Database embeds may require additional domains"
-  ],
+  "defaultVersion": "current",
   "aliases": ["notion-workspace"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "1.0",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

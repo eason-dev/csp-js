@@ -72,11 +72,11 @@
       },
       "requiresNonce": true,
       "requiresDynamic": true,
-      "notes": "Intercom Messenger widget for customer support. Requires extensive CSP configuration due to multiple regional endpoints and embedded media support. Supports nonce-based CSP for enhanced security."
+      "notes": "Intercom verified against official CSP documentation. Requires multiple regional endpoints (US, EU, AU), WebSocket connections for real-time messaging, and various CDN domains for assets. Supports iframe embeds for third-party content (YouTube, Vimeo, Wistia). Regional API endpoints and upload domains required based on account location."
     }
   },
   "defaultVersion": "current",
   "aliases": ["intercom-messenger"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

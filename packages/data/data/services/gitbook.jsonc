@@ -2,31 +2,34 @@
   // GitBook - Documentation platform
   "id": "gitbook",
   "name": "GitBook",
-  "category": "other",
+  "category": "documentation",
   "description": "Modern documentation platform for teams",
   "website": "https://www.gitbook.com/",
   "officialDocs": [
     "https://developer.gitbook.com/",
     "https://docs.gitbook.com/integrations/embed-content"
   ],
-  "csp": {
-    "script-src": [
-      "https://gitbook.com",
-      "https://www.gitbook.com"
-    ],
-    "frame-src": [
-      "https://gitbook.com",
-      "https://www.gitbook.com",
-      "https://*.gitbook.io"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2014-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://gitbook.com",
+          "https://www.gitbook.com"
+        ],
+        "frame-src": [
+          "https://gitbook.com",
+          "https://www.gitbook.com",
+          "https://*.gitbook.io"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "GitBook documentation platform. Documentation embeds require frame permissions. Custom domains hosted on gitbook.io subdomains."
+    }
   },
-  "notes": [
-    "Documentation embeds require frame permissions",
-    "Custom domains hosted on gitbook.io subdomains"
-  ],
+  "defaultVersion": "current",
   "aliases": ["gitbook-docs"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "2.0",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

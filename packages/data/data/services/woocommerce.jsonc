@@ -1,5 +1,6 @@
 {
   // WooCommerce E-commerce Platform
+  "id": "woocommerce",
   "name": "WooCommerce",
   "category": "payment",
   "description": "WordPress-based e-commerce platform and payment processing",
@@ -27,5 +28,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["woo"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

@@ -5,31 +5,30 @@
   "description": "Digital analytics platform for tracking user behavior and product usage",
   "website": "https://amplitude.com",
   "officialDocs": [
-    "https://amplitude.com/docs/sdks/analytics/browser/browser-sdk-2",
-    "https://community.amplitude.com/data-instrumentation-57/content-security-policy-documentation-1805"
+    "https://www.docs.developers.amplitude.com/data/sdks/browser-2/",
+    "https://www.docs.developers.amplitude.com/guides/cookies-consent-mgmt-guide/"
   ],
   "versions": {
     "current": {
       "validFrom": "2020-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://cdn.amplitude.com"
+          "https://*.amplitude.com"
         ],
         "connect-src": [
-          "https://api2.amplitude.com",
-          "https://api-secure.amplitude.com"
+          "https://*.amplitude.com"
         ],
         "img-src": [
-          "https://cdn.amplitude.com"
+          "https://*.amplitude.com"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Amplitude JavaScript SDK for user analytics. Requires api2.amplitude.com for event tracking and api-secure.amplitude.com for session replay. For advanced features like Guides and Surveys, use https://*.amplitude.com wildcard."
+      "notes": "Amplitude verified against official Browser SDK 2.0 documentation. Requires *.amplitude.com wildcard for script loading and API connections. Covers all Amplitude subdomains including api2.amplitude.com for events, api-secure.amplitude.com for session replay, and cdn.amplitude.com for SDK delivery."
     }
   },
   "defaultVersion": "current",
   "aliases": ["amplitude-analytics"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

@@ -2,32 +2,35 @@
   // Webflow - Visual web development platform
   "id": "webflow",
   "name": "Webflow",
-  "category": "other",
+  "category": "cms",
   "description": "Visual web development platform for designers",
   "website": "https://webflow.com/",
   "officialDocs": [
     "https://developers.webflow.com/",
     "https://university.webflow.com/lesson/custom-code-in-the-head-and-body-tags"
   ],
-  "csp": {
-    "script-src": [
-      "https://webflow.com",
-      "https://d3e54v103j8qbb.cloudfront.net"
-    ],
-    "connect-src": [
-      "https://api.webflow.com"
-    ],
-    "img-src": [
-      "https://uploads-ssl.webflow.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2013-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://webflow.com",
+          "https://d3e54v103j8qbb.cloudfront.net"
+        ],
+        "connect-src": [
+          "https://api.webflow.com"
+        ],
+        "img-src": [
+          "https://uploads-ssl.webflow.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Webflow visual web development platform. Custom code embeds may require additional permissions. CMS assets are served from CloudFront CDN."
+    }
   },
-  "notes": [
-    "Custom code embeds may require additional permissions",
-    "CMS assets are served from CloudFront CDN"
-  ],
+  "defaultVersion": "current",
   "aliases": ["webflow-cms"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "1.0",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

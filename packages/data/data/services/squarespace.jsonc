@@ -2,34 +2,37 @@
   // Squarespace - Website builder platform
   "id": "squarespace",
   "name": "Squarespace",
-  "category": "other",
+  "category": "cms",
   "description": "All-in-one website building and hosting platform",
   "website": "https://www.squarespace.com/",
   "officialDocs": [
     "https://developers.squarespace.com/",
     "https://support.squarespace.com/hc/en-us/articles/205815908-Using-code-injection"
   ],
-  "csp": {
-    "script-src": [
-      "https://squarespace.com",
-      "https://www.squarespace.com",
-      "https://static1.squarespace.com"
-    ],
-    "connect-src": [
-      "https://squarespace.com",
-      "https://api.squarespace.com"
-    ],
-    "img-src": [
-      "https://images.squarespace-cdn.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2003-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://squarespace.com",
+          "https://www.squarespace.com",
+          "https://static1.squarespace.com"
+        ],
+        "connect-src": [
+          "https://squarespace.com",
+          "https://api.squarespace.com"
+        ],
+        "img-src": [
+          "https://images.squarespace-cdn.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Squarespace website builder platform. Custom domains may require additional CSP entries. Template-specific assets may need additional domains."
+    }
   },
-  "notes": [
-    "Custom domains may require additional CSP entries",
-    "Template-specific assets may need additional domains"
-  ],
+  "defaultVersion": "current",
   "aliases": ["squarespace-website"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "1.0",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

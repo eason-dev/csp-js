@@ -2,28 +2,31 @@
   // Unbounce - Landing page builder and A/B testing
   "id": "unbounce",
   "name": "Unbounce",
-  "category": "other",
+  "category": "marketing",
   "description": "Landing page builder with A/B testing and conversion optimization",
   "website": "https://unbounce.com/",
   "officialDocs": [
     "https://documentation.unbounce.com/hc/en-us/articles/203661044-JavaScript-API",
     "https://documentation.unbounce.com/"
   ],
-  "csp": {
-    "script-src": [
-      "https://unbounce.com"
-    ],
-    "connect-src": [
-      "https://unbounce.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2009-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://unbounce.com"
+        ],
+        "connect-src": [
+          "https://unbounce.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Unbounce landing page builder platform. Custom JavaScript may require additional permissions. Third-party integrations may need extra domains."
+    }
   },
-  "notes": [
-    "Custom JavaScript may require additional permissions",
-    "Third-party integrations may need extra domains"
-  ],
+  "defaultVersion": "current",
   "aliases": ["unbounce-landing"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "1.0",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

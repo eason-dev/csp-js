@@ -1,7 +1,8 @@
 {
   // Sanity Headless CMS
+  "id": "sanity",
   "name": "Sanity",
-  "category": "other",
+  "category": "cms",
   "description": "Structured content platform with real-time APIs",
   "website": "https://sanity.io",
   "officialDocs": [
@@ -27,5 +28,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["sanity-cms"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

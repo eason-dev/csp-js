@@ -2,34 +2,36 @@
   // Okta - Identity and access management
   "id": "okta",
   "name": "Okta",
-  "category": "other",
+  "category": "authentication",
   "description": "Identity and access management platform",
   "website": "https://www.okta.com/",
   "officialDocs": [
     "https://developer.okta.com/docs/guides/content-security-policy/main/",
     "https://developer.okta.com/"
   ],
-  "csp": {
-    "script-src": [
-      "https://oktacdn.com"
-    ],
-    "connect-src": [
-      "https://*.okta.com",
-      "https://*.oktapreview.com"
-    ],
-    "frame-src": [
-      "https://*.okta.com",
-      "https://*.oktapreview.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2009-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://oktacdn.com"
+        ],
+        "connect-src": [
+          "https://*.okta.com",
+          "https://*.oktapreview.com"
+        ],
+        "frame-src": [
+          "https://*.okta.com",
+          "https://*.oktapreview.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": true,
+      "notes": "Okta identity and access management platform. Organization-specific subdomains require wildcard permissions. Preview environments use oktapreview.com domain. Widget embedding requires frame permissions."
+    }
   },
-  "notes": [
-    "Organization-specific subdomains require wildcard permissions",
-    "Preview environments use oktapreview.com domain",
-    "Widget embedding requires frame permissions"
-  ],
+  "defaultVersion": "current",
   "aliases": ["okta-identity"],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "7.x",
-  "requiresDynamic": true,
-  "requiresNonce": false
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

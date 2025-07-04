@@ -1,5 +1,6 @@
 {
   // Ghost Inspector Automated Testing
+  "id": "ghost-inspector",
   "name": "Ghost Inspector",
   "category": "testing",
   "description": "Automated browser testing and website monitoring service",
@@ -26,5 +27,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["ghost-test"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

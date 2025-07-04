@@ -1,5 +1,6 @@
 {
   // Microsoft Teams
+  "id": "microsoft-teams",
   "name": "Microsoft Teams",
   "category": "video",
   "description": "Microsoft's collaboration and video conferencing platform",
@@ -29,5 +30,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["teams", "ms-teams"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2025-06-29T00:00:00Z",
+  "verifiedAt": "2025-07-03T00:00:00.000Z"
 }

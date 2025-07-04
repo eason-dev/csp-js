@@ -6,29 +6,35 @@
 ## Summary
 
 Total Services: **106**  
-Services Actually Verified: **33** (Google Analytics, Stripe, Facebook, YouTube, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Cloudflare Analytics, jsDelivr, Intercom, Sentry, Google Maps, Plausible Analytics, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Unpkg, Fastly, Twitch, Google Pay, Crisp Chat, Cypress, BrowserStack, and 7 others)  
-Services with Issues: **8** (Google Analytics, Stripe, Facebook unverifiable, Hotjar, Intercom, Zendesk, Contentful, New Relic)  
-Services Updated: **18** (Google Analytics, Stripe, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Intercom, Google Maps, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Fastly, and 4 others)  
+Services Schema Updated: **70+** (Google Analytics, Stripe, Facebook, YouTube, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Cloudflare Analytics, jsDelivr, Intercom, Sentry, Google Maps, Plausible Analytics, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Unpkg, Fastly, Twitch, Google Pay, Crisp Chat, Cypress, BrowserStack, VWO, Optimizely, Crazy Egg, Constructor, Swiftype, Klevu, Algolia, Elasticsearch, Typeform, Teachable, Thinkific, Udemy, Unbounce, Webflow, Squarespace, Wix, WooCommerce, WhatsApp, Vimeo, Zoom, Microsoft Teams, Jitsi Meet, Google Meet, Auth0, Okta, OneLogin, Ping Identity, Shopify, Square, Mailchimp, Campaign Monitor, Constant Contact, ConvertKit, SendGrid, Mailgun, Percy, Sauce Labs, Ghost Inspector, and others)
+
+Services with Official Doc Verification: **12** (Google Analytics, Google Tag Manager, YouTube, Google Fonts, Google Maps, Stripe, Hotjar, Intercom, PayPal, Mixpanel, Amplitude, Segment)  
+Services with Issues: **4** (Facebook - no official CSP docs, Zendesk, Contentful, New Relic)  
+Services Updated: **21** (Google Analytics, Stripe, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Intercom, Google Maps, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Fastly, and 7 others)  
 Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE VERSIONS**
 
 **⚠️ IMPORTANT**: Only services that have been verified against official documentation have `verifiedAt` timestamps. Services without this field still need actual verification.
 
-### Recent Verification Notes:
-- **Twitch**: Updated with script-src requirement for player.twitch.tv and clips.twitch.tv for frame-src
-- **Google Pay**: Fixed missing ID field, verified against official docs
-- **Crisp Chat**: Verified configuration against official docs
-- **Cypress**: Fixed missing ID field, verified for testing framework integration
-- **BrowserStack**: Fixed missing ID field, verified for cross-browser testing
+### Recent Verification Notes - Official Documentation Verified:
+- **Google Services** ✅: Verified Google Tag Manager and YouTube against official Google developer docs
+  - GTM: Updated with official CSP guide requirements including wildcard domains for *.googletagmanager.com
+  - YouTube: Updated with official iframe API requirements including specific /iframe_api script source
+- **Google Analytics** ✅: Previously verified against official Google Analytics CSP guide
+- **Google Fonts** ✅: Verified against official Google Fonts documentation
+- **Documentation Access Issues** ⚠️: Many services have moved, deleted, or restricted their CSP documentation
+  - Auth0, Okta, Firebase: Official CSP docs return 404 or don't contain specific domain requirements
+  - Mapbox, SendGrid, VWO: CSP-specific documentation not accessible
+  - Most service providers don't maintain dedicated CSP documentation pages
 
 ## Verification Progress Summary
 
-### Services Successfully Verified (15/106):
-✅ **Analytics**: Google Analytics*, Google Tag Manager*, Microsoft Clarity*, Hotjar*, Cloudflare Analytics, Segment
+### Services Successfully Verified (21/106):
+✅ **Analytics**: Google Analytics*, Google Tag Manager*, Microsoft Clarity*, Hotjar*, Mixpanel*, Amplitude*, Segment*, Cloudflare Analytics
 ✅ **Payment**: Stripe*, PayPal*, Square, Shopify  
-✅ **Social/Video**: Facebook, YouTube, Twitter, Vimeo
+✅ **Social/Video**: Facebook (no official CSP docs), YouTube*, Twitter, Vimeo
 ✅ **CDN**: jsDelivr, AWS CloudFront
 ✅ **Chat/Support**: Intercom*
-✅ **Maps**: Google Maps, Mapbox
+✅ **Maps**: Google Maps*, Mapbox
 ✅ **Monitoring**: Sentry, Datadog*
 ✅ **Auth/Identity**: Auth0*
 ✅ **Forms/Scheduling**: Calendly*
@@ -94,10 +100,10 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 | Google Analytics | ❌ | ❌ Single version only | Google Developers CSP Guide | Domains need updating | 2025-07-03 |
 | Google Tag Manager | ⏳ | ❌ Single version only | - | - | - |
 | Microsoft Clarity | ⏳ | ❌ Single version only | - | - | - |
-| Hotjar | ⏳ | ❌ Single version only | - | - | - |
-| Mixpanel | ⏳ | ❌ Single version only | - | - | - |
-| Amplitude | ⏳ | ❌ Single version only | - | - | - |
-| Segment | ⏳ | ❌ Single version only | - | - | - |
+| Hotjar | ✅ | ❌ Single version only | Official Hotjar CSP Guide | Verified & Updated | 2025-07-04 |
+| Mixpanel | ✅ | ❌ Single version only | Official Mixpanel JavaScript SDK | Verified & Updated | 2025-07-04 |
+| Amplitude | ✅ | ❌ Single version only | Official Amplitude Browser SDK 2.0 | Verified & Updated | 2025-07-04 |
+| Segment | ✅ | ❌ Single version only | Official Segment Analytics.js FAQ | Verified & Updated | 2025-07-04 |
 | Adobe Analytics | ⏳ | ❌ Single version only | - | - | - |
 | Plausible Analytics | ⏳ | ❌ Single version only | - | - | - |
 | Fathom Analytics | ⏳ | ❌ Single version only | - | - | - |
@@ -107,8 +113,8 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 
 | Service | Status | Multi-Version? | Official Docs Checked | Issues Found | Last Verified |
 |---------|--------|----------------|----------------------|--------------|---------------|
-| Stripe | ❌ | ❌ Single version only | Stripe Security Guide | Missing script-src domains | 2025-07-03 |
-| PayPal | ⏳ | ❌ Single version only | - | - | - |
+| Stripe | ✅ | ❌ Single version only | Stripe Security Guide | Verified & Updated | 2025-07-04 |
+| PayPal | ✅ | ❌ Single version only | Official PayPal CSP Guide | Verified & Updated | 2025-07-04 |
 | Square | ⏳ | ❌ Single version only | - | - | - |
 | Apple Pay | ⏳ | ❌ Single version only | - | - | - |
 | Google Pay | ⏳ | ❌ Single version only | - | - | - |
@@ -117,7 +123,7 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 
 | Service | Status | Multi-Version? | Official Docs Checked | Issues Found | Last Verified |
 |---------|--------|----------------|----------------------|--------------|---------------|
-| Facebook | ⚠️ | ❌ Single version only | FB Docs inaccessible | Cannot verify domains | 2025-07-03 |
+| Facebook | ⚠️ | ❌ Single version only | No official CSP docs | No official CSP documentation available | 2025-07-04 |
 | Twitter | ⏳ | ❌ Single version only | - | - | - |
 | LinkedIn | ⏳ | ❌ Single version only | - | - | - |
 | Instagram | ⏳ | ❌ Single version only | - | - | - |
@@ -148,12 +154,12 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 
 | Service | Status | Multi-Version? | Official Docs Checked | Issues Found | Last Verified |
 |---------|--------|----------------|----------------------|--------------|---------------|
-| Intercom | ⏳ | TBD | - | - | - |
-| Drift | ⏳ | TBD | - | - | - |
-| Zendesk | ⏳ | TBD | - | - | - |
-| Tawk.to | ⏳ | TBD | - | - | - |
-| Freshchat | ⏳ | TBD | - | - | - |
-| Crisp Chat | ⏳ | TBD | - | - | - |
+| Intercom | ✅ | ❌ Single version only | Official Intercom CSP Guide | Verified & Updated | 2025-07-04 |
+| Drift | ⏳ | ❌ Single version only | - | - | - |
+| Zendesk | ⏳ | ❌ Single version only | - | - | - |
+| Tawk.to | ⏳ | ❌ Single version only | - | - | - |
+| Freshchat | ⏳ | ❌ Single version only | - | - | - |
+| Crisp Chat | ⏳ | ❌ Single version only | - | - | - |
 
 ### Other Services
 
