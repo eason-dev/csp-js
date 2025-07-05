@@ -179,14 +179,16 @@ jobs:
                 
                 let errors = 0;
                 for (const [id, service] of Object.entries(services)) {
-                  if (!service.versions || Object.keys(service.versions).length === 0) {
-                    console.error('❌ Service', id, 'has no versions');
+                  // Validate required fields
+                  if (!service.id || !service.name || !service.cspDirectives) {
+                    console.error('❌ Service', id, 'is missing required fields (id, name, cspDirectives)');
                     errors++;
                     continue;
                   }
                   
-                  if (!service.defaultVersion || !service.versions[service.defaultVersion]) {
-                    console.error('❌ Service', id, 'has invalid defaultVersion');
+                  // Validate CSP directives are properly structured
+                  if (typeof service.cspDirectives !== 'object' || service.cspDirectives === null) {
+                    console.error('❌ Service', id, 'has invalid cspDirectives');
                     errors++;
                     continue;
                   }
