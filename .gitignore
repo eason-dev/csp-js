@@ -40,5 +40,6 @@ yarn-error.log*
 # Generated files
 sitemap*.xml
 robots.txt
+packages/data/src/services-bundle.ts
 
 .serena
