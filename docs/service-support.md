@@ -221,7 +221,7 @@ Authentication, productivity, and specialized tools.
 |--------|----------|-----------------|
 | **[GitHub Issues](https://github.com/eason-dev/csp-kit/issues/new?template=add-service.md)** | Detailed requests | 1-2 weeks |
 | **[CLI Contribution](../cli-guide.md#contributing-a-new-service)** | Developer contributors | 3-5 days |
-| **[Manual PR](../contributing.md#adding-a-new-service)** | Advanced contributors | 1-3 days |
+| **[Manual PR](../contributing.md#-adding-a-new-service)** | Advanced contributors | 1-3 days |
 
 ### 📝 **Service Request Requirements**
 

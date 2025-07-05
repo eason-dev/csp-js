@@ -445,7 +445,7 @@ We believe in recognizing our contributors:
 
 ### Community Guidelines
 
-We follow the [Contributor Covenant Code of Conduct](https://github.com/eason-dev/csp-kit/blob/main/CODE_OF_CONDUCT.md). Please be:
+We follow the Contributor Covenant Code of Conduct. Please be:
 
 - **Respectful** and inclusive
 - **Constructive** in feedback
@@ -534,5 +534,5 @@ By contributing to CSP Kit:
 - **[Getting Started](./getting-started.md)** - Using CSP Kit
 - **[API Reference](./api-reference.md)** - Complete API docs
 - **[CLI Guide](./cli-guide.md)** - Command-line tools
-- **[Maintainer Architecture](./maintainer/architecture.md)** - Technical details
-- **[Service Definition Guide](./maintainer/service-definition-guide.md)** - Detailed schema docs
+- **[Maintainer Architecture](./maintainer/ARCHITECTURE.md)** - Technical details
+- **[Service Definition Guide](./maintainer/SERVICE_DEFINITION_GUIDE.md)** - Detailed schema docs

@@ -69,11 +69,11 @@ console.log(result.header);
 
 | Guide | Description |
 |-------|-------------|
-| **[Architecture](./maintainer/architecture.md)** | Technical architecture overview |
-| **[Maintainer Guide](./maintainer/maintainer-guide.md)** | Project maintenance procedures |
-| **[Release Process](./maintainer/release-process.md)** | How releases are managed |
-| **[Service Definition Guide](./maintainer/service-definition-guide.md)** | Detailed schema documentation |
-| **[NPM Publishing Guide](./maintainer/npm-publishing-guide.md)** | Package publishing procedures |
+| **[Architecture](./maintainer/ARCHITECTURE.md)** | Technical architecture overview |
+| **[Maintainer Guide](./maintainer/MAINTAINER_GUIDE.md)** | Project maintenance procedures |
+| **[Release Process](./maintainer/RELEASE_PROCESS.md)** | How releases are managed |
+| **[Service Definition Guide](./maintainer/SERVICE_DEFINITION_GUIDE.md)** | Detailed schema documentation |
+| **[NPM Publishing Guide](./maintainer/NPM_PUBLISHING_GUIDE.md)** | Package publishing procedures |
 
 ## 🎯 What is CSP Kit?
 

@@ -657,7 +657,4 @@ if (process.env.NODE_ENV === 'development') {
 
 ## 🔗 Related Examples
 
-- **[Express.js Integration](./express.md)**
-- **[React Integration](./react.md)**
-- **[Vue.js Integration](./vue.md)**
-- **[Nuxt.js Integration](./nuxt.md)**
+*More framework examples coming soon! Contributions welcome.*
