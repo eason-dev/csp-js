@@ -10,18 +10,18 @@ describe('generateCSP', () => {
   it('should generate CSP for single service', async () => {
     const result = await generateCSPAsync(['google-analytics']);
 
-    expect(result.includedServices).toContain('google-analytics@1.0.0');
+    expect(result.includedServices).toContain('google-analytics');
     expect(result.unknownServices).toHaveLength(0);
     expect(result.header).toContain('script-src');
-    expect(result.header).toContain('https://www.google-analytics.com');
+    expect(result.header).toContain('https://*.google-analytics.com');
   });
 
   it('should generate CSP for multiple services', async () => {
     const result = await generateCSPAsync(['google-analytics', 'microsoft-clarity']);
 
-    expect(result.includedServices).toContain('google-analytics@1.0.0');
-    expect(result.includedServices).toContain('microsoft-clarity@1.0.0');
-    expect(result.header).toContain('https://www.google-analytics.com');
+    expect(result.includedServices).toContain('google-analytics');
+    expect(result.includedServices).toContain('microsoft-clarity');
+    expect(result.header).toContain('https://*.google-analytics.com');
     expect(result.header).toContain('https://www.clarity.ms');
   });
 
@@ -35,8 +35,8 @@ describe('generateCSP', () => {
   it('should work with service aliases', async () => {
     const result = await generateCSPAsync(['ga4']); // alias for google-analytics
 
-    expect(result.includedServices).toContain('google-analytics@1.0.0');
-    expect(result.header).toContain('https://www.google-analytics.com');
+    expect(result.includedServices).toContain('google-analytics');
+    expect(result.header).toContain('https://*.google-analytics.com');
   });
 
   it('should include self directive by default', async () => {
