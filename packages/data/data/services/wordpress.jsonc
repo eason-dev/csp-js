@@ -7,7 +7,9 @@
   "website": "https://wordpress.org",
   "officialDocs": [
     "https://developer.wordpress.org/",
-    "https://developer.wordpress.org/rest-api/"
+    "https://wordpress.org/plugins/tags/content-security-policy/",
+    "https://wordpress.org/plugins/cookies-and-content-security-policy/",
+    "https://wpvip.com/blog/content-security-policy-guide/"
   ],
   "versions": {
     "current": {
@@ -26,7 +28,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "WordPress.org resources for updates and API calls. Self-hosted WordPress installations may need additional CSP configuration for themes, plugins, and admin interface. Consider using CSP plugins for complex setups."
+      "notes": "WordPress verified from official plugin directory and VIP documentation. Multiple CSP plugins available: Content Security Policy Manager, Cookies and Content Security Policy, HTTP Headers. Admin area favors inline scripts - may require 'unsafe-inline'. Themes/plugins can break with strict CSP. Different policies for admin vs frontend recommended. Extensive testing required after CSP implementation."
     }
   },
   "defaultVersion": "current",

@@ -6,8 +6,9 @@
   "description": "Visual testing and review platform for web applications",
   "website": "https://percy.io",
   "officialDocs": [
-    "https://docs.percy.io/",
-    "https://docs.percy.io/docs/percy-web"
+    "https://www.browserstack.com/docs/percy/common-issue/handling-csp",
+    "https://docs.percy.io/docs/enterprise-firewalls",
+    "https://docs.percy.io/docs/capturing-multiple-asset-hosts-cli"
   ],
   "versions": {
     "current": {
@@ -23,7 +24,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Percy visual testing and screenshot comparison service"
+      "notes": "Percy verified from official BrowserStack documentation. Visual testing platform (now part of BrowserStack) recommends temporarily disabling CSP during screenshot capture for accurate results, then re-enabling for security. Requires outbound access to percy.io domain. Use allowed-hostnames config for multi-domain asset capture. CI environment must allow outbound internet access to percy.io."
     }
   },
   "defaultVersion": "current",

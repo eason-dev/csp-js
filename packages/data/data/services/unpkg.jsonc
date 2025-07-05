@@ -24,7 +24,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "unpkg CDN for npm packages and libraries"
+      "notes": "unpkg verified from official documentation. Fast, global CDN for everything on npm. Mirror of all npm packages available within minutes. Runs on Cloudflare's global edge network using Workers. For best cache hits use full version numbers. Subresource Integrity recommended for additional security. CSP challenges: can allow org namespaces like @myorg but not specific libraries without org namespace."
     }
   },
   "defaultVersion": "current",

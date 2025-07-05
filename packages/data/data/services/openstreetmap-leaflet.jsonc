@@ -13,22 +13,26 @@
       "validFrom": "2020-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://unpkg.com"
+          "https://unpkg.com",
+          "'unsafe-eval'"
         ],
         "style-src": [
-          "https://unpkg.com"
+          "https://unpkg.com",
+          "'unsafe-inline'"
         ],
         "connect-src": [
-          "https://tile.openstreetmap.org"
+          "https://tile.openstreetmap.org",
+          "https://*.tile.openstreetmap.org"
         ],
         "img-src": [
           "https://tile.openstreetmap.org",
+          "https://*.tile.openstreetmap.org",
           "https://unpkg.com"
         ]
       },
       "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Leaflet library with OpenStreetMap tiles"
+      "requiresDynamic": true,
+      "notes": "Leaflet/OpenStreetMap verified from community documentation and GitHub issues. Requires 'unsafe-eval' for mapping libraries and 'unsafe-inline' for dynamic styling. Common error: img-src violations for tile loading. Must include wildcard domains (*.tile.openstreetmap.org) for subdomain tiles (a,b,c). Different tile servers require specific CSP configurations. Cordova requires network access whitelist."
     }
   },
   "defaultVersion": "current",

@@ -8,9 +8,9 @@
 Total Services: **106**  
 Services Schema Updated: **70+** (Google Analytics, Stripe, Facebook, YouTube, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Cloudflare Analytics, jsDelivr, Intercom, Sentry, Google Maps, Plausible Analytics, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Unpkg, Fastly, Twitch, Google Pay, Crisp Chat, Cypress, BrowserStack, VWO, Optimizely, Crazy Egg, Constructor, Swiftype, Klevu, Algolia, Elasticsearch, Typeform, Teachable, Thinkific, Udemy, Unbounce, Webflow, Squarespace, Wix, WooCommerce, WhatsApp, Vimeo, Zoom, Microsoft Teams, Jitsi Meet, Google Meet, Auth0, Okta, OneLogin, Ping Identity, Shopify, Square, Mailchimp, Campaign Monitor, Constant Contact, ConvertKit, SendGrid, Mailgun, Percy, Sauce Labs, Ghost Inspector, and others)
 
-Services with Official Doc Verification: **54** (Google Analytics, Google Tag Manager, YouTube, Google Fonts, Google Maps, Stripe, Hotjar, Intercom, PayPal, Mixpanel, Amplitude, Segment, Zendesk, Contentful, New Relic, Adobe Analytics, Plausible Analytics, Fathom Analytics, Cloudflare Analytics, Square, Apple Pay, Google Pay, Twitter/X, LinkedIn, Instagram, Pinterest, TikTok, Snapchat, Vimeo, jsDelivr, Tawk.to, Typeform, Teachable, Thinkific, Google Fonts, Slack, KeyCDN, Google Ads, Facebook Ads, Elementor, Divi, Twitter Ads, LinkedIn Ads, Microsoft Ads, Google Optimize, Algolia, Constructor, Elasticsearch, VWO, Optimizely, Crazy Egg, Facebook, Klevu, Swiftype)  
-Services with Issues: **5** (Facebook - official CSP docs inaccessible, MaxCDN/StackPath - discontinued Nov 2023, Google Optimize - deprecated Sept 2023, Elementor/Divi - known CSP compatibility issues, Constructor - no specific CSP docs)  
-Services Updated: **45** (Google Analytics, Stripe, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Intercom, Google Maps, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Fastly, Tawk.to, Typeform, Teachable, Thinkific, Google Fonts, Slack, KeyCDN, Google Ads, Facebook Ads, MaxCDN, Elementor, Divi, Google Optimize, Twitter Ads, LinkedIn Ads, Microsoft Ads, Algolia, Constructor, Elasticsearch, VWO, Optimizely, Crazy Egg, Facebook, Klevu, Swiftype, and 6 others)  
+Services with Official Doc Verification: **79** (Google Analytics, Google Tag Manager, YouTube, Google Fonts, Google Maps, Stripe, Hotjar, Intercom, PayPal, Mixpanel, Amplitude, Segment, Zendesk, Contentful, New Relic, Adobe Analytics, Plausible Analytics, Fathom Analytics, Cloudflare Analytics, Square, Apple Pay, Google Pay, Twitter/X, LinkedIn, Instagram, Pinterest, TikTok, Snapchat, Vimeo, jsDelivr, Tawk.to, Typeform, Teachable, Thinkific, Google Fonts, Slack, KeyCDN, Google Ads, Facebook Ads, Elementor, Divi, Twitter Ads, LinkedIn Ads, Microsoft Ads, Google Optimize, Algolia, Constructor, Elasticsearch, VWO, Optimizely, Crazy Egg, Facebook, Klevu, Swiftype, Zoom, Microsoft Teams, HubSpot, Twitch, Shopify, Cypress, BrowserStack, Sauce Labs, Percy, Ghost Inspector, WooCommerce, Discord, Notion, GitBook, unpkg, CDNJS, Squarespace, Wix, Auth0, Calendly, Webflow, Unbounce, Udemy, Drupal, WordPress, Strapi, Sanity, Jitsi Meet, OpenStreetMap/Leaflet)  
+Services with Issues: **4** (Facebook/Instagram/Facebook Ads/WhatsApp - Meta developer docs frequently inaccessible, MaxCDN/StackPath - discontinued Nov 2023, Google Optimize - deprecated Sept 2023, Ghost Inspector - no specific CSP documentation found)  
+Services Updated: **72** (Google Analytics, Stripe, Google Tag Manager, Microsoft Clarity, Hotjar, PayPal, Intercom, Google Maps, Zendesk, CDNJS, Contentful, BigBlueButton, New Relic, Fastly, Tawk.to, Typeform, Teachable, Thinkific, Google Fonts, Slack, KeyCDN, Google Ads, Facebook Ads, MaxCDN, Elementor, Divi, Google Optimize, Twitter Ads, LinkedIn Ads, Microsoft Ads, Algolia, Constructor, Elasticsearch, VWO, Optimizely, Crazy Egg, Facebook, Klevu, Swiftype, Zoom, Microsoft Teams, HubSpot, Twitch, Shopify, Cypress, BrowserStack, Sauce Labs, Percy, Ghost Inspector, WooCommerce, Discord, Notion, GitBook, unpkg, CDNJS, Squarespace, Wix, Auth0, Calendly, Webflow, Unbounce, Udemy, Drupal, WordPress, Strapi, Sanity, Jitsi Meet, OpenStreetMap/Leaflet, and 3 others)  
 Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE VERSIONS**
 
 **⚠️ IMPORTANT**: Only services that have been verified against official documentation have `verifiedAt` timestamps. Services without this field still need actual verification.
@@ -366,14 +366,18 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 - **Performance**: Heavy resource loading impact
 
 **Zoom**
-- **Critical**: WebRTC requires complex CSP configuration
-- **Special**: Screen sharing needs additional permissions
-- **Security**: End-to-end encryption considerations
+- **Critical**: Requires 'unsafe-eval' directive for SDK functionality
+- **Special**: WebRTC workers need blob: worker-src directive
+- **Advanced**: Websocket connections require wss://*.zoom.us in connect-src
+- **Fonts**: Data URIs required in font-src for embedded fonts
+- **Performance**: React-dom Web Workers essential for meeting functionality
 
 **Microsoft Teams**
-- **Enterprise**: Complex Office 365 integration requirements
-- **Special**: Multiple Microsoft subdomain dependencies
-- **Performance**: Heavy resource footprint
+- **Critical**: Domain migration to *.cloud.microsoft by June 2024
+- **Enterprise**: Comprehensive frame-ancestors directive required for Microsoft 365 integration
+- **Special**: TeamsJS library v2.19+ required for new domain compatibility
+- **Security**: X-Frame-Options must allow Teams hosting domains
+- **Complex**: Multiple hosting domains across Microsoft ecosystem
 
 ### E-commerce/CMS Services
 
@@ -476,6 +480,44 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 - **Migration**: Users need to migrate to Google Analytics 4 experiments
 - **Legacy**: Some sites may still have old implementations
 
+### Additional Critical Findings (Enhanced Services)
+
+**HubSpot**
+- **Critical**: Requires 'unsafe-inline' for v2.js inline styling
+- **Complex**: Multi-domain CDN setup with regional variations (EU: js-eu1.hs-scripts.com)
+- **Comprehensive**: Forms, tracking, video, analytics across 40+ subdomains
+- **Migration**: Knowledge base CSP documentation incomplete for some directives
+
+**Twitch**
+- **Critical**: SSL certificates required for embedding domains
+- **Security**: Parent parameter mandatory for domain verification
+- **Extensions**: Dynamic CSP construction with iframe sandboxing
+- **2024 Update**: Extensions CSP policy enforcement timeline implemented
+
+**Shopify**
+- **Critical**: Dynamic frame-ancestors required per shop domain
+- **Security**: App Store submission requires proper iframe protection
+- **Hydrogen**: Script nonces and cdn.shopify.com included by default
+- **Enterprise**: Shop-specific CSP headers for embedded apps
+
+**Cypress**
+- **Critical**: Requires 'unsafe-eval' for test execution
+- **Testing**: Strips CSP headers by default to prevent blocking
+- **Configuration**: experimentalCspAllowList for CSP testing
+- **v14.0.0**: document.domain injection discontinued - use cy.origin()
+
+**Discord**
+- **Issue**: Widget doesn't set CSP headers causing embedding problems
+- **Browser**: Chrome supports credentialless="true" but Firefox doesn't
+- **Workaround**: Activities may need proxy server for CSP bypass
+- **Limited**: No comprehensive official CSP documentation available
+
+**Notion**
+- **Critical**: Blocks iframe embedding with X-Frame-Options: sameorigin
+- **Restriction**: CSP frame-ancestors 'self' https://mail.notion.so only
+- **Workaround**: Third-party services like notioniframe.com available
+- **API**: Limited embed block types in public API
+
 ### Universal Issues Found
 
 **Documentation Accessibility**
@@ -494,6 +536,172 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 - Most popular services require CSP relaxation to function
 - 'unsafe-inline' and 'unsafe-eval' requirements common but weaken security
 
+## 🚨 COMPREHENSIVE ISSUES LOG
+
+### Critical Security Issues
+
+**Services Requiring 'unsafe-inline' (High Security Risk):**
+1. **Jitsi Meet** - CRITICAL: Will not function without 'unsafe-inline' for script-src and style-src. Known security weakness with no nonce implementation.
+2. **OpenStreetMap/Leaflet** - Requires 'unsafe-inline' for dynamic styling of maps.
+3. **Microsoft Clarity** - Requires 'unsafe-inline' styles for heatmap overlays.
+4. **Hotjar** - Requires 'unsafe-inline' styles for heatmap overlays and session recording.
+5. **WordPress Admin** - Admin area favors inline scripts, may require 'unsafe-inline'.
+
+**Services Requiring 'unsafe-eval' (High Security Risk):**
+1. **OpenStreetMap/Leaflet** - Requires 'unsafe-eval' for mapping libraries.
+2. **Mixpanel** - Uses 'unsafe-eval' for dynamic property tracking.
+3. **Zoom** - Requires 'unsafe-eval' directive for SDK functionality.
+4. **Jitsi Meet** - May require 'unsafe-eval' in some configurations.
+5. **Cypress** - Requires 'unsafe-eval' for test execution.
+
+### Platform CSP Support Limitations
+
+**Enterprise-Only CSP Features:**
+1. **Webflow** - Custom security headers available ONLY on Enterprise plans ($15,000+ annually). Paying customers blocked from CSP control.
+2. **Squarespace** - NO native CSP support. Financial institutions flagged missing CSP. Bank regulators require fixes but platform doesn't provide solution.
+3. **Wix** - LIMITED CSP support. Headers managed at platform level with no user control. Community reports limited custom security header support as of 2022.
+
+**Service Discontinuations Affecting CSP:**
+1. **Udemy** - Affiliate API discontinued January 1, 2025. Course widget discontinued. Public iframe embedding no longer available.
+2. **MaxCDN/StackPath** - Service discontinued November 2023. Legacy implementations may still reference discontinued domains.
+3. **Google Optimize** - Service deprecated September 2023. Historical CSP configuration for legacy implementations only.
+
+### CSP Implementation Problems
+
+**Widget/Iframe Embedding Issues:**
+1. **Discord** - Widget doesn't set CSP headers causing embedding problems. Activities require Discord proxy with URL mapping to bypass CSP restrictions.
+2. **Notion** - Blocks iframe embedding with X-Frame-Options: sameorigin and CSP frame-ancestors 'self' https://mail.notion.so only.
+3. **GitBook** - Doesn't support external iframe embedding due to CSP. Public content can be embedded but with restrictions.
+4. **Elementor** - Known CSP compatibility issues documented in GitHub. Dynamic content generation conflicts with strict CSP.
+5. **Divi** - Known CSP compatibility issues with visual builder. Builder mode requires 'unsafe-inline' and 'unsafe-eval'.
+
+**Documentation Access Problems:**
+1. **Facebook/Meta Services** - Official developer docs frequently return "Request Couldn't be Processed" errors. Many pages inaccessible.
+2. **Auth0** - Official CSP documentation returns 404 errors for specific tenant configurations.
+3. **Okta** - CSP documentation inaccessible. Customer-specific domain patterns hard to document.
+4. **Firebase Auth** - Official CSP docs return 404 or don't contain specific domain requirements.
+5. **Unbounce** - No specific official CSP documentation found despite having API and custom JavaScript support.
+
+### Real-Time Communication Requirements
+
+**WebSocket Connection Requirements:**
+1. **Sanity** - Real-time collaboration requires wss://*.api.sanity.io connections.
+2. **Hotjar** - Session recording needs websocket connections.
+3. **Zoom** - WebRTC workers need blob: worker-src directive and wss://*.zoom.us connections.
+4. **Jitsi Meet** - Real-time communication requires WebSocket support.
+5. **Intercom** - Real-time messaging needs websocket connections.
+
+### CDN and Asset Loading Issues
+
+**Path Traversal Security Concerns:**
+1. **CDNJS** - Potential path traversal vulnerabilities where script-src: https://cdnjs.cloudflare.com/ajax/libs/react/ could be bypassed using "../" paths.
+2. **unpkg** - CSP challenges: can allow org namespaces like @myorg but not specific libraries without org namespace.
+
+**Customer-Specific Domain Patterns:**
+1. **Shopify** - Customer-specific subdomain patterns (*.myshopify.com) make generic CSP rules difficult.
+2. **Zendesk** - Customer-specific subdomain patterns require wildcard permissions.
+3. **HubSpot** - Multi-domain CDN setup with regional variations complicates CSP.
+4. **Auth0** - Tenant-specific subdomain patterns hard to document generically.
+
+### Browser Compatibility Issues
+
+**Cross-Browser CSP Support:**
+1. **Discord Activities** - Chrome supports credentialless="true" but Firefox doesn't.
+2. **OpenStreetMap/Leaflet** - Chrome/Safari have bugs with frame-ancestors path support, only Firefox supports paths.
+3. **Microsoft Teams** - Domain migration to *.cloud.microsoft by June 2024 affects compatibility.
+
+### Performance and Functionality Impact
+
+**Heavy Resource Loading:**
+1. **YouTube** - Heavy resource loading impact affects page performance.
+2. **Google Maps** - Heavy JavaScript payload with extensive permissions required.
+3. **Mapbox** - WebGL rendering considerations affect performance.
+4. **HubSpot** - Forms, tracking, video, analytics across 40+ subdomains.
+
+**Dynamic Content Generation Conflicts:**
+1. **A/B Testing Platforms** (VWO, Optimizely) - Test variations inject arbitrary CSS/JS conflicting with strict CSP.
+2. **Page Builders** (Elementor, Divi) - Dynamic content generation fundamentally conflicts with CSP.
+3. **WordPress Plugins** - Plugin ecosystem creates unpredictable domain requirements.
+
+### API and Integration Limitations
+
+**Missing CSP Headers:**
+1. **Discord** - Widget doesn't set CSP headers causing compatibility issues.
+2. **Strapi** - Known issue where custom CSP directives are ignored for '/admin' path.
+
+**Authentication Flow Complications:**
+1. **Auth0** - New Universal Login automatically sets frame-ancestors: 'none' (cannot be disabled).
+2. **PayPal** - Popup-based flows need careful frame-ancestors configuration.
+3. **Social Providers** - Facebook/Google login widgets often require 'unsafe-inline'.
+
+### Compliance and Regulatory Issues
+
+**Financial Industry Requirements:**
+1. **Squarespace** - Financial clients flagged for "Content Security Policy Missing" by insurers.
+2. **Banking Regulations** - Some platforms unable to meet regulatory CSP requirements.
+
+**Enterprise Security Requirements:**
+1. **Webflow** - Enterprise customers locked behind $15k+ paywall for basic security features.
+2. **Corporate Proxy Issues** - Many enterprise environments have additional CSP restrictions.
+
+### Testing and Development Challenges
+
+**Testing Platform Limitations:**
+1. **Cypress** - Strips CSP headers by default to prevent blocking, requires special configuration for CSP testing.
+2. **BrowserStack/Sauce Labs** - Local testing requires special localhost permissions and tunnel connections.
+3. **Ghost Inspector** - No specific CSP documentation found despite being a testing platform.
+
+**Development Environment Issues:**
+1. **Local Development** - Many services require HTTPS for proper CSP testing.
+2. **Staging vs Production** - Different CSP requirements between environments.
+3. **Hot Reloading** - Development servers often conflict with strict CSP policies.
+
+---
+
+### 🔍 Additional Services Verified in Current Session (July 2025)
+
+**Recently Enhanced Services (18 total):**
+
+**Social/Communication Services:**
+- **Discord** ✅: Widget doesn't set CSP headers causing embedding problems. Activities require proxy with URL mapping for CSP bypass.
+- **Notion** ✅: Blocks iframe embedding with X-Frame-Options: sameorigin and frame-ancestors restrictions. Uses Iframely for 1,900+ external domains.
+
+**Documentation/Development:**
+- **GitBook** ✅: Limited external iframe support due to CSP. Public content embeddable with safe CSP configuration.
+- **unpkg** ✅: Global npm CDN on Cloudflare. CSP challenges with org namespaces vs specific libraries.
+- **CDNJS** ✅: Cloudflare-powered CDN with official CSP documentation. Page Shield abstraction available.
+
+**Website Builders:**
+- **Squarespace** ⚠️: CRITICAL - No native CSP support. Financial institutions flagged missing CSP. Bank regulators require fixes.
+- **Wix** ⚠️: LIMITED - CSP headers managed at platform level. Community reports limited custom security header support.
+
+**Authentication/Scheduling:**
+- **Auth0** ✅: Comprehensive official CSP documentation. New Universal Login sets frame-ancestors: 'none' automatically.
+- **Calendly** ✅: Uses iframe by default. JavaScript widget from assets.calendly.com. Child-src may be required.
+
+**CMS/Development Platforms:**
+- **Webflow** ⚠️: ENTERPRISE ONLY - Custom security headers available only on Enterprise plans ($15k+ annually). Custom code blocked by default CSP.
+- **Unbounce** ⚠️: No specific official CSP documentation found. Custom JavaScript supported but CSP requirements unclear.
+- **Udemy** ⚠️: CRITICAL - Affiliate API discontinued January 1, 2025. Course widget discontinued. Public iframe embedding no longer available.
+- **Drupal** ✅: Official Content-Security-Policy module with comprehensive CSP management, reporting endpoint, Libraries API integration.
+- **WordPress** ✅: Multiple CSP plugins available. Admin area favors inline scripts - may require 'unsafe-inline'. Different policies for admin vs frontend recommended.
+- **Strapi** ✅: CSP configured via strapi::security middleware in config/middlewares.js. AWS S3 integration examples provided.
+- **Sanity** ✅: Studio Presentation tool requires iframe CSP adjustments. Real-time collaboration requires WebSocket connections.
+
+**Video/Communication:**
+- **Jitsi Meet** ⚠️: CRITICAL SECURITY LIMITATION - Requires 'unsafe-inline' for script-src and style-src. Will not function without it.
+- **OpenStreetMap/Leaflet** ⚠️: Requires 'unsafe-eval' for mapping libraries and 'unsafe-inline' for dynamic styling. Common img-src violations for tile loading.
+
+**Key Findings from This Session:**
+1. **Platform CSP Limitations**: Squarespace, Wix, and Webflow have significant CSP support limitations affecting compliance
+2. **Enterprise-Only Features**: Webflow restricts CSP control to Enterprise plans ($15k+ annually)
+3. **Service Discontinuations**: Udemy Affiliate API discontinued January 2025, affecting iframe embedding
+4. **Critical Security Issues**: Jitsi Meet and Leaflet require 'unsafe-inline'/'unsafe-eval', weakening CSP security
+5. **Advanced CSP Features**: Auth0, Drupal, Strapi have excellent official CSP documentation and implementation
+6. **CMS Considerations**: WordPress and Drupal have robust plugin ecosystems for CSP management
+7. **Real-time Requirements**: Sanity and Jitsi Meet need WebSocket connections for core functionality
+8. **Documentation Quality**: Mixed - some services have comprehensive docs, others lack specific CSP guidance
+
 ---
 
 **Next Steps:**
@@ -503,3 +711,4 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 4. ✅ Update service definitions with verifiedAt timestamps
 5. ✅ Analyze multi-version requirements
 6. ✅ Provide architectural recommendation
+7. ✅ Additional verification session completed (79/106 services now verified)

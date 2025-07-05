@@ -6,8 +6,9 @@
   "description": "Online learning and teaching marketplace",
   "website": "https://www.udemy.com/",
   "officialDocs": [
-    "https://www.udemy.com/developers/affiliate/",
-    "https://support.udemy.com/hc/en-us/articles/229233387-API-Basics"
+    "https://www.udemy.com/developers/",
+    "https://business-support.udemy.com/hc/en-us/articles/13292752846999-How-to-Embed-Content-via-iframe-Leadership-Academy",
+    "https://www.udemy.com/developers/instructor/"
   ],
   "versions": {
     "current": {
@@ -24,7 +25,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Udemy online learning marketplace. Course embeds require frame permissions. Affiliate links may require additional domains."
+      "notes": "Udemy verified from official documentation. CRITICAL: Affiliate API discontinued January 1, 2025. Course widget discontinued. Udemy Business supports iframe embedding for internal use only. REST/GraphQL/xAPI available for Business customers. Public course iframe embedding no longer available for affiliate purposes. Contact current affiliate program for CSP domain requirements."
     }
   },
   "defaultVersion": "current",

@@ -6,7 +6,8 @@
   "website": "https://cdnjs.com",
   "officialDocs": [
     "https://cdnjs.com/about",
-    "https://cdnjs.com/libraries"
+    "https://cdnjs.com/libraries",
+    "https://developers.cloudflare.com/fundamentals/reference/policies-compliances/content-security-policies/"
   ],
   "versions": {
     "current": {
@@ -24,7 +25,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "cdnjs hosted libraries including jQuery, Bootstrap, React, and more"
+      "notes": "CDNJS verified from official Cloudflare CSP documentation. Free and open-source CDN powered by Cloudflare. Supports nonce-based CSP with automatic script injection. Potential path traversal security concerns with '../' bypasses. Page Shield abstraction available for easier CSP management. Compatible with CSP headers via Transform Rules or _headers files."
     }
   },
   "defaultVersion": "current",

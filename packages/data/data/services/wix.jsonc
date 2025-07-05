@@ -7,7 +7,8 @@
   "website": "https://www.wix.com/",
   "officialDocs": [
     "https://dev.wix.com/api/rest/getting-started/introduction",
-    "https://support.wix.com/en/article/embedding-custom-code-to-your-site"
+    "https://support.wix.com/en/article/embedding-custom-code-on-your-site",
+    "https://support.wix.com/en/article/wix-editor-embedding-a-site-or-a-widget"
   ],
   "versions": {
     "current": {
@@ -28,7 +29,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Wix website builder platform. Wix apps may require additional domains. Custom code injection may need specific CSP permissions."
+      "notes": "Wix verified from official documentation and community forums. LIMITED CSP SUPPORT: CSP headers managed at platform level, no user control. Custom code runs in sandboxed iframes for security. HTTPS required for all embedded content. External sites may block embedding due to their own CSP policies. Community reports limited support for custom security headers as of 2022."
     }
   },
   "defaultVersion": "current",

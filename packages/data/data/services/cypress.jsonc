@@ -6,15 +6,17 @@
   "description": "End-to-end testing framework for web applications",
   "website": "https://www.cypress.io",
   "officialDocs": [
-    "https://docs.cypress.io/",
-    "https://docs.cypress.io/guides/references/configuration"
+    "https://docs.cypress.io/app/references/content-security-policy",
+    "https://docs.cypress.io/guides/guides/content-security-policy",
+    "https://docs.cypress.io/app/references/experiments"
   ],
   "versions": {
     "current": {
       "validFrom": "2017-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://download.cypress.io"
+          "https://download.cypress.io",
+          "'unsafe-eval'"
         ],
         "connect-src": [
           "https://api.cypress.io",
@@ -22,8 +24,8 @@
         ]
       },
       "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Cypress testing framework and dashboard integration"
+      "requiresDynamic": true,
+      "notes": "Cypress verified from official documentation. Testing framework that requires script injection for DOM interaction. By default, Cypress strips CSP headers to prevent blocking. Use experimentalCspAllowList configuration for CSP testing. Requires 'unsafe-eval' for test execution. Document.domain injection discontinued in v14.0.0 - use cy.origin() for cross-origin testing."
     }
   },
   "defaultVersion": "current",

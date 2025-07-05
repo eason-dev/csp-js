@@ -24,7 +24,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Discord server widgets and invite embeds"
+      "notes": "Discord verified from official widget documentation. Widget doesn't set CSP headers causing embedding problems. Activities require Discord proxy with URL mapping to bypass CSP restrictions. Chrome supports credentialless=\"true\" but Firefox doesn't. Community reports CSP compatibility issues with Activities - proxy server workarounds needed."
     }
   },
   "defaultVersion": "current",

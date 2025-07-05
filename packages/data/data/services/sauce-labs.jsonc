@@ -6,24 +6,28 @@
   "description": "Cloud-based testing platform for web and mobile applications",
   "website": "https://saucelabs.com",
   "officialDocs": [
-    "https://docs.saucelabs.com/",
-    "https://docs.saucelabs.com/web-apps/"
+    "https://docs.saucelabs.com/basics/data-center-endpoints/",
+    "https://docs.saucelabs.com/secure-connections/sauce-connect/security-authentication/",
+    "https://wiki.saucelabs.com/display/DOCS/Whitelisted+Domains+for+Sauce+Connect+Proxy"
   ],
   "versions": {
     "current": {
       "validFrom": "2008-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://saucelabs.com"
+          "https://saucelabs.com",
+          "https://*.saucelabs.com"
         ],
         "connect-src": [
           "https://api.saucelabs.com",
-          "https://ondemand.saucelabs.com"
+          "https://ondemand.saucelabs.com",
+          "https://*.saucelabs.com",
+          "https://*.miso.saucelabs.com"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Sauce Labs automated testing platform integration"
+      "notes": "Sauce Labs verified from official documentation. Multi-data-center testing platform with regional endpoints (US-West-1, US-East-1, EU-Central-1). Requires Sauce Connect Proxy domains (*.miso.saucelabs.com) for tunnel connections. Recommends hostname whitelisting over IP addresses. Official CSP-specific guidance should be requested from Sauce Labs support."
     }
   },
   "defaultVersion": "current",

@@ -6,8 +6,9 @@
   "description": "Automated browser testing and website monitoring service",
   "website": "https://ghostinspector.com",
   "officialDocs": [
-    "https://ghostinspector.com/docs/",
-    "https://ghostinspector.com/docs/api/"
+    "https://docs.ghostinspector.com/test-running-ip-addresses/",
+    "https://docs.ghostinspector.com/test-settings/",
+    "https://docs.ghostinspector.com/faq/"
   ],
   "versions": {
     "current": {
@@ -17,12 +18,13 @@
           "https://ghostinspector.com"
         ],
         "connect-src": [
-          "https://api.ghostinspector.com"
+          "https://api.ghostinspector.com",
+          "https://ghostinspector.com"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Ghost Inspector automated testing platform integration"
+      "notes": "Ghost Inspector verified from official documentation. Automated testing platform provides IP addresses for firewall whitelisting. Tests originate from specific documented IP ranges. User agent appends 'Ghost Inspector' for identification. No specific CSP domain documentation found - contact Ghost Inspector support for current CSP requirements."
     }
   },
   "defaultVersion": "current",

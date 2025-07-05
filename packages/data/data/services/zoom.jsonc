@@ -6,26 +6,36 @@
   "description": "Video conferencing and communication platform",
   "website": "https://zoom.us",
   "officialDocs": [
-    "https://marketplace.zoom.us/docs/sdk/native-sdks/web",
-    "https://marketplace.zoom.us/docs/guides/build/web-sdk"
+    "https://developers.zoom.us/docs/meeting-sdk/web/",
+    "https://devforum.zoom.us/t/what-is-an-appropiate-content-security-policy-csp-for-embedding-an-application-on-the-zoom-client/73158",
+    "https://devforum.zoom.us/t/content-securty-policy/5945"
   ],
   "versions": {
     "current": {
       "validFrom": "2011-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://source.zoom.us"
+          "https://source.zoom.us",
+          "https://*.zoom.us",
+          "'unsafe-eval'"
         ],
         "frame-src": [
           "https://*.zoom.us"
         ],
         "connect-src": [
-          "https://*.zoom.us"
+          "https://*.zoom.us",
+          "wss://*.zoom.us"
+        ],
+        "worker-src": [
+          "blob:"
+        ],
+        "font-src": [
+          "data:"
         ]
       },
       "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Zoom Web SDK and meeting integration"
+      "requiresDynamic": true,
+      "notes": "Zoom Web SDK verified from official developer forum discussions. Requires 'unsafe-eval' for SDK functionality, blob: worker-src for WebRTC workers, data: font-src for embedded fonts, and websocket connections (wss://*.zoom.us). Meeting SDK uses react-dom with Web Workers requiring blob: worker-src directive."
     }
   },
   "defaultVersion": "current",

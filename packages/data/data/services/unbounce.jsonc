@@ -6,8 +6,9 @@
   "description": "Landing page builder with A/B testing and conversion optimization",
   "website": "https://unbounce.com/",
   "officialDocs": [
-    "https://documentation.unbounce.com/hc/en-us/articles/203661044-JavaScript-API",
-    "https://documentation.unbounce.com/"
+    "https://developer.unbounce.com/",
+    "https://documentation.unbounce.com/hc/en-us/articles/203879070-Adding-Custom-JavaScript-and-CSS-in-the-Classic-Builder",
+    "https://unbounce.com/product/security/"
   ],
   "versions": {
     "current": {
@@ -22,7 +23,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Unbounce landing page builder platform. Custom JavaScript may require additional permissions. Third-party integrations may need extra domains."
+      "notes": "Unbounce verified from official documentation. No specific official CSP documentation found. Custom JavaScript and CSS supported in Classic Builder. API available on all pricing plans. HTTPS/SSL enforced with industry-leading security protocols. Contact support for CSP-specific requirements. Community forums available for developer discussions."
     }
   },
   "defaultVersion": "current",

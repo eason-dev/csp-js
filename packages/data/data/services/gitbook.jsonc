@@ -7,7 +7,8 @@
   "website": "https://www.gitbook.com/",
   "officialDocs": [
     "https://developer.gitbook.com/",
-    "https://docs.gitbook.com/integrations/embed-content"
+    "https://docs.gitbook.com/integrations/embed-content",
+    "https://docs.gitbook.com/help-center/editing-content/assets-and-files/can-i-embed-an-iframe-in-gitbook"
   ],
   "versions": {
     "current": {
@@ -25,7 +26,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "GitBook documentation platform. Documentation embeds require frame permissions. Custom domains hosted on gitbook.io subdomains."
+      "notes": "GitBook verified from official documentation. Doesn't support external iframe embedding due to CSP. Public content can be embedded in iframes with safe CSP configuration (no cookies/credentials accessible). Custom domain SSL certificates managed by GitBook. frame-ancestors CSP directive configured to allow iframe embedding of public content."
     }
   },
   "defaultVersion": "current",

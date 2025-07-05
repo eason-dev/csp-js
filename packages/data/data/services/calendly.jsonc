@@ -24,7 +24,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Calendly scheduling widget and inline embeds"
+      "notes": "Calendly verified from official embed documentation. Uses iframe by default for popup integrations. JavaScript widget loads from assets.calendly.com. Advanced embed options available for developers. Child-src may also be required for iframe compatibility. Direct iframe embedding supported with simple frame-src allowlist."
     }
   },
   "defaultVersion": "current",

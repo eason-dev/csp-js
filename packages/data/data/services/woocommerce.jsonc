@@ -6,24 +6,29 @@
   "description": "WordPress-based e-commerce platform and payment processing",
   "website": "https://woocommerce.com",
   "officialDocs": [
+    "https://developer.woocommerce.com/",
     "https://woocommerce.com/document/woocommerce-rest-api/",
-    "https://developer.woocommerce.com/category/checkout/"
+    "https://wordpress.org/support/topic/using-a-strict-content-security-policy-while-allowing-woocommerce-plugin-to-work/"
   ],
   "versions": {
     "current": {
       "validFrom": "2019-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://woocommerce.com"
+          "https://woocommerce.com",
+          "'unsafe-inline'"
         ],
         "connect-src": [
           "https://woocommerce.com",
           "https://checkout.woocommerce.com"
+        ],
+        "style-src": [
+          "'unsafe-inline'"
         ]
       },
       "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "WooCommerce payment processing and checkout scripts"
+      "requiresDynamic": true,
+      "notes": "WooCommerce verified from community documentation and WordPress support forums. E-commerce plugin with known CSP compatibility challenges - may require 'unsafe-inline' for checkout functionality. WordPress CSP plugins like 'Cookies and Content Security Policy' can help manage WooCommerce CSP requirements. Implementation typically requires WordPress-level CSP configuration rather than dedicated WooCommerce CSP plugin."
     }
   },
   "defaultVersion": "current",

@@ -7,7 +7,8 @@
   "website": "https://sanity.io",
   "officialDocs": [
     "https://www.sanity.io/docs/",
-    "https://www.sanity.io/docs/http-api"
+    "https://www.sanity.io/docs/api-cdn",
+    "https://www.sanity.io/docs/security"
   ],
   "versions": {
     "current": {
@@ -18,12 +19,17 @@
         ],
         "connect-src": [
           "https://api.sanity.io",
-          "https://cdn.sanity.io"
+          "https://cdn.sanity.io",
+          "wss://*.api.sanity.io"
+        ],
+        "img-src": [
+          "https://cdn.sanity.io",
+          "https://lh3.googleusercontent.com"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Sanity content platform API and CDN endpoints"
+      "notes": "Sanity verified from official API CDN and security documentation. Studio Presentation tool requires iframe CSP adjustments. Global CDN at cdn.sanity.io based on Google CDN. Real-time collaboration requires WebSocket connections (wss://). User avatars from Google (lh3.googleusercontent.com). frame-ancestors 'self' needed for embedded Studio. Avoid access tokens in browser-side JavaScript."
     }
   },
   "defaultVersion": "current",
