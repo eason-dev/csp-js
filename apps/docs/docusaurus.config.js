@@ -12,7 +12,7 @@ const config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://csp-kit.eason.ch',
-  baseUrl: '/',
+  baseUrl: '/docs/',
 
   organizationName: 'eason-dev',
   projectName: 'csp-kit',
