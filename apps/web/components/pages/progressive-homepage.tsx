@@ -20,7 +20,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { SimpleSearch } from '@/components/search/simple-search';
 import { ColorCodedHeader } from '@/components/csp/color-coded-header';
 import { UsageMethods } from '@/components/csp/usage-methods';
@@ -38,40 +43,44 @@ const SCENARIO_CARDS = [
     title: 'Blog with Analytics',
     description: 'Personal blog with Google Analytics tracking',
     icon: TrendingUp,
-    color: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
-    services: ['google-analytics', 'google-fonts']
+    color:
+      'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
+    services: ['google-analytics', 'google-fonts'],
   },
   {
     id: 'ecommerce-store',
     title: 'E-commerce Store',
     description: 'Online store with payments and tracking',
     icon: Shield,
-    color: 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800',
-    services: ['stripe', 'google-analytics', 'google-tag-manager', 'facebook-pixel']
+    color:
+      'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800',
+    services: ['stripe', 'google-analytics', 'google-tag-manager', 'facebook-pixel'],
   },
   {
     id: 'marketing-landing',
     title: 'Marketing Landing Page',
     description: 'High-converting page with social tracking',
     icon: Users,
-    color: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800',
-    services: ['facebook-pixel', 'google-analytics', 'hotjar', 'linkedin-insights']
+    color:
+      'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800',
+    services: ['facebook-pixel', 'google-analytics', 'hotjar', 'linkedin-insights'],
   },
   {
     id: 'saas-dashboard',
     title: 'SaaS Dashboard',
     description: 'Web app with user analytics and CDN',
     icon: Layers,
-    color: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/20 dark:text-orange-300 dark:border-orange-800',
-    services: ['mixpanel', 'amplitude', 'google-fonts']
-  }
+    color:
+      'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/20 dark:text-orange-300 dark:border-orange-800',
+    services: ['mixpanel', 'amplitude', 'google-fonts'],
+  },
 ];
-
 
 export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHomepageProps) {
   const services = serviceRegistry.services;
-  const { selectedServices, addService, removeService, clearServices, isSelected } = useSelectedServices();
-  
+  const { selectedServices, addService, removeService, clearServices, isSelected } =
+    useSelectedServices();
+
   // State management
   const [useNonce, setUseNonce] = useState(false);
   const [reportUri, setReportUri] = useState('');
@@ -85,7 +94,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
     'media-src': '',
     'object-src': '',
   });
-  
+
   const [customRuleToggles, setCustomRuleToggles] = useState<Record<string, boolean>>({
     'script-src': false,
     'style-src': false,
@@ -125,7 +134,10 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
       const customRulesObj: Record<string, string[]> = {};
       Object.entries(customRules).forEach(([directive, value]) => {
         if (value.trim() && customRuleToggles[directive]) {
-          customRulesObj[directive] = value.split(',').map(v => v.trim()).filter(Boolean);
+          customRulesObj[directive] = value
+            .split(',')
+            .map(v => v.trim())
+            .filter(Boolean);
         }
       });
 
@@ -150,7 +162,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
       }
 
       const cspResult = await response.json();
-      
+
       // Parse the CSP header to extract directives for better display
       const directives: Record<string, string[]> = {};
       if (cspResult.header) {
@@ -162,7 +174,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
           }
         });
       }
-      
+
       setResult({
         ...cspResult,
         directives,
@@ -199,31 +211,26 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
           addService({
             id: service.id,
             name: service.name,
-            version: service.defaultVersion,
           });
         }
       });
     }
   };
 
-
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Hero Section */}
-      <div className="text-center mb-12">
-        <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+      <div className="mb-12 text-center">
+        <h1 className="from-primary to-primary/70 mb-6 bg-gradient-to-r bg-clip-text text-5xl font-bold text-transparent">
           Generate CSP Headers Instantly
         </h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-          Select services, get production-ready Content Security Policy headers. 
-          Protect your website from XSS attacks with zero configuration.
+        <p className="text-muted-foreground mx-auto mb-8 max-w-3xl text-xl">
+          Select services, get production-ready Content Security Policy headers. Protect your
+          website from XSS attacks with zero configuration.
         </p>
 
         {/* Enhanced Search Bar */}
-        <SimpleSearch
-          services={services}
-          className="max-w-2xl mx-auto"
-        />
+        <SimpleSearch services={services} className="mx-auto max-w-2xl" />
       </div>
 
       {/* Quick Start Scenarios - Hide when services are selected */}
@@ -231,8 +238,8 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
         <Card className="mb-8">
           <CardHeader>
             <div className="text-center">
-              <CardTitle className="flex items-center justify-center gap-2 mb-2">
-                <Bookmark className="h-5 w-5 text-primary" />
+              <CardTitle className="mb-2 flex items-center justify-center gap-2">
+                <Bookmark className="text-primary h-5 w-5" />
                 Quick Start Scenarios
               </CardTitle>
               <CardDescription>
@@ -241,11 +248,11 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
             </div>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {SCENARIO_CARDS.map(scenario => {
                 const Icon = scenario.icon;
                 const scenarioServices = scenario.services.filter(id => services[id]);
-                
+
                 return (
                   <div
                     key={scenario.id}
@@ -253,13 +260,9 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                     onClick={() => handleScenarioSelect(scenario.id)}
                   >
                     <div className="text-center">
-                      <Icon className="h-8 w-8 mx-auto mb-3" />
-                      <h3 className="font-medium text-sm mb-2">
-                        {scenario.title}
-                      </h3>
-                      <p className="text-xs opacity-80 mb-3">
-                        {scenario.description}
-                      </p>
+                      <Icon className="mx-auto mb-3 h-8 w-8" />
+                      <h3 className="mb-2 text-sm font-medium">{scenario.title}</h3>
+                      <p className="mb-3 text-xs opacity-80">{scenario.description}</p>
                       <div className="text-xs opacity-70">
                         {scenarioServices.length} service{scenarioServices.length !== 1 ? 's' : ''}
                       </div>
@@ -274,7 +277,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
 
       {/* Progressive Disclosure - Only show when services are selected */}
       {hasSelectedServices && (
-        <div className="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
           {/* Left Column - Selected Services & Configuration */}
           <div className="space-y-6">
             {/* Selected Services */}
@@ -285,11 +288,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                     <Users className="h-5 w-5" />
                     Selected Services ({selectedServices.length})
                   </CardTitle>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearServices}
-                  >
+                  <Button variant="ghost" size="sm" onClick={clearServices}>
                     Clear all
                   </Button>
                 </div>
@@ -299,22 +298,17 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                   {selectedServices.map(service => (
                     <div
                       key={service.id}
-                      className="flex items-center justify-between gap-3 rounded-lg border p-3 bg-primary/5 hover:bg-primary/10 transition-colors cursor-pointer group"
+                      className="bg-primary/5 hover:bg-primary/10 group flex cursor-pointer items-center justify-between gap-3 rounded-lg border p-3 transition-colors"
                       onClick={() => window.open(`/service/${service.id}`, '_blank')}
                     >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span className="font-medium text-sm truncate">
-                          {service.name}
-                        </span>
-                        <Badge variant="outline" className="text-xs shrink-0">
-                          v{service.version}
-                        </Badge>
+                      <div className="flex min-w-0 items-center gap-2">
+                        <span className="truncate text-sm font-medium">{service.name}</span>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0 hover:bg-destructive/20 text-destructive transition-opacity"
-                        onClick={(e) => {
+                        className="hover:bg-destructive/20 text-destructive h-6 w-6 p-0 transition-opacity"
+                        onClick={e => {
                           e.stopPropagation();
                           removeService(service.id);
                         }}
@@ -334,9 +328,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                   <Settings className="h-5 w-5" />
                   Advanced Configuration
                 </CardTitle>
-                <CardDescription>
-                  Optional settings for power users
-                </CardDescription>
+                <CardDescription>Optional settings for power users</CardDescription>
               </CardHeader>
               <CardContent>
                 <Accordion type="multiple" className="w-full">
@@ -365,26 +357,23 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                           <div className="space-y-0.5">
                             <div className="flex items-center gap-2">
                               <Label>Generate Nonce</Label>
-                              <InfoTooltip 
+                              <InfoTooltip
                                 content="A nonce (number used once) is a cryptographic token that makes inline scripts safer by allowing only scripts with the correct nonce value to execute. Essential for secure inline JavaScript and styles."
                                 referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#nonce"
                                 referenceText="MDN: CSP Nonce"
                               />
                             </div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-muted-foreground text-xs">
                               Generate a unique nonce for inline scripts
                             </p>
                           </div>
-                          <Switch 
-                            checked={useNonce} 
-                            onCheckedChange={setUseNonce} 
-                          />
+                          <Switch checked={useNonce} onCheckedChange={setUseNonce} />
                         </div>
-                        
+
                         <div className="space-y-2">
                           <div className="flex items-center gap-2">
                             <Label htmlFor="report-uri">Report URI (optional)</Label>
-                            <InfoTooltip 
+                            <InfoTooltip
                               content="When CSP violations occur, the browser will send a report to this URL. Essential for monitoring security issues and debugging CSP policies in production."
                               referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/report-uri"
                               referenceText="MDN: CSP Reporting"
@@ -395,9 +384,9 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                             type="url"
                             placeholder="https://your-site.com/csp-report"
                             value={reportUri}
-                            onChange={(e) => setReportUri(e.target.value)}
+                            onChange={e => setReportUri(e.target.value)}
                           />
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-muted-foreground text-xs">
                             CSP violations will be reported to this endpoint
                           </p>
                         </div>
@@ -408,72 +397,92 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                   {/* Custom CSP Rules */}
                   <AccordionItem value="custom-rules">
                     <AccordionTrigger className="[&_[data-badge]]:no-underline">
-                      <div className="flex flex-col items-start gap-2 w-full pr-4">
+                      <div className="flex w-full flex-col items-start gap-2 pr-4">
                         <span>Custom CSP Rules</span>
-                        {Object.entries(customRules).filter(([directive, value]) => value.trim() && customRuleToggles[directive]).length > 0 && (
+                        {Object.entries(customRules).filter(
+                          ([directive, value]) => value.trim() && customRuleToggles[directive]
+                        ).length > 0 && (
                           <div className="flex flex-wrap gap-1">
-                            {Object.entries(customRules).filter(([directive, value]) => value.trim() && customRuleToggles[directive]).map(([directive]) => (
-                              <Badge key={directive} variant="secondary" className="text-xs" data-badge>
-                                {directive}
-                              </Badge>
-                            ))}
+                            {Object.entries(customRules)
+                              .filter(
+                                ([directive, value]) => value.trim() && customRuleToggles[directive]
+                              )
+                              .map(([directive]) => (
+                                <Badge
+                                  key={directive}
+                                  variant="secondary"
+                                  className="text-xs"
+                                  data-badge
+                                >
+                                  {directive}
+                                </Badge>
+                              ))}
                           </div>
                         )}
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                           Add custom domains and rules for each CSP directive
                         </p>
                         {Object.entries(customRules).map(([directive, value]) => {
                           // Define directive info for CSP rules
                           const directiveInfoMap = {
                             'script-src': {
-                              description: 'Controls which scripts can be executed. Protects against XSS attacks by preventing unauthorized JavaScript execution.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src'
+                              description:
+                                'Controls which scripts can be executed. Protects against XSS attacks by preventing unauthorized JavaScript execution.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src',
                             },
                             'style-src': {
-                              description: 'Controls which stylesheets can be loaded. Prevents CSS injection attacks and unauthorized styling.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src'
+                              description:
+                                'Controls which stylesheets can be loaded. Prevents CSS injection attacks and unauthorized styling.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src',
                             },
                             'img-src': {
-                              description: 'Controls which images can be loaded. Prevents data exfiltration through malicious images.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src'
+                              description:
+                                'Controls which images can be loaded. Prevents data exfiltration through malicious images.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src',
                             },
                             'connect-src': {
-                              description: 'Controls which URLs can be loaded using script interfaces (fetch, XMLHttpRequest, WebSocket). Prevents unauthorized API calls.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src'
+                              description:
+                                'Controls which URLs can be loaded using script interfaces (fetch, XMLHttpRequest, WebSocket). Prevents unauthorized API calls.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src',
                             },
                             'font-src': {
-                              description: 'Controls which fonts can be loaded. Prevents unauthorized font downloads that could be used for tracking.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src'
+                              description:
+                                'Controls which fonts can be loaded. Prevents unauthorized font downloads that could be used for tracking.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src',
                             },
                             'frame-src': {
-                              description: 'Controls which URLs can be embedded as frames. Prevents clickjacking and unauthorized iframe embedding.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-src'
+                              description:
+                                'Controls which URLs can be embedded as frames. Prevents clickjacking and unauthorized iframe embedding.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-src',
                             },
                             'media-src': {
-                              description: 'Controls which audio and video sources can be loaded. Prevents unauthorized media content.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src'
+                              description:
+                                'Controls which audio and video sources can be loaded. Prevents unauthorized media content.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src',
                             },
                             'object-src': {
-                              description: 'Controls which plugins can be loaded (Flash, Java). Generally recommended to set to "none" for security.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/object-src'
-                            }
+                              description:
+                                'Controls which plugins can be loaded (Flash, Java). Generally recommended to set to "none" for security.',
+                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/object-src',
+                            },
                           };
-                          const directiveInfo = directiveInfoMap[directive as keyof typeof directiveInfoMap];
+                          const directiveInfo =
+                            directiveInfoMap[directive as keyof typeof directiveInfoMap];
                           const isEnabled = customRuleToggles[directive];
 
                           return (
                             <div key={directive} className="space-y-2">
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                  <Label htmlFor={directive} className="text-sm font-mono">
+                                  <Label htmlFor={directive} className="font-mono text-sm">
                                     {directive}
                                   </Label>
                                   {directiveInfo && (
-                                    <InfoTooltip 
+                                    <InfoTooltip
                                       content={directiveInfo.description}
                                       referenceUrl={directiveInfo.url}
                                       referenceText="MDN Docs"
@@ -482,15 +491,15 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                                 </div>
                                 <Switch
                                   checked={isEnabled}
-                                  onCheckedChange={(checked) => {
+                                  onCheckedChange={checked => {
                                     setCustomRuleToggles(prev => ({
                                       ...prev,
-                                      [directive]: checked
+                                      [directive]: checked,
                                     }));
                                     if (checked && !value) {
                                       setCustomRules(prev => ({
                                         ...prev,
-                                        [directive]: 'https://example.com'
+                                        [directive]: 'https://example.com',
                                       }));
                                     }
                                   }}
@@ -501,18 +510,21 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                                   id={directive}
                                   placeholder="https://example.com, 'self'"
                                   value={value}
-                                  onChange={(e) => setCustomRules(prev => ({
-                                    ...prev,
-                                    [directive]: e.target.value
-                                  }))}
+                                  onChange={e =>
+                                    setCustomRules(prev => ({
+                                      ...prev,
+                                      [directive]: e.target.value,
+                                    }))
+                                  }
                                   className="font-mono text-xs"
                                 />
                               )}
                             </div>
                           );
                         })}
-                        <p className="text-xs text-muted-foreground">
-                          Separate multiple values with commas. Use quotes for keywords like &apos;self&apos;, &apos;unsafe-inline&apos;.
+                        <p className="text-muted-foreground text-xs">
+                          Separate multiple values with commas. Use quotes for keywords like
+                          &apos;self&apos;, &apos;unsafe-inline&apos;.
                         </p>
                       </div>
                     </AccordionContent>
@@ -535,9 +547,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                           <Zap className="h-5 w-5" />
                           Your CSP Header
                         </CardTitle>
-                        <CardDescription>
-                          Ready to use in your application
-                        </CardDescription>
+                        <CardDescription>Ready to use in your application</CardDescription>
                       </div>
                     </div>
                   </CardHeader>
@@ -548,8 +558,17 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                       useNonce={useNonce}
                       reportUri={reportUri}
                       customRules={Object.fromEntries(
-                        Object.entries(customRules).filter(([directive, value]) => value.trim() && customRuleToggles[directive])
-                          .map(([key, value]) => [key, value.split(',').map(v => v.trim()).filter(Boolean)])
+                        Object.entries(customRules)
+                          .filter(
+                            ([directive, value]) => value.trim() && customRuleToggles[directive]
+                          )
+                          .map(([key, value]) => [
+                            key,
+                            value
+                              .split(',')
+                              .map(v => v.trim())
+                              .filter(Boolean),
+                          ])
                       )}
                     />
                   </CardContent>
@@ -572,25 +591,28 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                       showBreakdown={true}
                       serviceTags={selectedServices.map(service => ({
                         serviceId: service.id,
-                        serviceName: service.name
+                        serviceName: service.name,
                       }))}
-                      serviceDetails={selectedServices.map(service => {
-                        const serviceDefinition = services[service.id];
-                        if (!serviceDefinition) return null;
-                        
-                        const version = service.version || serviceDefinition.defaultVersion;
-                        const versionData = serviceDefinition.versions[version];
-                        
-                        return versionData ? {
-                          serviceId: service.id,
-                          serviceName: service.name,
-                          cspDirectives: versionData.csp
-                        } : null;
-                      }).filter((detail): detail is {
-                        serviceId: string;
-                        serviceName: string;
-                        cspDirectives: Record<string, string[]>;
-                      } => detail !== null)}
+                      serviceDetails={selectedServices
+                        .map(service => {
+                          const serviceDefinition = services[service.id];
+                          if (!serviceDefinition) return null;
+
+                          return {
+                            serviceId: service.id,
+                            serviceName: service.name,
+                            cspDirectives: serviceDefinition.cspDirectives,
+                          };
+                        })
+                        .filter(
+                          (
+                            detail
+                          ): detail is {
+                            serviceId: string;
+                            serviceName: string;
+                            cspDirectives: Record<string, string[]>;
+                          } => detail !== null
+                        )}
                     />
                   </CardContent>
                 </Card>
@@ -607,13 +629,13 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                     <CardContent className="space-y-3">
                       {result.warnings?.map((warning, index) => (
                         <div key={index} className="flex items-start gap-2 text-sm">
-                          <AlertTriangle className="h-4 w-4 text-amber-500 mt-0.5" />
+                          <AlertTriangle className="mt-0.5 h-4 w-4 text-amber-500" />
                           <span>{warning}</span>
                         </div>
                       ))}
                       {result.unknownServices?.length > 0 && (
                         <div className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400">
-                          <X className="h-4 w-4 mt-0.5" />
+                          <X className="mt-0.5 h-4 w-4" />
                           <span>Unknown services: {result.unknownServices.join(', ')}</span>
                         </div>
                       )}
@@ -628,14 +650,14 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
 
       {/* Call to Action when no services selected */}
       {!hasSelectedServices && (
-        <Card className="max-w-2xl mx-auto">
+        <Card className="mx-auto max-w-2xl">
           <CardContent className="py-12 text-center">
-            <Shield className="mx-auto mb-4 h-16 w-16 text-muted-foreground/50" />
-            <h3 className="text-lg font-medium mb-2">Ready to Generate CSP</h3>
+            <Shield className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
+            <h3 className="mb-2 text-lg font-medium">Ready to Generate CSP</h3>
             <p className="text-muted-foreground mb-4">
               Search for services above or choose a category to get started.
             </p>
-            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="text-muted-foreground inline-flex items-center gap-2 text-sm">
               <Info className="h-4 w-4" />
               <span>Your CSP will update automatically as you select services</span>
             </div>

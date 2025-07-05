@@ -27,7 +27,6 @@ program
   .command('update')
   .description('Update existing service definition')
   .argument('<service-id>', 'Service ID to update')
-  .option('-v, --version <version>', 'Version to update or add')
   .option('-i, --interactive', 'Use interactive mode')
   .option('-f, --file <file>', 'JSON file with service definition')
   .action(updateServiceCommand);
@@ -45,7 +44,6 @@ program
   .description('Check a service for CSP requirement changes')
   .argument('<service-id>', 'Service ID to check')
   .option('-u, --url <url>', 'Custom URL to check')
-  .option('-v, --version <version>', 'Check specific version')
   .action(checkServiceCommand);
 
 // Error handling

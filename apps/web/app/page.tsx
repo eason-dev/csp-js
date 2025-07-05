@@ -10,7 +10,7 @@ export default async function CSPGenerator() {
   const registry = await getServiceRegistry();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         <Suspense fallback={<div className="container mx-auto px-4 py-8">Loading...</div>}>

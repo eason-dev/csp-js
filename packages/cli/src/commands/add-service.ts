@@ -1,6 +1,5 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
-import semver from 'semver';
 import { ServiceCategory, getService } from '@csp-kit/data';
 import type { ServiceDefinition } from '@csp-kit/data';
 import type { AddServiceOptions } from '../types.js';
@@ -168,34 +167,7 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
     addMoreDocs = addAnother;
   }
 
-  // Collect version information
-  const versionInfo = await inquirer.prompt([
-    {
-      type: 'input',
-      name: 'version',
-      message: 'Initial version (e.g., 1.0.0 or 2024-01-15):',
-      default: '1.0.0',
-      validate: input => {
-        if (!input) return 'Version is required';
-        // Allow semantic versions or date-based versions
-        if (semver.valid(input) || /^\\d{4}-\\d{2}-\\d{2}$/.test(input)) {
-          return true;
-        }
-        return 'Version must be semantic (e.g., 1.0.0) or date-based (e.g., 2024-01-15)';
-      },
-    },
-    {
-      type: 'input',
-      name: 'validFrom',
-      message: 'Valid from date (YYYY-MM-DD):',
-      default: () => new Date().toISOString().slice(0, 10),
-      validate: input => {
-        if (!input) return 'Valid from date is required';
-        if (!/^\\d{4}-\\d{2}-\\d{2}$/.test(input)) return 'Date must be in YYYY-MM-DD format';
-        return true;
-      },
-    },
-  ]);
+  // Skip version collection - using simplified single-version format
 
   // Collect CSP directives
   console.log(chalk.yellow("\nNow let's define the CSP requirements..."));
@@ -298,15 +270,9 @@ async function collectServiceDataInteractively(): Promise<ServiceDefinition> {
     description: basicInfo.description,
     website: basicInfo.website,
     officialDocs,
-    versions: {
-      [versionInfo.version]: {
-        csp,
-        validFrom: versionInfo.validFrom,
-        requiresDynamic: metadata.requiresDynamic,
-        requiresNonce: metadata.requiresNonce,
-      },
-    },
-    defaultVersion: versionInfo.version,
+    cspDirectives: csp,
+    requiresDynamic: metadata.requiresDynamic,
+    requiresNonce: metadata.requiresNonce,
     aliases,
     lastUpdated: new Date().toISOString(),
   };
@@ -319,8 +285,7 @@ async function createAddServicePR(service: ServiceDefinition, filePath: string):
 
 - Service ID: ${service.id}
 - Category: ${service.category}
-- Default version: ${service.defaultVersion}
-- CSP directives: ${Object.keys(service.versions[service.defaultVersion]?.csp || {}).join(', ')}
+- CSP directives: ${Object.keys(service.cspDirectives || {}).join(', ')}
 
 Generated with @csp-kit/cli`;
 
@@ -333,10 +298,9 @@ Add new service definition for **${service.name}**.
 - **ID**: \`${service.id}\`
 - **Category**: ${service.category}
 - **Website**: ${service.website}
-- **Default Version**: ${service.defaultVersion}
 
 ## CSP Requirements
-${Object.entries(service.versions[service.defaultVersion]?.csp || {})
+${Object.entries(service.cspDirectives || {})
   .map(([directive, sources]) => `- \`${directive}\`: ${(sources as string[]).join(', ')}`)
   .join('\\n')}
 

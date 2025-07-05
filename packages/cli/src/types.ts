@@ -9,7 +9,6 @@ export interface AddServiceOptions {
 }
 
 export interface UpdateServiceOptions {
-  version?: string;
   interactive?: boolean;
   file?: string;
 }
@@ -20,7 +19,6 @@ export interface ValidateDataOptions {
 
 export interface CheckServiceOptions {
   url?: string;
-  version?: string;
 }
 
 /**
@@ -28,7 +26,6 @@ export interface CheckServiceOptions {
  */
 export interface ServiceCheckResult {
   serviceId: string;
-  version: string;
   success: boolean;
   errors: string[];
   warnings: string[];
@@ -66,7 +63,6 @@ export interface GitOperationResult {
  */
 export interface ServiceUpdateData {
   service: ServiceDefinition;
-  version?: string;
   reason: string;
   breaking: boolean;
   autoDetected: boolean;

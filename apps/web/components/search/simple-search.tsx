@@ -3,13 +3,7 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { type ServiceDefinition } from '@csp-kit/generator';
 import Fuse from 'fuse.js';
-import {
-  Search,
-  ExternalLink,
-  Sparkles,
-  Plus,
-  Check,
-} from 'lucide-react';
+import { Search, ExternalLink, Sparkles, Plus, Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -26,13 +20,13 @@ interface SimpleSearchProps {
 // Popular services for initial display
 const POPULAR_SERVICES = [
   'google-analytics',
-  'google-fonts', 
+  'google-fonts',
   'stripe',
   'youtube',
   'sentry',
   'cloudflare-analytics',
   'facebook-pixel',
-  'google-tag-manager'
+  'google-tag-manager',
 ];
 
 export function SimpleSearch({
@@ -43,7 +37,7 @@ export function SimpleSearch({
   const [searchQuery, setSearchQuery] = useState('');
   const [showResults, setShowResults] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  
+
   const { addService, removeService, isSelected } = useSelectedServices();
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -71,61 +65,63 @@ export function SimpleSearch({
       const results = fuse.search(searchQuery, { limit: 15 });
       return results.map(result => result.item);
     }
-    
+
     // Show popular services by default
-    return POPULAR_SERVICES
-      .map(id => services[id])
+    return POPULAR_SERVICES.map(id => services[id])
       .filter((service): service is ServiceDefinition => Boolean(service))
       .slice(0, 8);
   }, [searchQuery, fuse, services]);
 
-  const handleServiceSelect = useCallback((serviceId: string) => {
-    const service = services[serviceId];
-    if (service) {
-      if (isSelected(serviceId)) {
-        removeService(serviceId);
-      } else {
-        addService({
-          id: service.id,
-          name: service.name,
-          version: service.defaultVersion,
-        });
+  const handleServiceSelect = useCallback(
+    (serviceId: string) => {
+      const service = services[serviceId];
+      if (service) {
+        if (isSelected(serviceId)) {
+          removeService(serviceId);
+        } else {
+          addService({
+            id: service.id,
+            name: service.name,
+          });
+        }
       }
-    }
-    // Keep popup open - don't reset search or close results
-  }, [services, isSelected, addService, removeService]);
+      // Keep popup open - don't reset search or close results
+    },
+    [services, isSelected, addService, removeService]
+  );
 
   // Handle keyboard navigation
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (!showResults) return;
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (!showResults) return;
 
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setFocusedIndex(prev => 
-          prev < displayServices.length - 1 ? prev + 1 : prev
-        );
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setFocusedIndex(prev => prev > 0 ? prev - 1 : -1);
-        break;
-      case 'Enter':
-        e.preventDefault();
-        if (focusedIndex >= 0 && focusedIndex < displayServices.length) {
-          const service = displayServices[focusedIndex];
-          if (service) {
-            handleServiceSelect(service.id);
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          setFocusedIndex(prev => (prev < displayServices.length - 1 ? prev + 1 : prev));
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          setFocusedIndex(prev => (prev > 0 ? prev - 1 : -1));
+          break;
+        case 'Enter':
+          e.preventDefault();
+          if (focusedIndex >= 0 && focusedIndex < displayServices.length) {
+            const service = displayServices[focusedIndex];
+            if (service) {
+              handleServiceSelect(service.id);
+            }
           }
-        }
-        break;
-      case 'Escape':
-        setShowResults(false);
-        setFocusedIndex(-1);
-        inputRef.current?.blur();
-        break;
-    }
-  }, [showResults, displayServices, focusedIndex, handleServiceSelect]);
+          break;
+        case 'Escape':
+          setShowResults(false);
+          setFocusedIndex(-1);
+          inputRef.current?.blur();
+          break;
+      }
+    },
+    [showResults, displayServices, focusedIndex, handleServiceSelect]
+  );
 
   // Handle click outside
   useEffect(() => {
@@ -158,13 +154,13 @@ export function SimpleSearch({
     <div className={`relative ${className}`} ref={searchRef}>
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+        <Search className="text-muted-foreground absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2" />
         <Input
           ref={inputRef}
           placeholder={placeholder}
-          className="pl-12 pr-4 py-6 text-lg rounded-xl border-2 shadow-lg"
+          className="rounded-xl border-2 py-6 pl-12 pr-4 text-lg shadow-lg"
           value={searchQuery}
-          onChange={(e) => {
+          onChange={e => {
             setSearchQuery(e.target.value);
             setShowResults(true);
             setFocusedIndex(-1);
@@ -181,7 +177,7 @@ export function SimpleSearch({
 
       {/* Search Results */}
       {showResults && (
-        <Card className="absolute top-full left-0 right-0 mt-2 shadow-2xl z-50">
+        <Card className="absolute left-0 right-0 top-full z-50 mt-2 shadow-2xl">
           <CardContent className="p-0">
             <div
               ref={resultsRef}
@@ -190,12 +186,15 @@ export function SimpleSearch({
               aria-label="Search results"
             >
               {/* Results Header */}
-              <div className="p-4 border-b bg-muted/30">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <div className="bg-muted/30 border-b p-4">
+                <div className="text-muted-foreground flex items-center gap-2 text-sm">
                   {searchQuery.trim() ? (
                     <>
                       <Search className="h-4 w-4" />
-                      <span className="font-medium">{displayServices.length} search result{displayServices.length !== 1 ? 's' : ''}</span>
+                      <span className="font-medium">
+                        {displayServices.length} search result
+                        {displayServices.length !== 1 ? 's' : ''}
+                      </span>
                       <span>for &quot;{searchQuery}&quot;</span>
                     </>
                   ) : (
@@ -214,51 +213,51 @@ export function SimpleSearch({
                   const isServiceSelected = isSelected(service.id);
                   const isFocused = index === focusedIndex;
                   const categoryDisplayName = formatCategoryName(service.category);
-                  
+
                   return (
                     <div
                       key={service.id}
                       id={`search-option-${index}`}
-                      className={`flex items-start justify-between p-4 cursor-pointer transition-colors border-b last:border-b-0 ${
+                      className={`flex cursor-pointer items-start justify-between border-b p-4 transition-colors last:border-b-0 ${
                         isFocused
                           ? 'bg-primary/10 border-primary/20'
-                          : isServiceSelected 
-                            ? 'bg-primary/5 border-primary/10' 
+                          : isServiceSelected
+                            ? 'bg-primary/5 border-primary/10'
                             : 'hover:bg-muted/50'
                       }`}
                       onClick={() => handleServiceSelect(service.id)}
                       role="option"
                       aria-selected={isFocused}
                     >
-                      <div className="flex-1 min-w-0 mr-3">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium truncate">{service.name}</span>
-                          <Badge variant="outline" className="text-xs shrink-0">
+                      <div className="mr-3 min-w-0 flex-1">
+                        <div className="mb-1 flex items-center gap-2">
+                          <span className="truncate font-medium">{service.name}</span>
+                          <Badge variant="outline" className="shrink-0 text-xs">
                             {categoryDisplayName}
                           </Badge>
                           {isServiceSelected && (
-                            <Badge variant="default" className="text-xs shrink-0">
-                              <Check className="h-3 w-3 mr-1" />
+                            <Badge variant="default" className="shrink-0 text-xs">
+                              <Check className="mr-1 h-3 w-3" />
                               Added
                             </Badge>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground line-clamp-2 text-left">
+                        <p className="text-muted-foreground line-clamp-2 text-left text-sm">
                           {service.description}
                         </p>
                       </div>
-                      <div className="flex items-center gap-1 shrink-0">
+                      <div className="flex shrink-0 items-center gap-1">
                         {!isServiceSelected && (
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
+                          <Button
+                            variant="outline"
+                            size="sm"
                             className="h-8 px-2"
-                            onClick={(e) => {
+                            onClick={e => {
                               e.stopPropagation();
                               handleServiceSelect(service.id);
                             }}
                           >
-                            <Plus className="h-3 w-3 mr-1" />
+                            <Plus className="mr-1 h-3 w-3" />
                             Add
                           </Button>
                         )}
@@ -266,8 +265,8 @@ export function SimpleSearch({
                           href={`/service/${service.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="opacity-60 hover:opacity-100 transition-opacity"
+                          onClick={e => e.stopPropagation()}
+                          className="opacity-60 transition-opacity hover:opacity-100"
                         >
                           <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                             <ExternalLink className="h-3 w-3" />
@@ -279,14 +278,14 @@ export function SimpleSearch({
                   );
                 })
               ) : (
-                <div className="p-8 text-center text-muted-foreground">
-                  <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                <div className="text-muted-foreground p-8 text-center">
+                  <Search className="mx-auto mb-2 h-8 w-8 opacity-50" />
                   <p>No services found</p>
                   {searchQuery && (
-                    <p className="text-sm mt-1">
+                    <p className="mt-1 text-sm">
                       Try a different search term or{' '}
-                      <Link 
-                        href="/services" 
+                      <Link
+                        href="/services"
                         className="text-primary hover:underline"
                         onClick={() => setShowResults(false)}
                       >

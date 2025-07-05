@@ -1,5 +1,4 @@
 {
-  // Wix - Website builder platform
   "id": "wix",
   "name": "Wix",
   "category": "cms",
@@ -10,30 +9,26 @@
     "https://support.wix.com/en/article/embedding-custom-code-on-your-site",
     "https://support.wix.com/en/article/wix-editor-embedding-a-site-or-a-widget"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2006-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://wix.com",
-          "https://www.wix.com",
-          "https://static.wixstatic.com"
-        ],
-        "connect-src": [
-          "https://wix.com",
-          "https://www.wix.com"
-        ],
-        "img-src": [
-          "https://static.wixstatic.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Wix verified from official documentation and community forums. LIMITED CSP SUPPORT: CSP headers managed at platform level, no user control. Custom code runs in sandboxed iframes for security. HTTPS required for all embedded content. External sites may block embedding due to their own CSP policies. Community reports limited support for custom security headers as of 2022."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["wix-website"],
+  "aliases": [
+    "wix-website"
+  ],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://wix.com",
+      "https://www.wix.com",
+      "https://static.wixstatic.com"
+    ],
+    "connect-src": [
+      "https://wix.com",
+      "https://www.wix.com"
+    ],
+    "img-src": [
+      "https://static.wixstatic.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Wix verified from official documentation and community forums. LIMITED CSP SUPPORT: CSP headers managed at platform level, no user control. Custom code runs in sandboxed iframes for security. HTTPS required for all embedded content. External sites may block embedding due to their own CSP policies. Community reports limited support for custom security headers as of 2022."
 }

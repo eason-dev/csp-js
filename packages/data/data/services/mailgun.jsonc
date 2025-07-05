@@ -1,5 +1,4 @@
 {
-  // Mailgun - Email delivery service for developers
   "id": "mailgun",
   "name": "Mailgun",
   "category": "marketing",
@@ -9,25 +8,21 @@
     "https://documentation.mailgun.com/en/latest/user_manual.html#csp-headers",
     "https://help.mailgun.com/hc/en-us/articles/203380100-Where-Can-I-Find-My-API-Key-and-SMTP-Credentials-"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2010-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://mailgun.com"
-        ],
-        "connect-src": [
-          "https://api.mailgun.net",
-          "https://api.eu.mailgun.net"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Mailgun email delivery service for developers. Different API endpoints for US and EU regions. SMTP credentials may require additional domains."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["mailgun-email"],
+  "aliases": [
+    "mailgun-email"
+  ],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://mailgun.com"
+    ],
+    "connect-src": [
+      "https://api.mailgun.net",
+      "https://api.eu.mailgun.net"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Mailgun email delivery service for developers. Different API endpoints for US and EU regions. SMTP credentials may require additional domains."
 }

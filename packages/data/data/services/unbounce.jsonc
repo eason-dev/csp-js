@@ -1,5 +1,4 @@
 {
-  // Unbounce - Landing page builder and A/B testing
   "id": "unbounce",
   "name": "Unbounce",
   "category": "marketing",
@@ -10,24 +9,20 @@
     "https://documentation.unbounce.com/hc/en-us/articles/203879070-Adding-Custom-JavaScript-and-CSS-in-the-Classic-Builder",
     "https://unbounce.com/product/security/"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2009-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://unbounce.com"
-        ],
-        "connect-src": [
-          "https://unbounce.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Unbounce verified from official documentation. No specific official CSP documentation found. Custom JavaScript and CSS supported in Classic Builder. API available on all pricing plans. HTTPS/SSL enforced with industry-leading security protocols. Contact support for CSP-specific requirements. Community forums available for developer discussions."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["unbounce-landing"],
+  "aliases": [
+    "unbounce-landing"
+  ],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://unbounce.com"
+    ],
+    "connect-src": [
+      "https://unbounce.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Unbounce verified from official documentation. No specific official CSP documentation found. Custom JavaScript and CSS supported in Classic Builder. API available on all pricing plans. HTTPS/SSL enforced with industry-leading security protocols. Contact support for CSP-specific requirements. Community forums available for developer discussions."
 }

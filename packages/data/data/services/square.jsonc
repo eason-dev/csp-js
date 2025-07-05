@@ -1,5 +1,4 @@
 {
-  // Square Payment Processing
   "id": "square",
   "name": "Square",
   "category": "payment",
@@ -9,28 +8,24 @@
     "https://developer.squareup.com/forums/t/whitelisted-square-domains-for-content-security-policy-web-payments-sdk/8186",
     "https://developer.squareup.com/forums/t/content-security-policy-csp-questions-for-web-payments-sdk/11628"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://js.squareup.com"
-        ],
-        "connect-src": [
-          "https://connect.squareup.com",
-          "https://pci-connect.squareup.com"
-        ],
-        "frame-src": [
-          "https://js.squareup.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Square verified from developer forums discussing CSP requirements. Web Payments SDK requires HTTPS and CSP headers as of October 2025. Known CSP gaps in official documentation - developers report issues with 3DS verification frames and undocumented domains like geoissuer.card. CSP implementation requires testing to identify all needed domains."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["square-payments"],
+  "aliases": [
+    "square-payments"
+  ],
   "lastUpdated": "2025-06-29T00:00:00Z",
-  "verifiedAt": "2025-07-04T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://js.squareup.com"
+    ],
+    "connect-src": [
+      "https://connect.squareup.com",
+      "https://pci-connect.squareup.com"
+    ],
+    "frame-src": [
+      "https://js.squareup.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Square verified from developer forums discussing CSP requirements. Web Payments SDK requires HTTPS and CSP headers as of October 2025. Known CSP gaps in official documentation - developers report issues with 3DS verification frames and undocumented domains like geoissuer.card. CSP implementation requires testing to identify all needed domains."
 }

@@ -8,13 +8,13 @@
 
 > **Modern Content Security Policy (CSP) generator for popular web services and libraries**
 
-CSP Kit automatically generates Content Security Policy headers by analyzing the services and libraries you use. Say goodbye to manual CSP configuration and hello to automatic, version-aware security policies.
+CSP Kit automatically generates Content Security Policy headers by analyzing the services and libraries you use. Say goodbye to manual CSP configuration and hello to automatic security policies.
 
 ## ✨ Features
 
 - 🎯 **Service-First Approach**: Configure CSP by specifying services instead of manual directives
 - 📦 **50+ Popular Services**: Pre-configured CSP rules for Google Analytics, Stripe, Intercom, and more
-- 🔄 **Version Management**: Support for service versioning with automatic deprecation warnings
+- 🔄 **Service Management**: Up-to-date CSP rules for all supported services
 - 🤖 **Automated Monitoring**: GitHub Actions integration to detect service changes
 - 🌐 **Multiple Formats**: Generate headers, meta tags, or JSON configurations
 - 🔐 **Nonce Support**: Built-in nonce generation for secure inline scripts
@@ -61,7 +61,7 @@ app.use((req, res, next) => {
 import { generateCSP } from '@csp-kit/generator';
 
 const result = generateCSP({
-  services: ['google-analytics@4.1.0', 'typeform', 'youtube'],
+  services: ['google-analytics', 'typeform', 'youtube'],
   nonce: true,
   customRules: {
     'script-src': ['https://my-custom-domain.com'],
@@ -76,7 +76,7 @@ console.log(result);
 //   header: "script-src 'self' 'nonce-abc123' https://www.googletagmanager.com ...",
 //   nonce: "abc123",
 //   warnings: [],
-//   includedServices: ["google-analytics@4.1.0", "typeform@1.0.0", "youtube@1.0.0"]
+//   includedServices: ["google-analytics", "typeform", "youtube"]
 // }
 ```
 
@@ -97,17 +97,19 @@ const csp =
 const result = generateCSP(['google-analytics', 'stripe']);
 ```
 
-#### Version Management
+#### Service Identifiers
 
-Services support versioning for different implementation approaches:
+Services are identified by their unique names and can include aliases:
 
 ```javascript
-// Use specific version
-generateCSP(['google-analytics@4.0.0']);
+// Use service by ID
+generateCSP(['google-analytics']);
 
-// Use latest version (default)
-generateCSP(['google-analytics@latest']);
-generateCSP(['google-analytics']); // same as above
+// Use service by alias
+generateCSP(['ga4', 'gtag']); // aliases for google-analytics
+
+// Mix IDs and aliases
+generateCSP(['google-analytics', 'stripe', 'youtube']);
 ```
 
 ### API Reference
@@ -155,7 +157,7 @@ import {
   generateNonce, // Generate cryptographic nonce
   getService, // Get service definition
   searchServices, // Search services by name/description
-  getServiceVersions, // Get available versions for service
+  getServicesByCategory, // Get services by category
 } from '@csp-kit/generator';
 ```
 
@@ -174,7 +176,7 @@ npm install -g @csp-kit/cli
 csp-cli add --interactive
 
 # Update existing service
-csp-cli update google-analytics --version 4.2.0
+csp-cli update google-analytics
 
 # Validate service definitions
 csp-cli validate
@@ -212,11 +214,11 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) a
 
 ## 📋 Service Support
 
-CSP Kit supports 50+ popular services including Google Analytics, Stripe, Typeform, YouTube, and more.
+CSP Kit supports 100+ popular services including Google Analytics, Stripe, Typeform, YouTube, and more.
 
 See [SERVICE_SUPPORT.md](SERVICE_SUPPORT.md) for:
 
-- Complete list of supported services with versions
+- Complete list of supported services
 - Service categories (Analytics, Payment, Social, etc.)
 - How to request new services
 

@@ -6,7 +6,6 @@ This guide explains how to create and maintain service definitions for CSP Kit. 
 
 - [Overview](#overview)
 - [Service Definition Structure](#service-definition-structure)
-- [Version Management](#version-management)
 - [CSP Directives](#csp-directives)
 - [Monitoring Configuration](#monitoring-configuration)
 - [Validation Process](#validation-process)
@@ -19,8 +18,7 @@ This guide explains how to create and maintain service definitions for CSP Kit. 
 A service definition is a JSON document that describes:
 
 - **Service Identity**: Name, description, category
-- **CSP Requirements**: Required CSP directives for each version
-- **Version History**: Different implementations over time
+- **CSP Requirements**: Required CSP directives for the service
 - **Monitoring Setup**: Automated checking configuration
 - **Documentation**: Official links and implementation notes
 
@@ -53,64 +51,32 @@ Each service has its own `.jsonc` file (JSON with comments) containing the compl
     "https://content-security-policy.com/examples/google-analytics/"
   ],
 
-  // Version Management
-  "versions": {
-    "4.0.0": {
-      "csp": {
-        "script-src": [
-          "https://www.googletagmanager.com",
-          "https://www.google-analytics.com",
-          "https://ssl.google-analytics.com"
-        ],
-        "img-src": [
-          "https://www.google-analytics.com",
-          "https://www.googletagmanager.com"
-        ],
-        "connect-src": [
-          "https://www.google-analytics.com",
-          "https://analytics.google.com",
-          "https://stats.g.doubleclick.net"
-        ]
-      },
-      "validFrom": "2023-01-01",
-      "notes": [
-        "Standard GA4 implementation with gtag.js",
-        "For Google Signals, additional domains may be required"
-      ],
-      "requiresDynamic": true,
-      "requiresNonce": false
-    },
-    "4.1.0": {
-      "csp": {
-        "script-src": [
-          "https://www.googletagmanager.com",
-          "https://www.google-analytics.com",
-          "https://ssl.google-analytics.com"
-        ],
-        "img-src": [
-          "https://www.google-analytics.com",
-          "https://www.googletagmanager.com"
-        ],
-        "connect-src": [
-          "https://www.google-analytics.com",
-          "https://analytics.google.com",
-          "https://stats.g.doubleclick.net",
-          "https://region1.google-analytics.com"
-        ]
-      },
-      "validFrom": "2024-01-15",
-      "notes": [
-        "Added regional analytics endpoint support",
-        "Enhanced data collection capabilities"
-      ],
-      "breaking": false,
-      "requiresDynamic": true,
-      "requiresNonce": false
-    }
+  // CSP Requirements
+  "cspDirectives": {
+    "script-src": [
+      "https://www.googletagmanager.com",
+      "https://www.google-analytics.com",
+      "https://ssl.google-analytics.com"
+    ],
+    "img-src": [
+      "https://www.google-analytics.com",
+      "https://www.googletagmanager.com"
+    ],
+    "connect-src": [
+      "https://www.google-analytics.com",
+      "https://analytics.google.com",
+      "https://stats.g.doubleclick.net",
+      "https://region1.google-analytics.com"
+    ]
   },
-  "defaultVersion": "4.1.0",
+
+  // Service Configuration
+  "requiresDynamic": true,
+  "requiresNonce": false,
+  "notes": "Standard GA4 implementation with gtag.js. For Google Signals, additional domains may be required. Enhanced data collection capabilities with regional analytics endpoint support.",
   "aliases": ["ga4", "gtag", "google-gtag"],
   "lastUpdated": "2024-06-28T00:00:00.000Z",
+  "verifiedAt": "2025-07-05T00:00:00.000Z",
 
   // Monitoring Configuration
   "monitoring": {
@@ -129,88 +95,27 @@ Each service has its own `.jsonc` file (JSON with comments) containing the compl
 
 ### Required Fields
 
-| Field            | Type     | Description                             |
-| ---------------- | -------- | --------------------------------------- |
-| `id`             | string   | Unique kebab-case identifier            |
-| `name`           | string   | Human-readable service name             |
-| `category`       | string   | Service category (see categories below) |
-| `description`    | string   | Brief description (50-150 characters)   |
-| `website`        | string   | Official service website URL            |
-| `officialDocs`   | string[] | Links to official CSP documentation     |
-| `versions`       | object   | Version-specific configurations         |
-| `defaultVersion` | string   | Default version to use                  |
-| `lastUpdated`    | string   | ISO timestamp of last update            |
+| Field           | Type     | Description                             |
+| --------------- | -------- | --------------------------------------- |
+| `id`            | string   | Unique kebab-case identifier            |
+| `name`          | string   | Human-readable service name             |
+| `category`      | string   | Service category (see categories below) |
+| `description`   | string   | Brief description (50-150 characters)   |
+| `website`       | string   | Official service website URL            |
+| `officialDocs`  | string[] | Links to official CSP documentation     |
+| `cspDirectives` | object   | CSP directives required by the service  |
+| `lastUpdated`   | string   | ISO timestamp of last update            |
 
 ### Optional Fields
 
-| Field        | Type     | Description                        |
-| ------------ | -------- | ---------------------------------- |
-| `aliases`    | string[] | Alternative service identifiers    |
-| `monitoring` | object   | Automated monitoring configuration |
-
-## Version Management
-
-### Version Numbering
-
-**Semantic Versioning** (Recommended for library integrations):
-
-```
-1.0.0 - Initial implementation
-1.1.0 - New optional features/domains
-2.0.0 - Breaking changes
-```
-
-**Date-based Versioning** (For infrastructure changes):
-
-```
-2024-01-15 - Service update on specific date
-2024-06-01 - Major infrastructure change
-```
-
-### Version Object Structure
-
-```typescript
-interface ServiceVersion {
-  csp: CSPDirectives; // Required CSP rules
-  validFrom: string; // Date when version became valid
-  deprecatedFrom?: string; // When version was deprecated
-  notes?: string[]; // Implementation notes
-  breaking?: boolean; // Is this a breaking change?
-  requiresDynamic?: boolean; // Requires dynamic script injection
-  requiresNonce?: boolean; // Requires nonce for inline scripts
-  issues?: string[]; // Known issues or limitations
-}
-```
-
-### Deprecation Process
-
-1. **Mark as Deprecated**: Add `deprecatedFrom` date
-2. **Update Documentation**: Add migration notes
-3. **Grace Period**: Maintain for 6 months minimum
-4. **Removal**: Remove after grace period
-
-```typescript
-{
-  "1.0.0": {
-    "csp": { /* old rules */ },
-    "validFrom": "2023-01-01",
-    "deprecatedFrom": "2024-01-01",
-    "notes": [
-      "Deprecated: Use version 2.0.0 instead",
-      "Migration guide: https://docs.service.com/migrate"
-    ]
-  },
-  "2.0.0": {
-    "csp": { /* new rules */ },
-    "validFrom": "2024-01-01",
-    "breaking": true,
-    "notes": [
-      "Breaking: Removed legacy domain support",
-      "See migration guide for upgrade path"
-    ]
-  }
-}
-```
+| Field             | Type     | Description                               |
+| ----------------- | -------- | ----------------------------------------- |
+| `requiresDynamic` | boolean  | Service injects scripts dynamically       |
+| `requiresNonce`   | boolean  | Service requires nonce for inline scripts |
+| `notes`           | string   | Implementation notes and requirements     |
+| `aliases`         | string[] | Alternative service identifiers           |
+| `verifiedAt`      | string   | ISO timestamp when CSP was last verified  |
+| `monitoring`      | object   | Automated monitoring configuration        |
 
 ## CSP Directives
 
@@ -348,8 +253,7 @@ Service definitions are automatically validated for:
 1. **JSON Schema**: Correct structure and required fields
 2. **URL Validation**: Valid website and documentation URLs
 3. **CSP Syntax**: Valid CSP directive format
-4. **Version Logic**: Proper version numbering and relationships
-5. **Monitoring URLs**: Accessible test endpoints
+4. **Monitoring URLs**: Accessible test endpoints
 
 ### Manual Validation
 
@@ -368,7 +272,7 @@ Before submitting a service definition:
 2. **Verify Documentation**:
    - Check all official documentation links
    - Ensure CSP requirements match official docs
-   - Verify version information is current
+   - Verify service information is current
 
 3. **Test Monitoring**:
    ```bash
@@ -396,8 +300,9 @@ Before submitting a service definition:
   "description": "Service description",
   "website": "https://service.com",
   "officialDocs": ["https://docs.service.com"],
-  "versions": { /* ... */ },
-  "defaultVersion": "1.0.0",
+  "cspDirectives": {
+    "script-src": ["https://cdn.service.com"]
+  },
   "lastUpdated": "2024-06-29T00:00:00.000Z"
 }
 ```
@@ -407,37 +312,16 @@ Before submitting a service definition:
 ```typescript
 // ❌ Invalid - CSP values must be arrays
 {
-  "csp": {
+  "cspDirectives": {
     "script-src": "https://cdn.service.com"  // Should be array
   }
 }
 
 // ✅ Valid - CSP values as arrays
 {
-  "csp": {
+  "cspDirectives": {
     "script-src": ["https://cdn.service.com"]
   }
-}
-```
-
-**Version Consistency**:
-
-```typescript
-// ❌ Invalid - defaultVersion doesn't exist in versions
-{
-  "versions": {
-    "1.0.0": { /* ... */ }
-  },
-  "defaultVersion": "2.0.0"  // Doesn't exist in versions
-}
-
-// ✅ Valid - defaultVersion exists in versions
-{
-  "versions": {
-    "1.0.0": { /* ... */ },
-    "2.0.0": { /* ... */ }
-  },
-  "defaultVersion": "2.0.0"
 }
 ```
 
@@ -448,7 +332,7 @@ Before submitting a service definition:
 1. **Accuracy First**: CSP rules must be accurate and tested
 2. **Minimal Rules**: Only include necessary CSP directives
 3. **Clear Documentation**: Provide helpful notes and links
-4. **Version Management**: Use semantic versioning when possible
+4. **Regular Updates**: Keep service definitions current
 5. **Monitor Changes**: Set up appropriate monitoring intervals
 
 ### Naming Conventions
@@ -478,11 +362,7 @@ Before submitting a service definition:
 
 ```json
 {
-  "notes": [
-    "Standard GA4 implementation with gtag.js",
-    "For Google Signals, additional domains may be required",
-    "Consider using nonce-based approach for inline scripts"
-  ]
+  "notes": "Standard GA4 implementation with gtag.js. For Google Signals, additional domains may be required. Consider using nonce-based approach for inline scripts."
 }
 ```
 
@@ -548,7 +428,7 @@ Use appropriate categories from `ServiceCategory` enum:
 @csp-kit/cli add --interactive
 
 # Update existing service
-@csp-kit/cli update service-id --version 2.0.0
+@csp-kit/cli update service-id
 
 # Validate service definition
 @csp-kit/cli validate --service service-id
@@ -561,14 +441,14 @@ Use appropriate categories from `ServiceCategory` enum:
 
 ```javascript
 // Test CSP generation
-import { generateCSP, getServiceVersions } from '@csp-kit/generator';
+import { generateCSP, getServicesByCategory } from '@csp-kit/generator';
 
-const result = generateCSP(['your-service@1.0.0']);
+const result = generateCSP(['your-service']);
 console.log('CSP Header:', result.header);
 console.log('Warnings:', result.warnings);
 
-const versions = getServiceVersions('your-service');
-console.log('Available versions:', versions);
+const analyticsServices = getServicesByCategory('analytics');
+console.log('Analytics services:', analyticsServices);
 ```
 
 ### External Resources
@@ -580,4 +460,4 @@ console.log('Available versions:', versions);
 
 ---
 
-_Last Updated: 2024-06-29_
+_Last Updated: 2025-07-05_

@@ -1,5 +1,12 @@
 // Main exports
-export { generateCSP, generateCSPHeader, generateReportOnlyCSP, generateCSPAsync, generateCSPHeaderAsync, generateReportOnlyCSPAsync } from './generator.js';
+export {
+  generateCSP,
+  generateCSPHeader,
+  generateReportOnlyCSP,
+  generateCSPAsync,
+  generateCSPHeaderAsync,
+  generateReportOnlyCSPAsync,
+} from './generator.js';
 export { generateNonce } from './utils.js';
 
 // Type exports
@@ -20,13 +27,6 @@ export {
   getService,
   getServicesByCategory,
   searchServices,
-  parseServiceIdentifier,
-  getServiceWithVersion,
-  getServiceWithVersionAsync,
-  getServiceVersions,
-  isServiceVersionDeprecated,
-  getDeprecationWarning,
-  getDeprecationWarningAsync,
   loadServices,
   getServiceAsync,
   clearServicesCache,

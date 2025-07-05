@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { generateCSPAsync, generateCSPHeaderAsync, generateReportOnlyCSPAsync } from '../generator.js';
+import {
+  generateCSPAsync,
+  generateCSPHeaderAsync,
+  generateReportOnlyCSPAsync,
+} from '../generator.js';
 import { generateNonce } from '../utils.js';
 
 describe('generateCSP', () => {

@@ -1,5 +1,4 @@
 {
-  // OneLogin - Identity and access management
   "id": "onelogin",
   "name": "OneLogin",
   "category": "authentication",
@@ -9,28 +8,24 @@
     "https://developers.onelogin.com/api-docs/2/getting-started/working-with-apis",
     "https://developers.onelogin.com/"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2009-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://onelogin.com",
-          "https://www.onelogin.com"
-        ],
-        "connect-src": [
-          "https://api.onelogin.com"
-        ],
-        "frame-src": [
-          "https://*.onelogin.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "OneLogin cloud-based identity platform. Subdomain-specific configurations may be required. SAML integrations may need additional domains."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["onelogin-identity"],
+  "aliases": [
+    "onelogin-identity"
+  ],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://onelogin.com",
+      "https://www.onelogin.com"
+    ],
+    "connect-src": [
+      "https://api.onelogin.com"
+    ],
+    "frame-src": [
+      "https://*.onelogin.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "OneLogin cloud-based identity platform. Subdomain-specific configurations may be required. SAML integrations may need additional domains."
 }

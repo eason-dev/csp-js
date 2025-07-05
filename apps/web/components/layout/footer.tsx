@@ -7,16 +7,16 @@ interface FooterProps {
 
 export function Footer({ serviceCount }: FooterProps) {
   return (
-    <footer className="border-t bg-muted/30 mt-16">
+    <footer className="bg-muted/30 mt-16 border-t">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <Shield className="h-6 w-6 text-primary" />
+              <Shield className="text-primary h-6 w-6" />
               <span className="text-lg font-bold">CSP Kit</span>
             </div>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               The easiest way to generate Content Security Policy headers for your web applications.
             </p>
             <div className="flex gap-2">
@@ -47,9 +47,9 @@ export function Footer({ serviceCount }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <a 
-                  href="https://www.npmjs.com/package/@csp-kit/generator" 
-                  target="_blank" 
+                <a
+                  href="https://www.npmjs.com/package/@csp-kit/generator"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-foreground"
                 >
@@ -64,7 +64,12 @@ export function Footer({ serviceCount }: FooterProps) {
             <h3 className="font-semibold">Resources</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/docs" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">
+                <Link
+                  href="/docs"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   Documentation
                 </Link>
               </li>
@@ -129,12 +134,12 @@ export function Footer({ serviceCount }: FooterProps) {
           </div>
         </div>
 
-        <div className="border-t border-border mt-8 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-muted-foreground">
+        <div className="border-border mt-8 flex flex-col items-center justify-between gap-4 border-t pt-8 sm:flex-row">
+          <p className="text-muted-foreground text-sm">
             © 2024 CSP Kit. Made with ❤️ for web security.
           </p>
           {serviceCount && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Supporting {serviceCount} services and counting.
             </p>
           )}

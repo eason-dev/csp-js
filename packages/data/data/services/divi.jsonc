@@ -8,37 +8,34 @@
     "https://www.elegantthemes.com/documentation/divi/",
     "https://github.com/elegantthemes/create-divi-extension/issues/328"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://elegantthemes.com",
-          "'unsafe-inline'",
-          "'unsafe-eval'"
-        ],
-        "style-src": [
-          "https://elegantthemes.com",
-          "'unsafe-inline'"
-        ],
-        "worker-src": [
-          "blob:"
-        ],
-        "connect-src": [
-          "https://elegantthemes.com"
-        ],
-        "img-src": [
-          "https://elegantthemes.com",
-          "data:"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": true,
-      "notes": "Divi verified from GitHub issues and community reports. No official CSP documentation available. Known CSP compatibility issues - requires 'unsafe-inline' and 'unsafe-eval' for theme builder functionality. Worker-src blob: needed for bundle.js. Theme updates and third-party modules may need additional domains. Consider relaxed CSP for Divi pages."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["divi-theme", "elegant-themes"],
+  "aliases": [
+    "divi-theme",
+    "elegant-themes"
+  ],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-04T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://elegantthemes.com",
+      "'unsafe-inline'",
+      "'unsafe-eval'"
+    ],
+    "style-src": [
+      "https://elegantthemes.com",
+      "'unsafe-inline'"
+    ],
+    "worker-src": [
+      "blob:"
+    ],
+    "connect-src": [
+      "https://elegantthemes.com"
+    ],
+    "img-src": [
+      "https://elegantthemes.com",
+      "data:"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": true,
+  "notes": "Divi verified from GitHub issues and community reports. No official CSP documentation available. Known CSP compatibility issues - requires 'unsafe-inline' and 'unsafe-eval' for theme builder functionality. Worker-src blob: needed for bundle.js. Theme updates and third-party modules may need additional domains. Consider relaxed CSP for Divi pages."
 }

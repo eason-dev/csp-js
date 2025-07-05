@@ -9,54 +9,51 @@
     "https://developers.google.com/maps/documentation/javascript/get-api-key",
     "https://developers.google.com/maps/documentation/javascript/load-maps-js-api"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://*.googleapis.com",
-          "https://*.gstatic.com",
-          "https://*.google.com",
-          "https://*.ggpht.com",
-          "https://*.googleusercontent.com",
-          "'unsafe-eval'",
-          "blob:"
-        ],
-        "img-src": [
-          "https://*.googleapis.com",
-          "https://*.gstatic.com",
-          "https://*.google.com",
-          "https://*.googleusercontent.com",
-          "data:"
-        ],
-        "frame-src": [
-          "https://*.google.com"
-        ],
-        "connect-src": [
-          "https://*.googleapis.com",
-          "https://*.google.com",
-          "https://*.gstatic.com",
-          "data:",
-          "blob:"
-        ],
-        "font-src": [
-          "https://fonts.gstatic.com"
-        ],
-        "style-src": [
-          "https://fonts.googleapis.com",
-          "'unsafe-inline'"
-        ],
-        "worker-src": [
-          "blob:"
-        ]
-      },
-      "requiresNonce": true,
-      "requiresDynamic": true,
-      "notes": "Google Maps JavaScript API for interactive maps. Supports nonce-based strict CSP (recommended) or allowlist CSP. Requires 'unsafe-eval' for some features. All websites must specify googleapis.com in CSP directives."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["google-maps-api", "gmaps"],
+  "aliases": [
+    "google-maps-api",
+    "gmaps"
+  ],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://*.googleapis.com",
+      "https://*.gstatic.com",
+      "https://*.google.com",
+      "https://*.ggpht.com",
+      "https://*.googleusercontent.com",
+      "'unsafe-eval'",
+      "blob:"
+    ],
+    "img-src": [
+      "https://*.googleapis.com",
+      "https://*.gstatic.com",
+      "https://*.google.com",
+      "https://*.googleusercontent.com",
+      "data:"
+    ],
+    "frame-src": [
+      "https://*.google.com"
+    ],
+    "connect-src": [
+      "https://*.googleapis.com",
+      "https://*.google.com",
+      "https://*.gstatic.com",
+      "data:",
+      "blob:"
+    ],
+    "font-src": [
+      "https://fonts.gstatic.com"
+    ],
+    "style-src": [
+      "https://fonts.googleapis.com",
+      "'unsafe-inline'"
+    ],
+    "worker-src": [
+      "blob:"
+    ]
+  },
+  "requiresNonce": true,
+  "requiresDynamic": true,
+  "notes": "Google Maps JavaScript API for interactive maps. Supports nonce-based strict CSP (recommended) or allowlist CSP. Requires 'unsafe-eval' for some features. All websites must specify googleapis.com in CSP directives."
 }

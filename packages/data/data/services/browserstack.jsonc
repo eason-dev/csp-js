@@ -1,5 +1,4 @@
 {
-  // BrowserStack Cross-Browser Testing
   "id": "browserstack",
   "name": "BrowserStack",
   "category": "testing",
@@ -10,28 +9,24 @@
     "https://www.browserstack.com/docs/enterprise/domain-verification",
     "https://www.browserstack.com/docs/live/local-testing"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2011-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://www.browserstack.com"
-        ],
-        "connect-src": [
-          "https://api.browserstack.com",
-          "https://hub-cloud.browserstack.com"
-        ],
-        "frame-src": [
-          "https://www.browserstack.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "BrowserStack verified from official documentation. Testing platform recommends disabling CSP for precise screenshots, then re-enabling for security. Enterprise domain controls available for IP whitelisting. Iframe content capture may require CORS header adjustments. Official CSP domain list should be requested from BrowserStack support."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["bs"],
+  "aliases": [
+    "bs"
+  ],
   "lastUpdated": "2025-06-29T00:00:00Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://www.browserstack.com"
+    ],
+    "connect-src": [
+      "https://api.browserstack.com",
+      "https://hub-cloud.browserstack.com"
+    ],
+    "frame-src": [
+      "https://www.browserstack.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "BrowserStack verified from official documentation. Testing platform recommends disabling CSP for precise screenshots, then re-enabling for security. Enterprise domain controls available for IP whitelisting. Iframe content capture may require CORS header adjustments. Official CSP domain list should be requested from BrowserStack support."
 }

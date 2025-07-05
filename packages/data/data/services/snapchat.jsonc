@@ -8,33 +8,30 @@
     "https://businesshelp.snapchat.com/s/article/pixel-direct-implementation",
     "https://developers.snap.com/api/marketing-api/Ads-API/snap-pixel"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://sc-static.net"
-        ],
-        "frame-src": [
-          "https://tr.snapchat.com",
-          "https://tr-shadow.snapchat.com",
-          "https://snap.adbrn.com"
-        ],
-        "connect-src": [
-          "https://tr.snapchat.com",
-          "https://tr-shadow.snapchat.com"
-        ],
-        "form-action": [
-          "https://tr.snapchat.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Snapchat verified from business help and third-party documentation (RudderStack). Snap Pixel requires sc-static.net for SDK loading, tr.snapchat.com for tracking. Cross-device impact measurement for advertising campaigns. Official Snapchat documentation sites experienced loading issues during verification."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["snapchat-pixel", "snap-pixel"],
+  "aliases": [
+    "snapchat-pixel",
+    "snap-pixel"
+  ],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-04T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://sc-static.net"
+    ],
+    "frame-src": [
+      "https://tr.snapchat.com",
+      "https://tr-shadow.snapchat.com",
+      "https://snap.adbrn.com"
+    ],
+    "connect-src": [
+      "https://tr.snapchat.com",
+      "https://tr-shadow.snapchat.com"
+    ],
+    "form-action": [
+      "https://tr.snapchat.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Snapchat verified from business help and third-party documentation (RudderStack). Snap Pixel requires sc-static.net for SDK loading, tr.snapchat.com for tracking. Cross-device impact measurement for advertising campaigns. Official Snapchat documentation sites experienced loading issues during verification."
 }

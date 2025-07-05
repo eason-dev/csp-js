@@ -1,5 +1,4 @@
 {
-  // Google Tag Manager - Tag management system
   "id": "google-tag-manager",
   "name": "Google Tag Manager",
   "category": "analytics",
@@ -9,30 +8,27 @@
     "https://developers.google.com/tag-platform/security/guides/csp",
     "https://developers.google.com/tag-manager/quickstart"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2012-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://www.googletagmanager.com",
-          "https://*.googletagmanager.com"
-        ],
-        "img-src": [
-          "https://www.googletagmanager.com",
-          "https://*.googletagmanager.com"
-        ],
-        "connect-src": [
-          "https://www.googletagmanager.com",
-          "https://*.googletagmanager.com"
-        ]
-      },
-      "requiresNonce": true,
-      "requiresDynamic": true,
-      "notes": "Google Tag Manager verified against official CSP guide. GTM requires nonce implementation for secure inline script execution (preferred method). Preview mode requires additional domains. GTM may require 'unsafe-eval' for Custom JavaScript Variables. Tags within GTM may require additional CSP rules specific to each tag."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["gtm", "google-gtm"],
+  "aliases": [
+    "gtm",
+    "google-gtm"
+  ],
   "lastUpdated": "2024-06-28T00:00:00.000Z",
-  "verifiedAt": "2025-07-04T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://www.googletagmanager.com",
+      "https://*.googletagmanager.com"
+    ],
+    "img-src": [
+      "https://www.googletagmanager.com",
+      "https://*.googletagmanager.com"
+    ],
+    "connect-src": [
+      "https://www.googletagmanager.com",
+      "https://*.googletagmanager.com"
+    ]
+  },
+  "requiresNonce": true,
+  "requiresDynamic": true,
+  "notes": "Google Tag Manager verified against official CSP guide. GTM requires nonce implementation for secure inline script execution (preferred method). Preview mode requires additional domains. GTM may require 'unsafe-eval' for Custom JavaScript Variables. Tags within GTM may require additional CSP rules specific to each tag."
 }

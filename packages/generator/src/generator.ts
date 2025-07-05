@@ -1,4 +1,4 @@
-import { getServiceWithVersion, getServiceWithVersionAsync, getDeprecationWarning, getDeprecationWarningAsync, loadServices, type CSPDirectives } from '@csp-kit/data';
+import { getService, getServiceAsync, loadServices, type CSPDirectives } from '@csp-kit/data';
 import type { CSPOptions, CSPResult } from './types.js';
 import {
   generateNonce,
@@ -34,29 +34,12 @@ export function generateCSP(input: string[] | CSPOptions): CSPResult {
 
   // Process each service
   for (const serviceName of services) {
-    const serviceWithVersion = getServiceWithVersion(serviceName);
-    if (serviceWithVersion) {
-      const { service, version } = serviceWithVersion;
-      includedServices.push(`${service.id}@${version}`);
+    const service = getService(serviceName);
+    if (service) {
+      includedServices.push(service.id);
 
-      // Get CSP rules for the specific version
-      const serviceVersion = service.versions[version];
-      if (serviceVersion) {
-        serviceDirectives.push(serviceVersion.csp);
-
-        // Check for deprecation warnings
-        const deprecationWarning = getDeprecationWarning(service.id, version);
-        if (deprecationWarning) {
-          warnings.push(deprecationWarning);
-        }
-
-        // Add version-specific notes as warnings if breaking changes
-        if (serviceVersion.breaking) {
-          warnings.push(
-            `${service.id}@${version} contains breaking changes. Review implementation.`
-          );
-        }
-      }
+      // Get CSP rules from simplified format
+      serviceDirectives.push(service.cspDirectives);
     } else {
       unknownServices.push(serviceName);
     }
@@ -164,29 +147,12 @@ export async function generateCSPAsync(input: string[] | CSPOptions): Promise<CS
 
   // Process each service
   for (const serviceName of services) {
-    const serviceWithVersion = await getServiceWithVersionAsync(serviceName);
-    if (serviceWithVersion) {
-      const { service, version } = serviceWithVersion;
-      includedServices.push(`${service.id}@${version}`);
+    const service = await getServiceAsync(serviceName);
+    if (service) {
+      includedServices.push(service.id);
 
-      // Get CSP rules for the specific version
-      const serviceVersion = service.versions[version];
-      if (serviceVersion) {
-        serviceDirectives.push(serviceVersion.csp);
-
-        // Check for deprecation warnings
-        const deprecationWarning = await getDeprecationWarningAsync(service.id, version);
-        if (deprecationWarning) {
-          warnings.push(deprecationWarning);
-        }
-
-        // Add version-specific notes as warnings if breaking changes
-        if (serviceVersion.breaking) {
-          warnings.push(
-            `${service.id}@${version} contains breaking changes. Review implementation.`
-          );
-        }
-      }
+      // Get CSP rules from simplified format
+      serviceDirectives.push(service.cspDirectives);
     } else {
       unknownServices.push(serviceName);
     }

@@ -1,5 +1,4 @@
 {
-  // BigBlueButton Web Conferencing
   "id": "bigbluebutton",
   "name": "BigBlueButton",
   "category": "video",
@@ -9,28 +8,24 @@
     "https://docs.bigbluebutton.org/",
     "https://docs.bigbluebutton.org/dev/api.html"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2009-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://*.bigbluebutton.org"
-        ],
-        "frame-src": [
-          "https://*.bigbluebutton.org"
-        ],
-        "connect-src": [
-          "https://*.bigbluebutton.org",
-          "wss://*.bigbluebutton.org"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "BigBlueButton verified from community documentation and GitHub issues. Limited official CSP documentation available. iframe embedding requires SSL for WebRTC (camera, microphone, screen sharing). X-Frame-Options set to SAMEORIGIN by default in Greenlight. iframe needs allow permissions for geolocation, microphone, camera, display-capture. WebSocket connections required for real-time communication. iframe embedding not supported by default - may need provider request."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["bbb"],
+  "aliases": [
+    "bbb"
+  ],
   "lastUpdated": "2025-06-29T00:00:00Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://*.bigbluebutton.org"
+    ],
+    "frame-src": [
+      "https://*.bigbluebutton.org"
+    ],
+    "connect-src": [
+      "https://*.bigbluebutton.org",
+      "wss://*.bigbluebutton.org"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "BigBlueButton verified from community documentation and GitHub issues. Limited official CSP documentation available. iframe embedding requires SSL for WebRTC (camera, microphone, screen sharing). X-Frame-Options set to SAMEORIGIN by default in Greenlight. iframe needs allow permissions for geolocation, microphone, camera, display-capture. WebSocket connections required for real-time communication. iframe embedding not supported by default - may need provider request."
 }

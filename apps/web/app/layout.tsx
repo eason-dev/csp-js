@@ -44,9 +44,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            <SelectedServicesProvider>
-              {children}
-            </SelectedServicesProvider>
+            <SelectedServicesProvider>{children}</SelectedServicesProvider>
           </TooltipProvider>
         </ThemeProvider>
       </body>

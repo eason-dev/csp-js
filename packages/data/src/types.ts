@@ -37,34 +37,7 @@ export interface CSPDirectives {
   'report-to'?: string[];
 }
 
-/**
- * Version-specific CSP rules and metadata
- */
-export interface ServiceVersion {
-  /** CSP directives required for this version */
-  csp: CSPDirectives;
-
-  /** Date this version was first valid (ISO string) */
-  validFrom: string;
-
-  /** Date this version was deprecated (ISO string, optional) */
-  deprecatedFrom?: string;
-
-  /** Implementation notes for this version */
-  notes?: string[];
-
-  /** Whether this is a breaking change from previous version */
-  breaking?: boolean;
-
-  /** Whether this service requires dynamic CSP (script injection) */
-  requiresDynamic?: boolean;
-
-  /** Nonce requirements */
-  requiresNonce?: boolean;
-
-  /** Known issues or limitations for this version */
-  issues?: string[];
-}
+// ServiceVersion interface removed - version support eliminated
 
 /**
  * Service monitoring configuration
@@ -87,7 +60,7 @@ export interface ServiceMonitoring {
 }
 
 /**
- * Service definition interface with versioning support
+ * Service definition interface (simplified - no versioning support)
  */
 export interface ServiceDefinition {
   /** Unique identifier for the service */
@@ -108,11 +81,17 @@ export interface ServiceDefinition {
   /** Official CSP documentation URLs */
   officialDocs: string[];
 
-  /** Version-specific CSP rules */
-  versions: Record<string, ServiceVersion>;
+  /** CSP directives required for this service */
+  cspDirectives: CSPDirectives;
 
-  /** Default version to use when no version specified */
-  defaultVersion: string;
+  /** Whether this service requires dynamic CSP (script injection) */
+  requiresDynamic?: boolean;
+
+  /** Nonce requirements */
+  requiresNonce?: boolean;
+
+  /** Implementation notes */
+  notes?: string;
 
   /** Alternative service IDs (aliases) */
   aliases?: string[];
@@ -120,19 +99,14 @@ export interface ServiceDefinition {
   /** Last updated timestamp (ISO string) */
   lastUpdated: string;
 
+  /** When this service definition was last verified against official docs */
+  verifiedAt?: string;
+
   /** Monitoring configuration */
   monitoring?: ServiceMonitoring;
 }
 
-/**
- * Service with version specification
- */
-export interface ServiceWithVersion {
-  /** Service ID */
-  id: string;
-  /** Version string (semantic version, date, or 'latest') */
-  version: string;
-}
+// ServiceWithVersion interface removed - version support eliminated
 
 /**
  * Service registry interface
@@ -147,18 +121,4 @@ export interface ServiceRegistry {
   schemaVersion: string;
 }
 
-/**
- * Version change information for changelog
- */
-export interface VersionChange {
-  /** Version identifier */
-  version: string;
-  /** Date of change */
-  date: string;
-  /** List of changes */
-  changes: string[];
-  /** Whether this is a breaking change */
-  breaking: boolean;
-  /** Type of change */
-  type: 'added' | 'changed' | 'deprecated' | 'removed' | 'fixed' | 'security';
-}
+// VersionChange interface removed - version support eliminated

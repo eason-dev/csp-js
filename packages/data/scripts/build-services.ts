@@ -35,6 +35,9 @@ const categoryMap: Record<string, ServiceCategory> = {
   search: ServiceCategory.OTHER,
   ab_testing: ServiceCategory.OTHER,
   website_builder: ServiceCategory.OTHER,
+  marketing: ServiceCategory.OTHER,
+  documentation: ServiceCategory.OTHER,
+  productivity: ServiceCategory.OTHER,
 };
 
 interface ValidationError {
@@ -138,50 +141,25 @@ async function validateServiceFromJSONC(filePath: string): Promise<{
       });
     }
 
-    // Validate CSP structure
+    // Validate CSP structure (simplified format)
     let cspRules: Record<string, unknown> = {};
-    let versionKey = '1.0.0';
 
-    if (serviceData.csp) {
-      // Format 1: Direct csp object
-      cspRules = serviceData.csp;
+    if (data.cspDirectives) {
+      // Simplified format: Direct cspDirectives object
+      cspRules = data.cspDirectives as Record<string, unknown>;
       if (typeof cspRules !== 'object' || Array.isArray(cspRules)) {
         errors.push({
           file: fileName,
-          field: 'csp',
-          message: 'CSP rules must be an object',
+          field: 'cspDirectives',
+          message: 'CSP directives must be an object',
           severity: 'error',
         });
-      }
-    } else if (serviceData.versions) {
-      // Format 2: versions object
-      const firstVersion = Object.keys(serviceData.versions)[0];
-      if (!firstVersion) {
-        errors.push({
-          file: fileName,
-          field: 'versions',
-          message: 'At least one version must be defined',
-          severity: 'error',
-        });
-      } else {
-        versionKey = firstVersion;
-        const versionData = serviceData.versions[firstVersion];
-        cspRules = versionData?.cspDirectives || versionData?.csp || {};
-
-        if (typeof cspRules !== 'object' || Array.isArray(cspRules)) {
-          errors.push({
-            file: fileName,
-            field: `versions.${versionKey}.csp`,
-            message: 'CSP rules must be an object',
-            severity: 'error',
-          });
-        }
       }
     } else {
       errors.push({
         file: fileName,
-        field: 'csp',
-        message: 'Either direct "csp" object or "versions" with CSP rules is required',
+        field: 'cspDirectives',
+        message: 'cspDirectives object is required',
         severity: 'error',
       });
     }
@@ -278,33 +256,22 @@ async function validateServiceFromJSONC(filePath: string): Promise<{
       return { service: null, errors };
     }
 
-    // Convert to ServiceDefinition format
-    const notes = serviceData.notes || serviceData.versions?.[versionKey]?.notes || [];
-    const normalizedNotes = Array.isArray(notes) ? notes : [notes].filter(Boolean);
-
+    // Convert to simplified ServiceDefinition format
     const service: ServiceDefinition = {
       id: serviceId,
-      name: serviceData.name,
-      category: categoryMap[serviceData.category] || ServiceCategory.OTHER,
-      description: serviceData.description,
-      website: serviceData.website,
-      officialDocs: serviceData.officialDocs || [],
-      versions: {
-        [versionKey]: {
-          csp: cspRules,
-          validFrom: serviceData.versions?.[versionKey]?.validFrom || '2024-01-01',
-          notes: normalizedNotes,
-          requiresDynamic:
-            serviceData.requiresDynamic ||
-            serviceData.versions?.[versionKey]?.requiresDynamic ||
-            false,
-          requiresNonce:
-            serviceData.requiresNonce || serviceData.versions?.[versionKey]?.requiresNonce || false,
-        },
-      },
-      defaultVersion: serviceData.defaultVersion || versionKey,
-      aliases: serviceData.aliases || [],
-      lastUpdated: serviceData.lastUpdated || new Date().toISOString(),
+      name: data.name as string,
+      category: categoryMap[data.category as string] || ServiceCategory.OTHER,
+      description: data.description as string,
+      website: data.website as string,
+      officialDocs: (data.officialDocs as string[]) || [],
+      cspDirectives: cspRules,
+      requiresDynamic: (data.requiresDynamic as boolean) || false,
+      requiresNonce: (data.requiresNonce as boolean) || false,
+      notes: data.notes as string,
+      aliases: (data.aliases as string[]) || [],
+      lastUpdated: (data.lastUpdated as string) || new Date().toISOString(),
+      verifiedAt: data.verifiedAt as string,
+      monitoring: data.monitoring,
     };
 
     return { service, errors };

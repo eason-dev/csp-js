@@ -4,7 +4,6 @@
 
 export interface CSPState {
   selectedServices: string[];
-  serviceVersions: Record<string, string>;
   useNonce: boolean;
   reportUri: string;
   customRules: Record<string, string>;
@@ -12,7 +11,6 @@ export interface CSPState {
 
 export const DEFAULT_STATE: CSPState = {
   selectedServices: [],
-  serviceVersions: {},
   useNonce: false,
   reportUri: '',
   customRules: {
@@ -32,23 +30,19 @@ export const DEFAULT_STATE: CSPState = {
  */
 export function encodeStateToURL(state: Partial<CSPState>): URLSearchParams {
   const params = new URLSearchParams();
-  
+
   if (state.selectedServices?.length) {
     params.set('services', state.selectedServices.join(','));
   }
-  
-  if (state.serviceVersions && Object.keys(state.serviceVersions).length > 0) {
-    params.set('versions', JSON.stringify(state.serviceVersions));
-  }
-  
+
   if (state.useNonce) {
     params.set('nonce', 'true');
   }
-  
+
   if (state.reportUri) {
     params.set('reportUri', state.reportUri);
   }
-  
+
   if (state.customRules) {
     const nonEmptyRules = Object.fromEntries(
       Object.entries(state.customRules).filter(([, value]) => value.trim())
@@ -57,7 +51,7 @@ export function encodeStateToURL(state: Partial<CSPState>): URLSearchParams {
       params.set('customRules', JSON.stringify(nonEmptyRules));
     }
   }
-  
+
   return params;
 }
 
@@ -66,31 +60,22 @@ export function encodeStateToURL(state: Partial<CSPState>): URLSearchParams {
  */
 export function decodeStateFromURL(searchParams: URLSearchParams): Partial<CSPState> {
   const state: Partial<CSPState> = {};
-  
+
   const services = searchParams.get('services');
   if (services) {
     state.selectedServices = services.split(',').filter(Boolean);
   }
-  
-  const versions = searchParams.get('versions');
-  if (versions) {
-    try {
-      state.serviceVersions = JSON.parse(versions);
-    } catch (e) {
-      console.warn('Failed to parse service versions from URL:', e);
-    }
-  }
-  
+
   const nonce = searchParams.get('nonce');
   if (nonce === 'true') {
     state.useNonce = true;
   }
-  
+
   const reportUri = searchParams.get('reportUri');
   if (reportUri) {
     state.reportUri = reportUri;
   }
-  
+
   const customRules = searchParams.get('customRules');
   if (customRules) {
     try {
@@ -99,7 +84,7 @@ export function decodeStateFromURL(searchParams: URLSearchParams): Partial<CSPSt
       console.warn('Failed to parse custom rules from URL:', e);
     }
   }
-  
+
   return state;
 }
 
@@ -127,4 +112,3 @@ export function loadStateFromSession(): Partial<CSPState> {
   }
   return {};
 }
-

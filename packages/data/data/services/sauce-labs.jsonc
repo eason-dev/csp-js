@@ -1,5 +1,4 @@
 {
-  // Sauce Labs Testing Platform
   "id": "sauce-labs",
   "name": "Sauce Labs",
   "category": "testing",
@@ -10,28 +9,24 @@
     "https://docs.saucelabs.com/secure-connections/sauce-connect/security-authentication/",
     "https://wiki.saucelabs.com/display/DOCS/Whitelisted+Domains+for+Sauce+Connect+Proxy"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2008-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://saucelabs.com",
-          "https://*.saucelabs.com"
-        ],
-        "connect-src": [
-          "https://api.saucelabs.com",
-          "https://ondemand.saucelabs.com",
-          "https://*.saucelabs.com",
-          "https://*.miso.saucelabs.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Sauce Labs verified from official documentation. Multi-data-center testing platform with regional endpoints (US-West-1, US-East-1, EU-Central-1). Requires Sauce Connect Proxy domains (*.miso.saucelabs.com) for tunnel connections. Recommends hostname whitelisting over IP addresses. Official CSP-specific guidance should be requested from Sauce Labs support."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["saucelabs"],
+  "aliases": [
+    "saucelabs"
+  ],
   "lastUpdated": "2025-06-29T00:00:00Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://saucelabs.com",
+      "https://*.saucelabs.com"
+    ],
+    "connect-src": [
+      "https://api.saucelabs.com",
+      "https://ondemand.saucelabs.com",
+      "https://*.saucelabs.com",
+      "https://*.miso.saucelabs.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Sauce Labs verified from official documentation. Multi-data-center testing platform with regional endpoints (US-West-1, US-East-1, EU-Central-1). Requires Sauce Connect Proxy domains (*.miso.saucelabs.com) for tunnel connections. Recommends hostname whitelisting over IP addresses. Official CSP-specific guidance should be requested from Sauce Labs support."
 }

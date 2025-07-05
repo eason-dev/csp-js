@@ -1,5 +1,4 @@
 {
-  // Fastly Content Delivery Network
   "id": "fastly",
   "name": "Fastly",
   "category": "cdn",
@@ -9,30 +8,26 @@
     "https://docs.fastly.com/",
     "https://docs.fastly.com/en/guides/content-security-policy"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2011-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://*.fastly.com"
-        ],
-        "connect-src": [
-          "https://*.fastly.com"
-        ],
-        "img-src": [
-          "https://*.fastly.com"
-        ],
-        "style-src": [
-          "https://*.fastly.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Fastly CDN services and edge computing platform. Replace *.fastly.com with your specific Fastly subdomain. Supports Client-Side Protection with CSP policy management."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["fastly-cdn"],
+  "aliases": [
+    "fastly-cdn"
+  ],
   "lastUpdated": "2025-06-29T00:00:00Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://*.fastly.com"
+    ],
+    "connect-src": [
+      "https://*.fastly.com"
+    ],
+    "img-src": [
+      "https://*.fastly.com"
+    ],
+    "style-src": [
+      "https://*.fastly.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Fastly CDN services and edge computing platform. Replace *.fastly.com with your specific Fastly subdomain. Supports Client-Side Protection with CSP policy management."
 }

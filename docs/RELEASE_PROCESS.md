@@ -97,10 +97,10 @@ Service definitions use **independent versioning**:
 ### Cross-Package Compatibility
 
 | @csp-kit/generator | @csp-kit/data | @csp-kit/cli | Compatibility |
-| ------ | -------- | ------- | ------------- |
-| 1.x.x  | 1.x.x    | 1.x.x   | ✅ Full       |
-| 1.x.x  | 2.x.x    | 1.x.x   | ⚠️ Limited    |
-| 2.x.x  | 1.x.x    | 1.x.x   | ❌ None       |
+| ------------------ | ------------- | ------------ | ------------- |
+| 1.x.x              | 1.x.x         | 1.x.x        | ✅ Full       |
+| 1.x.x              | 2.x.x         | 1.x.x        | ⚠️ Limited    |
+| 2.x.x              | 1.x.x         | 1.x.x        | ❌ None       |
 
 ## Release Schedule
 

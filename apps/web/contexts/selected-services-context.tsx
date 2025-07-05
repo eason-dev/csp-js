@@ -5,7 +5,6 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 export interface SelectedService {
   id: string;
   name: string;
-  version?: string;
 }
 
 interface SelectedServicesContextType {
@@ -15,7 +14,6 @@ interface SelectedServicesContextType {
   clearServices: () => void;
   isSelected: (serviceId: string) => boolean;
   getSelectedServiceIds: () => string[];
-  updateServiceVersion: (serviceId: string, version: string) => void;
 }
 
 const SelectedServicesContext = createContext<SelectedServicesContextType | undefined>(undefined);
@@ -80,16 +78,6 @@ export function SelectedServicesProvider({ children }: SelectedServicesProviderP
     return selectedServices.map(s => s.id);
   };
 
-  const updateServiceVersion = (serviceId: string, version: string) => {
-    setSelectedServices(prev => 
-      prev.map(service => 
-        service.id === serviceId 
-          ? { ...service, version }
-          : service
-      )
-    );
-  };
-
   const value: SelectedServicesContextType = {
     selectedServices,
     addService,
@@ -97,7 +85,6 @@ export function SelectedServicesProvider({ children }: SelectedServicesProviderP
     clearServices,
     isSelected,
     getSelectedServiceIds,
-    updateServiceVersion,
   };
 
   // Don't render children until we've loaded from localStorage
@@ -106,9 +93,7 @@ export function SelectedServicesProvider({ children }: SelectedServicesProviderP
   }
 
   return (
-    <SelectedServicesContext.Provider value={value}>
-      {children}
-    </SelectedServicesContext.Provider>
+    <SelectedServicesContext.Provider value={value}>{children}</SelectedServicesContext.Provider>
   );
 }
 

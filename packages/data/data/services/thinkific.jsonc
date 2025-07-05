@@ -8,29 +8,25 @@
     "https://developers.thinkific.com/api/api-documentation/",
     "https://support.thinkific.com/hc/en-us/articles/360030350314-Thinkific-API"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://thinkific.com",
-          "https://*.thinkific.com"
-        ],
-        "frame-src": [
-          "https://thinkific.com",
-          "https://*.thinkific.com"
-        ],
-        "connect-src": [
-          "https://api.thinkific.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Thinkific course platform configuration based on API and general documentation. Official CSP documentation not readily available. Course player requires frame embedding permissions. White-label solutions may use custom domains requiring additional CSP entries."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["thinkific-courses"],
+  "aliases": [
+    "thinkific-courses"
+  ],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-04T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://thinkific.com",
+      "https://*.thinkific.com"
+    ],
+    "frame-src": [
+      "https://thinkific.com",
+      "https://*.thinkific.com"
+    ],
+    "connect-src": [
+      "https://api.thinkific.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Thinkific course platform configuration based on API and general documentation. Official CSP documentation not readily available. Course player requires frame embedding permissions. White-label solutions may use custom domains requiring additional CSP entries."
 }

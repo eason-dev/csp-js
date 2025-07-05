@@ -8,28 +8,24 @@
     "https://developers.freshchat.com/web-sdk/",
     "https://support.freshchat.com/support/solutions/articles/238000-freshchat-javascript-sdk"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://wchat.freshchat.com"
-        ],
-        "connect-src": [
-          "https://wsv.freshchat.com",
-          "https://wchat.freshchat.com"
-        ],
-        "frame-src": [
-          "https://wchat.freshchat.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Freshchat widget for customer messaging"
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["fresh-chat"],
+  "aliases": [
+    "fresh-chat"
+  ],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://wchat.freshchat.com"
+    ],
+    "connect-src": [
+      "https://wsv.freshchat.com",
+      "https://wchat.freshchat.com"
+    ],
+    "frame-src": [
+      "https://wchat.freshchat.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Freshchat widget for customer messaging"
 }

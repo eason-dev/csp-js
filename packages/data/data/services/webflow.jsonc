@@ -1,5 +1,4 @@
 {
-  // Webflow - Visual web development platform
   "id": "webflow",
   "name": "Webflow",
   "category": "cms",
@@ -11,28 +10,24 @@
     "https://help.webflow.com/hc/en-us/articles/33961369170963-Custom-security-headers",
     "https://university.webflow.com/lesson/custom-code-embed"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2013-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://webflow.com",
-          "https://d3e54v103j8qbb.cloudfront.net"
-        ],
-        "connect-src": [
-          "https://api.webflow.com"
-        ],
-        "img-src": [
-          "https://uploads-ssl.webflow.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Webflow verified from official documentation. ENTERPRISE ONLY: Custom security headers available only on Enterprise plans ($15k+ annually). Paying customers request broader CSP access. Custom code blocked by default CSP. Community reports script-src 'none' blocking custom JavaScript. Cloudflare workaround available for non-Enterprise users."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["webflow-cms"],
+  "aliases": [
+    "webflow-cms"
+  ],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://webflow.com",
+      "https://d3e54v103j8qbb.cloudfront.net"
+    ],
+    "connect-src": [
+      "https://api.webflow.com"
+    ],
+    "img-src": [
+      "https://uploads-ssl.webflow.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Webflow verified from official documentation. ENTERPRISE ONLY: Custom security headers available only on Enterprise plans ($15k+ annually). Paying customers request broader CSP access. Custom code blocked by default CSP. Community reports script-src 'none' blocking custom JavaScript. Cloudflare workaround available for non-Enterprise users."
 }

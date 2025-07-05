@@ -8,31 +8,28 @@
     "https://docs.mapbox.com/mapbox-gl-js/api/",
     "https://docs.mapbox.com/help/troubleshooting/mapbox-browser-support/"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://api.mapbox.com"
-        ],
-        "style-src": [
-          "https://api.mapbox.com"
-        ],
-        "connect-src": [
-          "https://api.mapbox.com",
-          "https://events.mapbox.com"
-        ],
-        "img-src": [
-          "https://api.mapbox.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Mapbox GL JS for interactive vector maps"
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["mapbox-gl", "mapbox-js"],
+  "aliases": [
+    "mapbox-gl",
+    "mapbox-js"
+  ],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://api.mapbox.com"
+    ],
+    "style-src": [
+      "https://api.mapbox.com"
+    ],
+    "connect-src": [
+      "https://api.mapbox.com",
+      "https://events.mapbox.com"
+    ],
+    "img-src": [
+      "https://api.mapbox.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Mapbox GL JS for interactive vector maps"
 }

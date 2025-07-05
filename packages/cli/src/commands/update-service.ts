@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 
 interface UpdateServiceOptions {
-  version?: string;
   interactive?: boolean;
   file?: string;
 }

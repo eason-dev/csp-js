@@ -1,5 +1,4 @@
 {
-  // Ghost Inspector Automated Testing
   "id": "ghost-inspector",
   "name": "Ghost Inspector",
   "category": "testing",
@@ -10,25 +9,21 @@
     "https://docs.ghostinspector.com/test-settings/",
     "https://docs.ghostinspector.com/faq/"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2014-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://ghostinspector.com"
-        ],
-        "connect-src": [
-          "https://api.ghostinspector.com",
-          "https://ghostinspector.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Ghost Inspector verified from official documentation. Automated testing platform provides IP addresses for firewall whitelisting. Tests originate from specific documented IP ranges. User agent appends 'Ghost Inspector' for identification. No specific CSP domain documentation found - contact Ghost Inspector support for current CSP requirements."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["ghost-test"],
+  "aliases": [
+    "ghost-test"
+  ],
   "lastUpdated": "2025-06-29T00:00:00Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://ghostinspector.com"
+    ],
+    "connect-src": [
+      "https://api.ghostinspector.com",
+      "https://ghostinspector.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Ghost Inspector verified from official documentation. Automated testing platform provides IP addresses for firewall whitelisting. Tests originate from specific documented IP ranges. User agent appends 'Ghost Inspector' for identification. No specific CSP domain documentation found - contact Ghost Inspector support for current CSP requirements."
 }

@@ -1,5 +1,4 @@
 {
-  // Firebase Auth - Google's authentication service
   "id": "firebase-auth",
   "name": "Firebase Authentication",
   "category": "authentication",
@@ -9,26 +8,23 @@
     "https://firebase.google.com/docs/auth/web/start",
     "https://firebase.google.com/docs/hosting/content-security-policy"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2011-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://firebase.googleapis.com",
-          "https://www.gstatic.com"
-        ],
-        "connect-src": [
-          "https://identitytoolkit.googleapis.com",
-          "https://securetoken.googleapis.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Firebase Authentication service by Google. Social providers may require additional domains. FirebaseUI requires additional script sources. Custom domains need separate configuration."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["firebase-authentication", "google-firebase-auth"],
+  "aliases": [
+    "firebase-authentication",
+    "google-firebase-auth"
+  ],
   "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://firebase.googleapis.com",
+      "https://www.gstatic.com"
+    ],
+    "connect-src": [
+      "https://identitytoolkit.googleapis.com",
+      "https://securetoken.googleapis.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Firebase Authentication service by Google. Social providers may require additional domains. FirebaseUI requires additional script sources. Custom domains need separate configuration."
 }

@@ -48,6 +48,9 @@ const categoryMap: Record<string, ServiceCategory> = {
   search: ServiceCategory.OTHER,
   ab_testing: ServiceCategory.OTHER,
   website_builder: ServiceCategory.OTHER,
+  marketing: ServiceCategory.OTHER,
+  documentation: ServiceCategory.OTHER,
+  productivity: ServiceCategory.OTHER,
 };
 
 // Cache for loaded services
@@ -70,29 +73,13 @@ async function loadServiceFromJSONC(filePath: string): Promise<ServiceDefinition
       return null;
     }
 
-    // Handle different JSONC formats
-    let cspRules: Record<string, unknown> = {};
-    let versionKey = '1.0.0';
-
-    if (serviceData.csp) {
-      // Format 1: Direct csp object (youtube, google-analytics)
-      cspRules = serviceData.csp;
-    } else if (serviceData.versions) {
-      // Format 2: versions object (stripe, facebook)
-      const firstVersion = Object.keys(serviceData.versions)[0];
-      if (!firstVersion) {
-        console.error(`Skipping service ${filePath}: No versions found`);
-        return null;
-      }
-      versionKey = firstVersion;
-      const versionData = serviceData.versions[firstVersion];
-      cspRules = versionData.cspDirectives || versionData.csp || {};
+    // Validate required fields for simplified format
+    if (!serviceData.cspDirectives) {
+      console.error(`Skipping service ${filePath}: No cspDirectives found`);
+      return null;
     }
 
-    // Convert JSONC format to ServiceDefinition format
-    const notes = serviceData.notes || serviceData.versions?.[versionKey]?.notes || [];
-    const normalizedNotes = Array.isArray(notes) ? notes : [notes].filter(Boolean);
-
+    // Convert JSONC to simplified ServiceDefinition format
     const service: ServiceDefinition = {
       id: serviceId,
       name: serviceData.name,
@@ -100,22 +87,14 @@ async function loadServiceFromJSONC(filePath: string): Promise<ServiceDefinition
       description: serviceData.description,
       website: serviceData.website,
       officialDocs: serviceData.officialDocs || [],
-      versions: {
-        [versionKey]: {
-          csp: cspRules,
-          validFrom: serviceData.versions?.[versionKey]?.validFrom || '2024-01-01',
-          notes: normalizedNotes,
-          requiresDynamic:
-            serviceData.requiresDynamic ||
-            serviceData.versions?.[versionKey]?.requiresDynamic ||
-            false,
-          requiresNonce:
-            serviceData.requiresNonce || serviceData.versions?.[versionKey]?.requiresNonce || false,
-        },
-      },
-      defaultVersion: serviceData.defaultVersion || versionKey,
+      cspDirectives: serviceData.cspDirectives,
+      requiresDynamic: serviceData.requiresDynamic || false,
+      requiresNonce: serviceData.requiresNonce || false,
+      notes: serviceData.notes,
       aliases: serviceData.aliases || [],
       lastUpdated: serviceData.lastUpdated || new Date().toISOString(),
+      verifiedAt: serviceData.verifiedAt,
+      monitoring: serviceData.monitoring,
     };
 
     return service;
@@ -159,7 +138,7 @@ async function loadAllServices(): Promise<Record<string, ServiceDefinition>> {
  * This is dynamically loaded from the data/services directory
  */
 export const services = new Proxy({} as Record<string, ServiceDefinition>, {
-  get(target, prop) {
+  get(_target, prop) {
     if (typeof prop === 'string') {
       // Lazy load services if not already loaded
       if (!_servicesCache) {
@@ -177,13 +156,13 @@ export const services = new Proxy({} as Record<string, ServiceDefinition>, {
     }
     return Object.keys(_servicesCache);
   },
-  has(target, prop) {
+  has(_target, prop) {
     if (!_servicesCache) {
       return false;
     }
     return prop in _servicesCache;
   },
-  getOwnPropertyDescriptor(target, prop) {
+  getOwnPropertyDescriptor(_target, prop) {
     if (!_servicesCache) {
       return undefined;
     }
@@ -301,139 +280,19 @@ export async function searchServices(query: string): Promise<ServiceDefinition[]
   );
 }
 
-/**
- * Parse service identifier (serviceId@version)
- */
-export function parseServiceIdentifier(identifier: string): { id: string; version?: string } {
-  const parts = identifier.split('@');
-  return {
-    id: parts[0] || '',
-    version: parts[1],
-  };
-}
+// parseServiceIdentifier function removed - version support eliminated
 
-/**
- * Get service with specific version (sync version - requires services to be preloaded)
- */
-export function getServiceWithVersion(
-  identifier: string,
-  version?: string
-): { service: ServiceDefinition; version: string } | undefined {
-  if (!_servicesCache) {
-    throw new Error('Services not loaded. Call loadServices() first or use getServiceWithVersionAsync().');
-  }
+// getServiceWithVersion function removed - version support eliminated
 
-  const { id, version: parsedVersion } = parseServiceIdentifier(identifier);
-  const targetVersion = version || parsedVersion;
+// getServiceWithVersionAsync function removed - version support eliminated
 
-  const service = getService(id);
-  if (!service) {
-    return undefined;
-  }
+// getServiceVersions function removed - version support eliminated
 
-  const serviceVersion = targetVersion || service.defaultVersion;
+// isServiceVersionDeprecated function removed - version support eliminated
 
-  if (!service.versions[serviceVersion]) {
-    return undefined;
-  }
+// getDeprecationWarning function removed - version support eliminated
 
-  return {
-    service,
-    version: serviceVersion,
-  };
-}
-
-/**
- * Get service with specific version (async version)
- */
-export async function getServiceWithVersionAsync(
-  identifier: string,
-  version?: string
-): Promise<{ service: ServiceDefinition; version: string } | undefined> {
-  const { id, version: parsedVersion } = parseServiceIdentifier(identifier);
-  const targetVersion = version || parsedVersion;
-
-  const service = await getServiceAsync(id);
-  if (!service) {
-    return undefined;
-  }
-
-  const serviceVersion = targetVersion || service.defaultVersion;
-
-  if (!service.versions[serviceVersion]) {
-    return undefined;
-  }
-
-  return {
-    service,
-    version: serviceVersion,
-  };
-}
-
-/**
- * Get all available versions for a service (async version)
- */
-export async function getServiceVersions(identifier: string): Promise<string[]> {
-  const service = await getServiceAsync(identifier);
-  return service ? Object.keys(service.versions) : [];
-}
-
-/**
- * Check if a service version is deprecated (async version)
- */
-export async function isServiceVersionDeprecated(
-  identifier: string,
-  version: string
-): Promise<boolean> {
-  const service = await getServiceAsync(identifier);
-  if (!service || !service.versions[version]) {
-    return false;
-  }
-
-  return !!service.versions[version].deprecatedFrom;
-}
-
-/**
- * Get deprecation warning for a service version (sync version - requires services to be preloaded)
- */
-export function getDeprecationWarning(
-  identifier: string,
-  version: string
-): string | undefined {
-  if (!_servicesCache) {
-    throw new Error('Services not loaded. Call loadServices() first or use getDeprecationWarningAsync().');
-  }
-
-  const service = getService(identifier);
-  if (!service || !service.versions[version]) {
-    return undefined;
-  }
-
-  const versionData = service.versions[version];
-  if (versionData.deprecatedFrom) {
-    return `This version has been deprecated since ${versionData.deprecatedFrom}`;
-  }
-  return undefined;
-}
-
-/**
- * Get deprecation warning for a service version (async version)
- */
-export async function getDeprecationWarningAsync(
-  identifier: string,
-  version: string
-): Promise<string | undefined> {
-  const service = await getServiceAsync(identifier);
-  if (!service || !service.versions[version]) {
-    return undefined;
-  }
-
-  const versionData = service.versions[version];
-  if (versionData.deprecatedFrom) {
-    return `This version has been deprecated since ${versionData.deprecatedFrom}`;
-  }
-  return undefined;
-}
+// getDeprecationWarningAsync function removed - version support eliminated
 
 /**
  * Clear the services cache (useful for testing or reloading)

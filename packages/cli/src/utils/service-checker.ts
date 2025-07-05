@@ -9,36 +9,21 @@ import { getService } from '@csp-kit/data';
  */
 export async function checkServiceCSP(
   serviceId: string,
-  options: { url?: string; version?: string } = {}
+  options: { url?: string } = {}
 ): Promise<ServiceCheckResult> {
   const service = getService(serviceId);
 
   if (!service) {
     return {
       serviceId,
-      version: options.version || 'unknown',
       success: false,
       errors: [`Service '${serviceId}' not found`],
       warnings: [],
     };
   }
 
-  const version = options.version || service.defaultVersion;
-  const serviceVersion = service.versions[version];
-
-  if (!serviceVersion) {
-    return {
-      serviceId,
-      version,
-      success: false,
-      errors: [`Version '${version}' not found for service '${serviceId}'`],
-      warnings: [],
-    };
-  }
-
   const result: ServiceCheckResult = {
     serviceId,
-    version,
     success: true,
     errors: [],
     warnings: [],
@@ -149,7 +134,7 @@ export async function checkServiceCSP(
 
     // Compare with expected CSP
     const expectedCSP = Object.fromEntries(
-      Object.entries(serviceVersion.csp).filter(([, value]) => value !== undefined)
+      Object.entries(service.cspDirectives).filter(([, value]) => value !== undefined)
     ) as Record<string, string[]>;
     result.comparisonResult = compareCSP(expectedCSP, result.detectedCSP);
 

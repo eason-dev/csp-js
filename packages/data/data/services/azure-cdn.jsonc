@@ -1,5 +1,4 @@
 {
-  // Microsoft Azure CDN
   "id": "azure-cdn",
   "name": "Azure CDN",
   "category": "cdn",
@@ -9,30 +8,26 @@
     "https://learn.microsoft.com/en-us/azure/frontdoor/front-door-security-headers",
     "https://learn.microsoft.com/en-us/azure/api-management/"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2014-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://*.azureedge.net"
-        ],
-        "connect-src": [
-          "https://*.azureedge.net"
-        ],
-        "img-src": [
-          "https://*.azureedge.net"
-        ],
-        "style-src": [
-          "https://*.azureedge.net"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Azure CDN verified from official Microsoft documentation. CSP headers configured via Azure Front Door Rules Engine. API Management has CSP and CORS configuration support. SharePoint Framework with Azure CDN deployment guidance available. Power Pages provides CSP management documentation. Rules Engine allows CSP header configuration for trusted script sources."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["azure-content-delivery"],
+  "aliases": [
+    "azure-content-delivery"
+  ],
   "lastUpdated": "2025-06-29T00:00:00Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://*.azureedge.net"
+    ],
+    "connect-src": [
+      "https://*.azureedge.net"
+    ],
+    "img-src": [
+      "https://*.azureedge.net"
+    ],
+    "style-src": [
+      "https://*.azureedge.net"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Azure CDN verified from official Microsoft documentation. CSP headers configured via Azure Front Door Rules Engine. API Management has CSP and CORS configuration support. SharePoint Framework with Azure CDN deployment guidance available. Power Pages provides CSP management documentation. Rules Engine allows CSP header configuration for trusted script sources."
 }

@@ -9,37 +9,34 @@
     "https://experienceleague.adobe.com/en/docs/id-service/using/reference/csp",
     "https://experienceleague.adobe.com/en/docs/experience-platform/tags/client-side/content-security-policy"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://assets.adobedtm.com",
-          "https://*.adobe.com"
-        ],
-        "connect-src": [
-          "https://*.2o7.net",
-          "https://*.omtrdc.net",
-          "https://*.demdex.net",
-          "https://*.adobe.com",
-          "https://*.omniture.com",
-          "https://*.adobedc.net"
-        ],
-        "img-src": [
-          "https://*.2o7.net",
-          "https://*.omtrdc.net",
-          "https://*.demdex.net",
-          "https://*.adobe.com",
-          "https://*.omniture.com"
-        ]
-      },
-      "requiresNonce": true,
-      "requiresDynamic": false,
-      "notes": "Adobe Analytics verified against official Experience League CSP documentation. Requires *.adobe.com for Activity Map, assets.adobedtm.com for tag management, *.demdex.net for Experience Cloud Identity Service, and legacy *.omniture.com domains. Adobe recommends nonce-based CSP over 'unsafe-inline'. *.adobedc.net required for Experience Platform integration."
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["adobe-launch", "adobe-tags"],
+  "aliases": [
+    "adobe-launch",
+    "adobe-tags"
+  ],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-04T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://assets.adobedtm.com",
+      "https://*.adobe.com"
+    ],
+    "connect-src": [
+      "https://*.2o7.net",
+      "https://*.omtrdc.net",
+      "https://*.demdex.net",
+      "https://*.adobe.com",
+      "https://*.omniture.com",
+      "https://*.adobedc.net"
+    ],
+    "img-src": [
+      "https://*.2o7.net",
+      "https://*.omtrdc.net",
+      "https://*.demdex.net",
+      "https://*.adobe.com",
+      "https://*.omniture.com"
+    ]
+  },
+  "requiresNonce": true,
+  "requiresDynamic": false,
+  "notes": "Adobe Analytics verified against official Experience League CSP documentation. Requires *.adobe.com for Activity Map, assets.adobedtm.com for tag management, *.demdex.net for Experience Cloud Identity Service, and legacy *.omniture.com domains. Adobe recommends nonce-based CSP over 'unsafe-inline'. *.adobedc.net required for Experience Platform integration."
 }

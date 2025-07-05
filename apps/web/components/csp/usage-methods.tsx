@@ -5,7 +5,7 @@ import { Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -29,40 +29,40 @@ const USAGE_METHODS = [
     title: '@csp-kit/generator',
     description: 'NPM package for programmatic use',
     language: 'javascript',
-    default: true
+    default: true,
   },
   {
     id: 'http-header',
     title: 'HTTP Header',
     description: 'Configure in your web server',
-    language: 'text'
+    language: 'text',
   },
   {
     id: 'meta-tag',
     title: 'HTML Meta Tag',
     description: 'Add directly to your HTML',
-    language: 'html'
+    language: 'html',
   },
   {
     id: 'nginx',
     title: 'Nginx Configuration',
     description: 'Server block configuration',
-    language: 'nginx'
+    language: 'nginx',
   },
   {
     id: 'apache',
     title: 'Apache Configuration',
     description: '.htaccess or virtual host',
-    language: 'apache'
-  }
+    language: 'apache',
+  },
 ];
 
-export function UsageMethods({ 
-  cspHeader, 
-  serviceIds = [], 
-  useNonce = false, 
-  reportUri = '', 
-  customRules = {} 
+export function UsageMethods({
+  cspHeader,
+  serviceIds = [],
+  useNonce = false,
+  reportUri = '',
+  customRules = {},
 }: UsageMethodsProps) {
   const [selectedUsageMethod, setSelectedUsageMethod] = useState('npm-package');
   const [copied, setCopied] = useState(false);
@@ -88,26 +88,34 @@ import { generateCSP } from '@csp-kit/generator';
 
 const result = await generateCSP({
   services: [${serviceIds.map(s => `'${s}'`).join(', ')}],
-  nonce: ${useNonce},${Object.keys(customRules).length > 0 ? '\n  customRules: {\n' + Object.entries(customRules).map(([k,v]) => `    '${k}': [${v.map(s => `'${s}'`).join(', ')}]`).join(',\n') + '\n  },' : ''}${reportUri ? `\n  reportUri: '${reportUri}',` : ''}
+  nonce: ${useNonce},${
+    Object.keys(customRules).length > 0
+      ? '\n  customRules: {\n' +
+        Object.entries(customRules)
+          .map(([k, v]) => `    '${k}': [${v.map(s => `'${s}'`).join(', ')}]`)
+          .join(',\n') +
+        '\n  },'
+      : ''
+  }${reportUri ? `\n  reportUri: '${reportUri}',` : ''}
 });
 
 console.log(result.header);
 // Output: "${cspHeader}"`;
-      
+
       case 'http-header':
         return `Content-Security-Policy: ${cspHeader}`;
-      
+
       case 'meta-tag':
         return `<meta http-equiv="Content-Security-Policy" content="${cspHeader}">`;
-      
+
       case 'nginx':
         return `# Add to your server block
 add_header Content-Security-Policy "${cspHeader}" always;`;
-      
+
       case 'apache':
         return `# Add to .htaccess or virtual host
 Header always set Content-Security-Policy "${cspHeader}"`;
-      
+
       default:
         return cspHeader;
     }
@@ -116,18 +124,22 @@ Header always set Content-Security-Policy "${cspHeader}"`;
   return (
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-2 flex-1 min-w-0">
-          <Label htmlFor="usage-method" className="text-sm whitespace-nowrap mt-2">Usage:</Label>
+        <div className="flex min-w-0 flex-1 items-start gap-2">
+          <Label htmlFor="usage-method" className="mt-2 whitespace-nowrap text-sm">
+            Usage:
+          </Label>
           <Select value={selectedUsageMethod} onValueChange={setSelectedUsageMethod}>
-            <SelectTrigger className="w-full h-auto min-h-[2.5rem] py-2 [&>span]:line-clamp-none [&>span]:whitespace-normal">
+            <SelectTrigger className="h-auto min-h-[2.5rem] w-full py-2 [&>span]:line-clamp-none [&>span]:whitespace-normal">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="max-w-none">
               {USAGE_METHODS.map(method => (
                 <SelectItem key={method.id} value={method.id}>
-                  <div className="text-left max-w-none">
+                  <div className="max-w-none text-left">
                     <div className="font-medium">{method.title}</div>
-                    <div className="text-xs text-muted-foreground whitespace-normal">{method.description}</div>
+                    <div className="text-muted-foreground whitespace-normal text-xs">
+                      {method.description}
+                    </div>
                   </div>
                 </SelectItem>
               ))}
@@ -138,14 +150,14 @@ Header always set Content-Security-Policy "${cspHeader}"`;
           variant="outline"
           size="sm"
           onClick={() => copyToClipboard(getUsageContent())}
-          className="flex items-center gap-2 shrink-0"
+          className="flex shrink-0 items-center gap-2"
         >
           {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           {copied ? 'Copied' : 'Copy'}
         </Button>
       </div>
-      
-      <div className="rounded-lg overflow-hidden">
+
+      <div className="overflow-hidden rounded-lg">
         <SyntaxHighlighter
           language={USAGE_METHODS.find(m => m.id === selectedUsageMethod)?.language || 'text'}
           style={oneDark}
@@ -165,7 +177,7 @@ Header always set Content-Security-Policy "${cspHeader}"`;
               whiteSpace: 'pre-wrap',
               wordBreak: 'break-word',
               overflowWrap: 'break-word',
-            }
+            },
           }}
           preTagProps={{
             style: {
@@ -173,7 +185,7 @@ Header always set Content-Security-Policy "${cspHeader}"`;
               wordBreak: 'break-word',
               overflowWrap: 'break-word',
               overflowX: 'visible',
-            }
+            },
           }}
         >
           {getUsageContent()}

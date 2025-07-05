@@ -8,25 +8,21 @@
     "https://docs.sentry.io/platforms/javascript/install/",
     "https://docs.sentry.io/product/security/content-security-policy/"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://browser.sentry-cdn.com"
-        ],
-        "connect-src": [
-          "https://sentry.io",
-          "https://o*.ingest.sentry.io"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Sentry JavaScript SDK for error monitoring"
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["sentry-js"],
+  "aliases": [
+    "sentry-js"
+  ],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://browser.sentry-cdn.com"
+    ],
+    "connect-src": [
+      "https://sentry.io",
+      "https://o*.ingest.sentry.io"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Sentry JavaScript SDK for error monitoring"
 }

@@ -8,28 +8,24 @@
     "https://mailchimp.com/developer/marketing/guides/create-signup-form/",
     "https://mailchimp.com/help/add-a-signup-form-to-your-website/"
   ],
-  "versions": {
-    "current": {
-      "validFrom": "2020-01-01",
-      "cspDirectives": {
-        "script-src": [
-          "https://chimpstatic.com"
-        ],
-        "connect-src": [
-          "https://us1.api.mailchimp.com",
-          "https://chimpstatic.com"
-        ],
-        "style-src": [
-          "https://chimpstatic.com"
-        ]
-      },
-      "requiresNonce": false,
-      "requiresDynamic": false,
-      "notes": "Mailchimp signup forms and embeds"
-    }
-  },
-  "defaultVersion": "current",
-  "aliases": ["mailchimp-forms"],
+  "aliases": [
+    "mailchimp-forms"
+  ],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-03T00:00:00.000Z",
+  "cspDirectives": {
+    "script-src": [
+      "https://chimpstatic.com"
+    ],
+    "connect-src": [
+      "https://us1.api.mailchimp.com",
+      "https://chimpstatic.com"
+    ],
+    "style-src": [
+      "https://chimpstatic.com"
+    ]
+  },
+  "requiresNonce": false,
+  "requiresDynamic": false,
+  "notes": "Mailchimp signup forms and embeds"
 }

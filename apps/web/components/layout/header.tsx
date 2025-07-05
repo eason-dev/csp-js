@@ -30,40 +30,40 @@ export function Header() {
   };
 
   return (
-    <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="bg-background/80 sticky top-0 z-50 border-b backdrop-blur-sm">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-            <Shield className="h-8 w-8 text-primary" />
+          <Link href="/" className="flex items-center gap-3 transition-opacity hover:opacity-80">
+            <Shield className="text-primary h-8 w-8" />
             <h1 className="text-2xl font-bold">CSP Kit</h1>
           </Link>
-          
-          <nav className="hidden md:flex items-center gap-6">
-            <Link 
+
+          <nav className="hidden items-center gap-6 md:flex">
+            <Link
               href="/"
               className={cn(
-                "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
+                'hover:text-primary flex items-center gap-2 text-sm font-medium transition-colors',
                 isActivePage('/') ? 'text-primary' : 'text-muted-foreground'
               )}
             >
               <Zap className="h-4 w-4" />
               Generator
             </Link>
-            <Link 
+            <Link
               href="/services"
               className={cn(
-                "flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary",
+                'hover:text-primary flex items-center gap-2 text-sm font-medium transition-colors',
                 isActivePage('/services') ? 'text-primary' : 'text-muted-foreground'
               )}
             >
               <Package className="h-4 w-4" />
               All Services
             </Link>
-            <Link 
-              href="/docs" 
-              target="_blank" 
+            <Link
+              href="/docs"
+              target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+              className="text-muted-foreground hover:text-primary flex items-center gap-2 text-sm font-medium transition-colors"
             >
               <BookOpen className="h-4 w-4" />
               Docs
@@ -71,8 +71,8 @@ export function Header() {
             <ServiceCart />
             <ThemeToggle />
           </nav>
-          
-          <div className="md:hidden flex items-center gap-2">
+
+          <div className="flex items-center gap-2 md:hidden">
             <ServiceCart />
             <ThemeToggle />
             <Button
@@ -86,40 +86,45 @@ export function Header() {
           </div>
         </div>
       </div>
-      
+
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t bg-background/95 backdrop-blur-sm">
-          <div className="container mx-auto px-4 py-4 space-y-2">
+        <div className="bg-background/95 border-t backdrop-blur-sm md:hidden">
+          <div className="container mx-auto space-y-2 px-4 py-4">
             <Link href="/" onClick={() => setMobileMenuOpen(false)}>
-              <Button 
-                variant={isActivePage('/') ? 'default' : 'ghost'} 
+              <Button
+                variant={isActivePage('/') ? 'default' : 'ghost'}
                 size="sm"
                 className={cn(
                   'w-full justify-start',
                   isActivePage('/') && 'bg-primary text-primary-foreground'
                 )}
               >
-                <Zap className="h-4 w-4 mr-2" />
+                <Zap className="mr-2 h-4 w-4" />
                 Generator
               </Button>
             </Link>
             <Link href="/services" onClick={() => setMobileMenuOpen(false)}>
-              <Button 
-                variant={isActivePage('/services') ? 'default' : 'ghost'} 
+              <Button
+                variant={isActivePage('/services') ? 'default' : 'ghost'}
                 size="sm"
                 className={cn(
                   'w-full justify-start',
                   isActivePage('/services') && 'bg-primary text-primary-foreground'
                 )}
               >
-                <Package className="h-4 w-4 mr-2" />
+                <Package className="mr-2 h-4 w-4" />
                 All Services
               </Button>
             </Link>
-            <Link href="/docs" target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
+            <Link
+              href="/docs"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMobileMenuOpen(false)}
+            >
               <Button variant="ghost" size="sm" className="w-full justify-start">
-                <BookOpen className="h-4 w-4 mr-2" />
+                <BookOpen className="mr-2 h-4 w-4" />
                 Docs
               </Button>
             </Link>

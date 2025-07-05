@@ -118,7 +118,7 @@ npm install -g @csp-kit/cli
 csp-cli add --interactive
 
 # Update existing service
-csp-cli update service-id --version 2.0.0
+csp-cli update service-id
 ```
 
 ### Manual Process
@@ -141,21 +141,16 @@ csp-cli update service-id --version 2.0.0
      "officialDocs": [
        "https://docs.yourservice.com/csp"
      ],
-     "versions": {
-       "1.0.0": {
-         "csp": {
-           "script-src": ["https://cdn.yourservice.com"],
-           "connect-src": ["https://api.yourservice.com"]
-         },
-         "validFrom": "2024-01-01",
-         "notes": ["Initial implementation"],
-         "requiresDynamic": false,
-         "requiresNonce": false
-       }
+     "cspDirectives": {
+       "script-src": ["https://cdn.yourservice.com"],
+       "connect-src": ["https://api.yourservice.com"]
      },
-     "defaultVersion": "1.0.0",
+     "requiresDynamic": false,
+     "requiresNonce": false,
+     "notes": "Initial implementation with standard CSP directives",
      "aliases": ["yourservice", "your-svc"],
      "lastUpdated": "2024-06-29T00:00:00.000Z",
+     "verifiedAt": "2025-07-05T00:00:00.000Z",
      "monitoring": {
        "testUrls": ["https://yourservice.com/demo"],
        "checkInterval": "weekly",
@@ -178,12 +173,12 @@ csp-cli update service-id --version 2.0.0
 
 ## Service Definition Guidelines
 
-### Version Management
+### Service Management
 
-- **Semantic Versioning**: Use semver for library-specific versions (1.0.0, 1.1.0)
-- **Date-based Versioning**: Use date format for service updates (2024-01-15)
-- **Default Version**: Always specify a defaultVersion
-- **Breaking Changes**: Mark breaking changes with `breaking: true`
+- **Single Version**: Each service maintains one current CSP configuration
+- **Verification**: Include `verifiedAt` timestamp when CSP rules are verified
+- **Updates**: Update service when CSP requirements change
+- **Documentation**: Explain CSP requirements in the `notes` field
 
 ### CSP Directives
 
@@ -272,7 +267,7 @@ Use our issue templates for:
 ### Versioning Strategy
 
 - **Packages**: Follow semantic versioning
-- **Services**: Use service-specific versioning
+- **Services**: Maintain single current configuration per service
 - **Breaking Changes**: Major version bump for API changes
 
 ### Release Checklist

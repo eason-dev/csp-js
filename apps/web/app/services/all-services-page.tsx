@@ -39,7 +39,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
   const router = useRouter();
   const { selectedServices, addService, removeService, isSelected } = useSelectedServices();
   const scrollPositionRef = useRef<number>(0);
-  
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -95,7 +95,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
     if (searchQuery.trim()) {
       const results = fuse.search(searchQuery, { limit: 100 });
       const searchResults = results.map(result => result.item);
-      
+
       if (selectedCategory !== 'all') {
         filtered = searchResults.filter(service => service.category === selectedCategory);
       } else {
@@ -110,20 +110,22 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
     return category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  const handleToggleService = useCallback((service: ServiceDefinition) => {
-    // Save current scroll position
-    scrollPositionRef.current = window.scrollY;
-    
-    if (isSelected(service.id)) {
-      removeService(service.id);
-    } else {
-      addService({
-        id: service.id,
-        name: service.name,
-        version: service.defaultVersion,
-      });
-    }
-  }, [isSelected, removeService, addService]);
+  const handleToggleService = useCallback(
+    (service: ServiceDefinition) => {
+      // Save current scroll position
+      scrollPositionRef.current = window.scrollY;
+
+      if (isSelected(service.id)) {
+        removeService(service.id);
+      } else {
+        addService({
+          id: service.id,
+          name: service.name,
+        });
+      }
+    },
+    [isSelected, removeService, addService]
+  );
 
   // Restore scroll position after selectedServices changes
   useEffect(() => {
@@ -138,7 +140,6 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
 
   const ServiceCard: React.FC<{ service: ServiceDefinition }> = ({ service }) => {
     const categoryDisplayName = formatCategoryName(service.category);
-    const versionCount = Object.keys(service.versions).length;
     const serviceSelected = isSelected(service.id);
 
     const handleCardClick = () => {
@@ -147,39 +148,30 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
 
     if (viewMode === 'list') {
       return (
-        <div 
-          className={`relative border-b p-4 hover:bg-muted/50 cursor-pointer transition-all ${
-            serviceSelected 
-              ? 'border-l-4 border-l-primary bg-primary/5' 
-              : 'border-border'
+        <div
+          className={`hover:bg-muted/50 relative cursor-pointer border-b p-4 transition-all ${
+            serviceSelected ? 'border-l-primary bg-primary/5 border-l-4' : 'border-border'
           }`}
           onClick={handleCardClick}
         >
-          <ChevronRight className="absolute top-4 right-4 h-4 w-4 text-muted-foreground" />
-          <div className="flex-1 min-w-0 pr-8">
-            <div className="flex items-center gap-3 mb-2">
-              <h3 className="font-medium text-lg truncate">{service.name}</h3>
-              <Badge variant="outline" className="text-xs shrink-0">
+          <ChevronRight className="text-muted-foreground absolute right-4 top-4 h-4 w-4" />
+          <div className="min-w-0 flex-1 pr-8">
+            <div className="mb-2 flex items-center gap-3">
+              <h3 className="truncate text-lg font-medium">{service.name}</h3>
+              <Badge variant="outline" className="shrink-0 text-xs">
                 {categoryDisplayName}
               </Badge>
-              {versionCount > 1 && (
-                <span className="text-xs text-muted-foreground shrink-0">
-                  {versionCount} versions
-                </span>
-              )}
             </div>
-            <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-              {service.description}
-            </p>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <p className="text-muted-foreground mb-2 line-clamp-2 text-sm">{service.description}</p>
+            <div className="text-muted-foreground flex items-center gap-2 text-xs">
               <span>Updated {new Date(service.lastUpdated).toLocaleDateString()}</span>
             </div>
           </div>
           <div className="absolute bottom-4 right-4">
             <Button
-              variant={serviceSelected ? "outline" : "default"}
+              variant={serviceSelected ? 'outline' : 'default'}
               size="sm"
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 handleToggleService(service);
               }}
@@ -203,60 +195,55 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
     }
 
     return (
-      <Card 
-        className={`relative group hover:shadow-md transition-all cursor-pointer flex flex-col h-full ${
-          serviceSelected 
-            ? 'border-2 border-primary shadow-sm' 
-            : 'border'
+      <Card
+        className={`group relative flex h-full cursor-pointer flex-col transition-all hover:shadow-md ${
+          serviceSelected ? 'border-primary border-2 shadow-sm' : 'border'
         }`}
         onClick={handleCardClick}
       >
-        <ChevronRight className="absolute top-6 right-6 h-4 w-4 text-muted-foreground" />
+        <ChevronRight className="text-muted-foreground absolute right-6 top-6 h-4 w-4" />
         <CardHeader className="pb-3 pr-12">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
-              <CardTitle className="text-lg mb-1 truncate">{service.name}</CardTitle>
-              <div className="flex items-center gap-2 mb-2">
+              <CardTitle className="mb-1 truncate text-lg">{service.name}</CardTitle>
+              <div className="mb-2 flex items-center gap-2">
                 <Badge variant="outline" className="text-xs">
                   {categoryDisplayName}
                 </Badge>
-                {versionCount > 1 && (
-                  <span className="text-xs text-muted-foreground">
-                    {versionCount} versions
-                  </span>
-                )}
               </div>
             </div>
           </div>
-          <CardDescription className="line-clamp-2 flex-grow">{service.description}</CardDescription>
+          <CardDescription className="line-clamp-2 flex-grow">
+            {service.description}
+          </CardDescription>
         </CardHeader>
-        <CardContent className="pt-0 mt-auto">
+        <CardContent className="mt-auto pt-0">
           <div className="flex items-center justify-between gap-2">
-            <div className="text-xs text-muted-foreground">
+            <div className="text-muted-foreground text-xs">
               Updated {new Date(service.lastUpdated).toLocaleDateString()}
             </div>
             <div className="flex items-center gap-2">
               <Button
-              variant={serviceSelected ? "outline" : "default"}
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleToggleService(service);
-              }}
-              className="flex items-center gap-1"
-            >
-              {serviceSelected ? (
-                <>
-                  <Minus className="h-3 w-3" />
-                  Remove
-                </>
-              ) : (
-                <>
-                  <Plus className="h-3 w-3" />
-                  Add
-                </>
-              )}
-            </Button>
+                variant={serviceSelected ? 'outline' : 'default'}
+                size="sm"
+                onClick={e => {
+                  e.stopPropagation();
+                  handleToggleService(service);
+                }}
+                className="flex items-center gap-1"
+              >
+                {serviceSelected ? (
+                  <>
+                    <Minus className="h-3 w-3" />
+                    Remove
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-3 w-3" />
+                    Add
+                  </>
+                )}
+              </Button>
             </div>
           </div>
         </CardContent>
@@ -266,185 +253,183 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
 
   return (
     <div className="container mx-auto px-4 py-8">
-        {/* Page Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4">All Supported Services</h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Browse our complete database of {Object.keys(services).length} web services and libraries with
-            pre-configured CSP rules. Find the perfect security configuration for your project.
-          </p>
-        </div>
+      {/* Page Header */}
+      <div className="mb-8 text-center">
+        <h1 className="mb-4 text-4xl font-bold">All Supported Services</h1>
+        <p className="text-muted-foreground mx-auto max-w-3xl text-xl">
+          Browse our complete database of {Object.keys(services).length} web services and libraries
+          with pre-configured CSP rules. Find the perfect security configuration for your project.
+        </p>
+      </div>
 
-        {/* Controls and Selected Services - Sticky Section */}
-        <div className="mb-8 space-y-4 sticky top-16 bg-background/95 backdrop-blur-sm z-40 py-4 -mt-4">
-          {/* Selected Services Section - Compact */}
-          {selectedServices.length > 0 && (
-            <Card className="border-primary/20 bg-primary/5">
-              <CardContent className="py-3">
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <span className="text-sm font-medium whitespace-nowrap">
-                      Selected ({selectedServices.length}):
-                    </span>
-                    <div className="flex flex-wrap gap-1 min-w-0">
-                      {selectedServices.map(service => (
-                        <div
-                          key={service.id}
-                          className="flex items-center gap-1 rounded border px-2 py-1 bg-background hover:bg-muted transition-colors cursor-pointer group text-xs"
-                          onClick={() => router.push(`/service/${service.id}`)}
+      {/* Controls and Selected Services - Sticky Section */}
+      <div className="bg-background/95 sticky top-16 z-40 -mt-4 mb-8 space-y-4 py-4 backdrop-blur-sm">
+        {/* Selected Services Section - Compact */}
+        {selectedServices.length > 0 && (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="py-3">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <span className="whitespace-nowrap text-sm font-medium">
+                    Selected ({selectedServices.length}):
+                  </span>
+                  <div className="flex min-w-0 flex-wrap gap-1">
+                    {selectedServices.map(service => (
+                      <div
+                        key={service.id}
+                        className="bg-background hover:bg-muted group flex cursor-pointer items-center gap-1 rounded border px-2 py-1 text-xs transition-colors"
+                        onClick={() => router.push(`/service/${service.id}`)}
+                      >
+                        <span className="font-medium">{service.name}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hover:bg-destructive/20 text-destructive h-3 w-3 p-0"
+                          onClick={e => {
+                            e.stopPropagation();
+                            removeService(service.id);
+                          }}
                         >
-                          <span className="font-medium">
-                            {service.name}
-                          </span>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-3 w-3 p-0 hover:bg-destructive/20 text-destructive"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              removeService(service.id);
-                            }}
-                          >
-                            <X className="h-2 w-2" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
+                          <X className="h-2 w-2" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => router.push('/')}
-                    className="shrink-0"
-                  >
-                    View Generated CSP
-                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-          )}
-          {/* Search and Filters */}
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search services (e.g., Google Analytics, Stripe, Sentry)..."
-                className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full sm:w-48">
-                <Filter className="h-4 w-4 mr-2" />
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories ({Object.keys(services).length})</SelectItem>
-                {categories.map(category => (
-                  <SelectItem key={category} value={category}>
-                    {formatCategoryName(category)} ({categoryCounts[category]})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="flex gap-2">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => router.push('/')}
+                  className="shrink-0"
+                >
+                  View Generated CSP
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+        {/* Search and Filters */}
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="relative flex-1">
+            <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+            <Input
+              placeholder="Search services (e.g., Google Analytics, Stripe, Sentry)..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
           </div>
-
-          {/* Results Summary */}
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>
-              Showing {filteredServices.length} of {Object.keys(services).length} services
-              {selectedCategory !== 'all' && ` in ${formatCategoryName(selectedCategory)}`}
-              {searchQuery && ` matching "${searchQuery}"`}
-            </span>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full sm:w-48">
+              <Filter className="mr-2 h-4 w-4" />
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories ({Object.keys(services).length})</SelectItem>
+              {categories.map(category => (
+                <SelectItem key={category} value={category}>
+                  {formatCategoryName(category)} ({categoryCounts[category]})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="flex gap-2">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+            >
+              <Grid3X3 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+            >
+              <List className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
-        {/* Services Grid/List */}
-        {filteredServices.length > 0 ? (
-          <div className={
+        {/* Results Summary */}
+        <div className="text-muted-foreground flex items-center justify-between text-sm">
+          <span>
+            Showing {filteredServices.length} of {Object.keys(services).length} services
+            {selectedCategory !== 'all' && ` in ${formatCategoryName(selectedCategory)}`}
+            {searchQuery && ` matching "${searchQuery}"`}
+          </span>
+        </div>
+      </div>
+
+      {/* Services Grid/List */}
+      {filteredServices.length > 0 ? (
+        <div
+          className={
             viewMode === 'grid'
               ? 'grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
-              : 'border border-border rounded-lg overflow-hidden'
-          }>
-            {filteredServices.map(service => (
-              <ServiceCard key={service.id} service={service} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-lg font-medium mb-2">No services found</h3>
-            <p className="text-muted-foreground mb-4">
-              {searchQuery
-                ? `No services match "${searchQuery}"`
-                : 'No services in this category'
-              }
-            </p>
-            <div className="flex flex-col sm:flex-row gap-2 justify-center">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('all');
-                }}
-              >
-                Clear filters
+              : 'border-border overflow-hidden rounded-lg border'
+          }
+        >
+          {filteredServices.map(service => (
+            <ServiceCard key={service.id} service={service} />
+          ))}
+        </div>
+      ) : (
+        <div className="py-12 text-center">
+          <div className="mb-4 text-6xl">🔍</div>
+          <h3 className="mb-2 text-lg font-medium">No services found</h3>
+          <p className="text-muted-foreground mb-4">
+            {searchQuery ? `No services match "${searchQuery}"` : 'No services in this category'}
+          </p>
+          <div className="flex flex-col justify-center gap-2 sm:flex-row">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedCategory('all');
+              }}
+            >
+              Clear filters
+            </Button>
+            <a
+              href="https://github.com/eason-dev/csp-kit/issues/new?assignees=&labels=service-request&template=service-request.md&title=Request%20Support%20for%20%5BService%20Name%5D"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="default" className="flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                Request Service
               </Button>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Service Request Section */}
+      {filteredServices.length > 0 && (
+        <div className="mt-12 text-center">
+          <Card className="mx-auto max-w-md">
+            <CardContent className="p-6">
+              <Plus className="text-muted-foreground mx-auto mb-3 h-8 w-8" />
+              <h3 className="mb-2 font-medium">Missing a service?</h3>
+              <p className="text-muted-foreground mb-4 text-sm">
+                Can&apos;t find the service you&apos;re using? Request support and we&apos;ll add it
+                to our database.
+              </p>
               <a
                 href="https://github.com/eason-dev/csp-kit/issues/new?assignees=&labels=service-request&template=service-request.md&title=Request%20Support%20for%20%5BService%20Name%5D"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Button variant="default" className="flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Request Service
+                <Button variant="outline" className="mx-auto flex items-center gap-2">
+                  <ExternalLinkIcon className="h-4 w-4" />
+                  Request Service on GitHub
                 </Button>
               </a>
-            </div>
-          </div>
-        )}
-
-        {/* Service Request Section */}
-        {filteredServices.length > 0 && (
-          <div className="mt-12 text-center">
-            <Card className="max-w-md mx-auto">
-              <CardContent className="p-6">
-                <Plus className="h-8 w-8 mx-auto mb-3 text-muted-foreground" />
-                <h3 className="font-medium mb-2">Missing a service?</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Can&apos;t find the service you&apos;re using? Request support and we&apos;ll add it to our database.
-                </p>
-                <a
-                  href="https://github.com/eason-dev/csp-kit/issues/new?assignees=&labels=service-request&template=service-request.md&title=Request%20Support%20for%20%5BService%20Name%5D"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Button variant="outline" className="flex items-center gap-2 mx-auto">
-                    <ExternalLinkIcon className="h-4 w-4" />
-                    Request Service on GitHub
-                  </Button>
-                </a>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </div>
   );
 }
