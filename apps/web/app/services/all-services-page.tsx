@@ -37,7 +37,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
   const services = serviceRegistry.services;
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { selectedServices, addService, removeService, isSelected } = useSelectedServices();
+  const { selectedServices, addService, removeService, isSelected, clearServices } = useSelectedServices();
   const scrollPositionRef = useRef<number>(0);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -169,24 +169,18 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
           </div>
           <div className="absolute bottom-4 right-4">
             <Button
-              variant={serviceSelected ? 'outline' : 'default'}
+              variant={serviceSelected ? 'destructive' : 'default'}
               size="sm"
               onClick={e => {
                 e.stopPropagation();
                 handleToggleService(service);
               }}
-              className="flex items-center gap-1"
+              className="h-8 w-8 rounded-full p-0"
             >
               {serviceSelected ? (
-                <>
-                  <Minus className="h-3 w-3" />
-                  Remove
-                </>
+                <Minus className="h-4 w-4" />
               ) : (
-                <>
-                  <Plus className="h-3 w-3" />
-                  Add
-                </>
+                <Plus className="h-4 w-4" />
               )}
             </Button>
           </div>
@@ -224,24 +218,18 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
             </div>
             <div className="flex items-center gap-2">
               <Button
-                variant={serviceSelected ? 'outline' : 'default'}
+                variant={serviceSelected ? 'destructive' : 'default'}
                 size="sm"
                 onClick={e => {
                   e.stopPropagation();
                   handleToggleService(service);
                 }}
-                className="flex items-center gap-1"
+                className="h-8 w-8 rounded-full p-0"
               >
                 {serviceSelected ? (
-                  <>
-                    <Minus className="h-3 w-3" />
-                    Remove
-                  </>
+                  <Minus className="h-4 w-4" />
                 ) : (
-                  <>
-                    <Plus className="h-3 w-3" />
-                    Add
-                  </>
+                  <Plus className="h-4 w-4" />
                 )}
               </Button>
             </div>
@@ -270,9 +258,19 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
             <CardContent className="py-3">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
-                  <span className="whitespace-nowrap text-sm font-medium">
-                    Selected ({selectedServices.length}):
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <span className="whitespace-nowrap text-sm font-medium">
+                      Selected ({selectedServices.length}):
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={clearServices}
+                      className="text-destructive hover:bg-destructive/10 h-6 px-2 text-xs"
+                    >
+                      Clear All
+                    </Button>
+                  </div>
                   <div className="flex min-w-0 flex-wrap gap-1">
                     {selectedServices.map(service => (
                       <div

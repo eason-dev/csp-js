@@ -83,7 +83,7 @@ export default function ServicePage({ service }: ServicePageProps) {
         </Button>
       </Link>
 
-      <div className="mx-auto max-w-4xl space-y-8">
+      <div className="mx-auto max-w-6xl space-y-8">
         {/* Service Header */}
         <div className="space-y-4 text-center">
           <div className="space-y-3">
