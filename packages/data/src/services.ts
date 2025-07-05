@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { parse } from 'jsonc-parser';
 import type { ServiceDefinition, ServiceRegistry } from './types.js';
 import { ServiceCategory } from './types.js';
+import { PREBUILT_SERVICES } from './services-bundle.js';
 
 // Get directory name compatible with both ESM and CJS
 let currentDir: string;
@@ -128,8 +129,11 @@ async function loadAllServices(): Promise<Record<string, ServiceDefinition>> {
     _servicesCache = services;
     return services;
   } catch (error) {
-    console.error('Error loading services:', error);
-    return {};
+    console.error('Error loading services from filesystem, using prebuilt bundle:', (error as Error).message);
+    
+    // Fallback to prebuilt services for production environments
+    _servicesCache = { ...PREBUILT_SERVICES };
+    return _servicesCache;
   }
 }
 

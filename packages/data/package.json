@@ -25,7 +25,8 @@
   ],
   "scripts": {
     "build-services": "tsx scripts/build-services.ts",
-    "build": "npm run build-services && tsup",
+    "generate-bundle": "tsx scripts/generate-services-bundle.ts",
+    "build": "npm run build-services && npm run generate-bundle && tsup",
     "dev": "tsup --watch",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",
