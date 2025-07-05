@@ -4,12 +4,13 @@
 
 [![NPM Version](https://img.shields.io/npm/v/@csp-kit/generator)](https://www.npmjs.com/package/@csp-kit/generator)
 [![NPM Downloads](https://img.shields.io/npm/dm/@csp-kit/generator)](https://www.npmjs.com/package/@csp-kit/generator)
-[![GitHub License](https://img.shields.io/github/license/eason-dev/csp-kit)](https://github.com/eason-dev/csp-kit/blob/main/LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/eason-dev/csp-kit/blob/main/LICENSE)
+[![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg)](https://github.com/eason-dev/csp-kit)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/eason-dev/csp-kit/ci.yml)](https://github.com/eason-dev/csp-kit/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue)](https://www.typescriptlang.org/)
 
 **The modern Content Security Policy toolkit for developers** \
-**106+ services • Zero config • TypeScript-first • Web interface**
+**Open Source • 106+ services • Zero config • TypeScript-first • Web interface**
 
 [📖 Documentation](https://csp-kit.eason.ch/docs) • [🌐 Web Generator](https://csp-kit.eason.ch) • [🚀 Quick Start](#-quick-start) • [💬 Discord](https://discord.gg/csp-kit)
 
@@ -35,6 +36,7 @@ const { header } = generateCSP(['google-analytics', 'stripe', 'google-fonts']);
 - 🔄 **Always Updated**: Community-driven service definitions with automated monitoring
 - 🌐 **Multiple Interfaces**: Web UI, CLI tools, and JavaScript/TypeScript API
 - 🚀 **Production Ready**: Used by thousands of developers worldwide
+- 🆓 **Free & Open Source**: MIT licensed, free for commercial and personal use
 
 ## ✨ Features
 
@@ -64,6 +66,7 @@ const { header } = generateCSP(['google-analytics', 'stripe', 'google-fonts']);
 - **Community-Driven**: Open source with active community
 - **Production Ready**: Battle-tested in real-world applications
 - **Security-First**: Conservative defaults, security warnings, regular audits
+- **Community-Driven**: Open source with active community contributions
 
 ## 🚀 Quick Start
 
@@ -471,9 +474,22 @@ Need dedicated support, custom service definitions, or enterprise features?
 
 ⭐ **[github.com/eason-dev/csp-kit](https://github.com/eason-dev/csp-kit)** ⭐
 
+### 📄 **License**
+
+**CSP Kit is free and open source software.**
+
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+
+- **License**: [MIT License](./LICENSE)
+- **Commercial Use**: ✅ Allowed
+- **Modification**: ✅ Allowed  
+- **Distribution**: ✅ Allowed
+- **Private Use**: ✅ Allowed
+
 <p>
   <strong>Made with ❤️ by the CSP Kit team and community</strong><br>
-  <em>Securing the web, one policy at a time</em>
+  <em>Securing the web, one policy at a time</em><br><br>
+  <strong>Copyright (c) 2025 Eason Chang. Free for commercial and personal use.</strong>
 </p>
 
 **[🌐 csp-kit.eason.ch](https://csp-kit.eason.ch)** • **[📖 Documentation](https://csp-kit.eason.ch/docs)** • **[💬 Community](https://github.com/eason-dev/csp-kit/discussions)**

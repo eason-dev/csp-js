@@ -252,6 +252,17 @@ console.log(result.unknownServices); // ['unknown-service']
 npm install @csp-kit/generator @csp-kit/data
 ```
 
+### 🔓 **License Questions**
+
+**Q: Can I use CSP Kit in commercial projects?**
+A: Yes! CSP Kit is MIT licensed - free for commercial and personal use.
+
+**Q: Do I need to include license notices in my app?**
+A: No, MIT license doesn't require attribution in your application.
+
+**Q: Will CSP Kit always be free?**
+A: Yes, the core toolkit will always be free and open source.
+
 ### Getting Help
 
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/eason-dev/csp-kit/issues)

@@ -139,7 +139,8 @@ CSP Kit uses a data-package separation model:
 - **Weekly Data Updates** with new services and fixes
 - **Active Community** of contributors and users
 - **Production Ready** with comprehensive testing
-- **MIT Licensed** - Free for commercial and personal use
+- **MIT Licensed** - Free forever for commercial and personal use
+- **Open Source** - Transparent development, community-driven, no vendor lock-in
 
 ## 🆘 Need Help?
 

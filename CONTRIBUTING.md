@@ -363,7 +363,9 @@ Maintainer-specific documentation:
 - **Security-focused** - Making the web safer
 - **Open** - Transparent development
 
-**By contributing, you agree to the [MIT License](./LICENSE) and [Code of Conduct](./CODE_OF_CONDUCT.md).**
+**By contributing, you agree that your contributions will be licensed under the [MIT License](./LICENSE).**
+
+**🔓 Your contributions remain open source forever** - CSP Kit is committed to remaining free and open source software.
 
 ---
 

@@ -520,6 +520,13 @@ Every contribution, no matter how small, makes CSP Kit better for everyone. Whet
 
 **Ready to contribute?** Start with a [good first issue](https://github.com/eason-dev/csp-kit/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or [add a new service](https://github.com/eason-dev/csp-kit/issues/new?template=add-service.md)!
 
+### 📄 **License Agreement**
+
+By contributing to CSP Kit:
+- **Your contributions will be licensed under the [MIT License](../LICENSE)**
+- **🔓 Your contributions remain open source forever** - CSP Kit is committed to remaining free and open source software
+- **No copyright assignment required** - You retain rights to your contributions
+
 ---
 
 ## 📚 Related Resources
