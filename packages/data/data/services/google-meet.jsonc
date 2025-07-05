@@ -25,7 +25,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Google Meet video conferencing integration"
+      "notes": "Google Meet verified from community documentation. CRITICAL LIMITATION: Google Meet does NOT allow iframe embedding - returns 'meet.google.com refused to connect' errors. No official API/SDK for direct website integration. Must be used in new tab rather than embedded. frame-ancestors CSP directive blocks iframe embedding for security. Google official policy prevents iframe integration."
     }
   },
   "defaultVersion": "current",

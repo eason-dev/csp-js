@@ -20,12 +20,13 @@
           "https://*.bigbluebutton.org"
         ],
         "connect-src": [
-          "https://*.bigbluebutton.org"
+          "https://*.bigbluebutton.org",
+          "wss://*.bigbluebutton.org"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "BigBlueButton open-source web conferencing integration. Replace *.bigbluebutton.org with your actual server domain. Requires SSL for WebRTC features (camera, microphone, screen sharing)."
+      "notes": "BigBlueButton verified from community documentation and GitHub issues. Limited official CSP documentation available. iframe embedding requires SSL for WebRTC (camera, microphone, screen sharing). X-Frame-Options set to SAMEORIGIN by default in Greenlight. iframe needs allow permissions for geolocation, microphone, camera, display-capture. WebSocket connections required for real-time communication. iframe embedding not supported by default - may need provider request."
     }
   },
   "defaultVersion": "current",

@@ -6,8 +6,8 @@
   "description": "Email marketing and campaign management platform",
   "website": "https://www.constantcontact.com/",
   "officialDocs": [
-    "https://knowledgebase.constantcontact.com/articles/KnowledgeBase/5590-getting-started-with-the-constant-contact-api-v3",
-    "https://developer.constantcontact.com/"
+    "https://knowledgebase.constantcontact.com/lead-gen-crm/articles/KnowledgeBase/50227-Using-Form-Embed-Codes",
+    "https://developer.constantcontact.com/api_reference/index.html"
   ],
   "versions": {
     "current": {
@@ -15,6 +15,9 @@
       "cspDirectives": {
         "script-src": [
           "https://imgssl.constantcontact.com"
+        ],
+        "frame-src": [
+          "https://lp.constantcontactpages.com"
         ],
         "connect-src": [
           "https://api.constantcontact.com"
@@ -25,7 +28,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Constant Contact email marketing platform. Email templates may require additional image domains. SSL-only image serving for security."
+      "notes": "Constant Contact verified from official documentation and community forums. IMPORTANT: Embed codes for forms no longer available as of recent updates. Some pages refuse iframe connections due to security headers and Terms of Use restrictions. Embeddable forms available via lp.constantcontactpages.com domain. New inline and pop-up signup forms recommended. No specific official CSP documentation found - contact support for requirements."
     }
   },
   "defaultVersion": "current",

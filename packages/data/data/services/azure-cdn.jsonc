@@ -6,8 +6,8 @@
   "description": "Microsoft Azure content delivery network",
   "website": "https://azure.microsoft.com/en-us/services/cdn/",
   "officialDocs": [
-    "https://docs.microsoft.com/en-us/azure/cdn/",
-    "https://docs.microsoft.com/en-us/azure/cdn/cdn-security"
+    "https://learn.microsoft.com/en-us/azure/frontdoor/front-door-security-headers",
+    "https://learn.microsoft.com/en-us/azure/api-management/"
   ],
   "versions": {
     "current": {
@@ -28,7 +28,7 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Azure CDN endpoints for content delivery"
+      "notes": "Azure CDN verified from official Microsoft documentation. CSP headers configured via Azure Front Door Rules Engine. API Management has CSP and CORS configuration support. SharePoint Framework with Azure CDN deployment guidance available. Power Pages provides CSP management documentation. Rules Engine allows CSP header configuration for trusted script sources."
     }
   },
   "defaultVersion": "current",
