@@ -6,7 +6,7 @@
   "website": "https://plausible.io",
   "officialDocs": [
     "https://plausible.io/docs/plausible-script",
-    "https://plausible.io/docs/script-extensions"
+    "https://github.com/plausible/docs/issues/20"
   ],
   "versions": {
     "current": {
@@ -21,11 +21,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Plausible Analytics tracking script"
+      "notes": "Plausible Analytics verified from official documentation and GitHub CSP issues. Requires plausible.io for both script loading and data collection. Self-hosted instances require custom domain in CSP. Proxy configurations require additional domain allowlisting. Supports automatic nonce in Discourse integration."
     }
   },
   "defaultVersion": "current",
   "aliases": ["plausible"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

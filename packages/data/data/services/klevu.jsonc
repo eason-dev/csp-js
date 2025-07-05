@@ -1,29 +1,42 @@
 {
-  // Klevu - AI-powered search and discovery
   "id": "klevu",
   "name": "Klevu",
   "category": "other",
   "description": "AI-powered search and discovery platform for e-commerce",
   "website": "https://www.klevu.com/",
   "officialDocs": [
-    "https://developers.klevu.com/",
-    "https://help.klevu.com/support/solutions/articles/5000871323-content-security-policy-csp-"
+    "https://docs.klevu.com/",
+    "https://github.com/klevultd/frontend-sdk",
+    "https://www.klevu.com/gdpr/"
   ],
-  "csp": {
-    "script-src": [
-      "https://js.klevu.com"
-    ],
-    "connect-src": [
-      "https://api.klevu.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://js.klevu.com",
+          "https://*.ksearchnet.com"
+        ],
+        "connect-src": [
+          "https://*.klevu.com",
+          "https://*.ksearchnet.com"
+        ],
+        "img-src": [
+          "https://*.klevu.com",
+          "https://*.ksearchnet.com"
+        ],
+        "style-src": [
+          "https://*.klevu.com",
+          "https://*.ksearchnet.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": true,
+      "notes": "Klevu verified from official documentation and GDPR policy. Uses wildcard domains *.klevu.com and *.ksearchnet.com for CDN, API endpoints, analytics, and search services. Key domains include js.klevu.com, stats.klevu.com, and customer-specific *.ksearchnet.com endpoints."
+    }
   },
-  "notes": [
-    "Search widgets may require additional style permissions",
-    "Custom implementations may need extra domains"
-  ],
+  "defaultVersion": "current",
   "aliases": ["klevu-search"],
-  "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "2.x",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-05T00:00:00.000Z"
 }

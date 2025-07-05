@@ -1,29 +1,40 @@
 {
-  // Elasticsearch - Search and analytics engine
   "id": "elasticsearch",
   "name": "Elasticsearch",
   "category": "other",
-  "description": "Distributed search and analytics engine",
+  "description": "Distributed search and analytics engine with Kibana visualization",
   "website": "https://www.elastic.co/elasticsearch/",
   "officialDocs": [
-    "https://www.elastic.co/guide/en/elasticsearch/reference/current/security-settings.html",
-    "https://www.elastic.co/guide/index.html"
+    "https://www.elastic.co/guide/en/kibana/current/Security-production-considerations.html",
+    "https://www.elastic.co/guide/en/kibana/current/settings.html"
   ],
-  "csp": {
-    "script-src": [
-      "https://elastic.co"
-    ],
-    "connect-src": [
-      "https://*.elastic.co"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "'unsafe-eval'",
+          "'self'"
+        ],
+        "worker-src": [
+          "blob:",
+          "'self'"
+        ],
+        "style-src": [
+          "'unsafe-inline'",
+          "'self'"
+        ],
+        "connect-src": [
+          "https://*.elastic.co"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": true,
+      "notes": "Elasticsearch/Kibana verified from official security documentation. Kibana uses CSP strict mode (csp.strict: true) to block browsers that don't enforce basic CSP. Requires 'unsafe-eval' and 'unsafe-inline' for functionality. Self-hosted instances need custom domain configuration. Elastic Cloud uses cluster-specific subdomains."
+    }
   },
-  "notes": [
-    "Self-hosted instances require custom domain configuration",
-    "Elastic Cloud instances use cluster-specific subdomains"
-  ],
-  "aliases": ["elastic-search"],
-  "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "8.x",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "defaultVersion": "current",
+  "aliases": ["elastic-search", "kibana"],
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

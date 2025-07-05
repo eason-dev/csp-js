@@ -5,8 +5,8 @@
   "description": "Customer service platform with support ticketing and live chat",
   "website": "https://zendesk.com",
   "officialDocs": [
-    "https://developer.zendesk.com/documentation/zendesk-web-widget-sdks/sdks/web/csp/",
-    "https://developer.zendesk.com/api-reference/ticketing/introduction/"
+    "https://developer.zendesk.com/documentation/classic-web-widget-sdks/web-widget/integrating-with-google/csp/",
+    "https://support.zendesk.com/hc/en-us/articles/5436016355738-Does-Zendesk-support-CSP-headers"
   ],
   "versions": {
     "current": {
@@ -23,6 +23,7 @@
         "connect-src": [
           "https://*.zendesk.com",
           "https://*.zopim.com",
+          "https://assets.zendesk.com",
           "wss://*.zendesk.com",
           "wss://*.zopim.com",
           "https://zendesk-eu.my.sentry.io"
@@ -42,11 +43,11 @@
       },
       "requiresNonce": true,
       "requiresDynamic": true,
-      "notes": "Zendesk Web Widget (Classic) for customer support. Supports nonce-based CSP following Google's strict CSP guidelines. Requires 'unsafe-inline' for styles."
+      "notes": "Zendesk verified against official CSP documentation. Web Widget (Classic) supports Google's strict CSP guidelines with nonce attribute. Requires static.zdassets.com for snippet.js and assets.zendesk.com for embeddable framework. Cannot guarantee custom CSP compatibility outside Google's guidelines."
     }
   },
   "defaultVersion": "current",
   "aliases": ["zendesk-chat", "zendesk-widget"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

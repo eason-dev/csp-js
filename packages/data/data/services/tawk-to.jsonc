@@ -13,24 +13,42 @@
       "validFrom": "2018-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://embed.tawk.to"
+          "https://*.tawk.to",
+          "https://cdn.jsdelivr.net"
         ],
         "style-src": [
-          "'unsafe-inline'"
+          "https://*.tawk.to",
+          "https://fonts.googleapis.com",
+          "https://cdn.jsdelivr.net"
+        ],
+        "frame-src": [
+          "https://*.tawk.to"
+        ],
+        "font-src": [
+          "https://*.tawk.to",
+          "https://fonts.gstatic.com"
         ],
         "img-src": [
-          "https://tawk.to"
+          "https://*.tawk.to",
+          "https://cdn.jsdelivr.net",
+          "https://tawk.link",
+          "https://s3.amazonaws.com"
         ],
         "connect-src": [
-          "wss://tawk.to"
+          "https://*.tawk.to",
+          "wss://*.tawk.to"
+        ],
+        "form-action": [
+          "https://*.tawk.to"
         ]
       },
       "requiresNonce": false,
-      "requiresDynamic": true,
-      "notes": "Tawk.to chat widget - requires unsafe-inline for styles due to inline CSS"
+      "requiresDynamic": false,
+      "notes": "Tawk.to verified from official CSP documentation. Requires wildcard *.tawk.to domains for various resources. Known CSP complexity due to extensive inline styles in widget implementation. Official docs recommend specific CSP directives to ensure widget displays correctly."
     }
   },
   "defaultVersion": "current",
   "aliases": ["tawk"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

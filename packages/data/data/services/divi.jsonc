@@ -1,5 +1,4 @@
 {
-  // Divi - WordPress theme and page builder
   "id": "divi",
   "name": "Divi",
   "category": "other",
@@ -7,23 +6,39 @@
   "website": "https://www.elegantthemes.com/gallery/divi/",
   "officialDocs": [
     "https://www.elegantthemes.com/documentation/divi/",
-    "https://www.elegantthemes.com/blog/divi-resources/divi-developer-api"
+    "https://github.com/elegantthemes/create-divi-extension/issues/328"
   ],
-  "csp": {
-    "script-src": [
-      "https://elegantthemes.com"
-    ],
-    "connect-src": [
-      "https://elegantthemes.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://elegantthemes.com",
+          "'unsafe-inline'",
+          "'unsafe-eval'"
+        ],
+        "style-src": [
+          "https://elegantthemes.com",
+          "'unsafe-inline'"
+        ],
+        "worker-src": [
+          "blob:"
+        ],
+        "connect-src": [
+          "https://elegantthemes.com"
+        ],
+        "img-src": [
+          "https://elegantthemes.com",
+          "data:"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": true,
+      "notes": "Divi verified from GitHub issues and community reports. No official CSP documentation available. Known CSP compatibility issues - requires 'unsafe-inline' and 'unsafe-eval' for theme builder functionality. Worker-src blob: needed for bundle.js. Theme updates and third-party modules may need additional domains. Consider relaxed CSP for Divi pages."
+    }
   },
-  "notes": [
-    "Theme updates may require additional domains",
-    "Third-party modules may need extra CSP permissions"
-  ],
+  "defaultVersion": "current",
   "aliases": ["divi-theme", "elegant-themes"],
-  "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "4.x",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

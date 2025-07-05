@@ -29,10 +29,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Facebook SDK for JavaScript, Like buttons, Comments widget"
+      "notes": "Facebook SDK for JavaScript, Like buttons, Comments widget. Note: Official CSP documentation from Facebook is currently inaccessible - many developer pages return errors. Configuration verified from community sources and Stack Overflow discussions."
     }
   },
   "defaultVersion": "current",
   "aliases": ["facebook-sdk", "fb"],
-  "lastUpdated": "2024-12-29T00:00:00.000Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-05T00:00:00.000Z"
 }

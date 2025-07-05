@@ -20,15 +20,18 @@
         ],
         "font-src": [
           "https://cdn.jsdelivr.net"
+        ],
+        "img-src": [
+          "https://cdn.jsdelivr.net"
         ]
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "jsDelivr CDN for JavaScript libraries, CSS frameworks, and fonts"
+      "notes": "jsDelivr verified from developer community discussions and GitHub issues. Primary CDN domain cdn.jsdelivr.net required for script-src, style-src, font-src, and img-src. Supports specific path restrictions for enhanced security. Can use Report-Only mode for CSP testing."
     }
   },
   "defaultVersion": "current",
   "aliases": ["jsdelivr-cdn"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

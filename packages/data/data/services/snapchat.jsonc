@@ -5,8 +5,8 @@
   "description": "Snapchat social media platform with Snap Pixel and embeds",
   "website": "https://snapchat.com",
   "officialDocs": [
-    "https://businesshelp.snapchat.com/s/article/snap-pixel-about",
-    "https://developers.snap.com/docs/snap-pixel"
+    "https://businesshelp.snapchat.com/s/article/pixel-direct-implementation",
+    "https://developers.snap.com/api/marketing-api/Ads-API/snap-pixel"
   ],
   "versions": {
     "current": {
@@ -30,11 +30,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Snapchat Pixel for conversion tracking and advertising. Requires sc-static.net for scripts, tr.snapchat.com for tracking endpoints, and additional shadow domains for enhanced tracking."
+      "notes": "Snapchat verified from business help and third-party documentation (RudderStack). Snap Pixel requires sc-static.net for SDK loading, tr.snapchat.com for tracking. Cross-device impact measurement for advertising campaigns. Official Snapchat documentation sites experienced loading issues during verification."
     }
   },
   "defaultVersion": "current",
   "aliases": ["snapchat-pixel", "snap-pixel"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

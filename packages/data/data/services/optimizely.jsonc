@@ -1,5 +1,4 @@
 {
-  // Optimizely - A/B testing and experimentation platform
   "id": "optimizely",
   "name": "Optimizely",
   "category": "other",
@@ -9,22 +8,31 @@
     "https://docs.developers.optimizely.com/web/docs/content-security-policy",
     "https://docs.developers.optimizely.com/"
   ],
-  "csp": {
-    "script-src": [
-      "https://cdn.optimizely.com"
-    ],
-    "connect-src": [
-      "https://logx.optimizely.com",
-      "https://p13nlog.dz.optimizely.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://cdn.optimizely.com"
+        ],
+        "style-src": [
+          "'unsafe-inline'"
+        ],
+        "connect-src": [
+          "https://logx.optimizely.com",
+          "https://p13nlog.dz.optimizely.com"
+        ],
+        "img-src": [
+          "https://cdn.optimizely.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": true,
+      "notes": "Optimizely verified from official CSP documentation. Requires cdn.optimizely.com for JavaScript SDK, logx.optimizely.com and p13nlog.dz.optimizely.com for event tracking. Experiment variations may require 'unsafe-inline' for dynamic style modifications. Custom events tracking needs additional connect sources."
+    }
   },
-  "notes": [
-    "Experiment variations may require 'unsafe-inline' for styles",
-    "Custom events tracking requires additional connect sources"
-  ],
+  "defaultVersion": "current",
   "aliases": ["optimizely-web"],
-  "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "1.x",
-  "requiresDynamic": true,
-  "requiresNonce": false
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

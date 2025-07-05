@@ -14,26 +14,32 @@
       "validFrom": "2020-01-01",
       "cspDirectives": {
         "script-src": [
-          "https://assets.adobedtm.com"
+          "https://assets.adobedtm.com",
+          "https://*.adobe.com"
         ],
         "connect-src": [
           "https://*.2o7.net",
           "https://*.omtrdc.net",
-          "https://*.demdex.net"
+          "https://*.demdex.net",
+          "https://*.adobe.com",
+          "https://*.omniture.com",
+          "https://*.adobedc.net"
         ],
         "img-src": [
           "https://*.2o7.net",
           "https://*.omtrdc.net",
-          "https://*.demdex.net"
+          "https://*.demdex.net",
+          "https://*.adobe.com",
+          "https://*.omniture.com"
         ]
       },
-      "requiresNonce": false,
+      "requiresNonce": true,
       "requiresDynamic": false,
-      "notes": "Adobe Analytics via Adobe Launch/Tags. Requires assets.adobedtm.com for tag management, *.2o7.net and *.omtrdc.net for AppMeasurement, and *.demdex.net for Experience Cloud Identity Service and Audience Manager."
+      "notes": "Adobe Analytics verified against official Experience League CSP documentation. Requires *.adobe.com for Activity Map, assets.adobedtm.com for tag management, *.demdex.net for Experience Cloud Identity Service, and legacy *.omniture.com domains. Adobe recommends nonce-based CSP over 'unsafe-inline'. *.adobedc.net required for Experience Platform integration."
     }
   },
   "defaultVersion": "current",
   "aliases": ["adobe-launch", "adobe-tags"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

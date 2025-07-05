@@ -5,9 +5,9 @@
   "description": "TikTok social media platform with video embeds and tracking",
   "website": "https://tiktok.com",
   "officialDocs": [
-    "https://developers.tiktok.com/doc/embed-videos/",
-    "https://developers.tiktok.com/doc/embed-creator-profiles/",
-    "https://business-api.tiktok.com/portal/docs"
+    "https://developers.tiktok.com/doc/embed-player",
+    "https://developers.tiktok.com/doc/embed-creator-profiles",
+    "https://ads.tiktok.com/help/article/get-started-pixel"
   ],
   "versions": {
     "current": {
@@ -33,11 +33,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "TikTok embeds and analytics pixel. Requires www.tiktok.com/embed.js for video embeds. Uses oEmbed API for embedding videos."
+      "notes": "TikTok verified from developer documentation and ads platform guides. Requires www.tiktok.com for embed.js script and iframe embeds. TikTok Ads Manager mentions CSP considerations when setting up pixel. oEmbed API available for video embedding. Player uses postMessage communication."
     }
   },
   "defaultVersion": "current",
   "aliases": ["tiktok-pixel"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

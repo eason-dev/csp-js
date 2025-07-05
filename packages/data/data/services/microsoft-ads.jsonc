@@ -1,5 +1,5 @@
 {
-  // Microsoft Ads (Bing Ads)
+  "id": "microsoft-ads",
   "name": "Microsoft Ads",
   "category": "advertising",
   "description": "Microsoft's advertising platform (formerly Bing Ads)",
@@ -26,5 +26,6 @@
   },
   "defaultVersion": "current",
   "aliases": ["bing-ads", "uet"],
-  "lastUpdated": "2025-06-29T00:00:00Z"
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

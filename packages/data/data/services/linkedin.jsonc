@@ -29,11 +29,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "LinkedIn share buttons, follow company buttons, and AutoFill. Requires platform.linkedin.com for scripts and www.linkedin.com for frames and API calls."
+      "notes": "LinkedIn verified from Microsoft Learn documentation and developer resources. Requires domain configuration in LinkedIn Developer Console for Valid SDK Domains. JavaScript API requires specific domain allowlisting for security. Share plugin and company follow buttons use platform.linkedin.com and www.linkedin.com domains."
     }
   },
   "defaultVersion": "current",
   "aliases": ["linkedin-widgets"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

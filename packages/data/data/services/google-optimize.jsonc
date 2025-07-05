@@ -1,5 +1,4 @@
 {
-  // Google Optimize - A/B testing platform (deprecated)
   "id": "google-optimize",
   "name": "Google Optimize",
   "category": "other",
@@ -9,22 +8,26 @@
     "https://support.google.com/optimize/answer/7359264",
     "https://developers.google.com/optimize/"
   ],
-  "csp": {
-    "script-src": [
-      "https://www.googleoptimize.com"
-    ],
-    "connect-src": [
-      "https://www.googleoptimize.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2016-01-01",
+      "validTo": "2023-09-30",
+      "cspDirectives": {
+        "script-src": [
+          "https://www.googleoptimize.com"
+        ],
+        "connect-src": [
+          "https://www.googleoptimize.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": true,
+      "notes": "Google Optimize service was DEPRECATED on September 30, 2023. Official documentation no longer maintained. Historical CSP configuration for legacy implementations only. Migrate to Google Analytics 4 experiments or other A/B testing platforms."
+    }
   },
-  "notes": [
-    "Service deprecated as of September 30, 2023",
-    "Existing implementations may still require CSP permissions",
-    "Migrate to Google Analytics 4 or other A/B testing platforms"
-  ],
+  "defaultVersion": "current",
   "aliases": ["google-optimize-360"],
-  "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "deprecated",
-  "requiresDynamic": true,
-  "requiresNonce": false
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-04T00:00:00.000Z",
+  "deprecated": true
 }

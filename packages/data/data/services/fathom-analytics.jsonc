@@ -5,8 +5,8 @@
   "description": "Privacy-first website analytics without cookies",
   "website": "https://usefathom.com",
   "officialDocs": [
-    "https://usefathom.com/docs/script/script-advanced",
-    "https://usefathom.com/docs/integrations/javascript"
+    "https://usefathom.com/docs/troubleshooting/not-working",
+    "https://usefathom.com/docs/integrations/discourse"
   ],
   "versions": {
     "current": {
@@ -21,11 +21,11 @@
       },
       "requiresNonce": false,
       "requiresDynamic": false,
-      "notes": "Fathom Analytics tracking script"
+      "notes": "Fathom Analytics verified from official troubleshooting documentation. Requires CSP allowlisting for script.js from their CDN. Uses EU-based bunny.net CDN for GDPR compliance with EU data isolation. No cookies or personal data collection."
     }
   },
   "defaultVersion": "current",
   "aliases": ["fathom"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

@@ -1,5 +1,4 @@
 {
-  // Thinkific - Online course platform
   "id": "thinkific",
   "name": "Thinkific",
   "category": "other",
@@ -9,22 +8,29 @@
     "https://developers.thinkific.com/api/api-documentation/",
     "https://support.thinkific.com/hc/en-us/articles/360030350314-Thinkific-API"
   ],
-  "csp": {
-    "script-src": [
-      "https://thinkific.com"
-    ],
-    "frame-src": [
-      "https://thinkific.com",
-      "https://*.thinkific.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://thinkific.com",
+          "https://*.thinkific.com"
+        ],
+        "frame-src": [
+          "https://thinkific.com",
+          "https://*.thinkific.com"
+        ],
+        "connect-src": [
+          "https://api.thinkific.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Thinkific course platform configuration based on API and general documentation. Official CSP documentation not readily available. Course player requires frame embedding permissions. White-label solutions may use custom domains requiring additional CSP entries."
+    }
   },
-  "notes": [
-    "Course player requires frame embedding",
-    "White-label solutions may use custom domains"
-  ],
+  "defaultVersion": "current",
   "aliases": ["thinkific-courses"],
-  "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "1.0",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

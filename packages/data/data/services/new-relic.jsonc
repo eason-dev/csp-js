@@ -5,8 +5,8 @@
   "description": "Application performance monitoring and observability platform",
   "website": "https://newrelic.com",
   "officialDocs": [
-    "https://docs.newrelic.com/docs/browser/browser-monitoring/installation/install-browser-monitoring-agent/",
-    "https://docs.newrelic.com/docs/browser/browser-monitoring/troubleshooting/content-security-policy-affecting-browser-monitoring/"
+    "https://docs.newrelic.com/docs/browser/new-relic-browser/performance-quality/security-browser-monitoring/",
+    "https://docs.newrelic.com/docs/browser/new-relic-browser/getting-started/compatibility-requirements-browser-monitoring/"
   ],
   "versions": {
     "current": {
@@ -23,11 +23,11 @@
       },
       "requiresNonce": true,
       "requiresDynamic": true,
-      "notes": "New Relic Browser agent for application performance monitoring. Supports nonce-based CSP (v1.247.0+). Requires js-agent.newrelic.com for script loading and bam*.nr-data.net for data reporting."
+      "notes": "New Relic verified against official security and compatibility documentation. Browser agent supports CSP Level 2 with nonce configuration (Ruby agent 9.10.0+ auto-detects CSP nonce). Agent v1.247.0+ includes integrity hashes for CDN verification. Proxy configuration available to reduce CSP exceptions."
     }
   },
   "defaultVersion": "current",
   "aliases": ["newrelic", "nr"],
   "lastUpdated": "2024-12-29T00:00:00.000Z",
-  "verifiedAt": "2025-07-03T00:00:00.000Z"
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }

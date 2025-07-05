@@ -1,5 +1,4 @@
 {
-  // Constructor - Product search and discovery
   "id": "constructor",
   "name": "Constructor",
   "category": "other",
@@ -9,21 +8,24 @@
     "https://docs.constructor.io/",
     "https://docs.constructor.io/build/integration-guides/javascript-client/"
   ],
-  "csp": {
-    "script-src": [
-      "https://cnstrc.com"
-    ],
-    "connect-src": [
-      "https://ac.cnstrc.com"
-    ]
+  "versions": {
+    "current": {
+      "validFrom": "2020-01-01",
+      "cspDirectives": {
+        "script-src": [
+          "https://cnstrc.com"
+        ],
+        "connect-src": [
+          "https://ac.cnstrc.com"
+        ]
+      },
+      "requiresNonce": false,
+      "requiresDynamic": false,
+      "notes": "Constructor.io configuration based on general documentation - no specific CSP documentation found. cnstrc.com hosts JavaScript files and custom bundles. ac.cnstrc.com used for API endpoints including collections, search, autocomplete, browse, and recommendations. Contact Constructor.io support for complete CSP requirements."
+    }
   },
-  "notes": [
-    "Autocomplete features require connect permissions",
-    "Product recommendations may need additional domains"
-  ],
+  "defaultVersion": "current",
   "aliases": ["constructor-io"],
-  "lastUpdated": "2024-06-29T00:00:00.000Z",
-  "version": "1.x",
-  "requiresDynamic": false,
-  "requiresNonce": false
+  "lastUpdated": "2024-12-29T00:00:00.000Z",
+  "verifiedAt": "2025-07-04T00:00:00.000Z"
 }
