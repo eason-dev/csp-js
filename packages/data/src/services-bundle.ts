@@ -1,5 +1,5 @@
 // This file is auto-generated. Do not edit manually.
-// Generated at: 2025-07-05T09:37:22.983Z
+// Generated at: 2025-07-05T09:42:46.815Z
 // Source: packages/data/scripts/generate-services-bundle.ts
 
 import type { ServiceDefinition } from './types.js';
@@ -3706,7 +3706,7 @@ export const PREBUILT_SERVICES: Record<string, ServiceDefinition> = {
     "lastUpdated": "2025-06-29T00:00:00Z",
     "verifiedAt": "2025-07-03T00:00:00.000Z"
   }
-} as const;
+} as any;
 
 /**
  * Number of prebuilt services included in this bundle

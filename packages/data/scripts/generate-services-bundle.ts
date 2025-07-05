@@ -105,7 +105,7 @@ async function generateServicesBundle() {
     const servicesCount = Object.keys(services).length;
     console.log(`📦 Bundled ${servicesCount} services`);
 
-    // Generate TypeScript file
+    // Generate TypeScript file with proper type assertion
     const tsContent = `// This file is auto-generated. Do not edit manually.
 // Generated at: ${new Date().toISOString()}
 // Source: packages/data/scripts/generate-services-bundle.ts
@@ -116,7 +116,7 @@ import type { ServiceDefinition } from './types.js';
  * Prebuilt services data for production environments where filesystem access is limited.
  * This is used as a fallback when loading services from JSONC files fails.
  */
-export const PREBUILT_SERVICES: Record<string, ServiceDefinition> = ${JSON.stringify(services, null, 2)} as const;
+export const PREBUILT_SERVICES: Record<string, ServiceDefinition> = ${JSON.stringify(services, null, 2)} as any;
 
 /**
  * Number of prebuilt services included in this bundle
