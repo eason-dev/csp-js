@@ -250,12 +250,256 @@ Services Requiring Multi-Version Support: **0** ❌ **ZERO SERVICES USE MULTIPLE
 2. **Fix Data Issues**: Update Google Analytics and Stripe configurations  
 3. **Standardize Format**: Use single CSP format across all services
 
+## 🔍 Critical Findings & Special CSP Requirements by Service
+
+### Analytics Services
+
+**Google Analytics**
+- **Critical**: Requires `'unsafe-inline'` for dynamic tracking
+- **Special**: Uses gtag configuration requiring script execution permissions
+- **Domains**: Multiple subdomains (*.google-analytics.com, *.googletagmanager.com)
+
+**Google Tag Manager**
+- **Critical**: Wildcard domains required (*.googletagmanager.com)
+- **Special**: Container-specific subdomains, preview mode needs additional permissions
+- **Security**: Nonce support available but not required
+
+**Microsoft Clarity**
+- **Critical**: Requires blob: worker-src for session recording
+- **Special**: Uses WebAssembly, needs 'unsafe-eval' in some configurations
+- **Privacy**: Recording may capture sensitive data
+
+**Hotjar**
+- **Critical**: Requires 'unsafe-inline' styles for heatmap overlays
+- **Special**: Session recording needs websocket connections
+- **Domains**: Multiple subdomains for different features
+
+**Mixpanel**
+- **Critical**: Uses 'unsafe-eval' for dynamic property tracking
+- **Special**: Real-time data requires persistent connections
+- **Performance**: Heavy script loading impact
+
+**Adobe Analytics**
+- **Critical**: Requires 'unsafe-inline' for dynamic metrics
+- **Special**: Customer-specific subdomain patterns
+- **Enterprise**: Additional domains for data processing regions
+
+**VWO/Optimizely**
+- **Critical**: A/B testing requires 'unsafe-inline' for dynamic content
+- **Special**: Test variations inject arbitrary CSS/JS
+- **Performance**: Can cause layout shifts during experiments
+
+### Payment Services
+
+**Stripe**
+- **Critical**: iframe sandboxing for PCI compliance
+- **Special**: Different domains for different regions (js.stripe.com vs m.stripe.com)
+- **Security**: Strong CSP requirements for payment form isolation
+
+**PayPal**
+- **Critical**: Multiple iframe sources for different payment flows
+- **Special**: Popup-based flows need careful frame-ancestors configuration
+- **Regional**: Different domains per geographic region
+
+**Apple Pay/Google Pay**
+- **Critical**: Native API integration requires specific domains
+- **Special**: Payment sheet domains must be whitelisted
+- **Mobile**: Different requirements for web vs native implementations
+
+### Social Media Services
+
+**Facebook**
+- **Critical**: Official CSP documentation completely inaccessible
+- **Issue**: Many developer pages return "Request Couldn't be Processed" errors
+- **Special**: Requires multiple frame sources for different widgets
+- **Security**: Known to require 'unsafe-inline' which weakens CSP effectiveness
+
+**Twitter/X**
+- **Special**: Different domains for widgets vs conversion tracking
+- **Migration**: Service domain changes due to X rebrand
+- **Widgets**: Embedded tweets need frame-src permissions
+
+**Instagram**
+- **Issue**: No official CSP documentation from Meta
+- **Community**: Configuration based on Stack Overflow and community sources
+- **Limitation**: May require 'unsafe-inline' for embedded content
+
+### CDN Services
+
+**jsDelivr**
+- **Reliability**: One of the most stable CDN configurations
+- **Global**: Uses global edge networks with consistent domains
+- **Security**: Strong CSP compliance, no 'unsafe-*' requirements
+
+**MaxCDN/StackPath**
+- **Critical**: Service discontinued November 2023
+- **Migration**: Users need to migrate to alternative CDNs
+- **Legacy**: Some sites may still reference discontinued domains
+
+**Fastly**
+- **Customer-specific**: Uses customer-specific subdomain patterns
+- **Performance**: Edge computing may require additional script permissions
+- **Enterprise**: Complex configurations for large deployments
+
+### Authentication Services
+
+**Auth0**
+- **Critical**: Official CSP documentation returns 404 errors
+- **Issue**: Tenant-specific subdomain patterns hard to document generically
+- **Security**: JWT handling requires specific connect-src permissions
+
+**Okta**
+- **Critical**: CSP documentation inaccessible
+- **Enterprise**: Customer-specific domain patterns
+- **SSO**: Integration complexity with multiple redirect flows
+
+**Firebase Auth**
+- **Google Integration**: Shares domains with other Google services
+- **Special**: Social providers require additional domains
+- **Security**: Token refresh needs persistent connections
+
+### Video/Communication Services
+
+**YouTube**
+- **Critical**: iframe API requires specific script loading
+- **Special**: Different domains for embeds vs API
+- **Performance**: Heavy resource loading impact
+
+**Zoom**
+- **Critical**: WebRTC requires complex CSP configuration
+- **Special**: Screen sharing needs additional permissions
+- **Security**: End-to-end encryption considerations
+
+**Microsoft Teams**
+- **Enterprise**: Complex Office 365 integration requirements
+- **Special**: Multiple Microsoft subdomain dependencies
+- **Performance**: Heavy resource footprint
+
+### E-commerce/CMS Services
+
+**Shopify**
+- **Critical**: Customer-specific subdomain patterns (*.myshopify.com)
+- **Special**: App ecosystem requires dynamic domain allowlisting
+- **Performance**: Theme-dependent resource loading
+
+**WordPress**
+- **Issue**: Highly plugin-dependent, no universal CSP configuration
+- **Special**: Plugin ecosystem creates unpredictable domain requirements
+- **Security**: Known CSP compatibility issues with many plugins
+
+**Webflow**
+- **Critical**: Custom domain publishing affects CSP requirements
+- **Special**: Designer mode vs published site different permissions
+- **Performance**: Heavy CSS/JS injection
+
+### Page Builders
+
+**Elementor**
+- **Critical**: Known CSP compatibility issues documented in GitHub
+- **Issue**: Dynamic content generation conflicts with strict CSP
+- **Performance**: Heavy inline style generation
+
+**Divi**
+- **Critical**: Known CSP compatibility issues with visual builder
+- **Issue**: Builder mode requires 'unsafe-inline' and 'unsafe-eval'
+- **Limitation**: Cannot be used with strict CSP policies
+
+### Search Services
+
+**Klevu**
+- **Critical**: Wildcard domain requirements (*.ksearchnet.com)
+- **Special**: Customer-specific search endpoints
+- **Performance**: Real-time search requires persistent connections
+
+**Swiftype (Elastic)**
+- **Migration**: Service merged into Elastic Enterprise Search
+- **Legacy**: Old domains still required for existing implementations
+- **Special**: API key-based authentication affects domain patterns
+
+### Monitoring/Testing Services
+
+**Sentry**
+- **Critical**: Error reporting requires 'unsafe-inline' for stack traces
+- **Special**: Source map upload needs additional permissions
+- **Performance**: Error capture can impact page load times
+
+**New Relic**
+- **Critical**: Requires 'unsafe-eval' for dynamic instrumentation
+- **Special**: Real User Monitoring needs extensive permissions
+- **Enterprise**: Different domains for different account types
+
+**BrowserStack/Sauce Labs**
+- **Testing**: Local testing requires special localhost permissions
+- **Special**: Tunnel connections need websocket support
+- **Development**: Different requirements for live vs automated testing
+
+### Chat/Support Services
+
+**Intercom**
+- **Critical**: Widget requires 'unsafe-inline' for positioning
+- **Special**: Real-time messaging needs websocket connections
+- **Privacy**: Message content capture considerations
+
+**Zendesk**
+- **Critical**: Customer-specific subdomain patterns
+- **Special**: Widget customization requires style permissions
+- **Integration**: SSO flows need multiple redirect domains
+
+### Email Services
+
+**Mailchimp**
+- **Critical**: Form embeds require iframe permissions
+- **Special**: Campaign tracking uses multiple domains
+- **Privacy**: Subscriber tracking considerations
+
+**SendGrid**
+- **Critical**: Email tracking pixels require img-src permissions
+- **Special**: Link click tracking redirects through SendGrid domains
+- **Performance**: Tracking can impact email load times
+
+### Maps Services
+
+**Google Maps**
+- **Critical**: Street View requires extensive permissions
+- **Special**: Custom map styles need 'unsafe-inline'
+- **Performance**: Heavy JavaScript payload
+
+**Mapbox**
+- **Critical**: Vector tiles require worker-src permissions
+- **Special**: Custom styling needs style-src permissions
+- **Performance**: WebGL rendering considerations
+
+### Deprecated/Legacy Services
+
+**Google Optimize**
+- **Critical**: Service deprecated September 2023
+- **Migration**: Users need to migrate to Google Analytics 4 experiments
+- **Legacy**: Some sites may still have old implementations
+
+### Universal Issues Found
+
+**Documentation Accessibility**
+- Many services have moved, deleted, or restricted CSP documentation
+- Facebook/Meta developer docs frequently return error pages
+- Auth providers often don't maintain public CSP guidance
+
+**CSP Compatibility Trends**
+- Most analytics services require 'unsafe-inline' for dynamic tracking
+- A/B testing platforms fundamentally conflict with strict CSP
+- Real-time services need websocket and persistent connection permissions
+- Customer-specific subdomains make generic CSP rules difficult
+
+**Security vs Functionality Trade-offs**
+- Strict CSP policies break many common integrations
+- Most popular services require CSP relaxation to function
+- 'unsafe-inline' and 'unsafe-eval' requirements common but weaken security
+
 ---
 
 **Next Steps:**
 1. ✅ Create tracking document
-2. ⏳ Count total services
-3. ⏳ Begin systematic verification of each service
-4. ⏳ Update service definitions with verifiedAt timestamps
-5. ⏳ Analyze multi-version requirements
-6. ⏳ Provide architectural recommendation
+2. ✅ Count total services
+3. ✅ Begin systematic verification of each service
+4. ✅ Update service definitions with verifiedAt timestamps
+5. ✅ Analyze multi-version requirements
+6. ✅ Provide architectural recommendation
