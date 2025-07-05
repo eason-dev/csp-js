@@ -1,10 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import {
+  generateCSP,
   generateCSPAsync,
   generateCSPHeaderAsync,
   generateReportOnlyCSPAsync,
 } from '../generator.js';
 import { generateNonce } from '../utils.js';
+import { clearServicesCache } from '@csp-kit/data';
 
 describe('generateCSP', () => {
   it('should generate CSP for single service', async () => {
@@ -117,5 +119,29 @@ describe('generateNonce', () => {
 
     expect(typeof nonce).toBe('string');
     expect(/^[0-9a-f]+$/.test(nonce)).toBe(true);
+  });
+});
+
+describe('Services Loading Edge Cases', () => {
+  it('should throw error when using sync generateCSP without loaded services', () => {
+    // Clear the services cache to simulate unloaded state
+    clearServicesCache();
+
+    // This should throw an error because services are not loaded
+    expect(() => {
+      generateCSP(['google-analytics']);
+    }).toThrow('Services not loaded. Call loadServices() first or use getServiceAsync()');
+  });
+
+  it('should work with async generateCSPAsync even without preloaded services', async () => {
+    // Clear the services cache to simulate unloaded state
+    clearServicesCache();
+
+    // This should work because it loads services internally
+    const result = await generateCSPAsync(['google-analytics']);
+
+    expect(result.includedServices).toContain('google-analytics');
+    expect(result.header).toContain('script-src');
+    expect(result.header).toContain('https://*.google-analytics.com');
   });
 });

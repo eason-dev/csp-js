@@ -1,24 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateCSP, loadServices } from '@csp-kit/generator';
-
-// Initialize services on first request
-let servicesLoaded = false;
-
-async function ensureServicesLoaded() {
-  if (!servicesLoaded) {
-    await loadServices();
-    servicesLoaded = true;
-  }
-}
+import { generateCSPAsync } from '@csp-kit/generator';
 
 export async function POST(request: NextRequest) {
   try {
-    await ensureServicesLoaded();
-
     const body = await request.json();
     const { services, nonce, customRules, reportUri } = body;
 
-    const result = generateCSP({
+    const result = await generateCSPAsync({
       services,
       nonce,
       customRules,

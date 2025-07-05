@@ -25,6 +25,7 @@ export interface CSPDirectives {
   'img-src'?: string[];
   'connect-src'?: string[];
   'frame-src'?: string[];
+  'frame-ancestors'?: string[];
   'font-src'?: string[];
   'style-src'?: string[];
   'form-action'?: string[];
@@ -33,6 +34,7 @@ export interface CSPDirectives {
   'child-src'?: string[];
   'worker-src'?: string[];
   'manifest-src'?: string[];
+  'base-uri'?: string[];
   'report-uri'?: string[];
   'report-to'?: string[];
 }
