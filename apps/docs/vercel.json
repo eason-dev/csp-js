@@ -2,15 +2,5 @@
   "buildCommand": "cd ../.. && pnpm install --frozen-lockfile && pnpm exec turbo build --filter=docs",
   "outputDirectory": "build",
   "installCommand": "echo 'Dependencies installed in buildCommand'",
-  "framework": "docusaurus-2",
-  "rewrites": [
-    {
-      "source": "/docs/(.*)",
-      "destination": "/$1"
-    },
-    {
-      "source": "/docs",
-      "destination": "/"
-    }
-  ]
+  "framework": "docusaurus-2"
 }
