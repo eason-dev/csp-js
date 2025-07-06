@@ -277,7 +277,7 @@ Now that you're up and running:
 2. **[CLI Guide](./cli-guide.md)** - Command-line tools reference
 3. **[Service Support](./service-support.md)** - List of all supported services
 4. **[Contributing](./contributing.md)** - Help add new services
-5. **[Examples](./examples/)** - Framework-specific examples
+5. **[Examples](./examples/nextjs.md)** - Framework-specific examples
 
 ## 🎉 Welcome to the Community!
 

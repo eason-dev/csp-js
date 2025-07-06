@@ -63,7 +63,7 @@ console.log(result.header);
 |----------|-------------|
 | **[Service Support](./service-support.md)** | List of 106+ supported services |
 | **[Contributing](./contributing.md)** | How to contribute new services |
-| **[Examples](./examples/)** | Framework-specific examples |
+| **[Examples](./examples/nextjs.md)** | Framework-specific examples |
 
 ### 🔧 **For Maintainers**
 
