@@ -445,7 +445,7 @@ We believe in recognizing our contributors:
 
 ### Community Guidelines
 
-We follow the [Contributor Covenant Code of Conduct](https://github.com/eason-dev/csp-kit/blob/main/CODE_OF_CONDUCT.md). Please be:
+We follow the Contributor Covenant Code of Conduct. Please be:
 
 - **Respectful** and inclusive
 - **Constructive** in feedback
@@ -496,7 +496,7 @@ Understanding our release cycle helps with contribution timing:
 
 ## 🔮 Roadmap Alignment
 
-Check our [roadmap](../ROADMAP.md) to see how your contribution fits:
+Check our [roadmap](https://github.com/eason-dev/csp-kit/blob/main/ROADMAP.md) to see how your contribution fits:
 
 ### Current Focus Areas
 
@@ -523,7 +523,7 @@ Every contribution, no matter how small, makes CSP Kit better for everyone. Whet
 ### 📄 **License Agreement**
 
 By contributing to CSP Kit:
-- **Your contributions will be licensed under the [MIT License](../LICENSE)**
+- **Your contributions will be licensed under the [MIT License](https://github.com/eason-dev/csp-kit/blob/main/LICENSE)**
 - **🔓 Your contributions remain open source forever** - CSP Kit is committed to remaining free and open source software
 - **No copyright assignment required** - You retain rights to your contributions
 
@@ -534,5 +534,5 @@ By contributing to CSP Kit:
 - **[Getting Started](./getting-started.md)** - Using CSP Kit
 - **[API Reference](./api-reference.md)** - Complete API docs
 - **[CLI Guide](./cli-guide.md)** - Command-line tools
-- **[Maintainer Architecture](./maintainer/architecture.md)** - Technical details
-- **[Service Definition Guide](./maintainer/service-definition-guide.md)** - Detailed schema docs
+- **[Maintainer Architecture](./maintainer/ARCHITECTURE.md)** - Technical details
+- **[Service Definition Guide](./maintainer/SERVICE_DEFINITION_GUIDE.md)** - Detailed schema docs

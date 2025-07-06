@@ -347,7 +347,7 @@ updates:
 
 ### Before Updating
 
-- [ ] Check [CHANGELOG.md](https://github.com/eason-dev/csp-kit/blob/main/CHANGELOG.md)
+- [ ] Check [GitHub Releases](https://github.com/eason-dev/csp-kit/releases) for changelog
 - [ ] Review your current CSP implementation
 - [ ] Backup your current package-lock.json
 - [ ] Ensure tests are passing

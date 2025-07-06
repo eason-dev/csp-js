@@ -364,8 +364,8 @@ csp-cli update service-name
 | Guide | Purpose |
 |-------|----------|
 | **[📖 Contributing Guide](./CONTRIBUTING.md)** | Complete contribution workflow |
-| **[🏗️ Architecture Guide](./docs/ARCHITECTURE.md)** | Technical architecture and design |
-| **[🔧 Service Definition Guide](./docs/SERVICE_DEFINITION_GUIDE.md)** | How to create service definitions |
+| **[🏗️ Architecture Guide](./docs/maintainer/ARCHITECTURE.md)** | Technical architecture and design |
+| **[🔧 Service Definition Guide](./docs/maintainer/SERVICE_DEFINITION_GUIDE.md)** | How to create service definitions |
 | **[🚀 Development Setup](./CONTRIBUTING.md#quick-start)** | Local development environment |
 
 ### 🌟 **What We Need Most**

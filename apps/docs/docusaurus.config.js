@@ -76,11 +76,11 @@ const config = {
             items: [
               {
                 label: 'Architecture',
-                to: '/ARCHITECTURE',
+                to: '/maintainer/ARCHITECTURE',
               },
               {
                 label: 'Maintainer Guide',
-                to: '/MAINTAINER_GUIDE',
+                to: '/maintainer/MAINTAINER_GUIDE',
               },
             ],
           },
