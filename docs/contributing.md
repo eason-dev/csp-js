@@ -496,7 +496,7 @@ Understanding our release cycle helps with contribution timing:
 
 ## 🔮 Roadmap Alignment
 
-Check our [roadmap](https://github.com/eason-dev/csp-kit/blob/main/ROADMAP.md) to see how your contribution fits:
+Check our [roadmap](../ROADMAP.md) to see how your contribution fits:
 
 ### Current Focus Areas
 
@@ -523,7 +523,7 @@ Every contribution, no matter how small, makes CSP Kit better for everyone. Whet
 ### 📄 **License Agreement**
 
 By contributing to CSP Kit:
-- **Your contributions will be licensed under the [MIT License](https://github.com/eason-dev/csp-kit/blob/main/LICENSE)**
+- **Your contributions will be licensed under the [MIT License](../LICENSE)**
 - **🔓 Your contributions remain open source forever** - CSP Kit is committed to remaining free and open source software
 - **No copyright assignment required** - You retain rights to your contributions
 
