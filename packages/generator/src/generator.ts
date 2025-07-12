@@ -62,30 +62,36 @@ export function generateCSP(input: CSPService[] | CSPOptionsV2): CSPResult {
   // Process each service
   const processedServiceIds = new Set<string>();
   
-  for (const service of finalOptions.services) {
+  for (const serviceItem of finalOptions.services) {
     // Check if this is a configured service partial
-    if (isConfiguredService(service)) {
+    if (isConfiguredService(serviceItem)) {
       // This is a configured service result, just use its directives
-      serviceDirectives.push(service.directives);
+      serviceDirectives.push(serviceItem.directives);
       includedServices.push('custom-configured-service');
       continue;
     }
 
     // Type guard check for full service
-    if (!isCSPService(service)) {
+    if (!isCSPService(serviceItem)) {
       warnings.push(`Invalid service object provided`);
       continue;
     }
 
+    // Now TypeScript knows serviceItem is CSPService
+    const service: CSPService = serviceItem;
+
     // Check for conflicts
     if (service.conflicts) {
+      let hasConflict = false;
       for (const conflictId of service.conflicts) {
         if (processedServiceIds.has(conflictId)) {
           conflicts.push(`${service.id} conflicts with ${conflictId}`);
           warnings.push(`Service ${service.id} conflicts with already included ${conflictId}, skipping`);
-          continue;
+          hasConflict = true;
+          break;
         }
       }
+      if (hasConflict) continue;
     }
 
     // Check if service replaces another
