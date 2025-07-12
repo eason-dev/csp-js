@@ -1,4 +1,4 @@
-import { defineService, createConfigurableService, type CSPService } from '../../service-types.js';
+import { defineService, createConfigurableService } from '../../service-types.js';
 import { ServiceCategory, type CSPDirectives } from '../../types.js';
 
 // Example of a configurable service
