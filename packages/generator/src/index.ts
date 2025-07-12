@@ -3,14 +3,13 @@ export {
   generateCSP,
   generateCSPHeader,
   generateReportOnlyCSP,
-  generateCSPAsync,
-  generateCSPHeaderAsync,
-  generateReportOnlyCSPAsync,
 } from './generator.js';
+
+
 export { generateNonce } from './utils.js';
 
 // Type exports
-export type { CSPOptions, CSPResult, NonceOptions } from './types.js';
+export type { CSPOptions, CSPOptionsV2, CSPResult, NonceOptions } from './types.js';
 
 // Re-export from data package for convenience
 export type {
@@ -18,19 +17,17 @@ export type {
   ServiceCategory,
   CSPDirectives,
   ServiceRegistry,
+  CSPService,
+  DefineServiceFn,
+  ValidationResult,
+  ConfigurableService,
 } from '@csp-kit/data';
 
 export {
-  services,
-  categories,
-  getServiceRegistry,
-  getService,
-  getServicesByCategory,
-  searchServices,
-  loadServices,
-  getServiceAsync,
-  clearServicesCache,
+  defineService,
+  isCSPService,
 } from '@csp-kit/data';
+
 
 // Default export for simple usage
 export { generateCSP as default } from './generator.js';

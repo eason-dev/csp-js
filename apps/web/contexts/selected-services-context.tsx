@@ -1,16 +1,12 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-
-export interface SelectedService {
-  id: string;
-  name: string;
-}
+import { type CSPService } from '@csp-kit/data';
 
 interface SelectedServicesContextType {
-  selectedServices: SelectedService[];
-  addService: (service: SelectedService) => void;
-  removeService: (serviceId: string) => void;
+  selectedServices: CSPService[];
+  addService: (service: CSPService) => void;
+  removeService: (service: CSPService) => void;
   clearServices: () => void;
   isSelected: (serviceId: string) => boolean;
   getSelectedServiceIds: () => string[];
@@ -18,14 +14,14 @@ interface SelectedServicesContextType {
 
 const SelectedServicesContext = createContext<SelectedServicesContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'csp-kit-selected-services';
+const STORAGE_KEY = 'csp-kit-selected-services-v2';
 
 interface SelectedServicesProviderProps {
   children: ReactNode;
 }
 
 export function SelectedServicesProvider({ children }: SelectedServicesProviderProps) {
-  const [selectedServices, setSelectedServices] = useState<SelectedService[]>([]);
+  const [selectedServices, setSelectedServices] = useState<CSPService[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Load from localStorage on mount
@@ -34,6 +30,7 @@ export function SelectedServicesProvider({ children }: SelectedServicesProviderP
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
+        // For backward compatibility, we'll store just the service data
         setSelectedServices(Array.isArray(parsed) ? parsed : []);
       }
     } catch (error) {
@@ -54,7 +51,7 @@ export function SelectedServicesProvider({ children }: SelectedServicesProviderP
     }
   }, [selectedServices, isLoaded]);
 
-  const addService = (service: SelectedService) => {
+  const addService = (service: CSPService) => {
     setSelectedServices(prev => {
       const exists = prev.find(s => s.id === service.id);
       if (exists) return prev; // Don't add duplicates
@@ -62,8 +59,8 @@ export function SelectedServicesProvider({ children }: SelectedServicesProviderP
     });
   };
 
-  const removeService = (serviceId: string) => {
-    setSelectedServices(prev => prev.filter(s => s.id !== serviceId));
+  const removeService = (service: CSPService) => {
+    setSelectedServices(prev => prev.filter(s => s.id !== service.id));
   };
 
   const clearServices = () => {

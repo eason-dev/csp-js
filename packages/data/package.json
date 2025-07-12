@@ -13,20 +13,24 @@
       "require": "./dist/index.cjs"
     },
     "./services": {
-      "types": "./dist/services.d.ts",
-      "import": "./dist/services.js",
-      "require": "./dist/services.cjs"
+      "types": "./dist/services/index.d.ts",
+      "import": "./dist/services/index.js",
+      "require": "./dist/services/index.cjs"
+    },
+    "./services/*": {
+      "types": "./dist/services/*.d.ts",
+      "import": "./dist/services/*.js",
+      "require": "./dist/services/*.cjs"
     }
   },
+  "sideEffects": false,
   "files": [
     "dist",
     "data",
     "README.md"
   ],
   "scripts": {
-    "build-services": "tsx scripts/build-services.ts",
-    "generate-bundle": "tsx scripts/generate-services-bundle.ts",
-    "build": "npm run build-services && npm run generate-bundle && tsup",
+    "build": "tsup",
     "dev": "tsup --watch",
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",

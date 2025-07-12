@@ -139,6 +139,8 @@ export function directivesToHeader(directives: CSPDirectives): string {
     'worker-src',
     'manifest-src',
     'form-action',
+    'report-uri',
+    'report-to',
   ];
 
   for (const directive of directiveOrder) {

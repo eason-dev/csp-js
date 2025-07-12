@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { type ServiceRegistry } from '@csp-kit/generator';
+import { type CSPService } from '@csp-kit/data';
+import * as allServices from '@csp-kit/data';
+import { generateCSP } from '@csp-kit/generator';
 import {
   Shield,
   AlertTriangle,
@@ -32,9 +34,17 @@ import { UsageMethods } from '@/components/csp/usage-methods';
 import { useSelectedServices } from '@/contexts/selected-services-context';
 import { InfoTooltip } from '@/components/ui/info-tooltip';
 
-interface ProgressiveHomepageProps {
-  serviceRegistry: ServiceRegistry;
-}
+// Filter to get only service objects
+const servicesList = Object.entries(allServices)
+  .filter(([key, value]) => 
+    typeof value === 'object' && 
+    value !== null && 
+    'id' in value &&
+    key !== 'defineService' &&
+    key !== 'isCSPService' &&
+    key !== 'createConfigurableService'
+  )
+  .map(([, service]) => service as CSPService);
 
 // Common use-case scenarios for better UX
 const SCENARIO_CARDS = [
@@ -76,23 +86,23 @@ const SCENARIO_CARDS = [
   },
 ];
 
-export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHomepageProps) {
-  const services = serviceRegistry.services;
-  const { selectedServices, addService, removeService, clearServices, isSelected } =
+export default function ProgressiveHomepage() {
+  const { selectedServices, addService, removeService, clearServices } =
     useSelectedServices();
+  const [copiedHeader, setCopiedHeader] = useState(false);
 
   // State management
   const [useNonce, setUseNonce] = useState(false);
   const [reportUri, setReportUri] = useState('');
-  const [customRules, setCustomRules] = useState<Record<string, string>>({
-    'script-src': '',
-    'style-src': '',
-    'img-src': '',
-    'connect-src': '',
-    'font-src': '',
-    'frame-src': '',
-    'media-src': '',
-    'object-src': '',
+  const [additionalRules, setAdditionalRules] = useState<Record<string, string[]>>({
+    'script-src': [],
+    'style-src': [],
+    'img-src': [],
+    'connect-src': [],
+    'font-src': [],
+    'frame-src': [],
+    'media-src': [],
+    'object-src': [],
   });
 
   const [customRuleToggles, setCustomRuleToggles] = useState<Record<string, boolean>>({
@@ -105,562 +115,348 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
     'media-src': false,
     'object-src': false,
   });
-  const [copied, setCopied] = useState(false);
-  const [result, setResult] = useState<{
-    header: string;
-    warnings: string[];
-    includedServices: string[];
-    unknownServices: string[];
-    nonce?: string;
-    directives: Record<string, string[]>;
-  } | null>(null);
 
-  // Check if we have any selected services
-  const hasSelectedServices = selectedServices.length > 0;
+  // Generate CSP
+  const [generatedCSP, setGeneratedCSP] = useState<ReturnType<typeof generateCSP> | null>(null);
+  const [, setIsGenerating] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
 
-  // Generate CSP automatically when services change
+  // Calculate active custom rules
+  const activeCustomRules = Object.entries(additionalRules).reduce(
+    (acc, [key, value]) => {
+      if (customRuleToggles[key] && value.length > 0) {
+        acc[key] = value;
+      }
+      return acc;
+    },
+    {} as Record<string, string[]>
+  );
+
+  // Generate CSP whenever settings change
   useEffect(() => {
-    if (hasSelectedServices) {
-      generateCurrentCSP();
-    } else {
-      setResult(null);
+    if (selectedServices.length === 0) {
+      setGeneratedCSP(null);
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedServices, useNonce, reportUri, customRules]);
 
-  const generateCurrentCSP = async () => {
-    try {
-      // Build custom rules object, filtering out empty values
-      const customRulesObj: Record<string, string[]> = {};
-      Object.entries(customRules).forEach(([directive, value]) => {
-        if (value.trim() && customRuleToggles[directive]) {
-          customRulesObj[directive] = value
-            .split(',')
-            .map(v => v.trim())
-            .filter(Boolean);
-        }
-      });
+    const generateNewCSP = () => {
+      setIsGenerating(true);
+      setGenerationError(null);
 
-      // Build service array with versions
-      const servicesWithVersions = selectedServices.map(service => service.id);
-
-      const response = await fetch('/api/generate-csp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          services: servicesWithVersions,
+      try {
+        const result = generateCSP({
+          services: selectedServices,
           nonce: useNonce,
-          customRules: customRulesObj,
+          additionalRules: activeCustomRules,
           reportUri: reportUri || undefined,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate CSP');
-      }
-
-      const cspResult = await response.json();
-
-      // Parse the CSP header to extract directives for better display
-      const directives: Record<string, string[]> = {};
-      if (cspResult.header) {
-        const parts = cspResult.header.split(';').map((part: string) => part.trim());
-        parts.forEach((part: string) => {
-          const [directive, ...sources] = part.split(' ');
-          if (directive && sources.length > 0) {
-            directives[directive] = sources;
-          }
         });
+        setGeneratedCSP(result);
+      } catch (error) {
+        console.error('Error generating CSP:', error);
+        setGenerationError(error instanceof Error ? error.message : 'Failed to generate CSP');
+      } finally {
+        setIsGenerating(false);
       }
+    };
 
-      setResult({
-        ...cspResult,
-        directives,
-      });
-    } catch (error) {
-      console.error('Error generating CSP:', error);
-      setResult({
-        header: 'Error: Failed to generate CSP',
-        warnings: ['Please check your configuration'],
-        includedServices: [],
-        unknownServices: selectedServices.map(s => s.id),
-        directives: {},
-      });
-    }
+    generateNewCSP();
+  }, [selectedServices, useNonce, activeCustomRules, reportUri]);
+
+  // Toggle custom rule
+  const toggleCustomRule = (directive: string) => {
+    setCustomRuleToggles((prev) => ({ ...prev, [directive]: !prev[directive] }));
   };
 
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
+  // Update custom rule
+  const updateCustomRule = (directive: string, value: string) => {
+    const values = value.split(/[\s,]+/).filter(Boolean);
+    setAdditionalRules((prev) => ({ ...prev, [directive]: values }));
   };
 
-  const handleScenarioSelect = (scenarioId: string) => {
-    const scenario = SCENARIO_CARDS.find(c => c.id === scenarioId);
-    if (scenario) {
-      // Add all services from this scenario that exist
-      scenario.services.forEach(serviceId => {
-        const service = services[serviceId];
-        if (service && !isSelected(serviceId)) {
-          addService({
-            id: service.id,
-            name: service.name,
-          });
-        }
-      });
-    }
+  // Load scenario
+  const loadScenario = (scenarioServices: string[]) => {
+    clearServices();
+    scenarioServices.forEach((serviceId) => {
+      const service = servicesList.find((s) => s.id === serviceId);
+      if (service) {
+        addService(service);
+      }
+    });
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 space-y-12">
       {/* Hero Section */}
-      <div className="mb-12 text-center">
-        <h1 className="from-primary to-primary/70 mb-6 bg-gradient-to-r bg-clip-text text-5xl font-bold text-transparent">
-          Generate CSP Headers Instantly
-        </h1>
-        <p className="text-muted-foreground mx-auto mb-8 max-w-3xl text-xl">
-          Select services, get production-ready Content Security Policy headers. Protect your
-          website from XSS attacks with zero configuration.
+      <div className="text-center space-y-6 max-w-3xl mx-auto">
+        <div className="flex items-center justify-center space-x-3 mb-4">
+          <Shield className="h-12 w-12 text-primary" />
+          <h1 className="text-4xl font-bold">CSP Kit Generator</h1>
+        </div>
+        <p className="text-xl text-muted-foreground">
+          Generate Content Security Policy headers by selecting the services you use.
+          We handle the complexity so you can focus on building.
         </p>
-
-        {/* Enhanced Search Bar */}
-        <SimpleSearch services={services} className="mx-auto max-w-2xl" />
+        <Badge variant="secondary" className="text-sm py-1 px-3">
+          106+ services • TypeScript-first • Tree-shakeable
+        </Badge>
       </div>
 
-      {/* Quick Start Scenarios - Hide when services are selected */}
-      {selectedServices.length === 0 && (
-        <Card className="mb-8">
-          <CardHeader>
-            <div className="text-center">
-              <CardTitle className="mb-2 flex items-center justify-center gap-2">
-                <Bookmark className="text-primary h-5 w-5" />
-                Quick Start Scenarios
-              </CardTitle>
-              <CardDescription>
-                Choose a common use case to get started with the right services
-              </CardDescription>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {SCENARIO_CARDS.map(scenario => {
-                const Icon = scenario.icon;
-                const scenarioServices = scenario.services.filter(id => services[id]);
-
-                return (
-                  <div
-                    key={scenario.id}
-                    className={`group cursor-pointer rounded-lg border p-4 transition-all hover:shadow-lg ${scenario.color}`}
-                    onClick={() => handleScenarioSelect(scenario.id)}
-                  >
-                    <div className="text-center">
-                      <Icon className="mx-auto mb-3 h-8 w-8" />
-                      <h3 className="mb-2 text-sm font-medium">{scenario.title}</h3>
-                      <p className="mb-3 text-xs opacity-80">{scenario.description}</p>
-                      <div className="text-xs opacity-70">
-                        {scenarioServices.length} service{scenarioServices.length !== 1 ? 's' : ''}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Progressive Disclosure - Only show when services are selected */}
-      {hasSelectedServices && (
-        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2">
-          {/* Left Column - Selected Services & Configuration */}
-          <div className="space-y-6">
-            {/* Selected Services */}
-            <Card>
-              <CardHeader>
+      {/* Common Scenarios */}
+      <div className="space-y-4">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold mb-2">Quick Start Templates</h2>
+          <p className="text-muted-foreground">
+            Select a common scenario or search for individual services below
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {SCENARIO_CARDS.map((scenario) => (
+            <Card
+              key={scenario.id}
+              className={`cursor-pointer transition-all hover:shadow-lg ${scenario.color}`}
+              onClick={() => loadScenario(scenario.services)}
+            >
+              <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    Selected Services ({selectedServices.length})
-                  </CardTitle>
-                  <Button variant="ghost" size="sm" onClick={clearServices}>
-                    Clear all
-                  </Button>
+                  <scenario.icon className="h-5 w-5" />
+                  <Zap className="h-4 w-4 opacity-50" />
                 </div>
+                <CardTitle className="text-lg">{scenario.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  {selectedServices.map(service => (
-                    <div
-                      key={service.id}
-                      className="bg-primary/5 hover:bg-primary/10 group flex cursor-pointer items-center justify-between gap-3 rounded-lg border p-3 transition-colors"
-                      onClick={() => window.open(`/service/${service.id}`, '_blank')}
-                    >
-                      <div className="flex min-w-0 items-center gap-2">
-                        <span className="truncate text-sm font-medium">{service.name}</span>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="hover:bg-destructive/20 text-destructive h-6 w-6 p-0 transition-opacity"
-                        onClick={e => {
-                          e.stopPropagation();
-                          removeService(service.id);
-                        }}
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  ))}
-                </div>
+                <CardDescription className="text-sm">{scenario.description}</CardDescription>
               </CardContent>
             </Card>
+          ))}
+        </div>
+      </div>
 
-            {/* Advanced Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Settings className="h-5 w-5" />
-                  Advanced Configuration
-                </CardTitle>
-                <CardDescription>Optional settings for power users</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Accordion type="multiple" className="w-full">
-                  {/* Security Options */}
-                  <AccordionItem value="security-options">
-                    <AccordionTrigger className="[&_[data-badge]]:no-underline">
-                      <div className="flex items-center gap-2">
-                        <span>Security Options</span>
-                        <div className="flex items-center gap-2">
-                          {useNonce && (
-                            <Badge variant="secondary" className="text-xs" data-badge>
-                              Nonce
-                            </Badge>
-                          )}
-                          {reportUri && (
-                            <Badge variant="secondary" className="text-xs" data-badge>
-                              Report URI
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="space-y-0.5">
-                            <div className="flex items-center gap-2">
-                              <Label>Generate Nonce</Label>
-                              <InfoTooltip
-                                content="A nonce (number used once) is a cryptographic token that makes inline scripts safer by allowing only scripts with the correct nonce value to execute. Essential for secure inline JavaScript and styles."
-                                referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#nonce"
-                                referenceText="MDN: CSP Nonce"
-                              />
-                            </div>
-                            <p className="text-muted-foreground text-xs">
-                              Generate a unique nonce for inline scripts
-                            </p>
-                          </div>
-                          <Switch checked={useNonce} onCheckedChange={setUseNonce} />
-                        </div>
+      {/* Service Search */}
+      <SimpleSearch services={servicesList} />
 
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2">
-                            <Label htmlFor="report-uri">Report URI (optional)</Label>
-                            <InfoTooltip
-                              content="When CSP violations occur, the browser will send a report to this URL. Essential for monitoring security issues and debugging CSP policies in production."
-                              referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/report-uri"
-                              referenceText="MDN: CSP Reporting"
-                            />
-                          </div>
-                          <Input
-                            id="report-uri"
-                            type="url"
-                            placeholder="https://your-site.com/csp-report"
-                            value={reportUri}
-                            onChange={e => setReportUri(e.target.value)}
-                          />
-                          <p className="text-muted-foreground text-xs">
-                            CSP violations will be reported to this endpoint
-                          </p>
-                        </div>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-
-                  {/* Custom CSP Rules */}
-                  <AccordionItem value="custom-rules">
-                    <AccordionTrigger className="[&_[data-badge]]:no-underline">
-                      <div className="flex w-full flex-col items-start gap-2 pr-4">
-                        <span>Custom CSP Rules</span>
-                        {Object.entries(customRules).filter(
-                          ([directive, value]) => value.trim() && customRuleToggles[directive]
-                        ).length > 0 && (
-                          <div className="flex flex-wrap gap-1">
-                            {Object.entries(customRules)
-                              .filter(
-                                ([directive, value]) => value.trim() && customRuleToggles[directive]
-                              )
-                              .map(([directive]) => (
-                                <Badge
-                                  key={directive}
-                                  variant="secondary"
-                                  className="text-xs"
-                                  data-badge
-                                >
-                                  {directive}
-                                </Badge>
-                              ))}
-                          </div>
-                        )}
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="space-y-4">
-                        <p className="text-muted-foreground text-sm">
-                          Add custom domains and rules for each CSP directive
-                        </p>
-                        {Object.entries(customRules).map(([directive, value]) => {
-                          // Define directive info for CSP rules
-                          const directiveInfoMap = {
-                            'script-src': {
-                              description:
-                                'Controls which scripts can be executed. Protects against XSS attacks by preventing unauthorized JavaScript execution.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src',
-                            },
-                            'style-src': {
-                              description:
-                                'Controls which stylesheets can be loaded. Prevents CSS injection attacks and unauthorized styling.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/style-src',
-                            },
-                            'img-src': {
-                              description:
-                                'Controls which images can be loaded. Prevents data exfiltration through malicious images.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/img-src',
-                            },
-                            'connect-src': {
-                              description:
-                                'Controls which URLs can be loaded using script interfaces (fetch, XMLHttpRequest, WebSocket). Prevents unauthorized API calls.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/connect-src',
-                            },
-                            'font-src': {
-                              description:
-                                'Controls which fonts can be loaded. Prevents unauthorized font downloads that could be used for tracking.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/font-src',
-                            },
-                            'frame-src': {
-                              description:
-                                'Controls which URLs can be embedded as frames. Prevents clickjacking and unauthorized iframe embedding.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/frame-src',
-                            },
-                            'media-src': {
-                              description:
-                                'Controls which audio and video sources can be loaded. Prevents unauthorized media content.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/media-src',
-                            },
-                            'object-src': {
-                              description:
-                                'Controls which plugins can be loaded (Flash, Java). Generally recommended to set to "none" for security.',
-                              url: 'https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/object-src',
-                            },
-                          };
-                          const directiveInfo =
-                            directiveInfoMap[directive as keyof typeof directiveInfoMap];
-                          const isEnabled = customRuleToggles[directive];
-
-                          return (
-                            <div key={directive} className="space-y-2">
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-2">
-                                  <Label htmlFor={directive} className="font-mono text-sm">
-                                    {directive}
-                                  </Label>
-                                  {directiveInfo && (
-                                    <InfoTooltip
-                                      content={directiveInfo.description}
-                                      referenceUrl={directiveInfo.url}
-                                      referenceText="MDN Docs"
-                                    />
-                                  )}
-                                </div>
-                                <Switch
-                                  checked={isEnabled}
-                                  onCheckedChange={checked => {
-                                    setCustomRuleToggles(prev => ({
-                                      ...prev,
-                                      [directive]: checked,
-                                    }));
-                                    if (checked && !value) {
-                                      setCustomRules(prev => ({
-                                        ...prev,
-                                        [directive]: 'https://example.com',
-                                      }));
-                                    }
-                                  }}
-                                />
-                              </div>
-                              {isEnabled && (
-                                <Input
-                                  id={directive}
-                                  placeholder="https://example.com, 'self'"
-                                  value={value}
-                                  onChange={e =>
-                                    setCustomRules(prev => ({
-                                      ...prev,
-                                      [directive]: e.target.value,
-                                    }))
-                                  }
-                                  className="font-mono text-xs"
-                                />
-                              )}
-                            </div>
-                          );
-                        })}
-                        <p className="text-muted-foreground text-xs">
-                          Separate multiple values with commas. Use quotes for keywords like
-                          &apos;self&apos;, &apos;unsafe-inline&apos;.
-                        </p>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </CardContent>
-            </Card>
+      {/* Selected Services */}
+      {selectedServices.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold">
+              Selected Services ({selectedServices.length})
+            </h3>
+            <Button onClick={clearServices} variant="ghost" size="sm">
+              Clear All
+            </Button>
           </div>
-
-          {/* Right Column - CSP Results */}
-          <div className="space-y-6">
-            {result && (
-              <>
-                {/* CSP Header with Color Coding */}
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="flex items-center gap-2">
-                          <Zap className="h-5 w-5" />
-                          Your CSP Header
-                        </CardTitle>
-                        <CardDescription>Ready to use in your application</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <UsageMethods
-                      cspHeader={result.header}
-                      serviceIds={selectedServices.map(s => s.id)}
-                      useNonce={useNonce}
-                      reportUri={reportUri}
-                      customRules={Object.fromEntries(
-                        Object.entries(customRules)
-                          .filter(
-                            ([directive, value]) => value.trim() && customRuleToggles[directive]
-                          )
-                          .map(([key, value]) => [
-                            key,
-                            value
-                              .split(',')
-                              .map(v => v.trim())
-                              .filter(Boolean),
-                          ])
-                      )}
-                    />
-                  </CardContent>
-                </Card>
-
-                {/* CSP Breakdown */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>CSP Breakdown</CardTitle>
-                    <CardDescription>
-                      Breakdown of all CSP directives and their sources
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ColorCodedHeader
-                      header={result.header}
-                      directives={result.directives}
-                      onCopy={() => copyToClipboard(result.header)}
-                      copied={copied}
-                      showBreakdown={true}
-                      serviceTags={selectedServices.map(service => ({
-                        serviceId: service.id,
-                        serviceName: service.name,
-                      }))}
-                      serviceDetails={selectedServices
-                        .map(service => {
-                          const serviceDefinition = services[service.id];
-                          if (!serviceDefinition) return null;
-
-                          return {
-                            serviceId: service.id,
-                            serviceName: service.name,
-                            cspDirectives: serviceDefinition.cspDirectives,
-                          };
-                        })
-                        .filter(
-                          (
-                            detail
-                          ): detail is {
-                            serviceId: string;
-                            serviceName: string;
-                            cspDirectives: Record<string, string[]>;
-                          } => detail !== null
-                        )}
-                    />
-                  </CardContent>
-                </Card>
-
-                {/* Warnings */}
-                {(result.warnings?.length > 0 || result.unknownServices?.length > 0) && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <AlertTriangle className="h-5 w-5 text-amber-500" />
-                        Warnings
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                      {result.warnings?.map((warning, index) => (
-                        <div key={index} className="flex items-start gap-2 text-sm">
-                          <AlertTriangle className="mt-0.5 h-4 w-4 text-amber-500" />
-                          <span>{warning}</span>
-                        </div>
-                      ))}
-                      {result.unknownServices?.length > 0 && (
-                        <div className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400">
-                          <X className="mt-0.5 h-4 w-4" />
-                          <span>Unknown services: {result.unknownServices.join(', ')}</span>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
-              </>
-            )}
+          <div className="flex flex-wrap gap-2">
+            {selectedServices.map((service) => (
+              <Badge key={service.id} variant="secondary" className="py-1 px-3">
+                {service.name}
+                <button
+                  onClick={() => removeService(service)}
+                  className="ml-2 hover:text-destructive"
+                  aria-label={`Remove ${service.name}`}
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
           </div>
         </div>
       )}
 
-      {/* Call to Action when no services selected */}
-      {!hasSelectedServices && (
-        <Card className="mx-auto max-w-2xl">
-          <CardContent className="py-12 text-center">
-            <Shield className="text-muted-foreground/50 mx-auto mb-4 h-16 w-16" />
-            <h3 className="mb-2 text-lg font-medium">Ready to Generate CSP</h3>
-            <p className="text-muted-foreground mb-4">
-              Search for services above or choose a category to get started.
-            </p>
-            <div className="text-muted-foreground inline-flex items-center gap-2 text-sm">
-              <Info className="h-4 w-4" />
-              <span>Your CSP will update automatically as you select services</span>
+      {/* Advanced Options */}
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="advanced">
+          <AccordionTrigger className="text-lg font-semibold">
+            <div className="flex items-center space-x-2">
+              <Settings className="h-5 w-5" />
+              <span>Advanced Options</span>
             </div>
+          </AccordionTrigger>
+          <AccordionContent className="space-y-6 pt-4">
+            {/* Nonce Option */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Label htmlFor="use-nonce" className="cursor-pointer">
+                  Use Cryptographic Nonce
+                </Label>
+                <InfoTooltip content="A nonce (number used once) adds an extra layer of security by requiring inline scripts to include a matching nonce value. Recommended for enhanced security." />
+              </div>
+              <Switch
+                id="use-nonce"
+                checked={useNonce}
+                onCheckedChange={setUseNonce}
+                aria-label="Toggle nonce usage"
+              />
+            </div>
+
+            {/* Report URI */}
+            <div className="space-y-2">
+              <div className="flex items-center space-x-2">
+                <Label htmlFor="report-uri">Report URI</Label>
+                <InfoTooltip content="Endpoint where browsers will send CSP violation reports. Useful for monitoring policy violations in production." />
+              </div>
+              <Input
+                id="report-uri"
+                type="url"
+                placeholder="https://your-site.com/csp-report"
+                value={reportUri}
+                onChange={(e) => setReportUri(e.target.value)}
+              />
+            </div>
+
+            {/* Custom Rules */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <h4 className="font-medium">Additional Rules</h4>
+                <InfoTooltip content="Add custom domains to specific CSP directives. Use this for services not in our database or custom domains." />
+              </div>
+              {Object.entries(additionalRules).map(([directive, value]) => (
+                <div key={directive} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor={`custom-${directive}`} className="text-sm">
+                      {directive}
+                    </Label>
+                    <Switch
+                      id={`toggle-${directive}`}
+                      checked={customRuleToggles[directive] || false}
+                      onCheckedChange={() => toggleCustomRule(directive)}
+                      aria-label={`Toggle ${directive}`}
+                    />
+                  </div>
+                  {customRuleToggles[directive] && (
+                    <Input
+                      id={`custom-${directive}`}
+                      placeholder="https://example.com, https://api.example.com"
+                      value={value.join(', ')}
+                      onChange={(e) => updateCustomRule(directive, e.target.value)}
+                      className="text-sm"
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+
+      {/* Generated CSP */}
+      {generatedCSP && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-semibold">Generated CSP</h2>
+            {generatedCSP.warnings && generatedCSP.warnings.length > 0 && (
+              <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+                <AlertTriangle className="h-3 w-3 mr-1" />
+                {generatedCSP.warnings.length} Warning{generatedCSP.warnings.length > 1 ? 's' : ''}
+              </Badge>
+            )}
+          </div>
+
+          {/* Warnings */}
+          {generatedCSP.warnings && generatedCSP.warnings.length > 0 && (
+            <Card className="border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-900/20">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center space-x-2">
+                  <AlertTriangle className="h-5 w-5 text-yellow-600" />
+                  <span>Security Warnings</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-1 text-sm">
+                  {generatedCSP.warnings.map((warning, index) => (
+                    <li key={index} className="flex items-start space-x-2">
+                      <span className="text-yellow-600">•</span>
+                      <span>{warning}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* CSP Header */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">CSP Header</CardTitle>
+              <CardDescription>
+                Copy this header and add it to your server configuration
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ColorCodedHeader 
+                header={generatedCSP.header} 
+                directives={generatedCSP.directives as Record<string, string[]>}
+                onCopy={() => {
+                  navigator.clipboard.writeText(generatedCSP.header);
+                  setCopiedHeader(true);
+                  setTimeout(() => setCopiedHeader(false), 2000);
+                }}
+                copied={copiedHeader}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Usage Methods */}
+          <UsageMethods
+            header={generatedCSP.header}
+            directives={generatedCSP.directives as Record<string, string[]>}
+            nonce={generatedCSP.nonce}
+            selectedServices={selectedServices}
+          />
+
+          {/* Report-Only Mode */}
+          {reportUri && (
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center space-x-2">
+                  <Info className="h-5 w-5" />
+                  <span>Report-Only Mode</span>
+                </CardTitle>
+                <CardDescription>
+                  Test your CSP without blocking resources by using the report-only header
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm">
+                  <code>Content-Security-Policy-Report-Only: {generatedCSP.reportOnlyHeader}</code>
+                </pre>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
+
+      {/* Empty State */}
+      {selectedServices.length === 0 && (
+        <Card className="border-dashed">
+          <CardContent className="text-center py-12">
+            <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No Services Selected</h3>
+            <p className="text-muted-foreground mb-4">
+              Select services from the templates above or search for specific services to generate
+              your CSP header.
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => loadScenario(['google-analytics', 'google-fonts'])}
+            >
+              <Bookmark className="h-4 w-4 mr-2" />
+              Try Example Configuration
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Error State */}
+      {generationError && (
+        <Card className="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center space-x-2 text-red-600">
+              <AlertTriangle className="h-5 w-5" />
+              <span>Generation Error</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm">{generationError}</p>
           </CardContent>
         </Card>
       )}
