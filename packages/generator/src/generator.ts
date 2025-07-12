@@ -13,9 +13,9 @@ import {
 /**
  * Check if a service is a configured result
  */
-function isConfiguredService(service: unknown): boolean {
+function isConfiguredService(service: unknown): service is { directives: CSPDirectives } {
   // A configured service is a partial CSPService returned by configure()
-  return service && typeof service === 'object' && 'directives' in service && !('id' in service);
+  return service !== null && typeof service === 'object' && 'directives' in service && !('id' in service);
 }
 
 /**
