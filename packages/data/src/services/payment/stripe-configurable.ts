@@ -1,5 +1,5 @@
 import { defineService, createConfigurableService, type CSPService } from '../../service-types.js';
-import { ServiceCategory } from '../../types.js';
+import { ServiceCategory, type CSPDirectives } from '../../types.js';
 
 // Example of a configurable service
 interface StripeOptions {
@@ -28,16 +28,14 @@ const baseStripe = defineService({
 export const StripeConfigurable = createConfigurableService<StripeOptions>(
   baseStripe,
   (options) => {
-    const additionalDirectives: Partial<CSPService> = {
-      directives: {}
-    };
+    const directives: CSPDirectives = {};
 
     if (options.checkout) {
-      additionalDirectives.directives['frame-src'] = [
+      directives['frame-src'] = [
         ...baseStripe.directives['frame-src'] || [],
         'https://checkout.stripe.com'
       ];
-      additionalDirectives.directives['script-src'] = [
+      directives['script-src'] = [
         ...baseStripe.directives['script-src'] || [],
         'https://checkout.stripe.com'
       ];
@@ -48,13 +46,13 @@ export const StripeConfigurable = createConfigurableService<StripeOptions>(
     }
 
     if (options.paymentRequest) {
-      additionalDirectives.directives['connect-src'] = [
+      directives['connect-src'] = [
         ...baseStripe.directives['connect-src'] || [],
         'https://stripe.network'
       ];
     }
 
-    return additionalDirectives;
+    return { directives };
   }
 );
 

@@ -5,8 +5,13 @@ export {
   generateReportOnlyCSP,
 } from './generator.js';
 
-// Alias for backwards compatibility (not actually async)
-export { generateCSP as generateCSPAsync } from './generator.js';
+// Import for the async wrapper
+import { generateCSP as generateCSPSync } from './generator.js';
+
+// Alias for backwards compatibility (wrap in promise for CI)
+export function generateCSPAsync(...args: Parameters<typeof generateCSPSync>): Promise<ReturnType<typeof generateCSPSync>> {
+  return Promise.resolve(generateCSPSync(...args));
+}
 
 
 export { generateNonce } from './utils.js';
