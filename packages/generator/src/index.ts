@@ -5,6 +5,9 @@ export {
   generateReportOnlyCSP,
 } from './generator.js';
 
+// Alias for backwards compatibility (not actually async)
+export { generateCSP as generateCSPAsync } from './generator.js';
+
 
 export { generateNonce } from './utils.js';
 

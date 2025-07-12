@@ -22,7 +22,7 @@ interface ServiceDefinition {
   aliases?: string[];
   lastUpdated: string;
   verifiedAt?: string;
-  monitoring?: any;
+  monitoring?: unknown;
 }
 
 const SERVICES_DIR = join(__dirname, '../data/services');

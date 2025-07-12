@@ -51,6 +51,7 @@ export interface CSPService {
   readonly monitoring?: ServiceMonitoring;
 
   /** Optional: Dynamic configuration */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   configure?: (options: any) => Partial<CSPService>;
 
   /** Optional: Validation logic */
@@ -106,7 +107,7 @@ export const defineService: DefineServiceFn = (service) => {
  */
 export function isCSPService(value: unknown): value is CSPService {
   if (!value || typeof value !== 'object') return false;
-  const service = value as any;
+  const service = value as Record<string, unknown>;
   return (
     typeof service.id === 'string' &&
     typeof service.name === 'string' &&
@@ -118,6 +119,7 @@ export function isCSPService(value: unknown): value is CSPService {
 /**
  * Type for configurable services
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface ConfigurableService<TOptions = any> extends CSPService {
   configure: (options: TOptions) => Partial<CSPService>;
 }

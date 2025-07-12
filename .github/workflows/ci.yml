@@ -180,15 +180,15 @@ jobs:
                 let errors = 0;
                 for (const [id, service] of Object.entries(services)) {
                   // Validate required fields
-                  if (!service.id || !service.name || !service.cspDirectives) {
-                    console.error('❌ Service', id, 'is missing required fields (id, name, cspDirectives)');
+                  if (!service.id || !service.name || !service.directives) {
+                    console.error('❌ Service', id, 'is missing required fields (id, name, directives)');
                     errors++;
                     continue;
                   }
                   
                   // Validate CSP directives are properly structured
-                  if (typeof service.cspDirectives !== 'object' || service.cspDirectives === null) {
-                    console.error('❌ Service', id, 'has invalid cspDirectives');
+                  if (typeof service.directives !== 'object' || service.directives === null) {
+                    console.error('❌ Service', id, 'has invalid directives');
                     errors++;
                     continue;
                   }

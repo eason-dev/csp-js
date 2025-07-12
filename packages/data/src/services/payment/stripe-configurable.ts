@@ -1,4 +1,4 @@
-import { defineService, createConfigurableService } from '../../service-types.js';
+import { defineService, createConfigurableService, type CSPService } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
 // Example of a configurable service
@@ -28,7 +28,7 @@ const baseStripe = defineService({
 export const StripeConfigurable = createConfigurableService<StripeOptions>(
   baseStripe,
   (options) => {
-    const additionalDirectives: any = {
+    const additionalDirectives: Partial<CSPService> = {
       directives: {}
     };
 

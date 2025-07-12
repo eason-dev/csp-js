@@ -1,10 +1,9 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   generateCSP,
   generateCSPHeader,
   generateReportOnlyCSP,
   defineService,
-  type CSPService,
 } from '../index.js';
 import { ServiceCategory } from '@csp-kit/data';
 
@@ -152,7 +151,7 @@ describe('generateCSP v2 API', () => {
         directives: {
           'script-src': ['https://validated.com'],
         },
-        validate: (directives) => ({
+        validate: () => ({
           warnings: ['This is a validation warning'],
         }),
         lastUpdated: '2024-01-01T00:00:00Z',

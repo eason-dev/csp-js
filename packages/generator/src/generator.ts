@@ -1,6 +1,6 @@
 import { type CSPService, isCSPService } from '@csp-kit/data';
 import type { CSPDirectives } from '@csp-kit/data';
-import type { CSPOptions, CSPResult, CSPOptionsV2 } from './types.js';
+import type { CSPResult, CSPOptionsV2 } from './types.js';
 import {
   generateNonce,
   mergeCSPDirectives,
@@ -13,7 +13,7 @@ import {
 /**
  * Check if a service is a configured result
  */
-function isConfiguredService(service: any): boolean {
+function isConfiguredService(service: unknown): boolean {
   // A configured service is a partial CSPService returned by configure()
   return service && typeof service === 'object' && 'directives' in service && !('id' in service);
 }
