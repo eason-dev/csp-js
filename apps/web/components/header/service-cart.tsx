@@ -25,7 +25,10 @@ export function ServiceCart() {
   };
 
   const handleRemoveService = (serviceId: string) => {
-    removeService(serviceId);
+    const service = selectedServices.find(s => s.id === serviceId);
+    if (service) {
+      removeService(service);
+    }
   };
 
   const handleClearAll = () => {

@@ -1,0 +1,10 @@
+export { Discord } from './discord.js';
+export { Facebook } from './facebook.js';
+export { Instagram } from './instagram.js';
+export { Linkedin } from './linkedin.js';
+export { Pinterest } from './pinterest.js';
+export { Slack } from './slack.js';
+export { Snapchat } from './snapchat.js';
+export { Tiktok } from './tiktok.js';
+export { Twitter } from './twitter.js';
+export { Whatsapp } from './whatsapp.js';

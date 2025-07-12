@@ -1,7 +1,7 @@
-import type { CSPDirectives } from '@csp-kit/data';
+import type { CSPDirectives, CSPService } from '@csp-kit/data';
 
 /**
- * CSP generation options
+ * CSP generation options (legacy API)
  */
 export interface CSPOptions {
   /** List of services to include */
@@ -27,6 +27,38 @@ export interface CSPOptions {
 
   /** Include 'unsafe-eval' (not recommended) */
   unsafeEval?: boolean;
+}
+
+/**
+ * CSP generation options (new API)
+ */
+export interface CSPOptionsV2 {
+  /** List of services to include */
+  services: CSPService[];
+
+  /** Generate a nonce for inline scripts */
+  nonce?: boolean | string;
+
+  /** Additional CSP rules to merge */
+  additionalRules?: CSPDirectives;
+
+  /** Report URI for CSP violations */
+  reportUri?: string;
+
+  /** Include 'self' directive by default */
+  includeSelf?: boolean;
+
+  /** Include 'unsafe-inline' (not recommended) */
+  unsafeInline?: boolean;
+
+  /** Include 'unsafe-eval' (not recommended) */
+  unsafeEval?: boolean;
+
+  /** Development-specific options */
+  development?: Partial<Omit<CSPOptionsV2, 'services' | 'development' | 'production'>>;
+
+  /** Production-specific options */
+  production?: Partial<Omit<CSPOptionsV2, 'services' | 'development' | 'production'>>;
 }
 
 /**

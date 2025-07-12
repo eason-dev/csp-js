@@ -1,9 +1,9 @@
-import { loadServices, getServiceRegistry } from '@csp-kit/generator';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import AllServicesPage from './all-services-page';
+import * as services from '@csp-kit/data';
 
 export const metadata: Metadata = {
   title: 'All Services - CSP Kit',
@@ -18,19 +18,21 @@ export const metadata: Metadata = {
   ],
 };
 
-export default async function ServicesPage() {
-  await loadServices();
-  const registry = await getServiceRegistry();
+export default function ServicesPage() {
+  // Count the services
+  const serviceCount = Object.values(services).filter(
+    (value) => typeof value === 'object' && value !== null && 'id' in value
+  ).length;
 
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
         <Suspense fallback={<div className="container mx-auto px-4 py-8">Loading services...</div>}>
-          <AllServicesPage serviceRegistry={registry} />
+          <AllServicesPage />
         </Suspense>
       </main>
-      <Footer serviceCount={Object.keys(registry.services).length} />
+      <Footer serviceCount={serviceCount} />
     </div>
   );
 }
