@@ -230,7 +230,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
         </p>
 
         {/* Enhanced Search Bar */}
-        <SimpleSearch services={services} className="mx-auto max-w-2xl" />
+        <SimpleSearch services={Object.values(services)} className="mx-auto max-w-2xl" />
       </div>
 
       {/* Quick Start Scenarios - Hide when services are selected */}

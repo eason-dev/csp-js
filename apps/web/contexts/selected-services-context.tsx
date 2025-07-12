@@ -1,12 +1,17 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { type CSPService } from '@csp-kit/data';
+
+// Simple service data that's stored in context
+interface SelectedService {
+  id: string;
+  name: string;
+}
 
 interface SelectedServicesContextType {
-  selectedServices: CSPService[];
-  addService: (service: CSPService) => void;
-  removeService: (service: CSPService) => void;
+  selectedServices: SelectedService[];
+  addService: (service: SelectedService) => void;
+  removeService: (serviceId: string) => void;
   clearServices: () => void;
   isSelected: (serviceId: string) => boolean;
   getSelectedServiceIds: () => string[];
@@ -21,7 +26,7 @@ interface SelectedServicesProviderProps {
 }
 
 export function SelectedServicesProvider({ children }: SelectedServicesProviderProps) {
-  const [selectedServices, setSelectedServices] = useState<CSPService[]>([]);
+  const [selectedServices, setSelectedServices] = useState<SelectedService[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   // Load from localStorage on mount
@@ -51,7 +56,7 @@ export function SelectedServicesProvider({ children }: SelectedServicesProviderP
     }
   }, [selectedServices, isLoaded]);
 
-  const addService = (service: CSPService) => {
+  const addService = (service: SelectedService) => {
     setSelectedServices(prev => {
       const exists = prev.find(s => s.id === service.id);
       if (exists) return prev; // Don't add duplicates
@@ -59,8 +64,8 @@ export function SelectedServicesProvider({ children }: SelectedServicesProviderP
     });
   };
 
-  const removeService = (service: CSPService) => {
-    setSelectedServices(prev => prev.filter(s => s.id !== service.id));
+  const removeService = (serviceId: string) => {
+    setSelectedServices(prev => prev.filter(s => s.id !== serviceId));
   };
 
   const clearServices = () => {

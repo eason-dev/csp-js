@@ -34,6 +34,8 @@ export type {
 export {
   defineService,
   isCSPService,
+  loadServices,
+  getServiceRegistry,
 } from '@csp-kit/data';
 
 

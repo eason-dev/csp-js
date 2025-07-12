@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
-import { type CSPService } from '@csp-kit/data';
+import { type ServiceDefinition } from '@csp-kit/generator';
 import Fuse from 'fuse.js';
 import { Search, ExternalLink, Sparkles, Plus, Check, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import { useSelectedServices } from '@/contexts/selected-services-context';
 import Link from 'next/link';
 
 interface SimpleSearchProps {
-  services: CSPService[];
+  services: ServiceDefinition[];
   placeholder?: string;
   className?: string;
 }
@@ -74,11 +74,14 @@ export function SimpleSearch({
 
   // Toggle service selection
   const toggleService = useCallback(
-    (service: CSPService) => {
+    (service: ServiceDefinition) => {
       if (isSelected(service.id)) {
-        removeService(service);
+        removeService(service.id);
       } else {
-        addService(service);
+        addService({
+          id: service.id,
+          name: service.name,
+        });
       }
       // Don't close results on selection
     },
