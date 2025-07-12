@@ -1,264 +1,433 @@
+/* eslint-disable react/prop-types */
 'use client';
 
-import { useState, useMemo } from 'react';
-import { type CSPService } from '@csp-kit/data';
-import * as allServices from '@csp-kit/data';
-import { Search, Package, ExternalLink, Plus, Check } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { type ServiceRegistry, type ServiceDefinition } from '@csp-kit/generator';
+import Fuse from 'fuse.js';
+import {
+  Search,
+  Filter,
+  Grid3X3,
+  List,
+  Plus,
+  ExternalLinkIcon,
+  Minus,
+  ChevronRight,
+  X,
+} from 'lucide-react';
+import { useSelectedServices } from '@/contexts/selected-services-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import Link from 'next/link';
-import { useSelectedServices } from '@/contexts/selected-services-context';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
-// Filter to get only service objects
-const servicesList = Object.entries(allServices)
-  .filter(([key, value]) => 
-    typeof value === 'object' && 
-    value !== null && 
-    'id' in value &&
-    key !== 'defineService' &&
-    key !== 'isCSPService' &&
-    key !== 'createConfigurableService'
-  )
-  .map(([, service]) => service as CSPService);
+interface AllServicesPageProps {
+  serviceRegistry: ServiceRegistry;
+}
 
-// Get unique categories
-const categories = Array.from(new Set(servicesList.map(s => s.category))).sort();
+export default function AllServicesPage({ serviceRegistry }: AllServicesPageProps) {
+  const services = serviceRegistry.services;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const { selectedServices, addService, removeService, isSelected, clearServices } = useSelectedServices();
+  const scrollPositionRef = useRef<number>(0);
 
-// Category descriptions
-const categoryDescriptions: Record<string, string> = {
-  analytics: 'Analytics and tracking services for measuring user behavior',
-  payment: 'Payment processors and e-commerce platforms',
-  social: 'Social media platforms and sharing widgets',
-  video: 'Video hosting and streaming services',
-  cdn: 'Content delivery networks and asset hosting',
-  fonts: 'Web font providers and typography services',
-  monitoring: 'Error tracking and performance monitoring',
-  chat: 'Customer support and live chat services',
-  authentication: 'Identity providers and authentication services',
-  maps: 'Mapping and location services',
-  forms: 'Form builders and survey tools',
-  marketing: 'Marketing automation and email services',
-  cms: 'Content management systems',
-  documentation: 'Documentation and knowledge base platforms',
-  education: 'Learning management and education platforms',
-  productivity: 'Productivity and collaboration tools',
-  testing: 'A/B testing and experimentation platforms',
-  other: 'Other services and utilities',
-};
-
-// Category colors
-const getCategoryColor = (category: string) => {
-  const colors: Record<string, string> = {
-    analytics: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-    payment: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-    social: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-    video: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-    cdn: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-    fonts: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
-    monitoring: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-    chat: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
-    other: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-300',
-  };
-  return colors[category] || colors.other;
-};
-
-export default function AllServicesPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const { addService, removeService, isSelected } = useSelectedServices();
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-  // Filter services based on search and category
+  // Initialize category from URL params
+  useEffect(() => {
+    const category = searchParams.get('category');
+    if (category) {
+      setSelectedCategory(category);
+    }
+  }, [searchParams]);
+
+  // Fuzzy search setup
+  const fuse = useMemo(() => {
+    const fuseOptions = {
+      keys: [
+        { name: 'name', weight: 0.4 },
+        { name: 'description', weight: 0.3 },
+        { name: 'aliases', weight: 0.2 },
+        { name: 'category', weight: 0.1 },
+      ],
+      threshold: 0.3,
+      includeScore: true,
+    };
+    return new Fuse(Object.values(services), fuseOptions);
+  }, [services]);
+
+  // Get unique categories
+  const categories = useMemo(() => {
+    const cats = [...new Set(Object.values(services).map(service => service.category))];
+    return cats.sort();
+  }, [services]);
+
+  // Get category counts
+  const categoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    Object.values(services).forEach(service => {
+      counts[service.category] = (counts[service.category] || 0) + 1;
+    });
+    return counts;
+  }, [services]);
+
+  // Filter and search services
   const filteredServices = useMemo(() => {
-    let filtered = servicesList;
+    let filtered = Object.values(services);
 
-    // Category filter
+    // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(service => service.category === selectedCategory);
     }
 
-    // Search filter
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        service =>
-          service.name.toLowerCase().includes(query) ||
-          service.id.toLowerCase().includes(query) ||
-          service.description.toLowerCase().includes(query)
-      );
+    // Search within filtered results
+    if (searchQuery.trim()) {
+      const results = fuse.search(searchQuery, { limit: 100 });
+      const searchResults = results.map(result => result.item);
+
+      if (selectedCategory !== 'all') {
+        filtered = searchResults.filter(service => service.category === selectedCategory);
+      } else {
+        filtered = searchResults;
+      }
     }
 
     return filtered.sort((a, b) => a.name.localeCompare(b.name));
-  }, [searchQuery, selectedCategory]);
+  }, [services, selectedCategory, searchQuery, fuse]);
 
-  // Category counts
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = { all: servicesList.length };
-    servicesList.forEach(service => {
-      counts[service.category] = (counts[service.category] || 0) + 1;
-    });
-    return counts;
-  }, []);
+  const formatCategoryName = (category: string) => {
+    return category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
 
-  const toggleService = (service: CSPService) => {
-    if (isSelected(service.id)) {
-      removeService(service);
-    } else {
-      addService(service);
+  const handleToggleService = useCallback(
+    (service: ServiceDefinition) => {
+      // Save current scroll position
+      scrollPositionRef.current = window.scrollY;
+
+      if (isSelected(service.id)) {
+        removeService(service.id);
+      } else {
+        addService({
+          id: service.id,
+          name: service.name,
+        });
+      }
+    },
+    [isSelected, removeService, addService]
+  );
+
+  // Restore scroll position after selectedServices changes
+  useEffect(() => {
+    if (scrollPositionRef.current > 0) {
+      // Use requestAnimationFrame to ensure DOM has updated
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollPositionRef.current);
+        scrollPositionRef.current = 0;
+      });
     }
+  }, [selectedServices.length]);
+
+  const ServiceCard: React.FC<{ service: ServiceDefinition }> = ({ service }) => {
+    const categoryDisplayName = formatCategoryName(service.category);
+    const serviceSelected = isSelected(service.id);
+
+    const handleCardClick = () => {
+      router.push(`/service/${service.id}`);
+    };
+
+    if (viewMode === 'list') {
+      return (
+        <div
+          className={`hover:bg-muted/50 relative cursor-pointer border-b p-4 transition-all ${
+            serviceSelected ? 'border-l-primary bg-primary/5 border-l-4' : 'border-border'
+          }`}
+          onClick={handleCardClick}
+        >
+          <ChevronRight className="text-muted-foreground absolute right-4 top-4 h-4 w-4" />
+          <div className="min-w-0 flex-1 pr-8">
+            <div className="mb-2 flex items-center gap-3">
+              <h3 className="truncate text-lg font-medium">{service.name}</h3>
+              <Badge variant="outline" className="shrink-0 text-xs">
+                {categoryDisplayName}
+              </Badge>
+            </div>
+            <p className="text-muted-foreground mb-2 line-clamp-2 text-sm">{service.description}</p>
+            <div className="text-muted-foreground flex items-center gap-2 text-xs">
+              <span>Updated {new Date(service.lastUpdated).toLocaleDateString()}</span>
+            </div>
+          </div>
+          <div className="absolute bottom-4 right-4">
+            <Button
+              variant={serviceSelected ? 'destructive' : 'default'}
+              size="sm"
+              onClick={e => {
+                e.stopPropagation();
+                handleToggleService(service);
+              }}
+              className="h-8 w-8 rounded-full p-0"
+            >
+              {serviceSelected ? (
+                <Minus className="h-4 w-4" />
+              ) : (
+                <Plus className="h-4 w-4" />
+              )}
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <Card
+        className={`group relative flex h-full cursor-pointer flex-col transition-all hover:shadow-md ${
+          serviceSelected ? 'border-primary border-2 shadow-sm' : 'border'
+        }`}
+        onClick={handleCardClick}
+      >
+        <ChevronRight className="text-muted-foreground absolute right-6 top-6 h-4 w-4" />
+        <CardHeader className="pb-3 pr-12">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <CardTitle className="mb-1 truncate text-lg">{service.name}</CardTitle>
+              <div className="mb-2 flex items-center gap-2">
+                <Badge variant="outline" className="text-xs">
+                  {categoryDisplayName}
+                </Badge>
+              </div>
+            </div>
+          </div>
+          <CardDescription className="line-clamp-2 flex-grow">
+            {service.description}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="mt-auto pt-0">
+          <div className="flex items-center justify-between gap-2">
+            <div className="text-muted-foreground text-xs">
+              Updated {new Date(service.lastUpdated).toLocaleDateString()}
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={serviceSelected ? 'destructive' : 'default'}
+                size="sm"
+                onClick={e => {
+                  e.stopPropagation();
+                  handleToggleService(service);
+                }}
+                className="h-8 w-8 rounded-full p-0"
+              >
+                {serviceSelected ? (
+                  <Minus className="h-4 w-4" />
+                ) : (
+                  <Plus className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="text-center space-y-4 mb-8">
-        <h1 className="text-4xl font-bold">All Services</h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Browse and search through {servicesList.length} supported services. Select services to
-          generate your Content Security Policy.
+      {/* Page Header */}
+      <div className="mb-8 text-center">
+        <h1 className="mb-4 text-4xl font-bold">All Supported Services</h1>
+        <p className="text-muted-foreground mx-auto max-w-3xl text-xl">
+          Browse our complete database of {Object.keys(services).length} web services and libraries
+          with pre-configured CSP rules. Find the perfect security configuration for your project.
         </p>
       </div>
 
-      {/* Filters */}
-      <div className="space-y-6 mb-8">
-        {/* Search */}
-        <div className="max-w-2xl mx-auto">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search services by name or description..."
-              className="pl-10 h-12 text-base"
-            />
-          </div>
-        </div>
-
-        {/* Category Filter */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Filter by Category</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <RadioGroup
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="all" id="all" />
-                <Label htmlFor="all" className="cursor-pointer">
-                  All Services ({categoryCounts.all})
-                </Label>
-              </div>
-              {categories.map((category) => (
-                <div key={category} className="flex items-center space-x-2">
-                  <RadioGroupItem value={category} id={category} />
-                  <Label htmlFor={category} className="cursor-pointer capitalize">
-                    {category} ({categoryCounts[category] || 0})
-                  </Label>
+      {/* Controls and Selected Services - Sticky Section */}
+      <div className="bg-background/95 sticky top-16 z-40 -mt-4 mb-8 space-y-4 py-4 backdrop-blur-sm">
+        {/* Selected Services Section - Compact */}
+        {selectedServices.length > 0 && (
+          <Card className="border-primary/20 bg-primary/5">
+            <CardContent className="py-3">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <div className="flex items-center gap-3">
+                    <span className="whitespace-nowrap text-sm font-medium">
+                      Selected ({selectedServices.length}):
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={clearServices}
+                      className="text-destructive hover:bg-destructive/10 h-6 px-2 text-xs"
+                    >
+                      Clear All
+                    </Button>
+                  </div>
+                  <div className="flex min-w-0 flex-wrap gap-1">
+                    {selectedServices.map(service => (
+                      <div
+                        key={service.id}
+                        className="bg-background hover:bg-muted group flex cursor-pointer items-center gap-1 rounded border px-2 py-1 text-xs transition-colors"
+                        onClick={() => router.push(`/service/${service.id}`)}
+                      >
+                        <span className="font-medium">{service.name}</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="hover:bg-destructive/20 text-destructive h-3 w-3 p-0"
+                          onClick={e => {
+                            e.stopPropagation();
+                            removeService(service.id);
+                          }}
+                        >
+                          <X className="h-2 w-2" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              ))}
-            </RadioGroup>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Results */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">
-            {filteredServices.length} {filteredServices.length === 1 ? 'Service' : 'Services'}
-            {selectedCategory !== 'all' && ` in ${selectedCategory}`}
-          </h2>
-          <Badge variant="secondary" className="text-sm">
-            <Package className="h-3 w-3 mr-1" />
-            Total: {servicesList.length}
-          </Badge>
-        </div>
-
-        {selectedCategory !== 'all' && categoryDescriptions[selectedCategory] && (
-          <p className="text-muted-foreground">{categoryDescriptions[selectedCategory]}</p>
-        )}
-
-        {/* Service Grid */}
-        {filteredServices.length === 0 ? (
-          <Card className="border-dashed">
-            <CardContent className="text-center py-12">
-              <Search className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No services found</h3>
-              <p className="text-muted-foreground">
-                Try adjusting your search query or category filter.
-              </p>
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={() => router.push('/')}
+                  className="shrink-0"
+                >
+                  View Generated CSP
+                </Button>
+              </div>
             </CardContent>
           </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredServices.map((service) => {
-              const selected = isSelected(service.id);
-              return (
-                <Card
-                  key={service.id}
-                  className={`group hover:shadow-lg transition-all ${
-                    selected ? 'ring-2 ring-primary' : ''
-                  }`}
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-lg">{service.name}</CardTitle>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge
-                            variant="secondary"
-                            className={`text-xs ${getCategoryColor(service.category)}`}
-                          >
-                            {service.category}
-                          </Badge>
-                          <code className="text-xs text-muted-foreground">{service.id}</code>
-                        </div>
-                      </div>
-                      <Link
-                        href={`/service/${service.id}`}
-                        className="opacity-0 group-hover:opacity-100 transition-opacity"
-                        aria-label={`View details for ${service.name}`}
-                      >
-                        <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-foreground" />
-                      </Link>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-sm mb-4 line-clamp-2">
-                      {service.description}
-                    </CardDescription>
-                    <Button
-                      size="sm"
-                      variant={selected ? 'secondary' : 'outline'}
-                      className="w-full"
-                      onClick={() => toggleService(service)}
-                    >
-                      {selected ? (
-                        <>
-                          <Check className="h-3 w-3 mr-1" />
-                          Added to Policy
-                        </>
-                      ) : (
-                        <>
-                          <Plus className="h-3 w-3 mr-1" />
-                          Add to Policy
-                        </>
-                      )}
-                    </Button>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
         )}
+        {/* Search and Filters */}
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="relative flex-1">
+            <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+            <Input
+              placeholder="Search services (e.g., Google Analytics, Stripe, Sentry)..."
+              className="pl-10"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-full sm:w-48">
+              <Filter className="mr-2 h-4 w-4" />
+              <SelectValue placeholder="All Categories" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories ({Object.keys(services).length})</SelectItem>
+              {categories.map(category => (
+                <SelectItem key={category} value={category}>
+                  {formatCategoryName(category)} ({categoryCounts[category]})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <div className="flex gap-2">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+            >
+              <Grid3X3 className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Results Summary */}
+        <div className="text-muted-foreground flex items-center justify-between text-sm">
+          <span>
+            Showing {filteredServices.length} of {Object.keys(services).length} services
+            {selectedCategory !== 'all' && ` in ${formatCategoryName(selectedCategory)}`}
+            {searchQuery && ` matching "${searchQuery}"`}
+          </span>
+        </div>
       </div>
+
+      {/* Services Grid/List */}
+      {filteredServices.length > 0 ? (
+        <div
+          className={
+            viewMode === 'grid'
+              ? 'grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+              : 'border-border overflow-hidden rounded-lg border'
+          }
+        >
+          {filteredServices.map(service => (
+            <ServiceCard key={service.id} service={service} />
+          ))}
+        </div>
+      ) : (
+        <div className="py-12 text-center">
+          <div className="mb-4 text-6xl">🔍</div>
+          <h3 className="mb-2 text-lg font-medium">No services found</h3>
+          <p className="text-muted-foreground mb-4">
+            {searchQuery ? `No services match "${searchQuery}"` : 'No services in this category'}
+          </p>
+          <div className="flex flex-col justify-center gap-2 sm:flex-row">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchQuery('');
+                setSelectedCategory('all');
+              }}
+            >
+              Clear filters
+            </Button>
+            <a
+              href="https://github.com/eason-dev/csp-kit/issues/new?assignees=&labels=service-request&template=service-request.md&title=Request%20Support%20for%20%5BService%20Name%5D"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="default" className="flex items-center gap-2">
+                <Plus className="h-4 w-4" />
+                Request Service
+              </Button>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Service Request Section */}
+      {filteredServices.length > 0 && (
+        <div className="mt-12 text-center">
+          <Card className="mx-auto max-w-md">
+            <CardContent className="p-6">
+              <Plus className="text-muted-foreground mx-auto mb-3 h-8 w-8" />
+              <h3 className="mb-2 font-medium">Missing a service?</h3>
+              <p className="text-muted-foreground mb-4 text-sm">
+                Can&apos;t find the service you&apos;re using? Request support and we&apos;ll add it
+                to our database.
+              </p>
+              <a
+                href="https://github.com/eason-dev/csp-kit/issues/new?assignees=&labels=service-request&template=service-request.md&title=Request%20Support%20for%20%5BService%20Name%5D"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button variant="outline" className="mx-auto flex items-center gap-2">
+                  <ExternalLinkIcon className="h-4 w-4" />
+                  Request Service on GitHub
+                </Button>
+              </a>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

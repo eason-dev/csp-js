@@ -1,21 +1,9 @@
+import { loadServices, getServiceRegistry } from '@csp-kit/generator';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
 import ServicePage from './service-page';
-import * as allServices from '@csp-kit/data';
-import { type CSPService } from '@csp-kit/data';
-
-// Get all service objects from the exports
-const servicesMap = new Map<string, CSPService>();
-Object.entries(allServices).forEach(([, value]) => {
-  if (typeof value === 'object' && value !== null && 'id' in value) {
-    const service = value as CSPService;
-    servicesMap.set(service.id, service);
-  }
-});
-
-const servicesList = Array.from(servicesMap.values());
 
 interface ServicePageProps {
   params: Promise<{
@@ -25,7 +13,9 @@ interface ServicePageProps {
 
 export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
   const { id } = await params;
-  const service = servicesMap.get(id);
+  await loadServices();
+  const registry = await getServiceRegistry();
+  const service = registry.services[id];
 
   if (!service) {
     return {
@@ -49,14 +39,19 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 }
 
 export async function generateStaticParams() {
-  return servicesList.map(service => ({
-    id: service.id,
+  await loadServices();
+  const registry = await getServiceRegistry();
+
+  return Object.keys(registry.services).map(id => ({
+    id,
   }));
 }
 
 export default async function Page({ params }: ServicePageProps) {
   const { id } = await params;
-  const service = servicesMap.get(id);
+  await loadServices();
+  const registry = await getServiceRegistry();
+  const service = registry.services[id];
 
   if (!service) {
     notFound();
@@ -68,7 +63,7 @@ export default async function Page({ params }: ServicePageProps) {
       <main className="flex-1">
         <ServicePage service={service} />
       </main>
-      <Footer serviceCount={servicesList.length} />
+      <Footer serviceCount={Object.keys(registry.services).length} />
     </div>
   );
 }

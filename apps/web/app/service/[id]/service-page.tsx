@@ -1,7 +1,6 @@
 'use client';
 
-import { type CSPService } from '@csp-kit/data';
-import { generateCSP } from '@csp-kit/generator';
+import { ServiceDefinition } from '@csp-kit/generator';
 import {
   Shield,
   ExternalLink,
@@ -12,8 +11,6 @@ import {
   Plus,
   Minus,
   ArrowLeft,
-  Copy,
-  Check,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,24 +22,8 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 interface ServicePageProps {
-  service: CSPService;
+  service: ServiceDefinition;
 }
-
-// Category colors
-const getCategoryColor = (category: string) => {
-  const colors: Record<string, string> = {
-    analytics: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-    payment: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-    social: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-    video: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-    cdn: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-    fonts: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
-    monitoring: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-    chat: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
-    other: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-300',
-  };
-  return colors[category] || colors.other;
-};
 
 export default function ServicePage({ service }: ServicePageProps) {
   const [copied, setCopied] = useState(false);
@@ -52,9 +33,12 @@ export default function ServicePage({ service }: ServicePageProps) {
 
   const handleToggleService = () => {
     if (serviceSelected) {
-      removeService(service);
+      removeService(service.id);
     } else {
-      addService(service);
+      addService({
+        id: service.id,
+        name: service.name,
+      });
     }
   };
 
@@ -68,192 +52,235 @@ export default function ServicePage({ service }: ServicePageProps) {
     }
   };
 
-  // Generate CSP header for this service only
-  const { header, directives } = generateCSP([service]);
+  const categoryDisplayName = service.category
+    .replace('_', ' ')
+    .replace(/\b\w/g, l => l.toUpperCase());
+  // Generate CSP header for this service
+  const generateServiceCSP = () => {
+    if (!service.cspDirectives) return '';
+    return Object.entries(service.cspDirectives)
+      .map(([directive, sources]) => `${directive} ${(sources as string[]).join(' ')}`)
+      .join('; ');
+  };
 
-  // Format date
-  const lastUpdated = new Date(service.lastUpdated).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
+  const cspHeader = generateServiceCSP();
+
+  // Parse CSP into directives object for color coding
+  const directives: Record<string, string[]> = {};
+  if (service.cspDirectives) {
+    Object.entries(service.cspDirectives).forEach(([directive, sources]) => {
+      directives[directive] = sources as string[];
+    });
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      {/* Header */}
-      <div className="mb-8">
-        <Link
-          href="/services"
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-4"
-        >
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          All Services
-        </Link>
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-4xl font-bold mb-2">{service.name}</h1>
-            <p className="text-xl text-muted-foreground">{service.description}</p>
-            <div className="flex items-center gap-4 mt-4">
-              <Badge variant="secondary" className={getCategoryColor(service.category)}>
-                {service.category}
-              </Badge>
-              <code className="text-sm text-muted-foreground bg-muted px-2 py-1 rounded">
-                {service.id}
-              </code>
-              <span className="text-sm text-muted-foreground flex items-center">
-                <Calendar className="h-3 w-3 mr-1" />
-                Updated {lastUpdated}
-              </span>
+    <div className="container mx-auto px-4 py-8">
+      {/* Go Back Button - Aligned to left edge */}
+      <Link href="/services">
+        <Button variant="ghost" className="mb-8 flex items-center gap-2">
+          <ArrowLeft className="h-4 w-4" />
+          Back to All Services
+        </Button>
+      </Link>
+
+      <div className="mx-auto max-w-6xl space-y-8">
+        {/* Service Header */}
+        <div className="space-y-4 text-center">
+          <div className="space-y-3">
+            <h1 className="text-4xl font-bold">{service.name}</h1>
+            <Badge variant="secondary" className="text-sm">
+              {categoryDisplayName}
+            </Badge>
+          </div>
+          <p className="text-muted-foreground mx-auto max-w-2xl text-xl">{service.description}</p>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Button
+              onClick={handleToggleService}
+              variant={serviceSelected ? 'outline' : 'default'}
+              size="lg"
+              className="flex items-center gap-2"
+            >
+              {serviceSelected ? (
+                <>
+                  <Minus className="h-4 w-4" />
+                  Remove from List
+                </>
+              ) : (
+                <>
+                  <Plus className="h-4 w-4" />
+                  Add to My List
+                </>
+              )}
+            </Button>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+            <a
+              href={service.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary flex items-center gap-2 hover:underline"
+            >
+              Official Website <ExternalLink className="h-4 w-4" />
+            </a>
+            <span className="text-muted-foreground">•</span>
+            <div className="text-muted-foreground flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              <span>Updated {new Date(service.lastUpdated).toLocaleDateString()}</span>
             </div>
           </div>
-          <Button
-            size="lg"
-            variant={serviceSelected ? 'secondary' : 'default'}
-            onClick={handleToggleService}
-          >
-            {serviceSelected ? (
-              <>
-                <Minus className="h-4 w-4 mr-2" />
-                Remove from Policy
-              </>
-            ) : (
-              <>
-                <Plus className="h-4 w-4 mr-2" />
-                Add to Policy
-              </>
-            )}
-          </Button>
         </div>
-      </div>
 
-      {/* Service Information */}
-      <div className="grid gap-6 mb-8">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Info className="h-5 w-5 mr-2" />
-              Service Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">Website</span>
-              <Link
-                href={service.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline flex items-center"
-              >
-                {service.website}
-                <ExternalLink className="h-3 w-3 ml-1" />
-              </Link>
-            </div>
-            {service.officialDocs && service.officialDocs.length > 0 && (
-              <div>
-                <span className="text-sm font-medium block mb-2">Official Documentation</span>
-                <ul className="space-y-1">
-                  {service.officialDocs.map((doc, index) => (
-                    <li key={index}>
-                      <Link
-                        href={doc}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline flex items-center text-sm"
-                      >
-                        <BookOpen className="h-3 w-3 mr-1" />
-                        {doc}
-                        <ExternalLink className="h-3 w-3 ml-1" />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {service.notes && (
-              <div>
-                <span className="text-sm font-medium block mb-2">Additional Notes</span>
-                <p className="text-sm text-muted-foreground">{service.notes}</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <div className="grid gap-8 lg:grid-cols-2">
+          {/* CSP Configuration */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5" />
+                CSP Configuration
+              </CardTitle>
+              <CardDescription>
+                Content Security Policy directives required for {service.name}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {cspHeader && (
+                <ColorCodedHeader
+                  header={cspHeader}
+                  directives={directives}
+                  onCopy={() => copyToClipboard(cspHeader)}
+                  copied={copied}
+                  showBreakdown={true}
+                />
+              )}
+            </CardContent>
+          </Card>
 
-        {/* CSP Directives */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Shield className="h-5 w-5 mr-2" />
-              CSP Directives
-            </CardTitle>
-            <CardDescription>
-              Content Security Policy directives required for {service.name}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {Object.entries(service.directives).map(([directive, values]) => (
-              <div key={directive}>
-                <span className="text-sm font-medium">{directive}</span>
-                <div className="mt-1 space-y-1">
-                  {values.map((value: string, index: number) => (
-                    <code
-                      key={index}
-                      className="text-xs bg-muted px-2 py-1 rounded inline-block mr-2 mb-1"
-                    >
-                      {value}
-                    </code>
-                  ))}
+          {/* Implementation Methods */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Code className="h-5 w-5" />
+                Implementation Methods
+              </CardTitle>
+              <CardDescription>Different ways to use this CSP configuration</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <UsageMethods
+                cspHeader={cspHeader}
+                serviceIds={[service.id]}
+                useNonce={false}
+                reportUri=""
+                customRules={{}}
+              />
+              <div className="mt-4">
+                <Link href="/">
+                  <Button className="w-full">Try Interactive Generator</Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Documentation & Resources */}
+        {service.officialDocs && service.officialDocs.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                Official Documentation
+              </CardTitle>
+              <CardDescription>
+                Official CSP documentation and guides from {service.name}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {service.officialDocs.map((docUrl, index) => (
+                  <a
+                    key={index}
+                    href={docUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:bg-muted flex items-center gap-2 rounded-lg border p-3 transition-colors"
+                  >
+                    <ExternalLink className="text-primary h-4 w-4" />
+                    <span className="text-sm font-medium">View Documentation</span>
+                  </a>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Service Notes */}
+        {service.notes && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Info className="h-5 w-5" />
+                Service Notes
+              </CardTitle>
+              <CardDescription>Important information about this service</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="bg-muted/50 rounded-lg p-3">
+                <div className="whitespace-pre-line text-sm">{service.notes}</div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Additional Information */}
+        {(service.aliases || service.requiresDynamic || service.requiresNonce) && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Additional Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {service.aliases && service.aliases.length > 0 && (
+                <div>
+                  <div className="mb-2 text-sm font-medium">Alternative Names:</div>
+                  <div className="flex flex-wrap gap-2">
+                    {service.aliases.map(alias => (
+                      <Badge key={alias} variant="outline" className="text-xs">
+                        {alias}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+              )}
 
-        {/* Generated CSP Header */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span className="flex items-center">
-                <Code className="h-5 w-5 mr-2" />
-                Generated CSP Header
-              </span>
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => copyToClipboard(header)}
-              >
-                {copied ? (
-                  <>
-                    <Check className="h-3 w-3 mr-1" />
-                    Copied
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-3 w-3 mr-1" />
-                    Copy
-                  </>
-                )}
-              </Button>
-            </CardTitle>
-            <CardDescription>
-              Complete CSP header for {service.name} only
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ColorCodedHeader 
-              header={header} 
-              directives={directives as Record<string, string[]>}
-              onCopy={() => copyToClipboard(header)}
-              copied={copied}
-            />
-          </CardContent>
-        </Card>
+              {service.requiresDynamic && (
+                <div className="flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20">
+                  <Info className="mt-0.5 h-4 w-4 text-amber-600 dark:text-amber-400" />
+                  <div className="text-sm">
+                    <div className="font-medium text-amber-800 dark:text-amber-200">
+                      Dynamic CSP Required
+                    </div>
+                    <div className="text-amber-700 dark:text-amber-300">
+                      This service may inject scripts dynamically and require runtime CSP
+                      adjustments.
+                    </div>
+                  </div>
+                </div>
+              )}
 
-        {/* Usage Examples */}
-        <UsageMethods
-          header={header}
-          directives={directives as Record<string, string[]>}
-          selectedServices={[service]}
-        />
+              {service.requiresNonce && (
+                <div className="flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
+                  <Info className="mt-0.5 h-4 w-4 text-blue-600 dark:text-blue-400" />
+                  <div className="text-sm">
+                    <div className="font-medium text-blue-800 dark:text-blue-200">
+                      Nonce Required
+                    </div>
+                    <div className="text-blue-700 dark:text-blue-300">
+                      This service requires nonce-based CSP for inline scripts to function properly.
+                    </div>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
