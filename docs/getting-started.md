@@ -368,17 +368,15 @@ npm install @csp-kit/generator @csp-kit/data
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/eason-dev/csp-kit/issues)
 - 💬 **Questions**: [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions)
 - 📖 **Documentation**: [csp-kit.eason.ch/docs](https://csp-kit.eason.ch/docs)
-- 🔄 **Migration Help**: [Migration Guide](./migration-guide.md)
 
 ## 📚 Next Steps
 
 Now that you're up and running:
 
 1. **[API Reference](./api-reference.md)** - Complete API documentation
-2. **[Migration Guide](./migration-guide.md)** - Upgrading from v1.x
-3. **[Custom Services](../CUSTOM-SERVICE-API-DESIGN.md)** - Create your own services
-4. **[Contributing](./contributing.md)** - Help add new services
-5. **[Examples](./examples/)** - Framework-specific examples
+2. **[Custom Services](../CUSTOM-SERVICE-API-DESIGN.md)** - Create your own services
+3. **[Contributing](./contributing.md)** - Help add new services
+4. **[Examples](./examples/)** - Framework-specific examples
 
 ## 🎉 Welcome to the Community!
 

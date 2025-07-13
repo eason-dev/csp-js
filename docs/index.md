@@ -59,7 +59,6 @@ console.log(result.header);
 | Guide | Description | Audience |
 |-------|-------------|----------|
 | **[Getting Started](./getting-started.md)** | Installation, TypeScript API, common patterns | New users |
-| **[Migration Guide](./migration-guide.md)** | Upgrade from string IDs to TypeScript imports | Existing users |
 | **[Web Interface](./web-interface.md)** | Interactive CSP generator guide | All users |
 | **[API Reference](./api-reference.md)** | Complete TypeScript API documentation | Developers |
 | **[CLI Guide](./cli-guide.md)** | Command-line tools reference | Advanced users |
@@ -144,18 +143,13 @@ CSP Kit uses a data-package separation model:
 
 ### TypeScript-First API
 
-The new API provides better developer experience:
+TypeScript-first design provides better developer experience:
 
 ```typescript
-// Old v1.x API (string-based)
-const result = generateCSP(['google-analytics', 'stripe']);
-
-// New v2.x API (TypeScript imports)
+// TypeScript imports with full type safety
 import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 const result = generateCSP({ services: [GoogleAnalytics, Stripe] });
 ```
-
-See the [Migration Guide](./migration-guide.md) for complete upgrade instructions.
 
 ## 🤝 Community
 
@@ -194,7 +188,6 @@ See the [Migration Guide](./migration-guide.md) for complete upgrade instruction
 
 **Need to install?** → Follow the [Getting Started Guide](./getting-started.md)
 
-**Upgrading from v1.x?** → Check the [Migration Guide](./migration-guide.md)
 
 **Looking for a service?** → Check [Service Support](./service-support.md)
 

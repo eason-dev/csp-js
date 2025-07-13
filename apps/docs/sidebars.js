@@ -87,16 +87,6 @@ const sidebars = {
       ]
     },
 
-    // Legacy and Migration
-    {
-      type: 'category',
-      label: '🔄 Migration & Legacy',
-      collapsible: true,
-      collapsed: true,
-      items: [
-        'upgrade-guide'
-      ]
-    }
   ]
 };
 
