@@ -37,7 +37,8 @@
     "validate": "echo 'Data validation passed'",
     "prepare": "npm run build",
     "prepack": "npm run build && npm run validate",
-    "prepublishOnly": "npm run lint && npm run check-types"
+    "prepublishOnly": "npm run lint && npm run check-types",
+    "publish:npm": "npm publish --provenance=false"
   },
   "keywords": [
     "csp",
@@ -50,7 +51,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eason-dev/csp-kit.git",
+    "url": "git+https://github.com/eason-dev/csp-kit.git",
     "directory": "packages/data"
   },
   "bugs": {

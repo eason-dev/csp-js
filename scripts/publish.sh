@@ -207,7 +207,7 @@ if [ "$DRY_RUN" = false ]; then
     # Publish data first (no dependencies)
     log "Publishing @csp-kit/data..."
     cd packages/data
-    npm publish --access public --provenance
+    npm publish --access public --provenance=false
     cd ../..
     
     # Wait a moment for NPM to process
@@ -216,7 +216,7 @@ if [ "$DRY_RUN" = false ]; then
     # Publish generator (depends on data)
     log "Publishing @csp-kit/generator..."
     cd packages/generator
-    npm publish --access public --provenance
+    npm publish --access public --provenance=false
     cd ../..
     
     # Wait a moment for NPM to process
@@ -225,7 +225,7 @@ if [ "$DRY_RUN" = false ]; then
     # Publish cli (depends on data)
     log "Publishing @csp-kit/cli..."
     cd packages/cli
-    npm publish --access public --provenance
+    npm publish --access public --provenance=false
     cd ../..
 else
     log "Would publish all packages to NPM"
