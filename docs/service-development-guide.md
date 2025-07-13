@@ -630,7 +630,7 @@ Include in your PR:
 
 ## Resources
 
-- [Service Definition Schema](./SERVICE_DEFINITION_GUIDE.md)
+- [Service Definition Schema](./maintainer/SERVICE_DEFINITION_GUIDE.md)
 - [TypeScript API Reference](./api-reference.md)
 - [Contributing Guide](./contributing.md)
 - [CSP MDN Documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)

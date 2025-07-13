@@ -374,7 +374,7 @@ npm install @csp-kit/generator @csp-kit/data
 Now that you're up and running:
 
 1. **[API Reference](./api-reference.md)** - Complete API documentation
-2. **[Custom Services](../CUSTOM-SERVICE-API-DESIGN.md)** - Create your own services
+2. **[Custom Services](https://github.com/eason-dev/csp-kit/blob/main/CUSTOM-SERVICE-API-DESIGN.md)** - Create your own services
 3. **[Contributing](./contributing.md)** - Help add new services
 4. **[Examples](./examples/)** - Framework-specific examples
 

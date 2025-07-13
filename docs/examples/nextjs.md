@@ -871,7 +871,4 @@ const html = renderToString(
 
 ## 🔗 More Examples
 
-- [Express.js Integration](./express.md)
-- [Fastify Integration](./fastify.md)
-- [Remix Integration](./remix.md)
-- [SvelteKit Integration](./sveltekit.md)
+More framework integration examples coming soon! For now, you can adapt the patterns shown above for other frameworks by following similar middleware patterns.
