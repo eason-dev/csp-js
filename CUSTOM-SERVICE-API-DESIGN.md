@@ -1,56 +1,60 @@
 # Custom Service API Design
 
-## The Problem with `additionalRules`
+## Creating Custom Services for Your Application
 
-Adding custom domains via `additionalRules` breaks the service-oriented model. Instead, users should define their own services - it's cleaner and more reusable.
+While CSP Kit provides 106+ pre-configured services, you'll often need to add your own domains and services. This guide shows how to create custom services that integrate seamlessly with CSP Kit's TypeScript-first API.
 
-## Better Approach: Custom Services as First-Class Citizens
+## Quick Start: Custom Service Definition
 
-### Option 1: Inline Service Definition (Quick & Dirty)
 ```typescript
 import { generateCSP, defineService } from '@csp-kit/generator';
-import { GoogleAnalytics4, Stripe } from '@csp-kit/data';
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
+import { ServiceCategory } from '@csp-kit/data';
 
-// Define a custom service inline
+// Define a custom service for your CDN
 const MyCDN = defineService({
   id: 'my-cdn',
   name: 'My CDN',
-  category: 'cdn',
+  category: ServiceCategory.CDN,
   directives: {
     'img-src': ['https://cdn.myapp.com'],
     'font-src': ['https://cdn.myapp.com'],
-    'style-src': ['https://cdn.myapp.com']
+    'style-src': ['https://cdn.myapp.com'],
+    'script-src': ['https://cdn.myapp.com']
   }
 });
 
 // Use it just like built-in services
-const csp = generateCSP({
-  services: [GoogleAnalytics4, Stripe, MyCDN],
+const result = generateCSP({
+  services: [GoogleAnalytics, Stripe, MyCDN],
   nonce: true
 });
 ```
 
-### Option 2: Reusable Service Files (Recommended)
+## Why Custom Services?
+
+Using custom services instead of `additionalRules` provides:
+- **Type Safety**: Full TypeScript support with IntelliSense
+- **Reusability**: Define once, use across your entire application
+- **Consistency**: Same API as built-in services
+- **Documentation**: Self-documenting with descriptions and metadata
+- **Validation**: Built-in validation and conflict detection
+
+## Service Definition Patterns
+
+### 1. Basic Service Definition
+
+For simple services with static domains:
+
 ```typescript
-// services/my-cdn.ts
 import { defineService } from '@csp-kit/generator';
+import { ServiceCategory } from '@csp-kit/data';
 
-export const MyCDN = defineService({
-  id: 'my-cdn',
-  name: 'My Company CDN',
-  category: 'cdn',
-  directives: {
-    'img-src': ['https://cdn.myapp.com'],
-    'font-src': ['https://cdn.myapp.com'],
-    'style-src': ['https://cdn.myapp.com']
-  }
-});
-
-// services/my-api.ts
 export const MyAPI = defineService({
   id: 'my-api',
   name: 'My API',
-  category: 'api',
+  category: ServiceCategory.API,
+  description: 'Main application API and WebSocket connections',
   directives: {
     'connect-src': [
       'https://api.myapp.com',
@@ -58,212 +62,19 @@ export const MyAPI = defineService({
     ]
   }
 });
-
-// services/my-monitoring.ts
-export const MyMonitoring = defineService({
-  id: 'my-monitoring',
-  name: 'Internal Monitoring',
-  category: 'monitoring',
-  directives: {
-    'script-src': ['https://monitoring.myapp.com'],
-    'connect-src': ['https://monitoring.myapp.com']
-  }
-});
-
-// app.ts
-import { generateCSP } from '@csp-kit/generator';
-import { GoogleAnalytics4, Stripe } from '@csp-kit/data';
-import { MyCDN, MyAPI, MyMonitoring } from './services';
-
-const csp = generateCSP({
-  services: [
-    // External services
-    GoogleAnalytics4,
-    Stripe,
-    
-    // Your custom services
-    MyCDN,
-    MyAPI,
-    MyMonitoring
-  ],
-  nonce: true,
-  environment: process.env.NODE_ENV
-});
 ```
 
-### Option 3: Service Factory Pattern (For Dynamic Needs)
+### 2. Comprehensive Service with Metadata
+
+Add documentation and validation for team collaboration:
+
 ```typescript
-// When you need dynamic configuration
-import { createService } from '@csp-kit/generator';
-
-// Factory function for multi-region CDN
-export const createRegionalCDN = (region: 'us' | 'eu' | 'asia') => 
-  createService({
-    id: `cdn-${region}`,
-    name: `CDN ${region.toUpperCase()}`,
-    category: 'cdn',
-    directives: {
-      'img-src': [`https://cdn-${region}.myapp.com`],
-      'font-src': [`https://cdn-${region}.myapp.com`]
-    }
-  });
-
-// Usage
-const csp = generateCSP({
-  services: [
-    GoogleAnalytics4,
-    createRegionalCDN('us'), // Based on user's region
-    createRegionalCDN('eu')  // Or load multiple regions
-  ]
-});
-```
-
-### Option 4: Environment-Aware Services
-```typescript
-// services/development.ts
-export const DevTools = defineService({
-  id: 'dev-tools',
-  name: 'Development Tools',
-  category: 'development',
-  directives: {
-    'script-src': [
-      'http://localhost:3000', // Vite/Webpack dev server
-      "'unsafe-eval'"          // For hot reload
-    ],
-    'connect-src': [
-      'ws://localhost:3000',   // Hot reload websocket
-      'http://localhost:3001'  // API dev server
-    ]
-  }
-});
-
-// Usage
-const csp = generateCSP({
-  services: [
-    GoogleAnalytics4,
-    Stripe,
-    ...(process.env.NODE_ENV === 'development' ? [DevTools] : [])
-  ]
-});
-```
-
-## Why This is Better
-
-### 1. **Consistency**
-Everything is a service - no special cases for "additional domains"
-
-### 2. **Reusability**
-```typescript
-// Define once
-export const CompanyAssets = defineService({
-  id: 'company-assets',
-  name: 'Company Assets',
-  directives: {
-    'img-src': ['https://assets.company.com'],
-    'font-src': ['https://assets.company.com'],
-    'style-src': ['https://assets.company.com']
-  }
-});
-
-// Use everywhere
-const webAppCSP = generateCSP({ services: [GA4, CompanyAssets] });
-const mobileAppCSP = generateCSP({ services: [CompanyAssets] });
-const landingPageCSP = generateCSP({ services: [GA4, Stripe, CompanyAssets] });
-```
-
-### 3. **Type Safety**
-```typescript
-// The defineService function ensures type safety
-const BadService = defineService({
-  id: 'bad',
-  name: 'Bad Service',
-  directives: {
-    'invalid-src': ['...'] // TypeScript error!
-  }
-});
-```
-
-### 4. **Documentation**
-```typescript
-export const MyVideoStreaming = defineService({
+export const VideoStreaming = defineService({
   id: 'video-streaming',
   name: 'Video Streaming Service',
-  category: 'video',
-  description: 'Our custom video streaming infrastructure',
+  category: ServiceCategory.VIDEO,
+  description: 'Custom video streaming infrastructure for product demos',
   website: 'https://docs.internal/video-streaming',
-  directives: {
-    'media-src': ['https://video.myapp.com'],
-    'img-src': ['https://thumbnails.myapp.com']
-  },
-  notes: 'Requires authentication token in query params'
-});
-```
-
-### 5. **Composition**
-```typescript
-// Combine multiple custom services into presets
-export const MyAppPreset = {
-  core: [MyCDN, MyAPI],
-  monitoring: [MyMonitoring, ErrorTracking],
-  thirdParty: [GoogleAnalytics4, Stripe]
-};
-
-// Usage
-const csp = generateCSP({
-  services: [
-    ...MyAppPreset.core,
-    ...MyAppPreset.monitoring,
-    ...MyAppPreset.thirdParty
-  ]
-});
-```
-
-## Service Definition Helpers
-
-```typescript
-// Common patterns as helpers
-import { cdn, api, analytics } from '@csp-kit/helpers';
-
-// Shorthand for common patterns
-export const MyCDN = cdn('https://cdn.myapp.com');
-// Equivalent to:
-// defineService({
-//   id: 'cdn-myapp-com',
-//   category: 'cdn',
-//   directives: {
-//     'img-src': ['https://cdn.myapp.com'],
-//     'font-src': ['https://cdn.myapp.com'],
-//     'style-src': ['https://cdn.myapp.com'],
-//     'script-src': ['https://cdn.myapp.com']
-//   }
-// })
-
-export const MyAPI = api('https://api.myapp.com', {
-  websocket: 'wss://realtime.myapp.com'
-});
-
-export const MyAnalytics = analytics('https://analytics.myapp.com');
-```
-
-## Complete Example
-
-```typescript
-// services/index.ts - Your app's CSP service definitions
-import { defineService, cdn, api } from '@csp-kit/generator';
-
-// Simple CDN
-export const AssetsCDN = cdn('https://assets.myapp.com');
-
-// API with WebSocket
-export const MainAPI = api('https://api.myapp.com', {
-  websocket: 'wss://realtime.myapp.com'
-});
-
-// Complex service with full control
-export const VideoService = defineService({
-  id: 'video-service',
-  name: 'Video Streaming',
-  category: 'video',
   directives: {
     'media-src': [
       'https://video.myapp.com',
@@ -272,34 +83,409 @@ export const VideoService = defineService({
     'img-src': ['https://thumbnails.myapp.com'],
     'connect-src': ['https://video-api.myapp.com']
   },
-  configure: (options: { hdEnabled?: boolean }) => ({
+  notes: 'Requires authentication token in query params',
+  requiresDynamic: true // Indicates dynamic content generation
+});
+```
+
+### 3. Environment-Specific Services
+
+Handle different configurations for development and production:
+
+```typescript
+// services/development.ts
+export const DevTools = defineService({
+  id: 'dev-tools',
+  name: 'Development Tools',
+  category: ServiceCategory.DEVELOPMENT,
+  description: 'Local development servers and hot reload',
+  directives: {
+    'script-src': [
+      'http://localhost:3000',
+      'http://localhost:5173', // Vite
+      "'unsafe-eval'"          // Required for hot reload
+    ],
+    'connect-src': [
+      'ws://localhost:3000',   // Hot reload websocket
+      'ws://localhost:5173',   // Vite HMR
+      'http://localhost:3001'  // API dev server
+    ]
+  },
+  notes: 'Only include in development builds'
+});
+
+// Usage with environment detection
+const result = generateCSP({
+  services: [
+    GoogleAnalytics,
+    Stripe,
+    ...(process.env.NODE_ENV === 'development' ? [DevTools] : [])
+  ]
+});
+```
+
+### 4. Multi-Region Services
+
+Create services dynamically based on user location:
+
+```typescript
+// services/regional.ts
+import { defineService } from '@csp-kit/generator';
+import { ServiceCategory } from '@csp-kit/data';
+
+export function createRegionalCDN(region: 'us' | 'eu' | 'asia') {
+  return defineService({
+    id: `cdn-${region}`,
+    name: `CDN ${region.toUpperCase()}`,
+    category: ServiceCategory.CDN,
+    description: `Regional CDN for ${region.toUpperCase()} users`,
     directives: {
-      'media-src': options.hdEnabled 
-        ? ['https://video-hd.myapp.com']
-        : ['https://video.myapp.com']
+      'img-src': [`https://cdn-${region}.myapp.com`],
+      'font-src': [`https://cdn-${region}.myapp.com`],
+      'style-src': [`https://cdn-${region}.myapp.com`],
+      'script-src': [`https://cdn-${region}.myapp.com`]
     }
-  })
+  });
+}
+
+// Usage based on user region
+const userRegion = getUserRegion(); // 'us', 'eu', or 'asia'
+const result = generateCSP({
+  services: [
+    GoogleAnalytics,
+    createRegionalCDN(userRegion)
+  ]
+});
+```
+
+### 5. Configurable Services
+
+For services that need runtime configuration:
+
+```typescript
+// services/monitoring.ts
+import { defineService, createConfigurableService } from '@csp-kit/generator';
+import { ServiceCategory } from '@csp-kit/data';
+
+// Note: createConfigurableService is for advanced use cases
+// For most cases, use a factory function instead
+export function createMonitoringService(options: {
+  apiKey: string;
+  region?: 'us' | 'eu';
+  enableRUM?: boolean;
+}) {
+  const region = options.region || 'us';
+  const baseUrl = `https://monitoring-${region}.myapp.com`;
+  
+  return defineService({
+    id: 'monitoring',
+    name: 'Application Monitoring',
+    category: ServiceCategory.MONITORING,
+    directives: {
+      'script-src': [baseUrl],
+      'connect-src': [
+        baseUrl,
+        ...(options.enableRUM ? [`https://rum-${region}.myapp.com`] : [])
+      ]
+    }
+  });
+}
+```
+
+## Organizing Custom Services
+
+### Recommended Project Structure
+
+```
+src/
+├── services/
+│   ├── index.ts          # Main exports
+│   ├── cdn.ts            # CDN services
+│   ├── api.ts            # API endpoints
+│   ├── monitoring.ts     # Monitoring/analytics
+│   ├── development.ts    # Dev-only services
+│   └── third-party.ts    # Wrapped third-party services
+├── csp/
+│   ├── presets.ts        # Service combinations
+│   └── config.ts         # CSP configuration
+```
+
+### Example Organization
+
+```typescript
+// services/index.ts
+export * from './cdn';
+export * from './api';
+export * from './monitoring';
+export * from './development';
+
+// services/cdn.ts
+import { defineService } from '@csp-kit/generator';
+import { ServiceCategory } from '@csp-kit/data';
+
+export const AssetsCDN = defineService({
+  id: 'assets-cdn',
+  name: 'Assets CDN',
+  category: ServiceCategory.CDN,
+  directives: {
+    'img-src': ['https://assets.myapp.com'],
+    'font-src': ['https://assets.myapp.com'],
+    'style-src': ['https://assets.myapp.com'],
+    'script-src': ['https://assets.myapp.com']
+  }
+});
+
+export const MediaCDN = defineService({
+  id: 'media-cdn',
+  name: 'Media CDN',
+  category: ServiceCategory.CDN,
+  directives: {
+    'img-src': ['https://media.myapp.com'],
+    'media-src': ['https://media.myapp.com']
+  }
+});
+```
+
+### Service Presets
+
+Group services into reusable presets:
+
+```typescript
+// csp/presets.ts
+import { GoogleAnalytics, Stripe, Sentry } from '@csp-kit/data';
+import { AssetsCDN, MediaCDN, MainAPI, Monitoring } from '../services';
+
+export const coreServices = [AssetsCDN, MainAPI];
+
+export const mediaServices = [MediaCDN];
+
+export const analyticsServices = [GoogleAnalytics, Monitoring];
+
+export const paymentServices = [Stripe];
+
+export const errorServices = [Sentry];
+
+// Complete preset for production
+export const productionServices = [
+  ...coreServices,
+  ...analyticsServices,
+  ...paymentServices,
+  ...errorServices
+];
+```
+
+## Type Safety Benefits
+
+Custom services provide full TypeScript support:
+
+```typescript
+import { type CSPService } from '@csp-kit/generator';
+import { AssetsCDN, MainAPI } from './services';
+
+// Type checking for service arrays
+const services: CSPService[] = [AssetsCDN, MainAPI];
+
+// IntelliSense for service properties
+console.log(AssetsCDN.id);          // "assets-cdn"
+console.log(AssetsCDN.category);    // "cdn"
+console.log(AssetsCDN.directives);  // { 'img-src': [...], ... }
+
+// Type errors for invalid directives
+const BadService = defineService({
+  id: 'bad',
+  name: 'Bad Service',
+  category: ServiceCategory.OTHER,
+  directives: {
+    'invalid-src': ['...'] // TypeScript error!
+  }
+});
+```
+
+## Advanced Patterns
+
+### Service Validation
+
+Add validation to ensure services are configured correctly:
+
+```typescript
+export const APIService = defineService({
+  id: 'api-service',
+  name: 'API Service',
+  category: ServiceCategory.API,
+  directives: {
+    'connect-src': ['https://api.myapp.com']
+  },
+  validate: (directives) => {
+    const warnings = [];
+    
+    // Check if API is using HTTPS
+    const connectSrc = directives['connect-src'] || [];
+    const hasHttp = connectSrc.some(src => src.startsWith('http://'));
+    
+    if (hasHttp) {
+      warnings.push('API should use HTTPS in production');
+    }
+    
+    return { warnings };
+  }
+});
+```
+
+### Service Conflicts
+
+Prevent incompatible services from being used together:
+
+```typescript
+export const OldAPI = defineService({
+  id: 'old-api',
+  name: 'Legacy API',
+  category: ServiceCategory.API,
+  directives: {
+    'connect-src': ['https://old-api.myapp.com']
+  },
+  deprecated: {
+    since: '2024-01-01',
+    message: 'Legacy API is deprecated',
+    alternative: 'new-api'
+  }
+});
+
+export const NewAPI = defineService({
+  id: 'new-api',
+  name: 'New API',
+  category: ServiceCategory.API,
+  directives: {
+    'connect-src': ['https://api.myapp.com']
+  },
+  conflicts: ['old-api'] // Prevents using both APIs together
+});
+```
+
+## Complete Example
+
+Here's a complete example of a production-ready CSP configuration:
+
+```typescript
+// services/index.ts
+import { defineService } from '@csp-kit/generator';
+import { ServiceCategory } from '@csp-kit/data';
+
+// CDN Services
+export const AssetsCDN = defineService({
+  id: 'assets-cdn',
+  name: 'Static Assets CDN',
+  category: ServiceCategory.CDN,
+  description: 'CDN for images, fonts, and static assets',
+  directives: {
+    'img-src': ['https://assets.myapp.com'],
+    'font-src': ['https://assets.myapp.com'],
+    'style-src': ['https://assets.myapp.com']
+  }
+});
+
+// API Services
+export const MainAPI = defineService({
+  id: 'main-api',
+  name: 'Main API',
+  category: ServiceCategory.API,
+  description: 'Primary API and real-time connections',
+  directives: {
+    'connect-src': [
+      'https://api.myapp.com',
+      'wss://realtime.myapp.com'
+    ]
+  }
+});
+
+// Monitoring
+export const Monitoring = defineService({
+  id: 'monitoring',
+  name: 'Error & Performance Monitoring',
+  category: ServiceCategory.MONITORING,
+  directives: {
+    'script-src': ['https://monitoring.myapp.com'],
+    'connect-src': ['https://monitoring.myapp.com']
+  }
 });
 
 // app.ts
 import { generateCSP } from '@csp-kit/generator';
-import { GoogleAnalytics4, Stripe } from '@csp-kit/data';
-import { AssetsCDN, MainAPI, VideoService } from './services';
+import { GoogleAnalytics, Stripe, Sentry } from '@csp-kit/data';
+import { AssetsCDN, MainAPI, Monitoring } from './services';
 
-export const csp = generateCSP({
-  services: [
-    // Your services
-    AssetsCDN,
-    MainAPI,
-    VideoService.configure({ hdEnabled: true }),
+export function generateAppCSP(options: { nonce?: string } = {}) {
+  return generateCSP({
+    services: [
+      // Custom services
+      AssetsCDN,
+      MainAPI,
+      Monitoring,
+      
+      // Third-party services
+      GoogleAnalytics,
+      Stripe,
+      Sentry
+    ],
+    nonce: options.nonce,
+    reportUri: '/api/csp-violations',
     
-    // Third-party services
-    GoogleAnalytics4,
-    Stripe
-  ],
-  nonce: true,
-  reportUri: '/csp-violations'
+    // Environment-specific overrides
+    development: {
+      unsafeEval: true, // For hot reload
+      additionalRules: {
+        'connect-src': ['http://localhost:*']
+      }
+    }
+  });
+}
+```
+
+## Best Practices
+
+1. **Use TypeScript**: Define services in `.ts` files for full type safety
+2. **Add Descriptions**: Help your team understand what each service does
+3. **Group by Category**: Organize services logically
+4. **Document Requirements**: Use the `notes` field for special requirements
+5. **Version Control**: Track service changes in your repository
+6. **Test Services**: Validate CSP headers in development and staging
+7. **Monitor Violations**: Use `reportUri` to track CSP violations
+
+## Migration from `additionalRules`
+
+If you're currently using `additionalRules`, migrate to custom services:
+
+```typescript
+// ❌ Old approach with additionalRules
+const result = generateCSP({
+  services: [GoogleAnalytics, Stripe],
+  additionalRules: {
+    'img-src': ['https://cdn.myapp.com'],
+    'connect-src': ['https://api.myapp.com']
+  }
+});
+
+// ✅ New approach with custom services
+const MyCDN = defineService({
+  id: 'my-cdn',
+  name: 'My CDN',
+  category: ServiceCategory.CDN,
+  directives: {
+    'img-src': ['https://cdn.myapp.com']
+  }
+});
+
+const MyAPI = defineService({
+  id: 'my-api',
+  name: 'My API',
+  category: ServiceCategory.API,
+  directives: {
+    'connect-src': ['https://api.myapp.com']
+  }
+});
+
+const result = generateCSP({
+  services: [GoogleAnalytics, Stripe, MyCDN, MyAPI]
 });
 ```
 
-This approach makes custom services feel natural and consistent with the built-in ones, while providing maximum flexibility and reusability.
+This approach provides better organization, reusability, and type safety for your CSP configuration.

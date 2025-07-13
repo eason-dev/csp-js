@@ -1,121 +1,179 @@
 # Service Definition Guide
 
-This guide explains how to create and maintain service definitions for CSP Kit. Service definitions are the core data that powers CSP generation for popular web services.
+This guide explains how to create and maintain service definitions for CSP Kit. Service definitions are now TypeScript modules that provide type-safe, tree-shakeable CSP configurations.
 
 ## Table of Contents
 
 - [Overview](#overview)
 - [Service Definition Structure](#service-definition-structure)
+- [Creating a New Service](#creating-a-new-service)
 - [CSP Directives](#csp-directives)
-- [Monitoring Configuration](#monitoring-configuration)
-- [Validation Process](#validation-process)
+- [Advanced Features](#advanced-features)
+- [Validation and Testing](#validation-and-testing)
 - [Best Practices](#best-practices)
+- [Migration from JSONC](#migration-from-jsonc)
 
 ## Overview
 
 ### What is a Service Definition?
 
-A service definition is a JSON document that describes:
+A service definition is a TypeScript module that exports a `CSPService` object containing:
 
-- **Service Identity**: Name, description, category
+- **Service Identity**: Unique ID, name, and category
 - **CSP Requirements**: Required CSP directives for the service
-- **Monitoring Setup**: Automated checking configuration
-- **Documentation**: Official links and implementation notes
+- **Metadata**: Description, documentation links, and notes
+- **Advanced Features**: Validation, deprecation warnings, and conflicts
 
 ### File Structure
 
 ```
-packages/data/data/services/
-├── google-analytics.jsonc
-├── microsoft-clarity.jsonc
-├── stripe.jsonc
-└── ...
+packages/data/src/services/
+├── analytics/
+│   ├── google-analytics.ts
+│   ├── amplitude.ts
+│   └── index.ts
+├── payment/
+│   ├── stripe.ts
+│   ├── paypal.ts
+│   └── index.ts
+└── index.ts
 ```
 
-Each service has its own `.jsonc` file (JSON with comments) containing the complete service definition.
+Each service is a TypeScript file that exports a service definition using the `defineService` function.
 
 ## Service Definition Structure
 
 ### Complete Example
 
 ```typescript
-{
-  // Basic Service Information
-  "id": "google-analytics",
-  "name": "Google Analytics 4",
-  "category": "analytics",
-  "description": "Web analytics service that tracks and reports website traffic",
-  "website": "https://analytics.google.com/",
-  "officialDocs": [
-    "https://developers.google.com/tag-platform/security/guides/csp",
-    "https://content-security-policy.com/examples/google-analytics/"
-  ],
+import { defineService } from '../../service-types.js';
+import { ServiceCategory } from '../../types.js';
 
-  // CSP Requirements
-  "cspDirectives": {
-    "script-src": [
-      "https://www.googletagmanager.com",
-      "https://www.google-analytics.com",
-      "https://ssl.google-analytics.com"
+export const GoogleAnalytics = defineService({
+  // Required: Service Identity
+  id: 'google-analytics',
+  name: 'Google Analytics 4',
+  category: ServiceCategory.ANALYTICS,
+  
+  // Required: Description and Documentation
+  description: 'Web analytics service that tracks and reports website traffic and user behavior',
+  website: 'https://analytics.google.com/',
+  
+  // Required: CSP Directives
+  directives: {
+    'script-src': [
+      'https://*.googletagmanager.com'
     ],
-    "img-src": [
-      "https://www.google-analytics.com",
-      "https://www.googletagmanager.com"
+    'img-src': [
+      'https://*.google-analytics.com',
+      'https://*.googletagmanager.com',
+      'https://*.g.doubleclick.net',
+      'https://*.google.com',
+      'https://*.google.<TLD>'
     ],
-    "connect-src": [
-      "https://www.google-analytics.com",
-      "https://analytics.google.com",
-      "https://stats.g.doubleclick.net",
-      "https://region1.google-analytics.com"
+    'connect-src': [
+      'https://*.google-analytics.com',
+      'https://*.analytics.google.com',
+      'https://*.googletagmanager.com',
+      'https://*.g.doubleclick.net',
+      'https://*.google.com',
+      'https://*.google.<TLD>',
+      'https://pagead2.googlesyndication.com'
+    ],
+    'frame-src': [
+      'https://td.doubleclick.net',
+      'https://www.googletagmanager.com'
     ]
   },
-
-  // Service Configuration
-  "requiresDynamic": true,
-  "requiresNonce": false,
-  "notes": "Standard GA4 implementation with gtag.js. For Google Signals, additional domains may be required. Enhanced data collection capabilities with regional analytics endpoint support.",
-  "aliases": ["ga4", "gtag", "google-gtag"],
-  "lastUpdated": "2024-06-28T00:00:00.000Z",
-  "verifiedAt": "2025-07-05T00:00:00.000Z",
-
-  // Monitoring Configuration
-  "monitoring": {
-    "testUrls": [
-      "https://www.googletagmanager.com/gtag/js?id=GA_TRACKING_ID"
-    ],
-    "checkInterval": "weekly",
-    "alertOnBreaking": true,
-    "lastChecked": "2024-06-28T00:00:00.000Z",
-    "notes": [
-      "Monitor for new regional endpoints and gtag.js updates"
-    ]
-  }
-}
+  
+  // Optional: Additional Metadata
+  officialDocs: [
+    'https://developers.google.com/tag-platform/security/guides/csp',
+    'https://developers.google.com/analytics/devguides/collection/ga4',
+    'https://www.google.com/supported_domains'
+  ],
+  notes: 'For Google Signals (cross-device tracking), use the extended CSP configuration. Each Google top-level domain (TLD) must be specified individually in CSP. See https://www.google.com/supported_domains for complete list of Google TLDs.',
+  aliases: ['ga4', 'gtag', 'google-gtag'],
+  
+  // Optional: Behavior Flags
+  requiresDynamic: true,
+  
+  // Optional: Metadata
+  lastUpdated: '2024-06-28T00:00:00.000Z',
+  verifiedAt: '2025-07-03T00:00:00.000Z'
+});
 ```
 
 ### Required Fields
 
-| Field           | Type     | Description                             |
-| --------------- | -------- | --------------------------------------- |
-| `id`            | string   | Unique kebab-case identifier            |
-| `name`          | string   | Human-readable service name             |
-| `category`      | string   | Service category (see categories below) |
-| `description`   | string   | Brief description (50-150 characters)   |
-| `website`       | string   | Official service website URL            |
-| `officialDocs`  | string[] | Links to official CSP documentation     |
-| `cspDirectives` | object   | CSP directives required by the service  |
-| `lastUpdated`   | string   | ISO timestamp of last update            |
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | `string` | Unique kebab-case identifier |
+| `name` | `string` | Human-readable service name |
+| `category` | `ServiceCategory` | Service category enum value |
+| `description` | `string` | Brief description (50-150 characters) |
+| `website` | `string` | Official service website URL |
+| `directives` | `CSPDirectives` | CSP directives required by the service |
 
 ### Optional Fields
 
-| Field             | Type     | Description                               |
-| ----------------- | -------- | ----------------------------------------- |
-| `requiresDynamic` | boolean  | Service injects scripts dynamically       |
-| `requiresNonce`   | boolean  | Service requires nonce for inline scripts |
-| `notes`           | string   | Implementation notes and requirements     |
-| `aliases`         | string[] | Alternative service identifiers           |
-| `verifiedAt`      | string   | ISO timestamp when CSP was last verified  |
-| `monitoring`      | object   | Automated monitoring configuration        |
+| Field | Type | Description |
+|-------|------|-------------|
+| `officialDocs` | `string[]` | Links to official CSP documentation |
+| `notes` | `string` | Implementation notes and requirements |
+| `aliases` | `string[]` | Alternative service identifiers |
+| `requiresDynamic` | `boolean` | Service injects scripts dynamically |
+| `requiresNonce` | `boolean` | Service requires nonce for inline scripts |
+| `deprecated` | `DeprecationInfo` | Deprecation information |
+| `conflicts` | `string[]` | IDs of conflicting services |
+| `validate` | `(directives) => ValidationResult` | Custom validation function |
+| `lastUpdated` | `string` | ISO timestamp of last update |
+| `verifiedAt` | `string` | ISO timestamp when CSP was last verified |
+
+## Creating a New Service
+
+### Step 1: Choose the Right Category
+
+Create your service file in the appropriate category folder:
+
+```typescript
+// packages/data/src/services/analytics/new-analytics.ts
+import { defineService } from '../../service-types.js';
+import { ServiceCategory } from '../../types.js';
+
+export const NewAnalytics = defineService({
+  id: 'new-analytics',
+  name: 'New Analytics Service',
+  category: ServiceCategory.ANALYTICS,
+  // ... rest of definition
+});
+```
+
+### Step 2: Research CSP Requirements
+
+1. **Check Official Documentation**: Look for CSP guides in the service's docs
+2. **Test Implementation**: Create a test page and monitor network requests
+3. **Use Browser DevTools**: Identify all domains the service connects to
+4. **Verify with CSP**: Test your CSP rules with the actual service
+
+```bash
+# Test your service definition
+pnpm test -- new-analytics
+
+# Validate against a live site
+pnpm csp-cli check new-analytics --url https://example.com
+```
+
+### Step 3: Export from Category Index
+
+Add your service to the category's index file:
+
+```typescript
+// packages/data/src/services/analytics/index.ts
+export * from './google-analytics.js';
+export * from './amplitude.js';
+export * from './new-analytics.js'; // Add your service
+```
 
 ## CSP Directives
 
@@ -123,341 +181,354 @@ Each service has its own `.jsonc` file (JSON with comments) containing the compl
 
 ```typescript
 interface CSPDirectives {
-  'script-src'?: string[]; // JavaScript sources
-  'style-src'?: string[]; // CSS sources
-  'img-src'?: string[]; // Image sources
-  'connect-src'?: string[]; // Fetch/XHR/WebSocket sources
-  'frame-src'?: string[]; // Frame/iframe sources
-  'font-src'?: string[]; // Font sources
-  'form-action'?: string[]; // Form submission targets
-  'object-src'?: string[]; // Plugin sources (flash, etc.)
-  'media-src'?: string[]; // Audio/video sources
-  'child-src'?: string[]; // Web workers and frames
-  'worker-src'?: string[]; // Web workers only
-  'manifest-src'?: string[]; // Web app manifests
+  'script-src'?: string[];      // JavaScript sources
+  'style-src'?: string[];       // CSS sources
+  'img-src'?: string[];         // Image sources
+  'connect-src'?: string[];     // Fetch/XHR/WebSocket sources
+  'frame-src'?: string[];       // Frame/iframe sources
+  'font-src'?: string[];        // Font sources
+  'media-src'?: string[];       // Audio/video sources
+  'object-src'?: string[];      // Plugin sources
+  'worker-src'?: string[];      // Web workers
+  'child-src'?: string[];       // Workers and frames
+  'manifest-src'?: string[];    // Web app manifests
+  'form-action'?: string[];     // Form submission targets
+  'frame-ancestors'?: string[]; // Who can frame this site
+  'base-uri'?: string[];        // Base tag restrictions
 }
 ```
 
 ### CSP Source Guidelines
 
-**Specific Domains** (Preferred):
+**Be Specific**:
+```typescript
+// ✅ Good - Specific domains
+directives: {
+  'script-src': ['https://cdn.service.com'],
+  'connect-src': ['https://api.service.com']
+}
 
-```json
-{
-  "script-src": ["https://cdn.service.com"]
+// ❌ Avoid - Too broad
+directives: {
+  'script-src': ['https://*.com']
 }
 ```
 
-**Avoid Wildcards** unless necessary:
-
-```json
-// Avoid if possible
-{
-  "script-src": ["https://*.service.com"]
+**Use Wildcards Carefully**:
+```typescript
+// ✅ Acceptable - Necessary for multi-subdomain services
+directives: {
+  'img-src': ['https://*.googletagmanager.com']
 }
 
-// Prefer specific subdomains
-{
-  "script-src": [
-    "https://cdn.service.com",
-    "https://api.service.com"
+// ✅ Better - List known subdomains when possible
+directives: {
+  'img-src': [
+    'https://www.googletagmanager.com',
+    'https://tagmanager.google.com'
   ]
 }
 ```
 
 **Special Values**:
-
-- `'self'` - Same origin (added automatically by @csp-kit/generator)
+- `'self'` - Automatically added by generator
 - `'unsafe-inline'` - Avoid! Use nonce instead
 - `'unsafe-eval'` - Avoid! Security risk
 - `data:` - Data URLs (use sparingly)
 - `blob:` - Blob URLs (for generated content)
 
-### CSP Research Process
+## Advanced Features
 
-1. **Official Documentation**: Check service's CSP docs first
-2. **Implementation Testing**: Test with actual service integration
-3. **Developer Tools**: Use browser network tab to identify domains
-4. **Community Input**: Check existing implementations and issues
+### Service Validation
 
-**Example Research Steps for New Service:**
-
-```bash
-# 1. Check official documentation
-curl -s "https://docs.newservice.com" | grep -i "content security policy\|csp"
-
-# 2. Test implementation
-# Create test page with service integration
-# Open browser developer tools -> Network tab
-# Note all domains accessed by the service
-
-# 3. Validate CSP rules
-# Add CSP header with identified domains
-# Test for console errors
-
-# 4. Document findings
-# Note any special requirements or configurations
-```
-
-## Monitoring Configuration
-
-### Monitoring Object
+Add custom validation logic to warn about misconfigurations:
 
 ```typescript
-interface ServiceMonitoring {
-  testUrls?: string[]; // URLs to test for CSP violations
-  checkInterval: string; // 'daily' | 'weekly' | 'monthly'
-  alertOnBreaking: boolean; // Create issues for breaking changes
-  lastChecked?: string; // ISO timestamp of last check
-  notes?: string[]; // Monitoring-specific notes
-}
-```
-
-### Test URL Guidelines
-
-**Good Test URLs**:
-
-- Service demo pages
-- Documentation examples
-- CDN endpoint checks
-- API endpoint health checks
-
-```json
-{
-  "testUrls": [
-    "https://service.com/demo", // Live demo
-    "https://cdn.service.com/sdk.js", // CDN health
-    "https://api.service.com/health" // API health
-  ]
-}
-```
-
-**Avoid**:
-
-- URLs requiring authentication
-- URLs with rate limiting
-- Internal/private endpoints
-
-### Check Intervals
-
-- **Daily**: Critical services with frequent changes
-- **Weekly**: Popular services with regular updates
-- **Monthly**: Stable services with infrequent changes
-
-## Validation Process
-
-### Automated Validation
-
-Service definitions are automatically validated for:
-
-1. **JSON Schema**: Correct structure and required fields
-2. **URL Validation**: Valid website and documentation URLs
-3. **CSP Syntax**: Valid CSP directive format
-4. **Monitoring URLs**: Accessible test endpoints
-
-### Manual Validation
-
-Before submitting a service definition:
-
-1. **Test CSP Rules**:
-
-   ```javascript
-   import { generateCSP } from '@csp-kit/generator';
-
-   const result = generateCSP(['your-service']);
-   console.log(result.header);
-   // Test this header with actual service integration
-   ```
-
-2. **Verify Documentation**:
-   - Check all official documentation links
-   - Ensure CSP requirements match official docs
-   - Verify service information is current
-
-3. **Test Monitoring**:
-   ```bash
-   # Test monitoring URLs
-   @csp-kit/cli check your-service --url https://your-test-url.com
-   ```
-
-### Common Validation Errors
-
-**Missing Required Fields**:
-
-```typescript
-// ❌ Invalid - missing required fields
-{
-  "id": "service",
-  "name": "Service"
-  // Missing: category, description, website, etc.
-}
-
-// ✅ Valid - all required fields present
-{
-  "id": "service",
-  "name": "Service Name",
-  "category": "analytics",
-  "description": "Service description",
-  "website": "https://service.com",
-  "officialDocs": ["https://docs.service.com"],
-  "cspDirectives": {
-    "script-src": ["https://cdn.service.com"]
+export const ServiceWithValidation = defineService({
+  id: 'validated-service',
+  name: 'Validated Service',
+  category: ServiceCategory.ANALYTICS,
+  directives: {
+    'script-src': ['https://analytics.service.com'],
+    'connect-src': ['https://api.service.com']
   },
-  "lastUpdated": "2024-06-29T00:00:00.000Z"
-}
+  
+  // Custom validation
+  validate: (directives) => {
+    const warnings: string[] = [];
+    const errors: string[] = [];
+    
+    // Check for wildcards
+    const scriptSrc = directives['script-src'] || [];
+    if (scriptSrc.some(src => src.includes('*'))) {
+      warnings.push('script-src contains wildcards which may be overly permissive');
+    }
+    
+    // Check for required directive
+    if (!directives['connect-src']) {
+      errors.push('connect-src is required for analytics tracking');
+    }
+    
+    return { warnings, errors };
+  }
+});
 ```
 
-**Invalid CSP Directives**:
+### Deprecation Warnings
+
+Mark services as deprecated with migration guidance:
 
 ```typescript
-// ❌ Invalid - CSP values must be arrays
-{
-  "cspDirectives": {
-    "script-src": "https://cdn.service.com"  // Should be array
+export const OldService = defineService({
+  id: 'old-service',
+  name: 'Old Service (Deprecated)',
+  category: ServiceCategory.ANALYTICS,
+  directives: {
+    'script-src': ['https://old.service.com']
+  },
+  
+  deprecated: {
+    since: '2024-01-01',
+    message: 'Old Service has been replaced by New Service',
+    alternative: 'new-service'
   }
-}
+});
+```
 
-// ✅ Valid - CSP values as arrays
-{
-  "cspDirectives": {
-    "script-src": ["https://cdn.service.com"]
+### Service Conflicts
+
+Prevent incompatible services from being used together:
+
+```typescript
+export const ServiceA = defineService({
+  id: 'service-a',
+  name: 'Service A',
+  category: ServiceCategory.ANALYTICS,
+  directives: {
+    'script-src': ['https://a.service.com']
+  },
+  conflicts: ['service-b'] // Cannot be used with service-b
+});
+```
+
+### Configurable Services
+
+For services that need runtime configuration:
+
+```typescript
+import { createConfigurableService } from '../../service-types.js';
+
+export const StripeConfigurable = createConfigurableService({
+  id: 'stripe-configurable',
+  name: 'Stripe (Configurable)',
+  category: ServiceCategory.PAYMENT,
+  
+  // Base configuration
+  directives: {
+    'script-src': ['https://js.stripe.com'],
+    'frame-src': ['https://js.stripe.com']
+  },
+  
+  // Configuration function
+  configure: (options: { 
+    checkout?: boolean;
+    elements?: boolean;
+    paymentRequest?: boolean;
+  }) => {
+    const directives: CSPDirectives = {};
+    
+    if (options.checkout) {
+      directives['frame-src'] = ['https://checkout.stripe.com'];
+    }
+    
+    if (options.paymentRequest) {
+      directives['connect-src'] = ['https://api.stripe.com'];
+    }
+    
+    return { directives };
   }
-}
+});
+```
+
+## Validation and Testing
+
+### Automated Testing
+
+Every service should have a corresponding test:
+
+```typescript
+// packages/data/src/services/analytics/__tests__/new-analytics.test.ts
+import { describe, it, expect } from 'vitest';
+import { NewAnalytics } from '../new-analytics.js';
+import { validateService } from '../../../test-utils.js';
+
+describe('NewAnalytics', () => {
+  it('should have valid structure', () => {
+    expect(validateService(NewAnalytics)).toBe(true);
+  });
+  
+  it('should have required directives', () => {
+    expect(NewAnalytics.directives['script-src']).toBeDefined();
+    expect(NewAnalytics.directives['connect-src']).toBeDefined();
+  });
+  
+  it('should have valid URLs', () => {
+    const scriptSrcs = NewAnalytics.directives['script-src'] || [];
+    scriptSrcs.forEach(src => {
+      expect(src).toMatch(/^https:\/\//);
+    });
+  });
+});
+```
+
+### Manual Testing
+
+Test your service definition with a real implementation:
+
+```typescript
+// test-implementation.ts
+import { generateCSP } from '@csp-kit/generator';
+import { NewAnalytics } from '@csp-kit/data';
+
+const result = generateCSP({
+  services: [NewAnalytics],
+  nonce: true
+});
+
+console.log('CSP Header:', result.header);
+console.log('Warnings:', result.warnings);
+
+// Test with actual HTML
+const testHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Security-Policy" content="${result.header}">
+  <!-- Add service integration code here -->
+</head>
+<body>
+  <h1>CSP Test Page</h1>
+</body>
+</html>
+`;
 ```
 
 ## Best Practices
 
-### Service Definition Best Practices
+### Code Quality
 
-1. **Accuracy First**: CSP rules must be accurate and tested
-2. **Minimal Rules**: Only include necessary CSP directives
-3. **Clear Documentation**: Provide helpful notes and links
-4. **Regular Updates**: Keep service definitions current
-5. **Monitor Changes**: Set up appropriate monitoring intervals
+1. **Type Safety**: Always use TypeScript and proper types
+2. **Consistent Naming**: Use PascalCase for exports, kebab-case for IDs
+3. **Clear Documentation**: Add helpful notes and official links
+4. **Comprehensive Testing**: Test with real service implementations
 
-### Naming Conventions
+### Performance
 
-**Service IDs**: Use kebab-case
+1. **Tree-Shaking**: Services are individually importable
+2. **Bundle Size**: Keep descriptions concise
+3. **No Dynamic Imports**: All services are statically analyzable
 
+### Security
+
+1. **Minimal Permissions**: Only include necessary domains
+2. **Avoid Wildcards**: Be as specific as possible
+3. **No Unsafe Directives**: Avoid 'unsafe-inline' and 'unsafe-eval'
+4. **Regular Updates**: Keep CSP rules current with service changes
+
+### Documentation
+
+```typescript
+export const WellDocumentedService = defineService({
+  id: 'well-documented',
+  name: 'Well Documented Service',
+  category: ServiceCategory.ANALYTICS,
+  
+  // Clear, concise description
+  description: 'Analytics service for tracking user interactions and conversions',
+  
+  // Link to official site
+  website: 'https://welldocumented.com',
+  
+  // CSP-specific documentation
+  officialDocs: [
+    'https://docs.welldocumented.com/security/csp',
+    'https://help.welldocumented.com/integrate/content-security-policy'
+  ],
+  
+  // Implementation notes
+  notes: 'Requires nonce for inline tracking scripts. For e-commerce tracking, additional domains may be needed. See official docs for advanced configuration.',
+  
+  // All CSP requirements
+  directives: {
+    'script-src': ['https://cdn.welldocumented.com'],
+    'connect-src': ['https://api.welldocumented.com'],
+    'img-src': ['https://pixel.welldocumented.com']
+  }
+});
 ```
-✅ google-analytics
-✅ microsoft-clarity
-✅ stripe-checkout
-❌ GoogleAnalytics
-❌ microsoft_clarity
-```
 
-**Aliases**: Include common variations
+## Migration from JSONC
 
-```json
+If you're migrating from the old JSONC format:
+
+1. **Create TypeScript File**: Convert `.jsonc` to `.ts`
+2. **Use defineService**: Wrap definition in `defineService()`
+3. **Update Imports**: Use proper TypeScript imports
+4. **Fix Property Names**: `cspDirectives` → `directives`
+5. **Add to Exports**: Export from category index
+
+```typescript
+// Before: google-analytics.jsonc
 {
   "id": "google-analytics",
-  "aliases": ["ga4", "gtag", "google-gtag"]
+  "name": "Google Analytics 4",
+  "cspDirectives": {
+    "script-src": ["https://www.googletagmanager.com"]
+  }
 }
+
+// After: google-analytics.ts
+import { defineService } from '../../service-types.js';
+import { ServiceCategory } from '../../types.js';
+
+export const GoogleAnalytics = defineService({
+  id: 'google-analytics',
+  name: 'Google Analytics 4',
+  category: ServiceCategory.ANALYTICS,
+  directives: {
+    'script-src': ['https://www.googletagmanager.com']
+  },
+  // ... additional required fields
+});
 ```
 
-### Documentation Standards
-
-**Notes**: Include implementation details
-
-```json
-{
-  "notes": "Standard GA4 implementation with gtag.js. For Google Signals, additional domains may be required. Consider using nonce-based approach for inline scripts."
-}
-```
-
-**Official Docs**: Link to CSP-specific documentation
-
-```json
-{
-  "officialDocs": [
-    "https://developers.google.com/tag-platform/security/guides/csp",
-    "https://support.service.com/csp-integration"
-  ]
-}
-```
-
-### Categories
-
-Use appropriate categories from `ServiceCategory` enum:
-
-- `analytics` - Google Analytics, Adobe Analytics, Mixpanel
-- `advertising` - Google Ads, Facebook Pixel, AdSense
-- `social` - Twitter widgets, Facebook SDK, LinkedIn
-- `payment` - Stripe, PayPal, Square
-- `forms` - Typeform, Google Forms, JotForm
-- `chat` - Intercom, Zendesk, Crisp
-- `cdn` - jsDelivr, unpkg, cdnjs
-- `fonts` - Google Fonts, Adobe Fonts, Typekit
-- `maps` - Google Maps, Mapbox, OpenStreetMap
-- `video` - YouTube, Vimeo, Wistia
-- `testing` - Google Optimize, Optimizely, VWO
-- `monitoring` - Sentry, LogRocket, Bugsnag
-- `other` - Services that don't fit other categories
-
-### Performance Considerations
-
-**Bundle Size**: Keep service definitions concise
-
-```json
-// ✅ Concise but complete
-{
-  "description": "Web analytics service"
-}
-
-// ❌ Overly verbose
-{
-  "description": "A comprehensive web analytics service that provides detailed insights into user behavior, traffic patterns, conversion tracking, and much more for websites and applications"
-}
-```
-
-**Load Time**: Optimize for fast parsing
-
-- Use efficient JSON structure
-- Avoid deeply nested objects
-- Keep arrays reasonably sized
-
----
-
-## Tools and Resources
+## Tools and Commands
 
 ### CLI Tools
 
 ```bash
-# Add new service interactively
-@csp-kit/cli add --interactive
+# Validate all services
+pnpm validate
 
-# Update existing service
-@csp-kit/cli update service-id
+# Test a specific service
+pnpm test google-analytics
 
-# Validate service definition
-@csp-kit/cli validate --service service-id
+# Check service against live site
+pnpm csp-cli check google-analytics --url https://example.com
 
-# Check service for changes
-@csp-kit/cli check service-id --url https://test-url.com
+# Generate CSP for testing
+pnpm csp-cli generate google-analytics stripe --output header
 ```
 
-### Testing Tools
+### Development Workflow
 
-```javascript
-// Test CSP generation
-import { generateCSP, getServicesByCategory } from '@csp-kit/generator';
-
-const result = generateCSP(['your-service']);
-console.log('CSP Header:', result.header);
-console.log('Warnings:', result.warnings);
-
-const analyticsServices = getServicesByCategory('analytics');
-console.log('Analytics services:', analyticsServices);
-```
-
-### External Resources
-
-- [CSP Reference](https://content-security-policy.com/)
-- [CSP Evaluator](https://csp-evaluator.withgoogle.com/)
-- [MDN CSP Guide](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
-- [CSP Scanner](https://cspscanner.com/)
+1. Create service definition in appropriate category
+2. Add comprehensive test coverage
+3. Export from category index
+4. Run validation and tests
+5. Test with real implementation
+6. Submit PR with evidence of testing
 
 ---
 
-_Last Updated: 2025-07-05_
+_Last Updated: 2025-07-12_

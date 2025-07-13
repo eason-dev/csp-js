@@ -6,7 +6,7 @@ Welcome to the CSP Kit community! We're excited you want to contribute to making
 
 | Priority | Type | Description | Time Estimate |
 |----------|------|-------------|---------------|
-| **🔥 High** | **New Services** | Add support for popular web services | 15-30 min |
+| **🔥 High** | **New Services** | Add TypeScript service definitions | 15-30 min |
 | **🔥 High** | **Service Updates** | Update existing services when they change | 10-15 min |
 | **📚 Medium** | **Documentation** | Improve guides and examples | 30-60 min |
 | **🐛 Medium** | **Bug Reports** | Report issues and edge cases | 5-10 min |
@@ -16,8 +16,9 @@ Welcome to the CSP Kit community! We're excited you want to contribute to making
 
 ### Prerequisites
 
-- **Node.js 18+** and **pnpm** (required)
+- **Node.js 22+** and **pnpm 9+** (required)
 - **Git** for version control
+- **TypeScript knowledge** (helpful for service definitions)
 - **Basic CSP knowledge** (helpful but not required)
 
 ### 1. Setup Development Environment
@@ -40,145 +41,196 @@ pnpm test
 pnpm dev
 ```
 
-### 2. Install CLI for Contributing
+### 2. Project Structure
 
-```bash
-# Install CLI globally for service management
-npm install -g @csp-kit/cli
-
-# Verify installation
-csp-cli --version
+```
+csp-kit/
+├── packages/
+│   ├── generator/           # Core CSP generation library
+│   ├── data/               # TypeScript service definitions
+│   │   └── src/
+│   │       └── services/   # Service definition files
+│   ├── cli/                # Command-line tools
+│   └── ui/                 # Shared UI components
+├── apps/
+│   ├── web/                # Next.js web interface
+│   └── docs/               # Documentation site
+└── docs/                   # Markdown documentation
 ```
 
 ## 🎯 Contributing Services (Most Needed!)
 
 ### 🆕 Adding a New Service
 
-**Method 1: Interactive CLI (Recommended)**
+Services are now TypeScript modules that export service definitions. Here's how to add one:
+
+**Step 1: Choose the right category folder**
 
 ```bash
-# Start interactive service creation
-csp-cli add --interactive
+# Navigate to the appropriate category
+cd packages/data/src/services/analytics/  # or payment/, social/, etc.
 ```
 
-The CLI will guide you through:
-1. **Service identification** (ID, name, category)
-2. **Documentation** (website, official docs)
-3. **CSP requirements** (what domains/directives are needed)
-4. **Testing configuration** (URLs for validation)
-5. **Review and submission** (creates PR automatically)
+**Step 2: Create your service file**
 
-**Method 2: Manual Creation**
+```typescript
+// packages/data/src/services/analytics/my-analytics.ts
+import { defineService } from '../../service-types.js';
+import { ServiceCategory } from '../../types.js';
 
-1. **Create service file:**
-   ```bash
-   touch packages/data/data/services/your-service.jsonc
-   ```
+export const MyAnalytics = defineService({
+  // Required fields
+  id: 'my-analytics',
+  name: 'My Analytics Service',
+  category: ServiceCategory.ANALYTICS,
+  description: 'Advanced analytics platform for tracking user behavior',
+  website: 'https://myanalytics.com',
+  
+  // CSP directives
+  directives: {
+    'script-src': ['https://cdn.myanalytics.com'],
+    'connect-src': ['https://api.myanalytics.com'],
+    'img-src': ['https://pixel.myanalytics.com']
+  },
+  
+  // Optional metadata
+  officialDocs: [
+    'https://docs.myanalytics.com/security/csp',
+    'https://help.myanalytics.com/implementation'
+  ],
+  notes: 'Requires script-src for tracking code. Use connect-src for real-time events.',
+  aliases: ['my-analytics', 'ma'],
+  requiresDynamic: true, // If service injects scripts dynamically
+  
+  // Timestamps
+  lastUpdated: '2025-07-12T00:00:00.000Z',
+  verifiedAt: '2025-07-12T00:00:00.000Z'
+});
+```
 
-2. **Use this template:**
-   ```jsonc
-   {
-     // Required fields
-     "id": "your-service",
-     "name": "Your Service Name",
-     "category": "analytics", // See categories below
-     "description": "Brief description of what this service does",
-     "website": "https://yourservice.com",
-     "officialDocs": [
-       "https://docs.yourservice.com/csp",
-       "https://help.yourservice.com/security"
-     ],
-     "cspDirectives": {
-       "script-src": ["https://cdn.yourservice.com"],
-       "connect-src": ["https://api.yourservice.com"],
-       "img-src": ["https://images.yourservice.com"]
-     },
-     
-     // Optional fields
-     "requiresDynamic": false,
-     "requiresNonce": false,
-     "notes": "Additional implementation details",
-     "aliases": ["yourservice", "your-svc"],
-     "lastUpdated": "2024-07-05T00:00:00.000Z",
-     "verifiedAt": "2024-07-05T00:00:00.000Z",
-     "monitoring": {
-       "testUrls": ["https://yourservice.com/demo"],
-       "checkInterval": "weekly",
-       "alertOnBreaking": true
-     }
-   }
-   ```
+**Step 3: Export from category index**
 
-3. **Validate your service:**
-   ```bash
-   csp-cli validate --service your-service
-   ```
+```typescript
+// packages/data/src/services/analytics/index.ts
+export * from './google-analytics.js';
+export * from './amplitude.js';
+export * from './my-analytics.js'; // Add your service
+```
 
-4. **Test CSP generation:**
-   ```bash
-   csp-cli generate your-service
-   ```
+**Step 4: Test your service**
+
+```bash
+# Build the data package
+pnpm build --filter @csp-kit/data
+
+# Run tests
+pnpm test --filter @csp-kit/data
+
+# Test CSP generation
+pnpm tsx test-service.ts
+```
+
+Create a test file:
+```typescript
+// test-service.ts
+import { generateCSP } from '@csp-kit/generator';
+import { MyAnalytics } from './packages/data/src/services/analytics/my-analytics.js';
+
+const result = generateCSP({
+  services: [MyAnalytics]
+});
+
+console.log('Generated CSP:', result.header);
+console.log('Warnings:', result.warnings);
+```
 
 ### 🔄 Updating Existing Services
 
 When a service changes their CSP requirements:
 
-```bash
-# Check if service needs updates
-csp-cli check service-name --url https://service-test-url.com
+1. **Find the service file:**
+   ```bash
+   # Search for the service
+   find packages/data/src/services -name "*stripe*"
+   ```
 
-# Update interactively
-csp-cli update service-name --interactive
+2. **Update the directives:**
+   ```typescript
+   // packages/data/src/services/payment/stripe.ts
+   export const Stripe = defineService({
+     // ... other fields
+     directives: {
+       'script-src': [
+         'https://js.stripe.com',
+         'https://checkout.stripe.com' // Add new domain
+       ],
+       // ... other directives
+     },
+     lastUpdated: '2025-07-12T00:00:00.000Z' // Update timestamp
+   });
+   ```
 
-# Or update specific fields manually
-# Edit packages/data/data/services/service-name.jsonc
-```
+3. **Add a note about the change:**
+   ```typescript
+   notes: 'Added checkout.stripe.com for new Stripe Checkout experience. Required as of July 2025.',
+   ```
 
 ### 📋 Service Categories
 
 Choose the most appropriate category:
 
-| Category | Examples | Description |
-|----------|----------|-------------|
-| `analytics` | Google Analytics, Mixpanel, Hotjar | Tracking and analytics |
-| `advertising` | Google Ads, Facebook Pixel | Ad networks and marketing |
-| `social` | Facebook, Twitter, LinkedIn | Social media widgets |
-| `payment` | Stripe, PayPal, Square | Payment processing |
-| `forms` | Typeform, Calendly, Mailchimp | Form builders and surveys |
-| `chat` | Intercom, Zendesk, Crisp | Customer support chat |
-| `cdn` | Cloudflare, jsDelivr, Fastly | Content delivery |
-| `fonts` | Google Fonts, Adobe Fonts | Web font services |
-| `maps` | Google Maps, Mapbox | Mapping and location |
-| `video` | YouTube, Vimeo, Twitch | Video hosting and players |
-| `testing` | Optimizely, VWO, Hotjar | A/B testing and optimization |
-| `monitoring` | Sentry, New Relic, Datadog | Error tracking and monitoring |
-| `other` | Auth0, Firebase, Slack | Services that don't fit above |
+| Category | Import Path | Examples |
+|----------|-------------|----------|
+| `ANALYTICS` | `services/analytics/` | Google Analytics, Mixpanel |
+| `ADVERTISING` | `services/advertising/` | Google Ads, Facebook Pixel |
+| `SOCIAL` | `services/social/` | Facebook, Twitter, LinkedIn |
+| `PAYMENT` | `services/payment/` | Stripe, PayPal, Square |
+| `FORMS` | `services/forms/` | Typeform, Calendly |
+| `CHAT` | `services/chat/` | Intercom, Zendesk |
+| `CDN` | `services/cdn/` | Cloudflare, jsDelivr |
+| `FONTS` | `services/fonts/` | Google Fonts, Adobe Fonts |
+| `MAPS` | `services/maps/` | Google Maps, Mapbox |
+| `VIDEO` | `services/video/` | YouTube, Vimeo |
+| `MONITORING` | `services/monitoring/` | Sentry, DataDog |
+| `OTHER` | `services/other/` | Everything else |
 
 ### 🔍 Research Guidelines
 
 Before adding a service, research their CSP requirements:
 
 1. **Check official documentation**
-   - Look for CSP, security, or implementation guides
-   - Search for "Content Security Policy" on their docs
+   ```bash
+   # Search their docs for CSP information
+   # Look for: "Content Security Policy", "CSP", "security headers"
+   ```
 
 2. **Analyze real implementations**
    ```bash
-   # Use browser dev tools to inspect CSP headers
-   curl -I https://service-website.com
+   # Check what domains they use
+   curl -I https://example-using-service.com | grep -i content-security
+   
+   # Use browser DevTools Network tab
+   # Filter by domain to see all requests
    ```
 
 3. **Test with minimal CSP**
    ```html
-   <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+   <!DOCTYPE html>
+   <html>
+   <head>
+     <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+     <!-- Add service integration code -->
+   </head>
+   <body>
+     <!-- Test if service works -->
+   </body>
+   </html>
    ```
-   Add domains until the service works
 
-4. **Verify requirements**
-   ```bash
-   # Test with CSP Kit CLI
-   csp-cli check new-service --url https://test-page.com
-   ```
+4. **Document your findings**
+   - List all domains the service uses
+   - Note which CSP directives are required
+   - Include any special requirements (nonce, dynamic scripts)
 
 ## 🐛 Bug Reports
 
@@ -188,24 +240,31 @@ Found a bug? Here's how to report it effectively:
 
 Search [GitHub Issues](https://github.com/eason-dev/csp-kit/issues) to avoid duplicates.
 
-### 2. Gather Information
+### 2. Create a Minimal Reproduction
 
-```bash
-# Version information
-npm list @csp-kit/generator @csp-kit/data
-csp-cli --version
+```typescript
+// bug-reproduction.ts
+import { generateCSP } from '@csp-kit/generator';
+import { ProblematicService } from '@csp-kit/data';
 
-# Test case that reproduces the bug
-node -e "console.log(require('@csp-kit/generator').generateCSP(['problematic-service']))"
+// Show the exact code that causes the issue
+const result = generateCSP({
+  services: [ProblematicService],
+  // Include all options you're using
+});
+
+console.log('Expected:', 'what you expected');
+console.log('Actual:', result.header);
 ```
 
 ### 3. Use Bug Report Template
 
-Click **"New Issue"** → **"Bug Report"** and fill out:
-- **Description**: What happened vs. what you expected
-- **Reproduction Steps**: Minimal code to reproduce
-- **Environment**: OS, Node.js version, package versions
-- **Additional Context**: Screenshots, logs, etc.
+Include:
+- **CSP Kit versions**: `npm list @csp-kit/generator @csp-kit/data`
+- **Node.js version**: `node --version`
+- **TypeScript version**: `npx tsc --version`
+- **Complete error messages**
+- **Minimal reproduction code**
 
 ## 💡 Feature Requests
 
@@ -213,18 +272,18 @@ Have an idea? We'd love to hear it!
 
 ### Types of Features We're Looking For
 
-- **🔧 Framework Integrations**: Next.js plugins, Express middleware
-- **🤖 Automation**: AI-powered service detection
-- **📊 Analytics**: CSP violation tracking and analysis
-- **🌐 Internationalization**: Multi-language support
-- **🎨 UI/UX**: Web interface improvements
+- **🔧 TypeScript Improvements**: Better types, generics support
+- **🤖 DX Enhancements**: Better error messages, IntelliSense
+- **📊 Validation**: Service conflict detection, CSP analysis
+- **🌐 Framework Plugins**: Vite, Webpack, Next.js integrations
+- **🎨 Service Discovery**: Auto-detect services from code
 
 ### How to Suggest Features
 
 1. **Check [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions)**
-2. **Use "Feature Request" template**
-3. **Provide use cases and examples**
-4. **Consider implementation complexity**
+2. **Provide concrete examples** of how it would work
+3. **Explain the use case** and who benefits
+4. **Consider implementation** complexity
 
 ## 📚 Documentation Improvements
 
@@ -232,307 +291,302 @@ Help make CSP Kit more accessible:
 
 ### Areas That Need Help
 
-- **More examples** for different frameworks
-- **Video tutorials** for common scenarios
-- **Translation** to other languages
+- **TypeScript examples** for different scenarios
+- **Migration guides** from other CSP solutions
+- **Framework guides** (Remix, SvelteKit, Astro)
+- **Video tutorials** for common use cases
 - **API documentation** improvements
-- **Beginner guides** for CSP concepts
 
 ### Contributing Docs
 
-1. **Documentation files** are in `/docs`
-2. **Edit in Markdown** with clear examples
-3. **Test instructions** to ensure they work
-4. **Use inclusive language** and clear explanations
+1. **Documentation structure:**
+   ```
+   docs/
+   ├── getting-started.md      # User onboarding
+   ├── api-reference.md        # Complete API docs
+   ├── contributing.md         # This file
+   ├── examples/               # Framework examples
+   └── maintainer/             # Technical docs
+   ```
+
+2. **Use clear examples:**
+   ```typescript
+   // ✅ Good: Complete, runnable example
+   import { generateCSP } from '@csp-kit/generator';
+   import { GoogleAnalytics, Stripe } from '@csp-kit/data';
+   
+   const result = generateCSP({
+     services: [GoogleAnalytics, Stripe],
+     nonce: true
+   });
+   
+   // ❌ Avoid: Incomplete snippets
+   generateCSP({ services: [...] })
+   ```
 
 ## 🔧 Code Contributions
 
 ### Development Workflow
 
-1. **Create a branch:**
+1. **Create a feature branch:**
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b feature/add-service-validation
    # or
-   git checkout -b fix/your-bug-fix
+   git checkout -b fix/nonce-generation-issue
    ```
 
-2. **Make your changes:**
-   - Write clear, documented code
-   - Add tests for new functionality
-   - Update documentation if needed
+2. **Follow TypeScript best practices:**
+   ```typescript
+   // Use proper types
+   export function validateService(service: CSPService): ValidationResult {
+     // Implementation
+   }
+   
+   // Avoid any
+   export function processData(data: any) { // ❌
+     // ...
+   }
+   ```
 
-3. **Test your changes:**
+3. **Write tests:**
+   ```typescript
+   // packages/data/src/services/analytics/__tests__/my-analytics.test.ts
+   import { describe, it, expect } from 'vitest';
+   import { MyAnalytics } from '../my-analytics.js';
+   import { validateService } from '../../../test-utils.js';
+   
+   describe('MyAnalytics', () => {
+     it('should have valid structure', () => {
+       expect(validateService(MyAnalytics)).toBe(true);
+     });
+     
+     it('should include required domains', () => {
+       expect(MyAnalytics.directives['script-src']).toContain(
+         'https://cdn.myanalytics.com'
+       );
+     });
+   });
+   ```
+
+4. **Run quality checks:**
    ```bash
-   pnpm test           # Run all tests
-   pnpm lint           # Check code style
+   pnpm lint           # ESLint with zero warnings
    pnpm check-types    # TypeScript validation
-   pnpm format         # Format code
+   pnpm test           # All tests must pass
+   pnpm format         # Prettier formatting
    ```
 
-4. **Commit with conventional commits:**
+5. **Commit with conventional commits:**
    ```bash
-   git commit -m "feat: add support for new-service"
-   git commit -m "fix: resolve CSP generation issue"
-   git commit -m "docs: improve getting started guide"
+   git commit -m "feat(data): add MyAnalytics service definition"
+   git commit -m "fix(generator): resolve nonce generation issue"
+   git commit -m "docs: improve TypeScript migration guide"
    ```
 
-5. **Push and create PR:**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
+### Code Style Guidelines
 
-### Code Style
+- **TypeScript**: Strict mode, no implicit any
+- **Imports**: Use `.js` extensions for local imports
+- **Exports**: Named exports for services
+- **Documentation**: JSDoc for public APIs
+- **Testing**: 100% coverage for new services
 
-- **TypeScript**: 100% TypeScript with strict mode
-- **ESLint**: Zero warnings policy (`--max-warnings 0`)
-- **Prettier**: Consistent code formatting
-- **Conventional Commits**: Use conventional commit messages
+## 📊 Service Definition Interface
 
-### Testing Requirements
-
-- **Unit tests** for new functions
-- **Integration tests** for service definitions
-- **Documentation** for public APIs
-- **Examples** for new features
-
-## 📊 Service Definition Schema
-
-### Complete Schema Reference
+### Complete TypeScript Interface
 
 ```typescript
 interface ServiceDefinition {
   // Required fields
-  id: string;                    // Unique identifier (kebab-case)
+  id: string;                    // Unique kebab-case identifier
   name: string;                  // Human-readable name
-  category: ServiceCategory;     // Service category
-  description: string;           // Brief description
-  website: string;               // Official website URL
-  officialDocs: string[];        // Documentation URLs
-  cspDirectives: CSPDirectives;  // CSP requirements
-  lastUpdated: string;           // ISO timestamp
+  category: ServiceCategory;     // Category enum value
+  description: string;           // 50-150 character description
+  website: string;               // Official service URL
+  directives: CSPDirectives;     // CSP requirements
   
-  // Optional fields
-  requiresDynamic?: boolean;     // Requires 'strict-dynamic'
-  requiresNonce?: boolean;       // Requires nonce
-  notes?: string;                // Additional notes
+  // Optional metadata
+  officialDocs?: string[];       // Documentation URLs
+  notes?: string;                // Implementation notes
   aliases?: string[];            // Alternative identifiers
-  verifiedAt?: string;           // Last verification timestamp
-  monitoring?: {                 // Monitoring configuration
-    testUrls: string[];
-    checkInterval: 'daily' | 'weekly' | 'monthly';
-    alertOnBreaking: boolean;
+  requiresDynamic?: boolean;     // Needs 'strict-dynamic'
+  requiresNonce?: boolean;       // Needs nonce support
+  
+  // Advanced features
+  deprecated?: {
+    since: string;               // ISO date
+    message: string;             // Explanation
+    alternative?: string;        // Suggested replacement
   };
-}
-```
-
-### CSP Directives Format
-
-```typescript
-interface CSPDirectives {
-  'script-src'?: string[];       // JavaScript sources
-  'style-src'?: string[];        // CSS sources
-  'img-src'?: string[];          // Image sources
-  'connect-src'?: string[];      // AJAX/WebSocket/EventSource
-  'font-src'?: string[];         // Font sources
-  'object-src'?: string[];       // Plugins (avoid if possible)
-  'media-src'?: string[];        // Audio/video sources
-  'frame-src'?: string[];        // Iframe sources
-  'child-src'?: string[];        // Web workers and nested contexts
-  'worker-src'?: string[];       // Web worker sources
-  'manifest-src'?: string[];     // Web app manifest
-  'base-uri'?: string[];         // Base element URLs
-  'form-action'?: string[];      // Form submission URLs
-  'frame-ancestors'?: string[];  // Iframe embedding restrictions
-  // Add other directives as needed
+  conflicts?: string[];          // Incompatible service IDs
+  validate?: (directives: CSPDirectives) => {
+    warnings?: string[];
+    errors?: string[];
+  };
+  
+  // Timestamps
+  lastUpdated?: string;          // ISO timestamp
+  verifiedAt?: string;           // Last verification
 }
 ```
 
 ### Service Definition Best Practices
 
-1. **Use specific domains**, avoid wildcards when possible:
-   ```jsonc
-   // Good
-   "script-src": ["https://js.stripe.com"]
+1. **Be specific with domains:**
+   ```typescript
+   // ✅ Good - Specific domains
+   directives: {
+     'script-src': ['https://js.stripe.com'],
+     'frame-src': ['https://checkout.stripe.com']
+   }
    
-   // Avoid unless necessary
-   "script-src": ["https://*.stripe.com"]
-   ```
-
-2. **Only include required directives**:
-   ```jsonc
-   // Don't include unnecessary directives
-   "cspDirectives": {
-     "script-src": ["https://analytics.example.com"],
-     // Only add connect-src if service makes AJAX calls
-     "connect-src": ["https://api.example.com"]
+   // ❌ Avoid - Overly broad
+   directives: {
+     'script-src': ['https://*.stripe.com']
    }
    ```
 
-3. **Add verification timestamps**:
-   ```jsonc
-   "lastUpdated": "2024-07-05T00:00:00.000Z",
-   "verifiedAt": "2024-07-05T00:00:00.000Z"
+2. **Include helpful metadata:**
+   ```typescript
+   notes: 'Requires frame-src for 3D Secure authentication. The connect-src is only needed for Stripe.js v3+.',
+   officialDocs: [
+     'https://stripe.com/docs/security/guide#content-security-policy'
+   ]
    ```
 
-4. **Include helpful notes**:
-   ```jsonc
-   "notes": "Requires script-src for tracking pixel. connect-src needed for real-time analytics data."
-   ```
-
-5. **Add test URLs for monitoring**:
-   ```jsonc
-   "monitoring": {
-     "testUrls": ["https://service.com/demo", "https://docs.service.com/integration"],
-     "checkInterval": "weekly",
-     "alertOnBreaking": true
+3. **Add validation when needed:**
+   ```typescript
+   validate: (directives) => {
+     const warnings = [];
+     if (!directives['frame-src']?.includes('https://checkout.stripe.com')) {
+       warnings.push('Stripe Checkout requires frame-src for payment forms');
+     }
+     return { warnings };
    }
    ```
 
-## 🤝 Code Review Process
+## 🤝 Pull Request Process
 
-### What We Look For
+### Before Submitting
 
-1. **Correctness**
-   - Service CSP requirements are accurate
-   - Code follows TypeScript best practices
-   - Tests pass and provide good coverage
+- [ ] Tests pass: `pnpm test`
+- [ ] No lint errors: `pnpm lint`
+- [ ] Types check: `pnpm check-types`
+- [ ] Docs updated (if needed)
+- [ ] Commits follow convention
 
-2. **Completeness**
-   - All required fields are present
-   - Documentation is updated
-   - Examples are provided when needed
+### PR Title Format
 
-3. **Quality**
-   - Clear, readable code
-   - Helpful comments for complex logic
-   - Consistent with existing patterns
+```
+feat(data): add Plausible Analytics service
+fix(generator): handle empty directives correctly
+docs: update Next.js integration guide
+chore: update dependencies
+```
 
-### Review Timeline
+### What We Review
 
-- **Service additions**: Usually reviewed within 48 hours
-- **Bug fixes**: Priority review, usually within 24 hours
-- **Features**: May take longer for discussion and refinement
+1. **For new services:**
+   - CSP directives are accurate
+   - All required fields present
+   - Tests included
+   - Proper category placement
+
+2. **For features:**
+   - TypeScript types are sound
+   - Tests cover edge cases
+   - Documentation updated
+   - No breaking changes
+
+3. **For all PRs:**
+   - Code follows project style
+   - Commits are clear
+   - CI checks pass
 
 ## 🏆 Recognition
 
-We believe in recognizing our contributors:
+We value our contributors!
 
-### How We Say Thank You
+### Contributor Showcases
 
-- **[Contributors page](https://csp-kit.eason.ch/contributors)** - Featured on our website
-- **[GitHub contributors](https://github.com/eason-dev/csp-kit/graphs/contributors)** - GitHub recognition
-- **Monthly highlights** - Featured in our newsletter
-- **Conference mentions** - Speaking opportunities
-- **Swag** - CSP Kit stickers and merchandise (coming soon!)
+- **Website**: Featured on [csp-kit.eason.ch/contributors](https://csp-kit.eason.ch/contributors)
+- **README**: Listed in project README
+- **Release notes**: Mentioned in releases
+- **Social media**: Highlighted in announcements
 
-### Contribution Levels
+### Contribution Milestones
 
-- **🥉 Service Contributor**: Added 1-5 services
-- **🥈 Regular Contributor**: Added 6-20 services or significant features
-- **🥇 Core Contributor**: Major features, documentation, or 20+ services
-- **💎 Maintainer**: Long-term commitment to project health
+- 🌱 **First PR**: Welcome to the community!
+- 🌿 **5 Services**: Service Contributor badge
+- 🌳 **10 Services**: Regular Contributor
+- 🌲 **25+ Services**: Core Contributor
+- 🏔️ **Major Feature**: Feature Contributor
 
 ## 📞 Getting Help
 
-### Where to Ask Questions
-
-| Question Type | Best Place | Response Time |
-|---------------|------------|---------------|
-| **Service definition help** | [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions) | ~24 hours |
-| **Bug reports** | [GitHub Issues](https://github.com/eason-dev/csp-kit/issues) | ~48 hours |
-| **Feature discussions** | [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions) | ~48 hours |
-| **Quick questions** | [Discord Community](https://discord.gg/csp-kit) | Real-time |
-
-### Community Guidelines
-
-We follow the Contributor Covenant Code of Conduct. Please be:
-
-- **Respectful** and inclusive
-- **Constructive** in feedback
-- **Patient** with newcomers
-- **Helpful** to other contributors
+| Need Help With | Where to Go | Response Time |
+|----------------|-------------|---------------|
+| TypeScript questions | [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions) | ~24 hours |
+| Service research | [Discord #services](https://discord.gg/csp-kit) | Real-time |
+| PR feedback | Comment on PR | ~48 hours |
+| General questions | [Discord #general](https://discord.gg/csp-kit) | Real-time |
 
 ## 🎉 First-Time Contributors
 
-New to open source? Welcome! Here are some beginner-friendly ways to start:
-
-### Good First Issues
-
-Look for issues labeled:
-- **"good first issue"** - Perfect for beginners
-- **"help wanted"** - We need community help
-- **"documentation"** - Improve our docs
+New to open source? Perfect! Here's how to start:
 
 ### Beginner-Friendly Tasks
 
-1. **Add a simple service** (analytics, fonts, CDN)
-2. **Fix typos** in documentation
-3. **Add examples** for your favorite framework
-4. **Improve error messages** in the CLI
-5. **Write tests** for existing code
+1. **Add a simple service** (start with CDN or fonts)
+2. **Improve error messages** in existing code
+3. **Add tests** for services missing coverage
+4. **Fix typos** in documentation
+5. **Add code examples** to docs
 
-### Mentorship
+### Your First Service
 
-We're happy to mentor new contributors:
-- **Tag @maintainers** in issues for guidance
-- **Join our Discord** for real-time help
-- **Attend community calls** (monthly, announced in Discord)
+Let's add Google Fonts together:
 
-## 📅 Release Process
+```typescript
+// packages/data/src/services/fonts/google-fonts.ts
+import { defineService } from '../../service-types.js';
+import { ServiceCategory } from '../../types.js';
 
-Understanding our release cycle helps with contribution timing:
+export const GoogleFonts = defineService({
+  id: 'google-fonts',
+  name: 'Google Fonts',
+  category: ServiceCategory.FONTS,
+  description: 'Web font service providing open source font families',
+  website: 'https://fonts.google.com',
+  directives: {
+    'style-src': ['https://fonts.googleapis.com'],
+    'font-src': ['https://fonts.gstatic.com']
+  },
+  officialDocs: ['https://developers.google.com/fonts/docs/getting_started'],
+  notes: 'Use style-src for CSS and font-src for font files'
+});
+```
 
-### Release Schedule
+### Getting PR Feedback
 
-- **Data package** (`@csp-kit/data`): Weekly releases with new services
-- **Core library** (`@csp-kit/generator`): Monthly releases with features
-- **CLI tools** (`@csp-kit/cli`): Monthly releases with improvements
-
-### Contribution Timing
-
-- **Service additions**: Can be included in next weekly data release
-- **Bug fixes**: Fast-tracked for next patch release
-- **Features**: Planned for next minor release
-
-## 🔮 Roadmap Alignment
-
-Check our [roadmap](https://github.com/eason-dev/csp-kit/blob/main/ROADMAP.md) to see how your contribution fits:
-
-### Current Focus Areas
-
-1. **Service Coverage**: Adding more popular services
-2. **Framework Integration**: Next.js, Express, and other plugins
-3. **Developer Experience**: Better CLI tools and documentation
-4. **Automation**: AI-powered service detection and updates
-
-### Long-term Vision
-
-- **Universal CSP Toolkit**: The go-to solution for all CSP needs
-- **Community-Driven**: Self-sustaining contributor ecosystem
-- **Enterprise Ready**: Advanced features for large organizations
-- **Educational Resource**: Teaching developers about web security
+- Tag `@maintainers` for help
+- Ask specific questions
+- Be patient and open to suggestions
+- Celebrate when it's merged! 🎉
 
 ---
 
-## 🙏 Thank You!
-
-Every contribution, no matter how small, makes CSP Kit better for everyone. Whether you're adding your first service or building major features, you're helping make the web more secure.
-
-**Ready to contribute?** Start with a [good first issue](https://github.com/eason-dev/csp-kit/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) or [add a new service](https://github.com/eason-dev/csp-kit/issues/new?template=add-service.md)!
-
-### 📄 **License Agreement**
+## 📄 License Agreement
 
 By contributing to CSP Kit:
-- **Your contributions will be licensed under the [MIT License](https://github.com/eason-dev/csp-kit/blob/main/LICENSE)**
-- **🔓 Your contributions remain open source forever** - CSP Kit is committed to remaining free and open source software
-- **No copyright assignment required** - You retain rights to your contributions
+- Your contributions will be licensed under the [MIT License](../LICENSE)
+- You retain copyright of your contributions
+- CSP Kit remains free and open source forever
 
 ---
 
-## 📚 Related Resources
+## Thank You! 🙏
 
-- **[Getting Started](./getting-started.md)** - Using CSP Kit
-- **[API Reference](./api-reference.md)** - Complete API docs
-- **[CLI Guide](./cli-guide.md)** - Command-line tools
-- **[Maintainer Architecture](./maintainer/ARCHITECTURE.md)** - Technical details
-- **[Service Definition Guide](./maintainer/SERVICE_DEFINITION_GUIDE.md)** - Detailed schema docs
+Every contribution makes the web more secure. Whether you're adding your first service or building major features, you're part of something important.
+
+**Ready to contribute?** Pick a service you use and add it to CSP Kit!
