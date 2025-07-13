@@ -579,7 +579,7 @@ export const GoogleFonts = defineService({
 ## 📄 License Agreement
 
 By contributing to CSP Kit:
-- Your contributions will be licensed under the [MIT License](../LICENSE)
+- Your contributions will be licensed under the [MIT License](https://github.com/eason-dev/csp-kit/blob/main/LICENSE)
 - You retain copyright of your contributions
 - CSP Kit remains free and open source forever
 
