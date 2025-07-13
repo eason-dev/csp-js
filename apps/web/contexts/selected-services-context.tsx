@@ -2,7 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
-export interface SelectedService {
+// Simple service data that's stored in context
+interface SelectedService {
   id: string;
   name: string;
 }
@@ -18,7 +19,7 @@ interface SelectedServicesContextType {
 
 const SelectedServicesContext = createContext<SelectedServicesContextType | undefined>(undefined);
 
-const STORAGE_KEY = 'csp-kit-selected-services';
+const STORAGE_KEY = 'csp-kit-selected-services-v2';
 
 interface SelectedServicesProviderProps {
   children: ReactNode;
@@ -34,6 +35,7 @@ export function SelectedServicesProvider({ children }: SelectedServicesProviderP
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
+        // For backward compatibility, we'll store just the service data
         setSelectedServices(Array.isArray(parsed) ? parsed : []);
       }
     } catch (error) {

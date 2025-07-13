@@ -4,7 +4,7 @@ Welcome to CSP Kit! This guide will help you get up and running quickly with Con
 
 ## 🎯 What is CSP Kit?
 
-CSP Kit is a modern toolkit that simplifies Content Security Policy (CSP) management by using a **service-first approach**. Instead of manually writing CSP directives, you specify the services your application uses, and CSP Kit automatically generates the appropriate security policies.
+CSP Kit is a modern TypeScript-first toolkit that simplifies Content Security Policy (CSP) management by using a **service-first approach**. Instead of manually writing CSP directives, you import and use service objects that automatically provide the correct security policies.
 
 ## 🚀 Quick Start Options
 
@@ -21,7 +21,7 @@ The fastest way to get started is using our interactive web interface:
 - ✅ Copy ready-to-use headers
 - ✅ Learn how different services affect CSP
 
-### Option 2: JavaScript/TypeScript API
+### Option 2: TypeScript/JavaScript API
 
 For developers who want to integrate CSP generation into their applications:
 
@@ -44,15 +44,14 @@ pnpm add @csp-kit/generator @csp-kit/data
 
 #### Basic Usage
 
-```javascript
+```typescript
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
 
-// Generate CSP for common services
-const result = generateCSP([
-  'google-analytics',
-  'stripe', 
-  'google-fonts'
-]);
+// Generate CSP using imported services
+const result = generateCSP({
+  services: [GoogleAnalytics, Stripe, GoogleFonts]
+});
 
 console.log(result.header);
 // Output: "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; style-src 'self' https://fonts.googleapis.com; ..."
@@ -63,53 +62,56 @@ response.setHeader('Content-Security-Policy', result.header);
 
 ### Option 3: CLI Tools
 
-For developers who want to contribute or manage service definitions:
+For developers who want to contribute or test CSP configurations:
 
 ```bash
-# Install CLI globally
+# Test CSP generation (global installation not required)
+npx tsx test-csp.ts
+
+# For contributors: Install CLI globally
 npm install -g @csp-kit/cli
-
-# Generate CSP from command line
-csp-cli generate google-analytics stripe
-
-# Add new services interactively
-csp-cli add --interactive
 ```
 
 ## 🎯 Common Use Cases
 
-### 1. Next.js Application
+### 1. Next.js Application (App Router)
 
-```javascript
-// pages/api/set-csp.js or app/api/set-csp/route.js
-import { generateCSP } from '@csp-kit/generator';
+```typescript
+// middleware.ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { generateCSPHeader } from '@csp-kit/generator';
+import { GoogleAnalytics, VercelAnalytics, GoogleFonts } from '@csp-kit/data';
 
-export default function handler(req, res) {
-  const result = generateCSP([
-    'google-analytics',
-    'vercel-analytics',
-    'google-fonts'
-  ]);
+export function middleware(request: NextRequest) {
+  const csp = generateCSPHeader({
+    services: [GoogleAnalytics, VercelAnalytics, GoogleFonts]
+  });
   
-  res.setHeader('Content-Security-Policy', result.header);
-  res.json({ csp: result.header });
+  const response = NextResponse.next();
+  response.headers.set('Content-Security-Policy', csp);
+  
+  return response;
 }
+
+export const config = {
+  matcher: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+};
 ```
 
 ### 2. Express.js Middleware
 
-```javascript
+```typescript
 import express from 'express';
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe, Intercom } from '@csp-kit/data';
 
 const app = express();
 
-// Generate CSP once at startup
-const cspResult = generateCSP([
-  'google-analytics',
-  'stripe',
-  'intercom'
-]);
+// Generate CSP once at startup (for better performance)
+const cspResult = generateCSP({
+  services: [GoogleAnalytics, Stripe, Intercom]
+});
 
 // Apply CSP to all routes
 app.use((req, res, next) => {
@@ -118,23 +120,43 @@ app.use((req, res, next) => {
 });
 ```
 
-### 3. React Application (Create React App)
+### 3. React Application (Vite)
 
-```javascript
-// public/index.html - Add to <head>
-<meta http-equiv="Content-Security-Policy" content="script-src 'self' https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com;">
+```typescript
+// vite.config.ts
+import { defineConfig } from 'vite';
+import { generateCSPHeader } from '@csp-kit/generator';
+import { GoogleAnalytics, GoogleFonts } from '@csp-kit/data';
 
-// Or generate dynamically
-import { generateCSP } from '@csp-kit/generator';
+const csp = generateCSPHeader({
+  services: [GoogleAnalytics, GoogleFonts]
+});
 
-const result = generateCSP(['google-analytics', 'google-fonts']);
-document.querySelector('meta[http-equiv="Content-Security-Policy"]')
-  .setAttribute('content', result.header);
+export default defineConfig({
+  server: {
+    headers: {
+      'Content-Security-Policy': csp
+    }
+  }
+});
 ```
 
 ### 4. Static Sites (Netlify, Vercel)
 
-For static sites, you can use the web interface to generate CSP headers and add them to your hosting configuration:
+Generate CSP headers and add them to your hosting configuration:
+
+```typescript
+// generate-headers.ts
+import { generateCSPHeader } from '@csp-kit/generator';
+import { GoogleAnalytics, GoogleFonts } from '@csp-kit/data';
+
+const csp = generateCSPHeader({
+  services: [GoogleAnalytics, GoogleFonts]
+});
+
+console.log(csp);
+// Copy this output to your configuration files
+```
 
 **Netlify (_headers file):**
 ```
@@ -148,12 +170,10 @@ For static sites, you can use the web interface to generate CSP headers and add 
   "headers": [
     {
       "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Content-Security-Policy",
-          "value": "script-src 'self' https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com"
-        }
-      ]
+      "headers": [{
+        "key": "Content-Security-Policy",
+        "value": "script-src 'self' https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com"
+      }]
     }
   ]
 }
@@ -161,17 +181,30 @@ For static sites, you can use the web interface to generate CSP headers and add 
 
 ## 🔧 Advanced Configuration
 
-### Custom Rules
+### Custom Services
 
-Add your own CSP rules alongside service-generated ones:
+Define your own services alongside built-in ones:
 
-```javascript
+```typescript
+import { generateCSP, defineService } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe, ServiceCategory } from '@csp-kit/data';
+
+// Define a custom service
+const MyAPI = defineService({
+  id: 'my-api',
+  name: 'My API',
+  category: ServiceCategory.API,
+  description: 'Custom API endpoints',
+  website: 'https://api.myapp.com',
+  directives: {
+    'connect-src': ['https://api.myapp.com'],
+    'img-src': ['https://images.myapp.com']
+  }
+});
+
+// Use it like any built-in service
 const result = generateCSP({
-  services: ['google-analytics', 'stripe'],
-  customRules: {
-    'script-src': ['https://my-custom-domain.com'],
-    'img-src': ['data:', 'blob:'],
-  },
+  services: [GoogleAnalytics, Stripe, MyAPI],
   nonce: true, // Generate nonce for inline scripts
   reportUri: 'https://my-site.com/csp-report'
 });
@@ -181,87 +214,154 @@ const result = generateCSP({
 
 For secure inline scripts:
 
-```javascript
+```typescript
+import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics } from '@csp-kit/data';
+
 const result = generateCSP({
-  services: ['google-analytics'],
+  services: [GoogleAnalytics],
   nonce: true
 });
 
 // Use the nonce in your HTML
-`<script nonce="${result.nonce}">
-  // Your inline script
-</script>`
+const html = `
+  <script nonce="${result.nonce}">
+    // Your inline script
+  </script>
+`;
 ```
 
 ### Report-Only Mode
 
 Test CSP without breaking your site:
 
-```javascript
-const result = generateCSP(['google-analytics', 'stripe']);
+```typescript
+import { generateReportOnlyCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
+
+const reportOnlyHeader = generateReportOnlyCSP({
+  services: [GoogleAnalytics, Stripe],
+  reportUri: '/api/csp-violations'
+});
 
 // Use report-only header for testing
-response.setHeader('Content-Security-Policy-Report-Only', result.reportOnlyHeader);
+response.setHeader('Content-Security-Policy-Report-Only', reportOnlyHeader);
 ```
 
-## 🔍 Finding Services
+### Environment-Specific Configuration
 
-CSP Kit supports 106+ popular services. Here are some ways to find what you need:
+```typescript
+import { generateCSP, defineService } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe, ServiceCategory } from '@csp-kit/data';
 
-### 1. Web Interface
-Browse services visually at [csp-kit.eason.ch](https://csp-kit.eason.ch)
+// Development-only service
+const DevTools = defineService({
+  id: 'dev-tools',
+  name: 'Development Tools',
+  category: ServiceCategory.DEVELOPMENT,
+  description: 'Local development servers',
+  website: 'http://localhost:3000',
+  directives: {
+    'script-src': ['http://localhost:3000', "'unsafe-eval'"],
+    'connect-src': ['ws://localhost:3000', 'http://localhost:3001']
+  }
+});
 
-### 2. Search Programmatically
-```javascript
-import { searchServices } from '@csp-kit/generator';
+const isDevelopment = process.env.NODE_ENV === 'development';
 
-// Search for analytics services
-const analyticsServices = await searchServices('analytics');
-console.log(analyticsServices.map(s => s.id));
-// Output: ['google-analytics', 'mixpanel', 'hotjar', ...]
+const result = generateCSP({
+  services: [
+    GoogleAnalytics,
+    Stripe,
+    ...(isDevelopment ? [DevTools] : [])
+  ],
+  development: {
+    unsafeEval: true, // Allow eval in development
+    additionalRules: {
+      'connect-src': ['ws://localhost:*']
+    }
+  },
+  production: {
+    reportUri: 'https://api.myapp.com/csp-violations'
+  }
+});
 ```
 
-### 3. CLI Search
-```bash
-csp-cli list --category analytics
-csp-cli search "google"
+## 🔍 Available Services
+
+CSP Kit includes 106+ pre-configured services. Here's how to discover them:
+
+### TypeScript Auto-Complete
+
+The best way to discover services is through your IDE:
+
+```typescript
+import { 
+  // Start typing and your IDE will show all available services
+  GoogleAnalytics,
+  Stripe,
+  Intercom,
+  Sentry,
+  // ... 100+ more services
+} from '@csp-kit/data';
+```
+
+### Common Services by Category
+
+```typescript
+// Analytics
+import { GoogleAnalytics, Mixpanel, Amplitude, Hotjar } from '@csp-kit/data';
+
+// Payment
+import { Stripe, Paypal, Square, Braintree } from '@csp-kit/data';
+
+// Social Media
+import { Facebook, Twitter, LinkedIn, Youtube } from '@csp-kit/data';
+
+// Error Monitoring
+import { Sentry, Bugsnag, Rollbar } from '@csp-kit/data';
+
+// Customer Support
+import { Intercom, Zendesk, Crisp, Drift } from '@csp-kit/data';
+
+// CDN & Fonts
+import { GoogleFonts, Cloudflare, Fastly } from '@csp-kit/data';
 ```
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
-**1. "Services not loaded" error**
-```javascript
-// Solution: Call loadServices() first
-import { loadServices, generateCSP } from '@csp-kit/generator';
-
-await loadServices();
+**1. Cannot find service import**
+```typescript
+// ❌ Wrong - using string ID
 const result = generateCSP(['google-analytics']);
+
+// ✅ Correct - import service object
+import { GoogleAnalytics } from '@csp-kit/data';
+const result = generateCSP({ services: [GoogleAnalytics] });
 ```
 
-**2. Service not found**
-```javascript
-const result = generateCSP(['unknown-service']);
-console.log(result.unknownServices); // ['unknown-service']
+**2. Type errors with services**
+```typescript
+// Make sure you have TypeScript configured properly
+// tsconfig.json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler", // or "node16"
+    "esModuleInterop": true
+  }
+}
 ```
 
 **3. Missing @csp-kit/data package**
 ```bash
-# Install both packages
+# Make sure both packages are installed
+npm list @csp-kit/generator @csp-kit/data
+
+# If missing, install both
 npm install @csp-kit/generator @csp-kit/data
 ```
-
-### 🔓 **License Questions**
-
-**Q: Can I use CSP Kit in commercial projects?**
-A: Yes! CSP Kit is MIT licensed - free for commercial and personal use.
-
-**Q: Do I need to include license notices in my app?**
-A: No, MIT license doesn't require attribution in your application.
-
-**Q: Will CSP Kit always be free?**
-A: Yes, the core toolkit will always be free and open source.
 
 ### Getting Help
 
@@ -274,16 +374,14 @@ A: Yes, the core toolkit will always be free and open source.
 Now that you're up and running:
 
 1. **[API Reference](./api-reference.md)** - Complete API documentation
-2. **[CLI Guide](./cli-guide.md)** - Command-line tools reference
-3. **[Service Support](./service-support.md)** - List of all supported services
-4. **[Contributing](./contributing.md)** - Help add new services
-5. **[Examples](./examples/nextjs.md)** - Framework-specific examples
+2. **[Custom Services](https://github.com/eason-dev/csp-kit/blob/main/CUSTOM-SERVICE-API-DESIGN.md)** - Create your own services
+3. **[Contributing](./contributing.md)** - Help add new services
+4. **[Next.js Examples](./examples/nextjs.md)** - Framework-specific examples
 
 ## 🎉 Welcome to the Community!
 
 - ⭐ **[Star us on GitHub](https://github.com/eason-dev/csp-kit)**
-- 🐦 **[Follow updates](https://twitter.com/cspkit)**
 - 💬 **[Join discussions](https://github.com/eason-dev/csp-kit/discussions)**
 - 🤝 **[Contribute services](./contributing.md)**
 
-Happy coding! 🚀
+Happy coding with type-safe CSP! 🚀

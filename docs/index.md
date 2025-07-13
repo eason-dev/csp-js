@@ -1,8 +1,12 @@
+---
+sidebar_position: 1
+---
+
 # CSP Kit Documentation
 
 <div align="center">
 
-**The modern Content Security Policy toolkit for developers**
+**The modern TypeScript-first Content Security Policy toolkit for developers**
 
 [🌐 **Try Web Interface**](https://csp-kit.eason.ch) • [📦 **Install Packages**](./getting-started.md#installation) • [🛠️ **CLI Tools**](./cli-guide.md) • [🤝 **Contribute**](./contributing.md)
 
@@ -17,7 +21,7 @@
 | Method | Best For | Time to Start |
 |--------|----------|---------------|
 | **[🌐 Web Interface](./web-interface.md)** | Beginners, visual learners, quick testing | **0 minutes** |
-| **[📦 JavaScript API](./getting-started.md)** | Developers, production apps | **2 minutes** |
+| **[📦 TypeScript API](./getting-started.md)** | Developers, production apps | **2 minutes** |
 | **[🛠️ CLI Tools](./cli-guide.md)** | Contributors, automation | **5 minutes** |
 
 ### Most Popular: Web Interface
@@ -30,17 +34,20 @@
 - ✅ Copy ready-to-use headers
 - ✅ Works on mobile and desktop
 
-### For Developers: JavaScript API
+### For Developers: TypeScript API
 
 ```bash
 # Install both packages (required)
 npm install @csp-kit/generator @csp-kit/data
 ```
 
-```javascript
+```typescript
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
 
-const result = generateCSP(['google-analytics', 'stripe', 'google-fonts']);
+const result = generateCSP({
+  services: [GoogleAnalytics, Stripe, GoogleFonts]
+});
 console.log(result.header);
 // "script-src 'self' https://www.googletagmanager.com..."
 ```
@@ -51,48 +58,55 @@ console.log(result.header);
 
 | Guide | Description | Audience |
 |-------|-------------|----------|
-| **[Getting Started](./getting-started.md)** | Installation, basic usage, common patterns | New users |
+| **[Getting Started](./getting-started.md)** | Installation, TypeScript API, common patterns | New users |
 | **[Web Interface](./web-interface.md)** | Interactive CSP generator guide | All users |
-| **[API Reference](./api-reference.md)** | Complete JavaScript/TypeScript API | Developers |
+| **[API Reference](./api-reference.md)** | Complete TypeScript API documentation | Developers |
 | **[CLI Guide](./cli-guide.md)** | Command-line tools reference | Advanced users |
-| **[Upgrade Guide](./upgrade-guide.md)** | How to upgrade and get latest data | Existing users |
 
 ### 📖 **Reference**
 
 | Resource | Description |
 |----------|-------------|
 | **[Service Support](./service-support.md)** | List of 106+ supported services |
-| **[Contributing](./contributing.md)** | How to contribute new services |
-| **[Examples](./examples/nextjs.md)** | Framework-specific examples |
+| **[Framework Examples](./examples/nextjs.md)** | Next.js, Express, and more |
+
+### 🤝 **Contributing**
+
+| Guide | Description |
+|-------|-------------|
+| **[Contributing Guide](./contributing.md)** | How to contribute TypeScript service definitions |
+| **[Service Development](./service-development-guide.md)** | Complete guide for creating services |
 
 ### 🔧 **For Maintainers**
 
 | Guide | Description |
 |-------|-------------|
 | **[Architecture](./maintainer/ARCHITECTURE.md)** | Technical architecture overview |
+| **[Service Definition Guide](./maintainer/SERVICE_DEFINITION_GUIDE.md)** | TypeScript service schema documentation |
 | **[Maintainer Guide](./maintainer/MAINTAINER_GUIDE.md)** | Project maintenance procedures |
 | **[Release Process](./maintainer/RELEASE_PROCESS.md)** | How releases are managed |
-| **[Service Definition Guide](./maintainer/SERVICE_DEFINITION_GUIDE.md)** | Detailed schema documentation |
 | **[NPM Publishing Guide](./maintainer/NPM_PUBLISHING_GUIDE.md)** | Package publishing procedures |
 
 ## 🎯 What is CSP Kit?
 
-CSP Kit transforms Content Security Policy management from manual, error-prone work into an automated, service-based approach:
+CSP Kit transforms Content Security Policy management from manual, error-prone work into a TypeScript-first, service-based approach:
 
-```javascript
+```typescript
 // ❌ Traditional approach: Manual, hard to maintain
 const csp = "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; style-src 'self' https://fonts.googleapis.com...";
 
-// ✅ CSP Kit approach: Service-based, automatic, always up-to-date
-const { header } = generateCSP(['google-analytics', 'stripe', 'google-fonts']);
+// ✅ CSP Kit approach: Type-safe, automatic, always up-to-date
+import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
+const { header } = generateCSP({ services: [GoogleAnalytics, Stripe, GoogleFonts] });
 ```
 
 ### 🌟 **Key Benefits**
 
-- **🎯 Service-First**: Configure by services, not directives
-- **📦 106+ Services**: Pre-configured for popular web services
+- **🎯 TypeScript-First**: Full type safety with IntelliSense support
+- **📦 106+ Services**: Pre-configured TypeScript service definitions
+- **🌳 Tree-Shakeable**: Only bundle the services you actually use
 - **🔄 Always Updated**: Community-driven with automated monitoring
-- **🌐 Multiple Interfaces**: Web UI, CLI tools, and JavaScript API
+- **🌐 Multiple Interfaces**: Web UI, CLI tools, and TypeScript API
 - **🚀 Production Ready**: Used by thousands of developers worldwide
 - **🔒 Security-First**: Conservative defaults with expert guidance
 
@@ -104,24 +118,38 @@ CSP Kit uses a data-package separation model:
 
 ```
 @csp-kit/generator   # Core CSP generation library
-@csp-kit/data        # Service definitions (updates frequently)
+@csp-kit/data        # TypeScript service definitions (updates frequently)
 @csp-kit/cli         # Command-line tools
 ```
 
 **Why separate packages?**
 - ✅ **Fast Updates**: Get new services without library updates
 - ✅ **Stable API**: Core library changes rarely
-- ✅ **Smaller Bundles**: Only include what you need
+- ✅ **Tree Shaking**: Only bundle the services you import
+- ✅ **Type Safety**: Full TypeScript support with IntelliSense
 - ✅ **Community Driven**: Easy for contributors to add services
 
-### 🌐 **Ecosystem Overview**
+### 🌐 **TypeScript-First Design**
 
-| Component | Purpose | Users |
-|-----------|---------|--------|
-| **Web Interface** | Visual CSP generator | Beginners, designers, managers |
-| **JavaScript API** | Programmatic integration | Developers, applications |
-| **CLI Tools** | Service management, automation | Contributors, DevOps |
-| **Data Package** | Service definitions database | All components |
+| Feature | Benefit |
+|---------|---------|
+| **Direct Imports** | `import { GoogleAnalytics } from '@csp-kit/data'` |
+| **Type Safety** | Full compile-time checking and IntelliSense |
+| **Tree Shaking** | Only bundle the services you use |
+| **No Runtime Loading** | Services imported at build time |
+| **Better DX** | Clear dependencies and refactoring support |
+
+## 🚀 What's New in v2.x
+
+### TypeScript-First API
+
+TypeScript-first design provides better developer experience:
+
+```typescript
+// TypeScript imports with full type safety
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
+const result = generateCSP({ services: [GoogleAnalytics, Stripe] });
+```
 
 ## 🤝 Community
 
@@ -130,12 +158,13 @@ CSP Kit uses a data-package separation model:
 - **⭐ [Star on GitHub](https://github.com/eason-dev/csp-kit)** - Show your support
 - **🐛 [Report Issues](https://github.com/eason-dev/csp-kit/issues)** - Help us improve
 - **💬 [Join Discussions](https://github.com/eason-dev/csp-kit/discussions)** - Ask questions, share ideas
-- **🤝 [Contribute Services](./contributing.md)** - Add new service definitions
+- **🤝 [Contribute Services](./contributing.md)** - Add new TypeScript service definitions
 - **📖 [Improve Docs](./contributing.md#documentation-improvements)** - Help others learn
 
 ### 📊 **Project Stats**
 
 - **106+ Supported Services** across all major categories
+- **TypeScript-First** with full IntelliSense support
 - **Weekly Data Updates** with new services and fixes
 - **Active Community** of contributors and users
 - **Production Ready** with comprehensive testing
@@ -159,6 +188,7 @@ CSP Kit uses a data-package separation model:
 
 **Need to install?** → Follow the [Getting Started Guide](./getting-started.md)
 
+
 **Looking for a service?** → Check [Service Support](./service-support.md)
 
 **Want to contribute?** → Read the [Contributing Guide](./contributing.md)
@@ -171,7 +201,7 @@ CSP Kit uses a data-package separation model:
 
 ### 🎉 **Welcome to CSP Kit!**
 
-**Making Content Security Policy simple, maintainable, and secure for everyone.**
+**Making Content Security Policy simple, maintainable, and type-safe for everyone.**
 
 [**Get Started →**](./getting-started.md)
 

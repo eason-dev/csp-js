@@ -1,42 +1,46 @@
 # API Reference
 
-Complete API documentation for CSP Kit JavaScript/TypeScript library.
+Complete API documentation for CSP Kit TypeScript-first library.
 
 ## Installation
 
 ```bash
 npm install @csp-kit/generator @csp-kit/data
+# or
+yarn add @csp-kit/generator @csp-kit/data
+# or
+pnpm add @csp-kit/generator @csp-kit/data
 ```
 
-## Core Functions
+## Core API
 
-### `generateCSP(input)`
+### `generateCSP(options)`
 
 The primary function for generating Content Security Policy headers.
 
 **Syntax:**
-```javascript
-generateCSP(services)
-generateCSP(options)
+```typescript
+import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
+
+const result = generateCSP({
+  services: [GoogleAnalytics, Stripe]
+});
 ```
 
 **Parameters:**
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `input` | `string[]` \| `CSPOptions` | Array of service names or options object |
-
-**CSPOptions Interface:**
-
 ```typescript
 interface CSPOptions {
-  services: string[];           // Array of service identifiers
-  nonce?: boolean | string;     // Generate nonce or use provided
-  customRules?: CSPDirectives;  // Additional CSP rules
+  services: CSPService[];       // Array of service objects (imported from @csp-kit/data)
+  nonce?: boolean | string;     // Generate nonce or use provided value
+  additionalRules?: CSPDirectives; // Additional CSP rules
   reportUri?: string;           // CSP violation reporting endpoint
   includeSelf?: boolean;        // Include 'self' directive (default: true)
   unsafeInline?: boolean;       // Allow unsafe-inline (not recommended)
   unsafeEval?: boolean;         // Allow unsafe-eval (not recommended)
+  development?: Partial<CSPOptions>; // Dev-only options
+  production?: Partial<CSPOptions>;  // Production-only options
 }
 ```
 
@@ -47,198 +51,169 @@ interface CSPResult {
   header: string;               // Complete CSP header string
   directives: CSPDirectives;    // CSP directives as object
   reportOnlyHeader: string;     // Report-only version
-  includedServices: string[];   // Successfully included services
-  unknownServices: string[];    // Services not found
-  warnings: string[];           // Deprecation and other warnings
+  includedServices: string[];   // Service IDs that were included
+  unknownServices: string[];    // Always empty in new API
+  warnings: string[];           // Deprecation and security warnings
+  conflicts: string[];          // Service conflicts detected
   nonce?: string;               // Generated nonce (if requested)
 }
 ```
 
 **Examples:**
 
-```javascript
-// Simple usage
-const result = generateCSP(['google-analytics', 'stripe']);
+```typescript
+// Basic usage with imported services
+import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
-// Advanced usage
 const result = generateCSP({
-  services: ['google-analytics', 'stripe'],
+  services: [GoogleAnalytics, Stripe]
+});
+
+// Advanced usage with nonce and custom rules
+const result = generateCSP({
+  services: [GoogleAnalytics, Stripe],
   nonce: true,
-  customRules: {
+  additionalRules: {
     'script-src': ['https://my-cdn.com'],
     'img-src': ['data:', 'blob:']
   },
   reportUri: 'https://example.com/csp-report'
 });
+
+// Environment-specific configuration
+const result = generateCSP({
+  services: [GoogleAnalytics],
+  development: {
+    unsafeEval: true, // For hot reload
+    additionalRules: {
+      'connect-src': ['ws://localhost:*']
+    }
+  },
+  production: {
+    reportUri: 'https://api.example.com/csp-violations'
+  }
+});
 ```
 
-### `generateCSPHeader(input)`
+### `generateCSPHeader(options)`
 
-Returns only the CSP header string.
-
-**Syntax:**
-```javascript
-generateCSPHeader(services)
-generateCSPHeader(options)
-```
-
-**Parameters:**
-Same as `generateCSP()`
-
-**Return Value:**
-`string` - The CSP header string
+Returns only the CSP header string (convenience function).
 
 **Example:**
-```javascript
-const header = generateCSPHeader(['google-analytics', 'stripe']);
+```typescript
+import { generateCSPHeader } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
+
+const header = generateCSPHeader({
+  services: [GoogleAnalytics, Stripe]
+});
 // "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; ..."
 ```
 
-### `generateReportOnlyCSP(input)`
+### `generateReportOnlyCSP(options)`
 
 Generates a report-only CSP header for testing.
 
-**Syntax:**
-```javascript
-generateReportOnlyCSP(services)
-generateReportOnlyCSP(options)
-```
-
-**Parameters:**
-Same as `generateCSP()`
-
-**Return Value:**
-`string` - The report-only CSP header string
-
 **Example:**
-```javascript
-const reportOnlyHeader = generateReportOnlyCSP(['google-analytics']);
-// Use for testing: res.setHeader('Content-Security-Policy-Report-Only', reportOnlyHeader);
+```typescript
+import { generateReportOnlyCSP } from '@csp-kit/generator';
+import { GoogleAnalytics } from '@csp-kit/data';
+
+const reportOnlyHeader = generateReportOnlyCSP({
+  services: [GoogleAnalytics],
+  reportUri: '/api/csp-report'
+});
+// Use: res.setHeader('Content-Security-Policy-Report-Only', reportOnlyHeader);
 ```
 
-## Async Functions
+## Service Definition Functions
 
-### `generateCSPAsync(input)`
+### `defineService(definition)`
 
-Async version of `generateCSP()` that loads services on demand.
+Define a custom service with full TypeScript support.
 
 **Syntax:**
-```javascript
-await generateCSPAsync(services)
-await generateCSPAsync(options)
+```typescript
+import { defineService } from '@csp-kit/generator';
+import { ServiceCategory } from '@csp-kit/data';
+
+const MyService = defineService({
+  id: 'my-service',
+  name: 'My Service',
+  category: ServiceCategory.API,
+  directives: {
+    'connect-src': ['https://api.myservice.com']
+  }
+});
 ```
-
-**Example:**
-```javascript
-// No need to call loadServices() first
-const result = await generateCSPAsync(['google-analytics', 'stripe']);
-```
-
-### `generateCSPHeaderAsync(input)`
-
-Async version of `generateCSPHeader()`.
-
-### `generateReportOnlyCSPAsync(input)`
-
-Async version of `generateReportOnlyCSP()`.
-
-## Service Management Functions
-
-### `loadServices()`
-
-Loads service definitions from disk. Must be called before using sync functions.
-
-**Syntax:**
-```javascript
-await loadServices()
-```
-
-**Example:**
-```javascript
-import { loadServices, generateCSP } from '@csp-kit/generator';
-
-await loadServices();
-const result = generateCSP(['google-analytics']);
-```
-
-### `getService(identifier)`
-
-Get a service by ID or alias (sync version).
 
 **Parameters:**
-- `identifier` (string): Service ID or alias
 
-**Return Value:**
-`ServiceDefinition | undefined`
+```typescript
+interface ServiceDefinition {
+  // Required fields
+  id: string;                    // Unique kebab-case identifier
+  name: string;                  // Human-readable name
+  category: ServiceCategory;     // Service category
+  description: string;           // Brief description
+  website: string;               // Official website URL
+  directives: CSPDirectives;     // CSP directives
 
-**Example:**
-```javascript
-const service = getService('google-analytics');
-// or by alias
-const service = getService('ga4');
+  // Optional fields
+  officialDocs?: string[];       // Documentation URLs
+  notes?: string;                // Implementation notes
+  aliases?: string[];            // Alternative identifiers
+  requiresDynamic?: boolean;     // Requires 'strict-dynamic'
+  requiresNonce?: boolean;       // Requires nonce
+  deprecated?: DeprecationInfo;  // Deprecation information
+  conflicts?: string[];          // Conflicting service IDs
+  validate?: (directives: CSPDirectives) => ValidationResult;
+  lastUpdated?: string;          // ISO timestamp
+  verifiedAt?: string;           // Last verification timestamp
+}
 ```
 
-### `getServiceAsync(identifier)`
-
-Get a service by ID or alias (async version).
-
-**Parameters:**
-- `identifier` (string): Service ID or alias
-
 **Return Value:**
-`Promise<ServiceDefinition | undefined>`
+`CSPService` - A service object ready to use with `generateCSP()`
 
 **Example:**
-```javascript
-const service = await getServiceAsync('google-analytics');
+```typescript
+import { defineService } from '@csp-kit/generator';
+import { ServiceCategory } from '@csp-kit/data';
+
+// Define a custom CDN service
+const MyCDN = defineService({
+  id: 'my-cdn',
+  name: 'My CDN',
+  category: ServiceCategory.CDN,
+  description: 'Custom CDN for static assets',
+  website: 'https://mycdn.com',
+  directives: {
+    'img-src': ['https://cdn.myapp.com'],
+    'font-src': ['https://cdn.myapp.com'],
+    'style-src': ['https://cdn.myapp.com'],
+    'script-src': ['https://cdn.myapp.com']
+  }
+});
+
+// Use it like any built-in service
+const result = generateCSP({
+  services: [MyCDN, GoogleAnalytics]
+});
 ```
 
-### `searchServices(query)`
+### `isCSPService(value)`
 
-Search services by name, description, or aliases.
-
-**Parameters:**
-- `query` (string): Search query
-
-**Return Value:**
-`Promise<ServiceDefinition[]>`
+Type guard to check if a value is a valid CSPService.
 
 **Example:**
-```javascript
-const results = await searchServices('analytics');
-console.log(results.map(s => s.id));
-// ['google-analytics', 'mixpanel', 'hotjar', ...]
-```
+```typescript
+import { isCSPService } from '@csp-kit/generator';
+import { GoogleAnalytics } from '@csp-kit/data';
 
-### `getServicesByCategory(category)`
-
-Get all services in a specific category.
-
-**Parameters:**
-- `category` (ServiceCategory): Category enum value
-
-**Return Value:**
-`Promise<ServiceDefinition[]>`
-
-**Example:**
-```javascript
-import { ServiceCategory } from '@csp-kit/generator';
-
-const analyticsServices = await getServicesByCategory(ServiceCategory.ANALYTICS);
-```
-
-### `getServiceRegistry()`
-
-Get the complete service registry with metadata.
-
-**Return Value:**
-`Promise<ServiceRegistry>`
-
-**Example:**
-```javascript
-const registry = await getServiceRegistry();
-console.log(`Last updated: ${registry.lastUpdated}`);
-console.log(`Total services: ${Object.keys(registry.services).length}`);
+console.log(isCSPService(GoogleAnalytics)); // true
+console.log(isCSPService({ id: 'test' })); // false
 ```
 
 ## Utility Functions
@@ -254,45 +229,39 @@ Generate a cryptographic nonce for CSP.
 `string` - Base64-encoded nonce
 
 **Example:**
-```javascript
+```typescript
 import { generateNonce } from '@csp-kit/generator';
 
 const nonce = generateNonce();
 // Use in HTML: <script nonce="${nonce}">...</script>
 ```
 
-### `clearServicesCache()`
-
-Clear the services cache (useful for testing).
-
-**Example:**
-```javascript
-import { clearServicesCache } from '@csp-kit/generator';
-
-clearServicesCache();
-// Services will be reloaded on next access
-```
-
 ## Type Definitions
 
-### `ServiceDefinition`
+### `CSPService`
+
+The core service interface used by all services:
 
 ```typescript
-interface ServiceDefinition {
+interface CSPService {
   id: string;                    // Unique service identifier
   name: string;                  // Human-readable name
   category: ServiceCategory;     // Service category
   description: string;           // Brief description
   website: string;               // Official website
-  officialDocs: string[];        // Official documentation URLs
-  cspDirectives: CSPDirectives;  // CSP requirements
+  directives: CSPDirectives;     // CSP requirements
+  
+  // Optional properties
+  officialDocs?: string[];       // Documentation URLs
+  notes?: string;                // Implementation notes
+  aliases?: string[];            // Alternative identifiers
   requiresDynamic?: boolean;     // Requires 'strict-dynamic'
   requiresNonce?: boolean;       // Requires nonce
-  notes?: string;                // Additional notes
-  aliases?: string[];            // Alternative identifiers
-  lastUpdated: string;           // ISO timestamp
-  verifiedAt?: string;           // Last verification timestamp
-  monitoring?: ServiceMonitoring; // Monitoring configuration
+  deprecated?: DeprecationInfo;  // Deprecation info
+  conflicts?: string[];          // Conflicting service IDs
+  validate?: (directives: CSPDirectives) => ValidationResult;
+  lastUpdated?: string;          // ISO timestamp
+  verifiedAt?: string;           // Verification timestamp
 }
 ```
 
@@ -316,7 +285,7 @@ interface CSPDirectives {
   'frame-ancestors'?: string[];
   'report-uri'?: string[];
   'report-to'?: string[];
-  // ... other CSP directives
+  // ... other standard CSP directives
 }
 ```
 
@@ -336,41 +305,107 @@ enum ServiceCategory {
   CHAT = 'chat',
   FONTS = 'fonts',
   MAPS = 'maps',
+  API = 'api',
+  DEVELOPMENT = 'development',
   OTHER = 'other'
 }
 ```
 
-### `ServiceRegistry`
+### `DeprecationInfo`
 
 ```typescript
-interface ServiceRegistry {
-  services: Record<string, ServiceDefinition>;
-  categories: Record<ServiceCategory, string[]>;
-  lastUpdated: string;
-  version: string;
-  schemaVersion: string;
+interface DeprecationInfo {
+  since: string;        // ISO date when deprecated
+  message: string;      // Explanation
+  alternative?: string; // Suggested alternative service ID
 }
 ```
 
-## Framework Examples
+### `ValidationResult`
 
-### Next.js
-
-```javascript
-// pages/api/csp.js or app/api/csp/route.js
-import { generateCSP } from '@csp-kit/generator';
-
-export default function handler(req, res) {
-  const result = generateCSP(['google-analytics', 'vercel-analytics']);
-  res.setHeader('Content-Security-Policy', result.header);
-  res.json({ success: true });
+```typescript
+interface ValidationResult {
+  warnings?: string[];  // Non-critical issues
+  errors?: string[];    // Critical issues
 }
+```
 
-// middleware.js
+## Importing Services
+
+All 106+ pre-configured services are available from `@csp-kit/data`:
+
+```typescript
+// Import specific services
+import { 
+  GoogleAnalytics,
+  Stripe,
+  GoogleFonts,
+  Intercom,
+  Sentry
+} from '@csp-kit/data';
+
+// Use with generateCSP
+const result = generateCSP({
+  services: [GoogleAnalytics, Stripe, GoogleFonts, Intercom, Sentry]
+});
+```
+
+### Available Services by Category
+
+**Analytics** (12+ services):
+```typescript
+import {
+  GoogleAnalytics,
+  Amplitude,
+  Mixpanel,
+  Hotjar,
+  Plausible,
+  Fathom,
+  // ... more
+} from '@csp-kit/data';
+```
+
+**Payment** (8+ services):
+```typescript
+import {
+  Stripe,
+  Paypal,
+  Square,
+  Braintree,
+  Razorpay,
+  // ... more
+} from '@csp-kit/data';
+```
+
+**Social** (15+ services):
+```typescript
+import {
+  Facebook,
+  Twitter,
+  LinkedIn,
+  Instagram,
+  Youtube,
+  // ... more
+} from '@csp-kit/data';
+```
+
+**And many more categories...**
+
+## Framework Integration Examples
+
+### Next.js App Router
+
+```typescript
+// middleware.ts
+import { NextResponse } from 'next/server';
 import { generateCSPHeader } from '@csp-kit/generator';
+import { GoogleAnalytics, VercelAnalytics } from '@csp-kit/data';
 
-export function middleware(request) {
-  const csp = generateCSPHeader(['google-analytics']);
+export function middleware(request: Request) {
+  const csp = generateCSPHeader({
+    services: [GoogleAnalytics, VercelAnalytics]
+  });
+  
   const response = NextResponse.next();
   response.headers.set('Content-Security-Policy', csp);
   return response;
@@ -379,144 +414,200 @@ export function middleware(request) {
 
 ### Express.js
 
-```javascript
+```typescript
 import express from 'express';
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe, Sentry } from '@csp-kit/data';
 
 const app = express();
 
 // CSP middleware
 app.use((req, res, next) => {
-  const result = generateCSP(['google-analytics', 'stripe']);
+  const result = generateCSP({
+    services: [GoogleAnalytics, Stripe, Sentry],
+    nonce: true
+  });
+  
+  res.locals.nonce = result.nonce;
   res.setHeader('Content-Security-Policy', result.header);
   next();
 });
 ```
 
-### Fastify
+### Custom Service Patterns
 
-```javascript
-import Fastify from 'fastify';
-import { generateCSPHeader } from '@csp-kit/generator';
+```typescript
+import { defineService, generateCSP } from '@csp-kit/generator';
+import { ServiceCategory, GoogleAnalytics } from '@csp-kit/data';
 
-const fastify = Fastify();
+// Pattern 1: Environment-specific services
+const DevServer = defineService({
+  id: 'dev-server',
+  name: 'Development Server',
+  category: ServiceCategory.DEVELOPMENT,
+  description: 'Local development server',
+  website: 'http://localhost:3000',
+  directives: {
+    'script-src': ['http://localhost:3000', "'unsafe-eval'"],
+    'connect-src': ['ws://localhost:3000']
+  }
+});
 
-// CSP hook
-fastify.addHook('onSend', async (request, reply) => {
-  const csp = generateCSPHeader(['google-analytics']);
-  reply.header('Content-Security-Policy', csp);
+// Pattern 2: Dynamic service creation
+function createRegionalCDN(region: 'us' | 'eu' | 'asia') {
+  return defineService({
+    id: `cdn-${region}`,
+    name: `CDN ${region.toUpperCase()}`,
+    category: ServiceCategory.CDN,
+    description: `Regional CDN for ${region}`,
+    website: `https://cdn-${region}.example.com`,
+    directives: {
+      'img-src': [`https://cdn-${region}.example.com`],
+      'script-src': [`https://cdn-${region}.example.com`]
+    }
+  });
+}
+
+// Usage
+const isDev = process.env.NODE_ENV === 'development';
+const userRegion = getUserRegion(); // Your logic
+
+const result = generateCSP({
+  services: [
+    GoogleAnalytics,
+    createRegionalCDN(userRegion),
+    ...(isDev ? [DevServer] : [])
+  ]
 });
 ```
 
 ## Error Handling
 
-### Common Errors
+CSP Kit provides helpful error messages and warnings:
 
-**Services not loaded:**
-```javascript
-try {
-  const result = generateCSP(['google-analytics']);
-} catch (error) {
-  if (error.message.includes('Services not loaded')) {
-    await loadServices();
-    const result = generateCSP(['google-analytics']);
-  }
-}
-```
-
-**Unknown services:**
-```javascript
-const result = generateCSP(['unknown-service']);
-if (result.unknownServices.length > 0) {
-  console.warn('Unknown services:', result.unknownServices);
-}
-```
-
-**Validation warnings:**
-```javascript
+```typescript
 const result = generateCSP({
-  services: ['google-analytics'],
-  unsafeInline: true
+  services: [GoogleAnalytics],
+  unsafeInline: true  // Not recommended
 });
 
+// Check warnings
 if (result.warnings.length > 0) {
   console.warn('CSP warnings:', result.warnings);
+  // ["Using 'unsafe-inline' is not recommended for security"]
+}
+
+// Check for conflicts
+const result2 = generateCSP({
+  services: [OldAnalytics, NewAnalytics] // If they conflict
+});
+
+if (result2.conflicts.length > 0) {
+  console.error('Service conflicts:', result2.conflicts);
 }
 ```
 
-## Performance Considerations
+## Performance Tips
 
-### Service Loading
+### 1. Import Only What You Need
 
-```javascript
-// Load once at startup (recommended)
-import { loadServices } from '@csp-kit/generator';
-await loadServices();
+```typescript
+// ✅ Good - tree-shakeable imports
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
-// Or use async functions (loads on demand)
-const result = await generateCSPAsync(['google-analytics']);
+// ❌ Avoid - imports entire library
+import * as allServices from '@csp-kit/data';
 ```
 
-### Caching Results
+### 2. Cache CSP Results
 
-```javascript
-// Cache CSP result for better performance
-const cspCache = new Map();
+```typescript
+const cspCache = new Map<string, CSPResult>();
 
-function getCachedCSP(services) {
-  const key = services.sort().join(',');
+function getCachedCSP(services: CSPService[]): CSPResult {
+  const key = services.map(s => s.id).sort().join(',');
+  
   if (!cspCache.has(key)) {
-    cspCache.set(key, generateCSP(services));
+    cspCache.set(key, generateCSP({ services }));
   }
-  return cspCache.get(key);
+  
+  return cspCache.get(key)!;
 }
+```
+
+### 3. Reuse Service Definitions
+
+```typescript
+// Define once, use many times
+const commonServices = [GoogleAnalytics, GoogleFonts];
+
+// Different pages
+const homepageCSP = generateCSP({
+  services: [...commonServices, Youtube]
+});
+
+const checkoutCSP = generateCSP({
+  services: [...commonServices, Stripe, Paypal]
+});
 ```
 
 ## Migration Guide
 
-### From v0.x to v1.x
+### From String IDs to Service Objects
 
-The new version simplifies the API and removes version support:
-
-```javascript
-// Old (v0.x)
-const result = generateCSP(['google-analytics@4.0.0']);
-
-// New (v1.x) - versions removed, always uses latest
-const result = generateCSP(['google-analytics']);
-```
-
-## TypeScript Support
-
-CSP Kit is written in TypeScript and provides complete type definitions:
+The new TypeScript API uses direct imports instead of string IDs:
 
 ```typescript
-import { generateCSP, type CSPOptions, type CSPResult } from '@csp-kit/generator';
+// ❌ Old API (v1.x and below)
+import { generateCSP } from '@csp-kit/generator';
 
-const options: CSPOptions = {
-  services: ['google-analytics'],
-  nonce: true,
-  customRules: {
-    'script-src': ['https://example.com']
+const result = generateCSP(['google-analytics', 'stripe']);
+
+// ✅ New API (v2.x)
+import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
+
+const result = generateCSP({
+  services: [GoogleAnalytics, Stripe]
+});
+```
+
+### Benefits of the New API
+
+1. **Type Safety**: Full IntelliSense and compile-time checking
+2. **Tree Shaking**: Only bundle the services you use
+3. **No Runtime Loading**: Services are imported at build time
+4. **Better Performance**: No async loading or service registry
+5. **Clearer Dependencies**: See exactly which services are used
+
+## TypeScript Configuration
+
+For optimal TypeScript support:
+
+```json
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler", // or "node16"
+    "esModuleInterop": true,
+    "strict": true
   }
-};
-
-const result: CSPResult = generateCSP(options);
+}
 ```
 
 ## Browser Support
 
-CSP Kit works in any JavaScript environment:
+CSP Kit works in any modern JavaScript environment:
 - ✅ Node.js 18+
 - ✅ Modern browsers (ES2020+)
-- ✅ Webpack/Rollup/Vite bundlers
-- ✅ Edge runtime (Vercel, Cloudflare Workers)
+- ✅ Bundlers (Webpack, Vite, Rollup, esbuild)
+- ✅ Edge runtimes (Vercel, Cloudflare Workers)
+- ✅ Deno (with npm: specifiers)
 
 ---
 
 ## Need Help?
 
 - 📖 **[Getting Started Guide](./getting-started.md)**
+- 🌐 **[Web Interface](https://csp-kit.eason.ch)**
 - 🐛 **[GitHub Issues](https://github.com/eason-dev/csp-kit/issues)**
 - 💬 **[GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions)**
-- 🌐 **[Web Interface](https://csp-kit.eason.ch)**

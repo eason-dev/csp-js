@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { type ServiceDefinition } from '@csp-kit/generator';
 import Fuse from 'fuse.js';
-import { Search, ExternalLink, Sparkles, Plus, Check } from 'lucide-react';
+import { Search, ExternalLink, Sparkles, Plus, Check, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import { useSelectedServices } from '@/contexts/selected-services-context';
 import Link from 'next/link';
 
 interface SimpleSearchProps {
-  services: Record<string, ServiceDefinition>;
+  services: ServiceDefinition[];
   placeholder?: string;
   className?: string;
 }
@@ -48,87 +48,74 @@ export function SimpleSearch({
     const fuseOptions = {
       keys: [
         { name: 'name', weight: 0.4 },
-        { name: 'description', weight: 0.3 },
-        { name: 'aliases', weight: 0.2 },
+        { name: 'id', weight: 0.3 },
+        { name: 'description', weight: 0.2 },
         { name: 'category', weight: 0.1 },
       ],
       threshold: 0.3,
       includeScore: true,
+      ignoreLocation: true,
     };
-    return new Fuse(Object.values(services), fuseOptions);
+    return new Fuse(services, fuseOptions);
   }, [services]);
 
-  // Get display services
-  const displayServices = useMemo(() => {
-    if (searchQuery.trim()) {
-      // Show search results
-      const results = fuse.search(searchQuery, { limit: 15 });
-      return results.map(result => result.item);
+  // Get search results
+  const searchResults = useMemo(() => {
+    if (searchQuery.trim() === '') {
+      // Show popular services when no search query
+      return services
+        .filter((service) => POPULAR_SERVICES.includes(service.id))
+        .sort((a, b) => POPULAR_SERVICES.indexOf(a.id) - POPULAR_SERVICES.indexOf(b.id));
     }
 
-    // Show popular services by default
-    return POPULAR_SERVICES.map(id => services[id])
-      .filter((service): service is ServiceDefinition => Boolean(service))
-      .slice(0, 8);
+    const results = fuse.search(searchQuery);
+    return results.map((result) => result.item).slice(0, 8);
   }, [searchQuery, fuse, services]);
 
-  const handleServiceSelect = useCallback(
-    (serviceId: string) => {
-      const service = services[serviceId];
-      if (service) {
-        if (isSelected(serviceId)) {
-          removeService(serviceId);
-        } else {
-          addService({
-            id: service.id,
-            name: service.name,
-          });
-        }
+  // Toggle service selection
+  const toggleService = useCallback(
+    (service: ServiceDefinition) => {
+      if (isSelected(service.id)) {
+        removeService(service.id);
+      } else {
+        addService({
+          id: service.id,
+          name: service.name,
+        });
       }
-      // Keep popup open - don't reset search or close results
+      // Don't close results on selection
     },
-    [services, isSelected, addService, removeService]
+    [addService, removeService, isSelected]
   );
 
   // Handle keyboard navigation
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (!showResults) return;
-
-      switch (e.key) {
-        case 'ArrowDown':
-          e.preventDefault();
-          setFocusedIndex(prev => (prev < displayServices.length - 1 ? prev + 1 : prev));
-          break;
-        case 'ArrowUp':
-          e.preventDefault();
-          setFocusedIndex(prev => (prev > 0 ? prev - 1 : -1));
-          break;
-        case 'Enter':
-          e.preventDefault();
-          if (focusedIndex >= 0 && focusedIndex < displayServices.length) {
-            const service = displayServices[focusedIndex];
-            if (service) {
-              handleServiceSelect(service.id);
-            }
-          }
-          break;
-        case 'Escape':
-          setShowResults(false);
-          setFocusedIndex(-1);
-          inputRef.current?.blur();
-          break;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        setFocusedIndex((prev) => Math.min(prev + 1, searchResults.length - 1));
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setFocusedIndex((prev) => Math.max(prev - 1, -1));
+      } else if (e.key === 'Enter' && focusedIndex >= 0 && focusedIndex < searchResults.length) {
+        e.preventDefault();
+        const service = searchResults[focusedIndex];
+        if (service) {
+          toggleService(service);
+        }
+      } else if (e.key === 'Escape') {
+        setShowResults(false);
+        inputRef.current?.blur();
       }
     },
-    [showResults, displayServices, focusedIndex, handleServiceSelect]
+    [focusedIndex, searchResults, toggleService]
   );
 
-  // Handle click outside
+  // Handle clicks outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowResults(false);
-        setFocusedIndex(-1);
       }
     };
 
@@ -139,163 +126,147 @@ export function SimpleSearch({
   // Scroll focused item into view
   useEffect(() => {
     if (focusedIndex >= 0 && resultsRef.current) {
-      const focusedElement = resultsRef.current.children[focusedIndex + 1] as HTMLElement; // +1 for header
-      if (focusedElement) {
-        focusedElement.scrollIntoView({ block: 'nearest' });
+      const items = resultsRef.current.getElementsByClassName('search-result-item');
+      if (items[focusedIndex]) {
+        items[focusedIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
     }
   }, [focusedIndex]);
 
-  const formatCategoryName = (category: string) => {
-    return category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+  // Category colors
+  const getCategoryColor = (category: string) => {
+    const colors: Record<string, string> = {
+      analytics: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+      payment: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+      social: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+      video: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+      cdn: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+      fonts: 'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
+      monitoring: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+      chat: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
+      other: 'bg-gray-100 text-gray-800 dark:bg-gray-700/30 dark:text-gray-300',
+    };
+    return colors[category] || colors.other;
   };
 
   return (
-    <div className={`relative ${className}`} ref={searchRef}>
+    <div ref={searchRef} className={`relative ${className}`}>
       {/* Search Input */}
       <div className="relative">
-        <Search className="text-muted-foreground absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
         <Input
           ref={inputRef}
-          placeholder={placeholder}
-          className="rounded-xl border-2 py-6 pl-12 pr-4 text-lg shadow-lg"
+          type="text"
           value={searchQuery}
-          onChange={e => {
-            setSearchQuery(e.target.value);
-            setShowResults(true);
-            setFocusedIndex(-1);
-          }}
+          onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => setShowResults(true)}
           onKeyDown={handleKeyDown}
-          role="combobox"
+          placeholder={placeholder}
+          className="pl-10 pr-4 h-12 text-base"
+          aria-label="Search services"
           aria-expanded={showResults}
-          aria-haspopup="listbox"
-          aria-autocomplete="list"
-          aria-activedescendant={focusedIndex >= 0 ? `search-option-${focusedIndex}` : undefined}
+          aria-controls="search-results"
+          autoComplete="off"
         />
+        {searchQuery && (
+          <button
+            onClick={() => {
+              setSearchQuery('');
+              inputRef.current?.focus();
+            }}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            aria-label="Clear search"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       {/* Search Results */}
       {showResults && (
-        <Card className="absolute left-0 right-0 top-full z-50 mt-2 shadow-2xl">
-          <CardContent className="p-0">
-            <div
-              ref={resultsRef}
-              className="max-h-96 overflow-y-auto"
-              role="listbox"
-              aria-label="Search results"
-            >
-              {/* Results Header */}
-              <div className="bg-muted/30 border-b p-4">
-                <div className="text-muted-foreground flex items-center gap-2 text-sm">
-                  {searchQuery.trim() ? (
-                    <>
-                      <Search className="h-4 w-4" />
-                      <span className="font-medium">
-                        {displayServices.length} search result
-                        {displayServices.length !== 1 ? 's' : ''}
-                      </span>
-                      <span>for &quot;{searchQuery}&quot;</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="h-4 w-4" />
-                      <span className="font-medium">Popular Services</span>
-                      <span>Commonly used services</span>
-                    </>
-                  )}
-                </div>
+        <Card
+          id="search-results"
+          ref={resultsRef}
+          className="absolute top-full mt-2 w-full z-50 shadow-lg max-h-[400px] overflow-y-auto"
+        >
+          <CardContent className="p-2">
+            {searchResults.length === 0 ? (
+              <div className="p-4 text-center text-muted-foreground">
+                <p className="font-medium">No services found</p>
+                <p className="text-sm mt-1">Try searching with different keywords</p>
               </div>
-
-              {/* Service Results */}
-              {displayServices.length > 0 ? (
-                displayServices.map((service, index) => {
-                  const isServiceSelected = isSelected(service.id);
-                  const isFocused = index === focusedIndex;
-                  const categoryDisplayName = formatCategoryName(service.category);
-
+            ) : (
+              <div className="space-y-1">
+                {searchQuery === '' && (
+                  <div className="px-3 py-2 text-sm text-muted-foreground font-medium">
+                    <Sparkles className="inline h-3 w-3 mr-1" />
+                    Popular services
+                  </div>
+                )}
+                {searchResults.map((service, index) => {
+                  const selected = isSelected(service.id);
                   return (
                     <div
                       key={service.id}
-                      id={`search-option-${index}`}
-                      className={`flex cursor-pointer items-start justify-between border-b p-4 transition-colors last:border-b-0 ${
-                        isFocused
-                          ? 'bg-primary/10 border-primary/20'
-                          : isServiceSelected
-                            ? 'bg-primary/5 border-primary/10'
-                            : 'hover:bg-muted/50'
-                      }`}
-                      onClick={() => handleServiceSelect(service.id)}
+                      className={`search-result-item group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
+                        focusedIndex === index
+                          ? 'bg-accent'
+                          : 'hover:bg-accent/50'
+                      } ${selected ? 'bg-accent/30' : ''}`}
+                      onClick={() => toggleService(service)}
+                      onMouseEnter={() => setFocusedIndex(index)}
                       role="option"
-                      aria-selected={isFocused}
+                      aria-selected={selected}
                     >
-                      <div className="mr-3 min-w-0 flex-1">
-                        <div className="mb-1 flex items-center gap-2">
-                          <span className="truncate font-medium">{service.name}</span>
-                          <Badge variant="outline" className="shrink-0 text-xs">
-                            {categoryDisplayName}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-medium">{service.name}</span>
+                          <Badge
+                            variant="secondary"
+                            className={`text-xs ${getCategoryColor(service.category)}`}
+                          >
+                            {service.category}
                           </Badge>
-                          {isServiceSelected && (
-                            <Badge variant="default" className="shrink-0 text-xs">
-                              <Check className="mr-1 h-3 w-3" />
-                              Added
-                            </Badge>
-                          )}
                         </div>
-                        <p className="text-muted-foreground line-clamp-2 text-left text-sm">
+                        <p className="text-sm text-muted-foreground truncate">
                           {service.description}
                         </p>
                       </div>
-                      <div className="flex shrink-0 items-center gap-1">
-                        {!isServiceSelected && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="h-8 px-2"
-                            onClick={e => {
-                              e.stopPropagation();
-                              handleServiceSelect(service.id);
-                            }}
-                          >
-                            <Plus className="mr-1 h-3 w-3" />
-                            Add
-                          </Button>
-                        )}
+                      <div className="flex items-center gap-2 ml-4">
                         <Link
                           href={`/service/${service.id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={e => e.stopPropagation()}
-                          className="opacity-60 transition-opacity hover:opacity-100"
+                          onClick={(e) => e.stopPropagation()}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          aria-label={`View details for ${service.name}`}
                         >
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <ExternalLink className="h-3 w-3" />
-                            <span className="sr-only">View {service.name} details</span>
-                          </Button>
+                          <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-foreground" />
                         </Link>
+                        <Button
+                          size="sm"
+                          variant={selected ? 'secondary' : 'outline'}
+                          className="min-w-[70px]"
+                          aria-label={
+                            selected ? `Remove ${service.name}` : `Add ${service.name}`
+                          }
+                        >
+                          {selected ? (
+                            <>
+                              <Check className="h-3 w-3 mr-1" />
+                              Added
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="h-3 w-3 mr-1" />
+                              Add
+                            </>
+                          )}
+                        </Button>
                       </div>
                     </div>
                   );
-                })
-              ) : (
-                <div className="text-muted-foreground p-8 text-center">
-                  <Search className="mx-auto mb-2 h-8 w-8 opacity-50" />
-                  <p>No services found</p>
-                  {searchQuery && (
-                    <p className="mt-1 text-sm">
-                      Try a different search term or{' '}
-                      <Link
-                        href="/services"
-                        className="text-primary hover:underline"
-                        onClick={() => setShowResults(false)}
-                      >
-                        browse all services
-                      </Link>
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
       )}

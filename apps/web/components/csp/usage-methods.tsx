@@ -78,19 +78,27 @@ export function UsageMethods({
   };
 
   const getUsageContent = () => {
+    // Convert service IDs to service names for imports
+    const serviceNames = serviceIds.map(id => {
+      // Convert kebab-case to PascalCase for import names
+      return id.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+    });
+    const serviceImports = serviceNames.join(', ');
+
     switch (selectedUsageMethod) {
       case 'npm-package':
         return `// Install CSP Kit
-npm install @csp-kit/generator
+npm install @csp-kit/generator @csp-kit/data
 
-// Generate CSP
+// NEW: Import services directly (TypeScript)
 import { generateCSP } from '@csp-kit/generator';
+import { ${serviceImports || 'GoogleAnalytics, Stripe'} } from '@csp-kit/data';
 
-const result = await generateCSP({
-  services: [${serviceIds.map(s => `'${s}'`).join(', ')}],
+const result = generateCSP({
+  services: [${serviceImports || 'GoogleAnalytics, Stripe'}],
   nonce: ${useNonce},${
     Object.keys(customRules).length > 0
-      ? '\n  customRules: {\n' +
+      ? '\n  additionalRules: {\n' +
         Object.entries(customRules)
           .map(([k, v]) => `    '${k}': [${v.map(s => `'${s}'`).join(', ')}]`)
           .join(',\n') +

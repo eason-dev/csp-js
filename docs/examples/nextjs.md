@@ -1,6 +1,6 @@
 # Next.js Integration
 
-Complete guide for integrating CSP Kit with Next.js applications, covering both App Router and Pages Router.
+Complete guide for integrating CSP Kit with Next.js applications, covering both App Router and Pages Router with the new TypeScript API.
 
 ## 🚀 Quick Start
 
@@ -8,39 +8,42 @@ Complete guide for integrating CSP Kit with Next.js applications, covering both 
 
 ```bash
 npm install @csp-kit/generator @csp-kit/data
+# or
+yarn add @csp-kit/generator @csp-kit/data
+# or
+pnpm add @csp-kit/generator @csp-kit/data
 ```
 
 ### Basic Setup
 
-```javascript
-// lib/csp.js
+```typescript
+// lib/csp.ts
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, VercelAnalytics, GoogleFonts } from '@csp-kit/data';
 
-export const cspConfig = generateCSP([
-  'google-analytics',
-  'vercel-analytics', 
-  'google-fonts'
-]);
+export const cspConfig = generateCSP({
+  services: [GoogleAnalytics, VercelAnalytics, GoogleFonts]
+});
 ```
 
 ## 📱 App Router (Next.js 13+)
 
 ### Method 1: Middleware (Recommended)
 
-Create `middleware.js` in your project root:
+Create `middleware.ts` in your project root:
 
-```javascript
-// middleware.js
+```typescript
+// middleware.ts
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { generateCSPHeader } from '@csp-kit/generator';
+import { GoogleAnalytics, VercelAnalytics, GoogleFonts } from '@csp-kit/data';
 
-export function middleware(request) {
+export function middleware(request: NextRequest) {
   // Generate CSP header
-  const csp = generateCSPHeader([
-    'google-analytics',
-    'vercel-analytics',
-    'google-fonts'
-  ]);
+  const csp = generateCSPHeader({
+    services: [GoogleAnalytics, VercelAnalytics, GoogleFonts]
+  });
 
   // Create response
   const response = NextResponse.next();
@@ -54,7 +57,7 @@ export function middleware(request) {
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
+     * Match all request paths except:
      * - api (API routes)
      * - _next/static (static files)
      * - _next/image (image optimization files)
@@ -65,29 +68,36 @@ export const config = {
 };
 ```
 
-### Method 2: Route Headers
+### Method 2: Route Headers with Nonce
 
-```javascript
-// app/layout.js
+```typescript
+// app/layout.tsx
 import { headers } from 'next/headers';
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, VercelAnalytics } from '@csp-kit/data';
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const nonce = headers().get('x-nonce') || '';
+  
   return (
     <html lang="en">
       <head>
-        <CSPMeta />
+        <CSPMeta nonce={nonce} />
       </head>
       <body>{children}</body>
     </html>
   );
 }
 
-function CSPMeta() {
-  const result = generateCSP([
-    'google-analytics',
-    'vercel-analytics'
-  ]);
+function CSPMeta({ nonce }: { nonce: string }) {
+  const result = generateCSP({
+    services: [GoogleAnalytics, VercelAnalytics],
+    nonce
+  });
 
   return (
     <meta 
@@ -98,25 +108,60 @@ function CSPMeta() {
 }
 ```
 
-### Method 3: API Route
+### Method 3: Dynamic CSP by Route
 
-```javascript
-// app/api/csp/route.js
-import { generateCSP } from '@csp-kit/generator';
+```typescript
+// middleware.ts - Dynamic CSP based on route
 import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { generateCSPHeader, defineService } from '@csp-kit/generator';
+import { 
+  GoogleAnalytics, 
+  Stripe, 
+  Typeform, 
+  Intercom,
+  ServiceCategory 
+} from '@csp-kit/data';
 
-export async function GET() {
-  const result = generateCSP([
-    'google-analytics',
-    'stripe',
-    'google-fonts'
-  ]);
+// Custom service for your API
+const MyAPI = defineService({
+  id: 'my-api',
+  name: 'My API',
+  category: ServiceCategory.API,
+  description: 'Application API endpoints',
+  website: 'https://api.myapp.com',
+  directives: {
+    'connect-src': ['https://api.myapp.com']
+  }
+});
 
-  return NextResponse.json({
-    csp: result.header,
-    services: result.includedServices,
-    warnings: result.warnings
-  });
+export function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  
+  // Base services for all routes
+  const baseServices = [GoogleAnalytics, MyAPI];
+  
+  // Add services based on route
+  const services = [...baseServices];
+  
+  if (pathname.startsWith('/checkout')) {
+    services.push(Stripe);
+  }
+  
+  if (pathname.startsWith('/contact')) {
+    services.push(Typeform);
+  }
+  
+  if (pathname.startsWith('/support')) {
+    services.push(Intercom);
+  }
+
+  const csp = generateCSPHeader({ services });
+  
+  const response = NextResponse.next();
+  response.headers.set('Content-Security-Policy', csp);
+  
+  return response;
 }
 ```
 
@@ -124,21 +169,23 @@ export async function GET() {
 
 ### Method 1: Custom Document
 
-```javascript
-// pages/_document.js
+```typescript
+// pages/_document.tsx
 import Document, { Html, Head, Main, NextScript } from 'next/document';
+import type { DocumentContext, DocumentInitialProps } from 'next/document';
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, GoogleFonts, VercelAnalytics } from '@csp-kit/data';
 
 class MyDocument extends Document {
-  static async getInitialProps(ctx) {
+  static async getInitialProps(
+    ctx: DocumentContext
+  ): Promise<DocumentInitialProps & { csp: string }> {
     const initialProps = await Document.getInitialProps(ctx);
     
     // Generate CSP
-    const cspResult = generateCSP([
-      'google-analytics',
-      'google-fonts',
-      'vercel-analytics'
-    ]);
+    const cspResult = generateCSP({
+      services: [GoogleAnalytics, GoogleFonts, VercelAnalytics]
+    });
 
     // Add CSP header if we have access to res
     if (ctx.res) {
@@ -152,13 +199,15 @@ class MyDocument extends Document {
   }
 
   render() {
+    const { csp } = this.props as any;
+    
     return (
       <Html>
         <Head>
-          {this.props.csp && (
+          {csp && (
             <meta 
               httpEquiv="Content-Security-Policy" 
-              content={this.props.csp} 
+              content={csp} 
             />
           )}
         </Head>
@@ -174,32 +223,20 @@ class MyDocument extends Document {
 export default MyDocument;
 ```
 
-### Method 2: API Middleware
+### Method 2: Custom App with getInitialProps
 
-```javascript
-// pages/api/_middleware.js (Next.js 12)
-import { NextResponse } from 'next/server';
-import { generateCSPHeader } from '@csp-kit/generator';
-
-export function middleware(req) {
-  const csp = generateCSPHeader(['google-analytics', 'stripe']);
-  
-  const response = NextResponse.next();
-  response.headers.set('Content-Security-Policy', csp);
-  
-  return response;
-}
-```
-
-### Method 3: Custom App with getInitialProps
-
-```javascript
-// pages/_app.js
+```typescript
+// pages/_app.tsx
 import App from 'next/app';
+import type { AppContext, AppInitialProps } from 'next/app';
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, GoogleFonts } from '@csp-kit/data';
 
 class MyApp extends App {
-  static async getInitialProps({ Component, ctx }) {
+  static async getInitialProps({
+    Component,
+    ctx,
+  }: AppContext): Promise<AppInitialProps> {
     let pageProps = {};
 
     if (Component.getInitialProps) {
@@ -208,10 +245,9 @@ class MyApp extends App {
 
     // Set CSP header on server side
     if (ctx.res) {
-      const cspResult = generateCSP([
-        'google-analytics',
-        'google-fonts'
-      ]);
+      const cspResult = generateCSP({
+        services: [GoogleAnalytics, GoogleFonts]
+      });
       
       ctx.res.setHeader('Content-Security-Policy', cspResult.header);
     }
@@ -230,87 +266,72 @@ export default MyApp;
 
 ## 🔧 Advanced Configurations
 
-### Dynamic CSP Based on Route
-
-```javascript
-// middleware.js
-import { NextResponse } from 'next/server';
-import { generateCSPHeader } from '@csp-kit/generator';
-
-export function middleware(request) {
-  const url = request.nextUrl.clone();
-  let services = ['google-analytics', 'google-fonts']; // Base services
-
-  // Add services based on route
-  if (url.pathname.startsWith('/checkout')) {
-    services.push('stripe');
-  }
-  
-  if (url.pathname.startsWith('/contact')) {
-    services.push('typeform');
-  }
-  
-  if (url.pathname.startsWith('/help')) {
-    services.push('intercom');
-  }
-
-  const csp = generateCSPHeader(services);
-  const response = NextResponse.next();
-  response.headers.set('Content-Security-Policy', csp);
-  
-  return response;
-}
-```
-
 ### Environment-Based CSP
 
-```javascript
-// lib/csp.js
-import { generateCSP } from '@csp-kit/generator';
+```typescript
+// lib/csp.ts
+import { generateCSP, defineService } from '@csp-kit/generator';
+import { GoogleFonts, ServiceCategory } from '@csp-kit/data';
 
-const getCSPForEnvironment = () => {
-  const baseServices = ['google-fonts'];
-  
-  if (process.env.NODE_ENV === 'development') {
-    // More permissive for development
-    return generateCSP({
-      services: [...baseServices, 'localhost'],
-      customRules: {
-        'script-src': ["'unsafe-eval'"], // For hot reloading
-        'style-src': ["'unsafe-inline'"] // For styled-components
-      }
-    });
+// Development tools service
+const NextDevTools = defineService({
+  id: 'next-dev-tools',
+  name: 'Next.js Dev Tools',
+  category: ServiceCategory.DEVELOPMENT,
+  description: 'Next.js development server and hot reload',
+  website: 'http://localhost:3000',
+  directives: {
+    'script-src': ["'unsafe-eval'"], // Required for hot reload
+    'connect-src': [
+      'http://localhost:3000',
+      'ws://localhost:3000',    // Hot reload websocket
+      'http://localhost:3001'   // API routes in dev
+    ],
+    'style-src': ["'unsafe-inline'"] // For styled-jsx in dev
   }
+});
+
+export function getCSPForEnvironment() {
+  const isDevelopment = process.env.NODE_ENV === 'development';
+  const isProduction = process.env.NODE_ENV === 'production';
   
-  if (process.env.NODE_ENV === 'production') {
-    // Strict for production
-    return generateCSP([
-      ...baseServices,
-      'google-analytics',
-      'vercel-analytics'
-    ]);
-  }
-  
-  // Staging environment
   return generateCSP({
-    services: [...baseServices, 'google-analytics'],
-    reportUri: 'https://staging.example.com/csp-report'
+    services: [
+      GoogleFonts,
+      ...(isDevelopment ? [NextDevTools] : [])
+    ],
+    development: {
+      // More permissive in development
+      unsafeEval: true,
+      unsafeInline: true
+    },
+    production: {
+      // Strict in production
+      reportUri: process.env.CSP_REPORT_URI || '/api/csp-report'
+    }
   });
-};
-
-export const cspConfig = getCSPForEnvironment();
+}
 ```
 
 ### CSP with Nonce for Inline Scripts
 
-```javascript
-// app/layout.js
-import { generateCSP } from '@csp-kit/generator';
+```typescript
+// app/layout.tsx
+import { headers } from 'next/headers';
+import { generateCSP, generateNonce } from '@csp-kit/generator';
+import { GoogleAnalytics } from '@csp-kit/data';
+import Script from 'next/script';
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const nonce = generateNonce();
+  
   const cspResult = generateCSP({
-    services: ['google-analytics'],
-    nonce: true
+    services: [GoogleAnalytics],
+    nonce
   });
 
   return (
@@ -325,17 +346,95 @@ export default function RootLayout({ children }) {
         {children}
         
         {/* Use nonce for inline scripts */}
-        <script nonce={cspResult.nonce}>
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          nonce={nonce}
+        >
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'GA_MEASUREMENT_ID');
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
           `}
-        </script>
+        </Script>
       </body>
     </html>
   );
+}
+```
+
+### CSP for Specific Features
+
+```typescript
+// middleware.ts - Feature-specific CSP
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { generateCSPHeader, defineService } from '@csp-kit/generator';
+import { 
+  GoogleAnalytics,
+  Stripe,
+  Youtube,
+  GoogleMaps,
+  ServiceCategory
+} from '@csp-kit/data';
+
+// Custom services for your features
+const ImageCDN = defineService({
+  id: 'image-cdn',
+  name: 'Image CDN',
+  category: ServiceCategory.CDN,
+  description: 'Next.js Image Optimization',
+  website: 'https://images.myapp.com',
+  directives: {
+    'img-src': [
+      'https://images.myapp.com',
+      'data:', // For placeholder images
+      'blob:'  // For dynamic images
+    ]
+  }
+});
+
+const WebSocketAPI = defineService({
+  id: 'websocket-api',
+  name: 'WebSocket API',
+  category: ServiceCategory.API,
+  description: 'Real-time WebSocket connections',
+  website: 'wss://realtime.myapp.com',
+  directives: {
+    'connect-src': ['wss://realtime.myapp.com']
+  }
+});
+
+export function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  
+  // Always include these services
+  const services = [GoogleAnalytics, ImageCDN];
+  
+  // Add services based on features used
+  if (pathname.includes('/videos')) {
+    services.push(Youtube);
+  }
+  
+  if (pathname.includes('/maps')) {
+    services.push(GoogleMaps);
+  }
+  
+  if (pathname.includes('/checkout')) {
+    services.push(Stripe);
+  }
+  
+  if (pathname.includes('/chat')) {
+    services.push(WebSocketAPI);
+  }
+
+  const csp = generateCSPHeader({ services });
+  
+  const response = NextResponse.next();
+  response.headers.set('Content-Security-Policy', csp);
+  
+  return response;
 }
 ```
 
@@ -343,21 +442,44 @@ export default function RootLayout({ children }) {
 
 ### E-commerce Site
 
-```javascript
-// middleware.js - E-commerce CSP
+```typescript
+// middleware.ts - E-commerce CSP
 import { generateCSPHeader } from '@csp-kit/generator';
+import {
+  GoogleAnalytics,
+  FacebookPixel,
+  Stripe,
+  Paypal,
+  GoogleFonts,
+  Intercom,
+  Hotjar,
+  Mailchimp,
+  GoogleAds
+} from '@csp-kit/data';
 
-export function middleware(request) {
-  const csp = generateCSPHeader([
-    'google-analytics',    // Analytics
-    'facebook-pixel',      // Marketing
-    'stripe',              // Payments
-    'google-fonts',        // Typography
-    'intercom',            // Customer support
-    'hotjar',              // User experience
-    'mailchimp',           // Email marketing
-    'google-ads'           // Advertising
-  ]);
+export function middleware(request: NextRequest) {
+  const csp = generateCSPHeader({
+    services: [
+      // Analytics & Marketing
+      GoogleAnalytics,
+      FacebookPixel,
+      GoogleAds,
+      Hotjar,
+      
+      // Payments
+      Stripe,
+      Paypal,
+      
+      // Customer Support
+      Intercom,
+      
+      // Email Marketing
+      Mailchimp,
+      
+      // UI
+      GoogleFonts
+    ]
+  });
 
   const response = NextResponse.next();
   response.headers.set('Content-Security-Policy', csp);
@@ -367,60 +489,128 @@ export function middleware(request) {
 
 ### SaaS Application
 
-```javascript
-// lib/csp-saas.js
-import { generateCSP } from '@csp-kit/generator';
+```typescript
+// lib/csp-saas.ts
+import { generateCSP, defineService } from '@csp-kit/generator';
+import {
+  GoogleAnalytics,
+  Mixpanel,
+  Sentry,
+  Intercom,
+  Stripe,
+  Auth0,
+  GoogleFonts,
+  ServiceCategory
+} from '@csp-kit/data';
+
+// Custom services for SaaS
+const GraphQLAPI = defineService({
+  id: 'graphql-api',
+  name: 'GraphQL API',
+  category: ServiceCategory.API,
+  description: 'Application GraphQL endpoint',
+  website: 'https://api.yoursaas.com',
+  directives: {
+    'connect-src': [
+      'https://api.yoursaas.com',
+      'wss://subscriptions.yoursaas.com' // GraphQL subscriptions
+    ]
+  }
+});
+
+const FileStorage = defineService({
+  id: 'file-storage',
+  name: 'File Storage',
+  category: ServiceCategory.CDN,
+  description: 'User file uploads',
+  website: 'https://files.yoursaas.com',
+  directives: {
+    'img-src': ['https://files.yoursaas.com'],
+    'media-src': ['https://files.yoursaas.com'],
+    'connect-src': ['https://files.yoursaas.com'] // For uploads
+  }
+});
 
 export const saasCsp = generateCSP({
   services: [
-    'google-analytics',    // Product analytics
-    'mixpanel',            // Event tracking
-    'sentry',              // Error monitoring
-    'intercom',            // Customer support
-    'stripe',              // Billing
-    'auth0',               // Authentication
-    'google-fonts'         // Typography
+    // Analytics
+    GoogleAnalytics,
+    Mixpanel,
+    
+    // Error Monitoring
+    Sentry,
+    
+    // Customer Support
+    Intercom,
+    
+    // Billing
+    Stripe,
+    
+    // Authentication
+    Auth0,
+    
+    // UI
+    GoogleFonts,
+    
+    // Custom
+    GraphQLAPI,
+    FileStorage
   ],
-  customRules: {
-    'connect-src': [
-      'https://api.yoursaas.com',  // Your API
-      'wss://realtime.yoursaas.com' // WebSocket
-    ]
-  },
-  reportUri: 'https://yoursaas.com/csp-report'
+  reportUri: 'https://api.yoursaas.com/csp-violations'
 });
 ```
 
 ### Blog/Content Site
 
-```javascript
+```typescript
 // Blog CSP configuration
 import { generateCSPHeader } from '@csp-kit/generator';
+import {
+  GoogleAnalytics,
+  GoogleFonts,
+  Youtube,
+  Twitter,
+  Instagram,
+  GoogleAds,
+  Disqus
+} from '@csp-kit/data';
 
-const blogCsp = generateCSPHeader([
-  'google-analytics',      // Analytics
-  'google-fonts',          // Typography
-  'youtube',               // Video embeds
-  'twitter',               // Tweet embeds
-  'instagram',             // Instagram embeds
-  'google-ads',            // Monetization
-  'disqus'                 // Comments (if supported)
-]);
+const blogCsp = generateCSPHeader({
+  services: [
+    // Analytics
+    GoogleAnalytics,
+    
+    // Typography
+    GoogleFonts,
+    
+    // Embeds
+    Youtube,
+    Twitter,
+    Instagram,
+    
+    // Monetization
+    GoogleAds,
+    
+    // Comments (if Disqus is supported in the future)
+    // Disqus
+  ]
+});
 ```
 
 ## 🔒 Security Best Practices
 
 ### Report-Only Mode for Testing
 
-```javascript
-// middleware.js - Test CSP without breaking site
-import { generateReportOnlyCSPAsync } from '@csp-kit/generator';
+```typescript
+// middleware.ts - Test CSP without breaking site
+import { generateReportOnlyCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, NewServiceToTest } from '@csp-kit/data';
 
-export async function middleware(request) {
-  const reportOnlyCsp = await generateReportOnlyCSPAsync([
-    'google-analytics',
-    'new-service-to-test'
-  ]);
+export function middleware(request: NextRequest) {
+  const reportOnlyCsp = generateReportOnlyCSP({
+    services: [GoogleAnalytics, NewServiceToTest],
+    reportUri: '/api/csp-report'
+  });
 
   const response = NextResponse.next();
   response.headers.set('Content-Security-Policy-Report-Only', reportOnlyCsp);
@@ -430,97 +620,118 @@ export async function middleware(request) {
 
 ### CSP Violation Reporting
 
-```javascript
-// pages/api/csp-report.js
-export default function handler(req, res) {
-  if (req.method === 'POST') {
-    const report = req.body;
+```typescript
+// app/api/csp-report/route.ts
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  try {
+    const report = await request.json();
     
     // Log CSP violations
     console.error('CSP Violation:', {
-      document: report['document-uri'],
-      violated: report['violated-directive'],
-      blocked: report['blocked-uri'],
-      source: report['source-file'],
-      line: report['line-number']
+      documentUri: report['document-uri'],
+      violatedDirective: report['violated-directive'],
+      blockedUri: report['blocked-uri'],
+      sourceFile: report['source-file'],
+      lineNumber: report['line-number'],
+      columnNumber: report['column-number']
     });
     
     // Optionally send to monitoring service
     // await sendToMonitoring(report);
     
-    res.status(204).end();
-  } else {
-    res.status(405).end();
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    console.error('Error processing CSP report:', error);
+    return new NextResponse(null, { status: 500 });
   }
 }
 ```
 
 ### Gradual CSP Rollout
 
-```javascript
-// Gradually enable strict CSP
+```typescript
+// middleware.ts - Gradually enable strict CSP
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics } from '@csp-kit/data';
+import { cookies } from 'next/headers';
 
-const getCSPStrictness = () => {
-  const rolloutPercentage = 10; // 10% of users get strict CSP
-  const userId = getUserId(); // Your user identification logic
-  const isInRollout = (userId % 100) < rolloutPercentage;
+export function middleware(request: NextRequest) {
+  const cookieStore = cookies();
+  const isInStrictCSPGroup = cookieStore.get('strict-csp')?.value === 'true';
   
-  if (isInRollout) {
-    return generateCSP(['google-analytics']); // Strict
-  } else {
-    return generateCSP({
-      services: ['google-analytics'],
-      unsafeInline: true // Less strict
-    });
+  // 10% of users get strict CSP
+  if (!cookieStore.has('strict-csp')) {
+    const enableStrict = Math.random() < 0.1;
+    cookieStore.set('strict-csp', enableStrict ? 'true' : 'false');
   }
-};
+  
+  const csp = isInStrictCSPGroup
+    ? generateCSP({ services: [GoogleAnalytics] }) // Strict
+    : generateCSP({ 
+        services: [GoogleAnalytics],
+        unsafeInline: true // Less strict for gradual rollout
+      });
+  
+  const response = NextResponse.next();
+  response.headers.set('Content-Security-Policy', csp.header);
+  return response;
+}
 ```
 
 ## 🚀 Performance Optimization
 
-### Cached CSP Generation
+### Static CSP Generation
 
-```javascript
-// lib/csp-cache.js
-import { generateCSP } from '@csp-kit/generator';
+```typescript
+// next.config.js - Generate CSP at build time
+const { generateCSPHeader } = require('@csp-kit/generator');
+const { GoogleAnalytics, VercelAnalytics } = require('@csp-kit/data');
 
-const cspCache = new Map();
+const csp = generateCSPHeader({
+  services: [GoogleAnalytics, VercelAnalytics]
+});
 
-export function getCachedCSP(services) {
-  const key = services.sort().join(',');
-  
-  if (!cspCache.has(key)) {
-    const result = generateCSP(services);
-    cspCache.set(key, result);
+module.exports = {
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: csp
+          }
+        ]
+      }
+    ];
   }
-  
-  return cspCache.get(key);
-}
-
-// Clear cache periodically
-setInterval(() => {
-  cspCache.clear();
-}, 60 * 60 * 1000); // 1 hour
+};
 ```
 
 ### Edge Runtime Compatible
 
-```javascript
-// middleware.js - Works with Edge Runtime
+```typescript
+// middleware.ts - Works with Edge Runtime
 import { generateCSPHeader } from '@csp-kit/generator';
+import { GoogleAnalytics, VercelAnalytics } from '@csp-kit/data';
 
 export const config = {
   runtime: 'edge',
 };
 
-export function middleware(request) {
-  // Works in Vercel Edge Functions
-  const csp = generateCSPHeader(['google-analytics', 'vercel-analytics']);
+export function middleware(request: Request) {
+  // CSP Kit works in Vercel Edge Functions
+  const csp = generateCSPHeader({
+    services: [GoogleAnalytics, VercelAnalytics]
+  });
   
-  const response = NextResponse.next();
-  response.headers.set('Content-Security-Policy', csp);
-  return response;
+  return new Response(null, {
+    headers: {
+      'Content-Security-Policy': csp
+    }
+  });
 }
 ```
 
@@ -528,26 +739,26 @@ export function middleware(request) {
 
 ### Test CSP Configuration
 
-```javascript
-// __tests__/csp.test.js
+```typescript
+// __tests__/csp.test.ts
+import { describe, it, expect } from 'vitest';
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
 
 describe('CSP Configuration', () => {
-  test('generates valid CSP for production', () => {
-    const result = generateCSP([
-      'google-analytics',
-      'stripe',
-      'google-fonts'
-    ]);
+  it('should generate valid CSP for production', () => {
+    const result = generateCSP({
+      services: [GoogleAnalytics, Stripe, GoogleFonts]
+    });
     
     expect(result.header).toContain("script-src 'self'");
     expect(result.includedServices).toHaveLength(3);
-    expect(result.unknownServices).toHaveLength(0);
+    expect(result.warnings).toHaveLength(0);
   });
   
-  test('includes nonce when requested', () => {
+  it('should include nonce when requested', () => {
     const result = generateCSP({
-      services: ['google-analytics'],
+      services: [GoogleAnalytics],
       nonce: true
     });
     
@@ -559,8 +770,8 @@ describe('CSP Configuration', () => {
 
 ### E2E Testing with CSP
 
-```javascript
-// cypress/e2e/csp.cy.js
+```typescript
+// cypress/e2e/csp.cy.ts
 describe('CSP Compliance', () => {
   it('should not have CSP violations', () => {
     cy.visit('/');
@@ -585,66 +796,68 @@ describe('CSP Compliance', () => {
 
 ### Common Issues
 
-**1. CSP blocking development tools**
-```javascript
-// Add development-specific rules
-const isDev = process.env.NODE_ENV === 'development';
+**1. CSP blocking Next.js development features**
+```typescript
+// Use environment-specific configuration
+import { defineService } from '@csp-kit/generator';
+import { ServiceCategory } from '@csp-kit/data';
 
-const csp = generateCSP({
-  services: ['google-analytics'],
-  customRules: isDev ? {
-    'script-src': ["'unsafe-eval'"], // For hot reloading
-    'connect-src': ['webpack://', 'ws://localhost:*']
-  } : {}
+const NextJSDev = defineService({
+  id: 'nextjs-dev',
+  name: 'Next.js Development',
+  category: ServiceCategory.DEVELOPMENT,
+  description: 'Next.js dev server requirements',
+  website: 'http://localhost:3000',
+  directives: {
+    'script-src': ["'unsafe-eval'"], // For Fast Refresh
+    'connect-src': [
+      'http://localhost:3000',
+      'ws://localhost:3000',      // Hot reload
+      'http://localhost:3001'     // API routes
+    ],
+    'style-src': ["'unsafe-inline'"] // For styled-jsx
+  }
 });
 ```
 
-**2. CSP blocking styled-components**
-```javascript
-// Add nonce support for styled-components
+**2. Next.js Image Optimization**
+```typescript
+// Add image domains for next/image
+const NextImages = defineService({
+  id: 'next-images',
+  name: 'Next.js Images',
+  category: ServiceCategory.CDN,
+  description: 'Next.js image optimization',
+  website: 'https://your-domain.com',
+  directives: {
+    'img-src': [
+      'https://your-domain.com',
+      'https://images.your-domain.com',
+      'data:', // For placeholder images
+      'blob:'  // For dynamic images
+    ]
+  }
+});
+```
+
+**3. Styled Components / Emotion**
+```typescript
+// Handle CSS-in-JS libraries
+import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics } from '@csp-kit/data';
+
+const result = generateCSP({
+  services: [GoogleAnalytics],
+  nonce: true // Use nonce for styled-components
+});
+
+// In your app
 import { ServerStyleSheet } from 'styled-components';
 
 const sheet = new ServerStyleSheet();
-const csp = generateCSP({
-  services: ['google-analytics'],
-  nonce: true
-});
-
-// Use nonce in styled-components
-sheet.collectStyles(<App nonce={csp.nonce} />);
-```
-
-**3. CSP violations in production**
-```javascript
-// Enable reporting to debug issues
-const csp = generateCSP({
-  services: ['google-analytics', 'stripe'],
-  reportUri: 'https://yourdomain.com/api/csp-report'
-});
-```
-
-### Debug CSP Generation
-
-```javascript
-// lib/debug-csp.js
-import { generateCSP } from '@csp-kit/generator';
-
-export function debugCSP(services) {
-  const result = generateCSP(services);
-  
-  console.log('🔒 CSP Debug Info:');
-  console.log('Services:', result.includedServices);
-  console.log('Unknown:', result.unknownServices);
-  console.log('Warnings:', result.warnings);
-  console.log('Header:', result.header);
-  
-  return result;
-}
-
-// Usage in development
-if (process.env.NODE_ENV === 'development') {
-  debugCSP(['google-analytics', 'stripe']);
-}
+const html = renderToString(
+  sheet.collectStyles(<App nonce={result.nonce} />)
+);
 ```
 
 ## 📚 Next.js Specific Resources
@@ -652,9 +865,10 @@ if (process.env.NODE_ENV === 'development') {
 - **[Next.js Security Headers](https://nextjs.org/docs/advanced-features/security-headers)**
 - **[Next.js Middleware](https://nextjs.org/docs/middleware)**
 - **[Vercel Edge Functions](https://vercel.com/docs/concepts/functions/edge-functions)**
+- **[Next.js Environment Variables](https://nextjs.org/docs/basic-features/environment-variables)**
 
 ---
 
-## 🔗 Related Examples
+## 🔗 More Examples
 
-*More framework examples coming soon! Contributions welcome.*
+More framework integration examples coming soon! For now, you can adapt the patterns shown above for other frameworks by following similar middleware patterns.
