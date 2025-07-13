@@ -30,8 +30,7 @@ const sidebars = {
       collapsed: false,
       items: [
         'getting-started',
-        'web-interface',
-        'migration-guide'
+        'web-interface'
       ]
     },
 
