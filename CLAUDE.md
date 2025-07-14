@@ -9,19 +9,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Prefer using `eslint` and `prettier` to format your code.
 - Don't auto commit and auto push unless I ask you to.
 
+## Project Overview
+
+CSP Kit is a modern Content Security Policy (CSP) toolkit that simplifies CSP header generation for web developers. It provides:
+
+- **Core Library** (`@csp-kit/generator`): Type-safe CSP generation with 100+ pre-configured services
+- **Service Database** (`@csp-kit/data`): Service definitions with PascalCase exports (e.g., `GoogleAnalytics`, `Stripe`)
+- **CLI Tools** (`@csp-kit/cli`): Command-line utilities for service management
+- **Web Interface** (https://csp-kit.eason.ch): Interactive visual CSP generator
+- **Documentation**: Comprehensive guides and API reference
+
+### Key Features
+- 🎯 Service-first configuration (not directive-based)
+- 📦 100+ pre-configured services across 19 categories
+- 🌳 Tree-shakeable ES modules with TypeScript
+- 🔒 Security-first with conservative defaults
+- 🚀 Zero-config for common services
+- 🔧 Configurable services for dynamic values
+
 ## Project Structure
 
 This is a Turborepo monorepo with TypeScript and React/Next.js applications. The project uses pnpm as the package manager and requires Node.js >=22.
 
 ### Key Directories
 
-- `apps/` - Contains Next.js applications (web, docs)
-- `packages/` - Shared packages and libraries
-  - `ui/` - React component library shared across apps
+- `apps/` - Contains Next.js applications
+  - `web/` - Interactive CSP generator web app (Next.js 15, React 19, Tailwind CSS)
+  - `docs/` - Documentation site (Docusaurus)
+- `packages/` - Core packages and shared libraries
+  - `generator/` - Core CSP generation library (@csp-kit/generator)
+  - `data/` - Service definitions database (@csp-kit/data)
+  - `cli/` - Command-line tools (@csp-kit/cli)
+  - `ui/` - Shared React component library (@repo/ui)
   - `eslint-config/` - ESLint configurations
   - `typescript-config/` - TypeScript configurations
-  - `generator/` - Core CSP functionality (@csp-kit/generator)
-  - `data/` - CSP data handling (@csp-kit/data)
 
 ## Development Commands
 
@@ -29,24 +50,36 @@ This is a Turborepo monorepo with TypeScript and React/Next.js applications. The
 
 - `pnpm dev` - Start development servers for all apps
 - `pnpm build` - Build all apps and packages
-- `pnpm lint` - Run ESLint across all packages
+- `pnpm lint` - Run ESLint across all packages (zero warnings policy)
 - `pnpm check-types` - Type check all packages
 - `pnpm format` - Format code using Prettier
+- `pnpm test` - Run all tests (Vitest)
 
 ### Targeted Commands (using Turbo filters)
 
 - `pnpm exec turbo dev --filter=web` - Run only the web app
 - `pnpm exec turbo build --filter=docs` - Build only the docs app
 - `pnpm exec turbo lint --filter=@repo/ui` - Lint only the UI package
+- `pnpm --filter @csp-kit/generator test` - Test specific package
 
-### Individual App Commands
+### Publishing
 
-Navigate to specific app directories for app-specific commands:
+Use the custom publish script for ordered package publishing:
+```bash
+./scripts/publish.sh [patch|minor|major]
+```
 
-- `apps/web/`: `pnpm dev` (runs on port 3000), `pnpm build`, `pnpm lint`, `pnpm check-types`
-- `apps/docs/`: Same commands available
+Note: NPM provenance is disabled (`--provenance=false`) due to CI limitations.
 
 ## Architecture Notes
+
+### Design Principles
+
+1. **Service-First**: Configure CSP by services, not individual directives
+2. **Data-Package Separation**: Service definitions update independently (inspired by Browserslist)
+3. **Type-Safe APIs**: Full TypeScript coverage with strict mode
+4. **Security by Default**: Conservative defaults with opt-in for relaxed policies
+5. **Tree-Shakeable**: Only bundle the services you use
 
 ### Monorepo Setup
 
@@ -54,6 +87,30 @@ Navigate to specific app directories for app-specific commands:
 - Workspace packages are referenced with `workspace:*` protocol
 - All packages are 100% TypeScript
 - Shared configurations are centralized in `packages/` directory
+- Build outputs cached in `.next/` and `dist/` directories
+
+### Service System
+
+- Services exported with PascalCase naming: `import { GoogleAnalytics, Stripe } from '@csp-kit/data'`
+- 19 categories: analytics, payment, authentication, video, fonts, etc.
+- Configurable services support dynamic values:
+  ```typescript
+  const mapsWithKey = GoogleMaps.configure({ apiKey: 'YOUR_KEY' });
+  ```
+
+### API Design
+
+- Simple array syntax: `generateCSP([GoogleAnalytics, Stripe])`
+- Options object for advanced usage:
+  ```typescript
+  generateCSP({
+    services: [GoogleAnalytics, Stripe],
+    nonce: true,
+    additionalRules: { /* ... */ },
+    development: { unsafeEval: true },
+    production: { reportUri: 'https://...' }
+  })
+  ```
 
 ### Component Library (`@repo/ui`)
 
@@ -72,7 +129,8 @@ Navigate to specific app directories for app-specific commands:
 ### Build System
 
 - Turbo handles dependency ordering and caching
-- Build outputs are cached in `.next/` directories
+- tsup for TypeScript bundling in packages
+- Next.js build system for apps
 - Dev mode uses Turbo's TUI interface
 - Remote caching available via Vercel integration
 
@@ -81,3 +139,25 @@ Navigate to specific app directories for app-specific commands:
 - Uses pnpm workspaces defined in `pnpm-workspace.yaml`
 - Workspace dependencies are automatically resolved
 - Lock file: `pnpm-lock.yaml`
+- Node.js >=22 required
+
+## Tech Stack Summary
+
+- **Frontend**: Next.js 15.3, React 19, TypeScript 5.8.2, Tailwind CSS 3.4, Radix UI
+- **Build Tools**: Turborepo, pnpm 10.12.4, tsup, Vitest
+- **Development**: ESLint (zero warnings), Prettier, TypeScript strict mode
+- **Deployment**: Vercel (web app and docs)
+
+## Recent Changes
+
+- Migration to TypeScript services (100% complete)
+- Removal of V2 type annotations (CSPOptionsV2 → CSPOptions)
+- Fixed npm publish provenance errors
+- Updated documentation for PascalCase imports
+
+## Important Notes
+
+- Always use PascalCase for service imports (e.g., `GoogleAnalytics`, not `googleAnalytics`)
+- The `@csp-kit/data` package must be installed alongside `@csp-kit/generator`
+- Service IDs are kebab-case (e.g., 'google-analytics') but exports are PascalCase
+- Use the visual web interface for quick CSP generation without coding
