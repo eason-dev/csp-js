@@ -1,35 +1,41 @@
 # @csp-kit/generator
 
-A simple and powerful JavaScript library to generate Content Security Policy (CSP) headers for popular web services and libraries.
+A simple and powerful JavaScript library to generate Content Security Policy (CSP) headers for popular web services and libraries. Works together with `@csp-kit/data` for service definitions.
 
 ## Features
 
 - 🚀 **Universal**: Works in any JavaScript environment (Node.js, Deno, Edge Runtime, Browser)
 - 🛡️ **Secure**: Generate secure CSP headers for popular services
-- 📦 **Zero Dependencies**: Lightweight and fast
-- 🎯 **Service-Aware**: Built-in support for Google Analytics, Microsoft Clarity, Typeform, and more
+- 📦 **Lightweight**: Minimal dependencies, optimized for performance
+- 🎯 **Service-Aware**: Built-in support for 100+ popular services via @csp-kit/data
 - 🔧 **Customizable**: Easy to extend with custom rules
 - 💡 **TypeScript**: Full TypeScript support with type definitions
+- 🔌 **Type-Safe Services**: Import services as typed objects from @csp-kit/data
 
 ## Installation
 
+**Both packages are required:**
+
 ```bash
-npm install @csp-kit/generator
+npm install @csp-kit/generator @csp-kit/data
 # or
-yarn add @csp-kit/generator
+yarn add @csp-kit/generator @csp-kit/data
 # or
-pnpm add @csp-kit/generator
+pnpm add @csp-kit/generator @csp-kit/data
 ```
+
+> **Note**: `@csp-kit/generator` provides the CSP generation logic, while `@csp-kit/data` contains the service definitions. This separation allows for faster updates to service definitions without changing the core API.
 
 ## Quick Start
 
 ```javascript
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics } from '@csp-kit/data';
 
-// Generate CSP for Google Analytics
-const result = generateCSP(['google-analytics']);
+// Generate CSP using service objects
+const result = generateCSP({ services: [GoogleAnalytics] });
 console.log(result.header);
-// Output: script-src 'self' https://www.google-analytics.com; img-src 'self' https://www.google-analytics.com; ...
+// Output: script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; img-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net
 
 // Use the CSP header in your response
 response.setHeader('Content-Security-Policy', result.header);
@@ -41,51 +47,102 @@ response.setHeader('Content-Security-Policy', result.header);
 
 ```javascript
 import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, MicrosoftClarity, Typeform } from '@csp-kit/data';
 
 // Single service
-const result = generateCSP(['google-analytics']);
+const result = generateCSP({ services: [GoogleAnalytics] });
 
 // Multiple services
-const result = generateCSP(['google-analytics', 'microsoft-clarity', 'typeform']);
+const result = generateCSP({ services: [GoogleAnalytics, MicrosoftClarity, Typeform] });
+
+// Shorthand syntax (array only)
+const result = generateCSP([GoogleAnalytics, MicrosoftClarity, Typeform]);
 ```
 
 ### Advanced Usage
 
 ```javascript
 import { generateCSP, generateNonce } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
 // With custom options
 const result = generateCSP({
-  services: ['google-analytics'],
+  services: [GoogleAnalytics, Stripe],
   nonce: true, // Generate nonce for inline scripts
-  customRules: {
+  additionalRules: {
     'script-src': ['https://my-domain.com'],
     'img-src': ['data:', 'blob:'],
   },
   reportUri: 'https://my-site.com/csp-report',
+  includeSelf: true, // Include 'self' in all directives (default: true)
+  unsafeInline: false, // Allow 'unsafe-inline' (default: false)
+  unsafeEval: false, // Allow 'unsafe-eval' (default: false)
 });
 
 console.log(result.header); // Complete CSP header
 console.log(result.nonce); // Generated nonce value
 console.log(result.warnings); // Security warnings
+console.log(result.includedServices); // Successfully included services
+console.log(result.unknownServices); // Services not found
 ```
 
-### Service Aliases
+### Configurable Services
+
+Some services support dynamic configuration:
 
 ```javascript
-// These are equivalent
-generateCSP(['google-analytics']);
-generateCSP(['ga4']);
-generateCSP(['gtag']);
+import { generateCSP } from '@csp-kit/generator';
+import { GoogleMaps, Stripe } from '@csp-kit/data';
+
+// Configure Google Maps with API key
+const mapsConfig = GoogleMaps.configure({ apiKey: 'YOUR_API_KEY' });
+
+// Configure Stripe with specific account
+const stripeConfig = Stripe.configure({ account: 'acct_123456' });
+
+// Generate CSP with configured services
+const result = generateCSP({ services: [mapsConfig, stripeConfig] });
+```
+
+### Environment-Specific Configuration
+
+```javascript
+import { generateCSP } from '@csp-kit/generator';
+import { GoogleAnalytics, Sentry } from '@csp-kit/data';
+
+const result = generateCSP({
+  services: [GoogleAnalytics, Sentry],
+  // Development-specific settings
+  development: {
+    unsafeEval: true, // Allow eval() in development
+    unsafeInline: true, // Allow inline scripts
+  },
+  // Production-specific settings
+  production: {
+    reportUri: 'https://my-site.com/csp-report',
+    upgradeInsecureRequests: true,
+  },
+});
 ```
 
 ## Supported Services
 
-- **Analytics**: Google Analytics 4, Microsoft Clarity, Google Tag Manager
-- **Forms**: Typeform
-- **Fonts**: Google Fonts
-- **Video**: YouTube
-- And more...
+The `@csp-kit/data` package provides 100+ pre-configured services across various categories:
+
+- **Analytics**: Google Analytics, Microsoft Clarity, Mixpanel, Amplitude, Heap, PostHog
+- **Authentication**: Auth0, Clerk, Firebase Auth, Supabase Auth
+- **CDN**: Cloudflare, Fastly, jsDelivr, unpkg, cdnjs
+- **Chat**: Intercom, Crisp, Tawk.to, Zendesk Chat
+- **Documentation**: Algolia DocSearch, Docsearch
+- **Fonts**: Google Fonts, Adobe Fonts
+- **Forms**: Typeform, Tally, Jotform
+- **Maps**: Google Maps, Mapbox
+- **Marketing**: HubSpot, Mailchimp, ConvertKit
+- **Monitoring**: Sentry, Datadog, LogRocket, Bugsnag
+- **Payment**: Stripe, PayPal, Square
+- **Social**: Twitter/X Widgets, Facebook SDK, LinkedIn
+- **Video**: YouTube, Vimeo, Wistia, Loom
+- And many more...
 
 ## API Reference
 
@@ -95,18 +152,22 @@ Generate a complete CSP configuration.
 
 **Parameters:**
 
-- `input` - String array of service names OR options object
+- `input` - Array of CSPService objects OR options object
 
 **Options:**
 
 ```typescript
 interface CSPOptions {
-  services: string[]; // Service names to include
+  services: CSPService[]; // Service objects to include
   nonce?: boolean | string; // Generate/use nonce
-  customRules?: CSPDirectives; // Additional CSP rules
-  reportOnly?: boolean; // Generate report-only policy
+  additionalRules?: CSPDirectives; // Additional CSP rules
   reportUri?: string; // CSP violation report URI
   includeSelf?: boolean; // Include 'self' (default: true)
+  unsafeInline?: boolean; // Allow 'unsafe-inline'
+  unsafeEval?: boolean; // Allow 'unsafe-eval'
+  upgradeInsecureRequests?: boolean; // Upgrade HTTP to HTTPS
+  development?: Partial<CSPOptions>; // Development overrides
+  production?: Partial<CSPOptions>; // Production overrides
 }
 ```
 

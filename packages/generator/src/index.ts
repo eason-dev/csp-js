@@ -17,7 +17,7 @@ export function generateCSPAsync(...args: Parameters<typeof generateCSPSync>): P
 export { generateNonce } from './utils.js';
 
 // Type exports
-export type { CSPOptions, CSPOptionsV2, CSPResult, NonceOptions } from './types.js';
+export type { CSPOptions, CSPResult, NonceOptions } from './types.js';
 
 // Re-export from data package for convenience
 export type {
