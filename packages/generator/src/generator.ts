@@ -1,6 +1,6 @@
 import { type CSPService, isCSPService } from '@csp-kit/data';
 import type { CSPDirectives } from '@csp-kit/data';
-import type { CSPResult, CSPOptionsV2 } from './types.js';
+import type { CSPResult, CSPOptions } from './types.js';
 import {
   generateNonce,
   mergeCSPDirectives,
@@ -19,11 +19,11 @@ function isConfiguredService(service: unknown): service is { directives: CSPDire
 }
 
 /**
- * Generate CSP header from services and options (new API)
+ * Generate CSP header from services and options
  */
-export function generateCSP(input: CSPService[] | CSPOptionsV2): CSPResult {
+export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
   // Normalize input
-  const options: CSPOptionsV2 = Array.isArray(input) ? { services: input } : input;
+  const options: CSPOptions = Array.isArray(input) ? { services: input } : input;
 
   const {
     services,
@@ -184,14 +184,14 @@ export function generateCSP(input: CSPService[] | CSPOptionsV2): CSPResult {
 /**
  * Generate CSP header string directly
  */
-export function generateCSPHeader(input: CSPService[] | CSPOptionsV2): string {
+export function generateCSPHeader(input: CSPService[] | CSPOptions): string {
   return generateCSP(input).header;
 }
 
 /**
  * Generate report-only CSP header
  */
-export function generateReportOnlyCSP(input: CSPService[] | CSPOptionsV2): CSPResult {
+export function generateReportOnlyCSP(input: CSPService[] | CSPOptions): CSPResult {
   const result = generateCSP(input);
   return {
     ...result,
