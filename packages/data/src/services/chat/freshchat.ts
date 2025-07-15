@@ -8,16 +8,16 @@ export const Freshchat = defineService({
   description: 'Modern messaging software for sales and customer engagement',
   website: 'https://freshchat.com',
   officialDocs: [
-    "https://developers.freshchat.com/web-sdk/",
-    "https://support.freshchat.com/support/solutions/articles/238000-freshchat-javascript-sdk"
+    'https://developers.freshchat.com/web-sdk/',
+    'https://support.freshchat.com/support/solutions/articles/238000-freshchat-javascript-sdk',
   ],
   directives: {
-    'script-src': ["https://wchat.freshchat.com"],
-    'connect-src': ["https://wsv.freshchat.com","https://wchat.freshchat.com"],
-    'frame-src': ["https://wchat.freshchat.com"]
+    'script-src': ['https://wchat.freshchat.com'],
+    'connect-src': ['https://wsv.freshchat.com', 'https://wchat.freshchat.com'],
+    'frame-src': ['https://wchat.freshchat.com'],
   },
   notes: 'Freshchat widget for customer messaging',
-  aliases: ["fresh-chat"],
+  aliases: ['fresh-chat'],
   lastUpdated: '2024-12-29T00:00:00.000Z',
-  verifiedAt: '2025-07-03T00:00:00.000Z'
+  verifiedAt: '2025-07-03T00:00:00.000Z',
 });

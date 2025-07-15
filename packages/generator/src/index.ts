@@ -1,18 +1,15 @@
 // Main exports
-export {
-  generateCSP,
-  generateCSPHeader,
-  generateReportOnlyCSP,
-} from './generator.js';
+export { generateCSP, generateCSPHeader, generateReportOnlyCSP } from './generator.js';
 
 // Import for the async wrapper
 import { generateCSP as generateCSPSync } from './generator.js';
 
 // Alias for backwards compatibility (wrap in promise for CI)
-export function generateCSPAsync(...args: Parameters<typeof generateCSPSync>): Promise<ReturnType<typeof generateCSPSync>> {
+export function generateCSPAsync(
+  ...args: Parameters<typeof generateCSPSync>
+): Promise<ReturnType<typeof generateCSPSync>> {
   return Promise.resolve(generateCSPSync(...args));
 }
-
 
 export { generateNonce } from './utils.js';
 
@@ -31,13 +28,7 @@ export type {
   ConfigurableService,
 } from '@csp-kit/data';
 
-export {
-  defineService,
-  isCSPService,
-  loadServices,
-  getServiceRegistry,
-} from '@csp-kit/data';
-
+export { defineService, isCSPService, loadServices, getServiceRegistry } from '@csp-kit/data';
 
 // Default export for simple usage
 export { generateCSP as default } from './generator.js';

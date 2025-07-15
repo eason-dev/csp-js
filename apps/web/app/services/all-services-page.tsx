@@ -37,7 +37,8 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
   const services = serviceRegistry.services;
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { selectedServices, addService, removeService, isSelected, clearServices } = useSelectedServices();
+  const { selectedServices, addService, removeService, isSelected, clearServices } =
+    useSelectedServices();
   const scrollPositionRef = useRef<number>(0);
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -177,11 +178,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
               }}
               className="h-8 w-8 rounded-full p-0"
             >
-              {serviceSelected ? (
-                <Minus className="h-4 w-4" />
-              ) : (
-                <Plus className="h-4 w-4" />
-              )}
+              {serviceSelected ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
             </Button>
           </div>
         </div>
@@ -226,11 +223,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
                 }}
                 className="h-8 w-8 rounded-full p-0"
               >
-                {serviceSelected ? (
-                  <Minus className="h-4 w-4" />
-                ) : (
-                  <Plus className="h-4 w-4" />
-                )}
+                {serviceSelected ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
               </Button>
             </div>
           </div>

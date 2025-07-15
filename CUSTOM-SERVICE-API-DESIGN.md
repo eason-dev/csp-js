@@ -20,20 +20,21 @@ const MyCDN = defineService({
     'img-src': ['https://cdn.myapp.com'],
     'font-src': ['https://cdn.myapp.com'],
     'style-src': ['https://cdn.myapp.com'],
-    'script-src': ['https://cdn.myapp.com']
-  }
+    'script-src': ['https://cdn.myapp.com'],
+  },
 });
 
 // Use it just like built-in services
 const result = generateCSP({
   services: [GoogleAnalytics, Stripe, MyCDN],
-  nonce: true
+  nonce: true,
 });
 ```
 
 ## Why Custom Services?
 
 Using custom services instead of `additionalRules` provides:
+
 - **Type Safety**: Full TypeScript support with IntelliSense
 - **Reusability**: Define once, use across your entire application
 - **Consistency**: Same API as built-in services
@@ -56,11 +57,8 @@ export const MyAPI = defineService({
   category: ServiceCategory.API,
   description: 'Main application API and WebSocket connections',
   directives: {
-    'connect-src': [
-      'https://api.myapp.com',
-      'wss://realtime.myapp.com'
-    ]
-  }
+    'connect-src': ['https://api.myapp.com', 'wss://realtime.myapp.com'],
+  },
 });
 ```
 
@@ -78,13 +76,13 @@ export const VideoStreaming = defineService({
   directives: {
     'media-src': [
       'https://video.myapp.com',
-      'blob:' // For blob URLs in video player
+      'blob:', // For blob URLs in video player
     ],
     'img-src': ['https://thumbnails.myapp.com'],
-    'connect-src': ['https://video-api.myapp.com']
+    'connect-src': ['https://video-api.myapp.com'],
   },
   notes: 'Requires authentication token in query params',
-  requiresDynamic: true // Indicates dynamic content generation
+  requiresDynamic: true, // Indicates dynamic content generation
 });
 ```
 
@@ -103,15 +101,15 @@ export const DevTools = defineService({
     'script-src': [
       'http://localhost:3000',
       'http://localhost:5173', // Vite
-      "'unsafe-eval'"          // Required for hot reload
+      "'unsafe-eval'", // Required for hot reload
     ],
     'connect-src': [
-      'ws://localhost:3000',   // Hot reload websocket
-      'ws://localhost:5173',   // Vite HMR
-      'http://localhost:3001'  // API dev server
-    ]
+      'ws://localhost:3000', // Hot reload websocket
+      'ws://localhost:5173', // Vite HMR
+      'http://localhost:3001', // API dev server
+    ],
   },
-  notes: 'Only include in development builds'
+  notes: 'Only include in development builds',
 });
 
 // Usage with environment detection
@@ -119,8 +117,8 @@ const result = generateCSP({
   services: [
     GoogleAnalytics,
     Stripe,
-    ...(process.env.NODE_ENV === 'development' ? [DevTools] : [])
-  ]
+    ...(process.env.NODE_ENV === 'development' ? [DevTools] : []),
+  ],
 });
 ```
 
@@ -143,18 +141,15 @@ export function createRegionalCDN(region: 'us' | 'eu' | 'asia') {
       'img-src': [`https://cdn-${region}.myapp.com`],
       'font-src': [`https://cdn-${region}.myapp.com`],
       'style-src': [`https://cdn-${region}.myapp.com`],
-      'script-src': [`https://cdn-${region}.myapp.com`]
-    }
+      'script-src': [`https://cdn-${region}.myapp.com`],
+    },
   });
 }
 
 // Usage based on user region
 const userRegion = getUserRegion(); // 'us', 'eu', or 'asia'
 const result = generateCSP({
-  services: [
-    GoogleAnalytics,
-    createRegionalCDN(userRegion)
-  ]
+  services: [GoogleAnalytics, createRegionalCDN(userRegion)],
 });
 ```
 
@@ -176,18 +171,15 @@ export function createMonitoringService(options: {
 }) {
   const region = options.region || 'us';
   const baseUrl = `https://monitoring-${region}.myapp.com`;
-  
+
   return defineService({
     id: 'monitoring',
     name: 'Application Monitoring',
     category: ServiceCategory.MONITORING,
     directives: {
       'script-src': [baseUrl],
-      'connect-src': [
-        baseUrl,
-        ...(options.enableRUM ? [`https://rum-${region}.myapp.com`] : [])
-      ]
-    }
+      'connect-src': [baseUrl, ...(options.enableRUM ? [`https://rum-${region}.myapp.com`] : [])],
+    },
   });
 }
 ```
@@ -231,8 +223,8 @@ export const AssetsCDN = defineService({
     'img-src': ['https://assets.myapp.com'],
     'font-src': ['https://assets.myapp.com'],
     'style-src': ['https://assets.myapp.com'],
-    'script-src': ['https://assets.myapp.com']
-  }
+    'script-src': ['https://assets.myapp.com'],
+  },
 });
 
 export const MediaCDN = defineService({
@@ -241,8 +233,8 @@ export const MediaCDN = defineService({
   category: ServiceCategory.CDN,
   directives: {
     'img-src': ['https://media.myapp.com'],
-    'media-src': ['https://media.myapp.com']
-  }
+    'media-src': ['https://media.myapp.com'],
+  },
 });
 ```
 
@@ -270,7 +262,7 @@ export const productionServices = [
   ...coreServices,
   ...analyticsServices,
   ...paymentServices,
-  ...errorServices
+  ...errorServices,
 ];
 ```
 
@@ -286,9 +278,9 @@ import { AssetsCDN, MainAPI } from './services';
 const services: CSPService[] = [AssetsCDN, MainAPI];
 
 // IntelliSense for service properties
-console.log(AssetsCDN.id);          // "assets-cdn"
-console.log(AssetsCDN.category);    // "cdn"
-console.log(AssetsCDN.directives);  // { 'img-src': [...], ... }
+console.log(AssetsCDN.id); // "assets-cdn"
+console.log(AssetsCDN.category); // "cdn"
+console.log(AssetsCDN.directives); // { 'img-src': [...], ... }
 
 // Type errors for invalid directives
 const BadService = defineService({
@@ -296,8 +288,8 @@ const BadService = defineService({
   name: 'Bad Service',
   category: ServiceCategory.OTHER,
   directives: {
-    'invalid-src': ['...'] // TypeScript error!
-  }
+    'invalid-src': ['...'], // TypeScript error!
+  },
 });
 ```
 
@@ -313,21 +305,21 @@ export const APIService = defineService({
   name: 'API Service',
   category: ServiceCategory.API,
   directives: {
-    'connect-src': ['https://api.myapp.com']
+    'connect-src': ['https://api.myapp.com'],
   },
-  validate: (directives) => {
+  validate: directives => {
     const warnings = [];
-    
+
     // Check if API is using HTTPS
     const connectSrc = directives['connect-src'] || [];
     const hasHttp = connectSrc.some(src => src.startsWith('http://'));
-    
+
     if (hasHttp) {
       warnings.push('API should use HTTPS in production');
     }
-    
+
     return { warnings };
-  }
+  },
 });
 ```
 
@@ -341,13 +333,13 @@ export const OldAPI = defineService({
   name: 'Legacy API',
   category: ServiceCategory.API,
   directives: {
-    'connect-src': ['https://old-api.myapp.com']
+    'connect-src': ['https://old-api.myapp.com'],
   },
   deprecated: {
     since: '2024-01-01',
     message: 'Legacy API is deprecated',
-    alternative: 'new-api'
-  }
+    alternative: 'new-api',
+  },
 });
 
 export const NewAPI = defineService({
@@ -355,9 +347,9 @@ export const NewAPI = defineService({
   name: 'New API',
   category: ServiceCategory.API,
   directives: {
-    'connect-src': ['https://api.myapp.com']
+    'connect-src': ['https://api.myapp.com'],
   },
-  conflicts: ['old-api'] // Prevents using both APIs together
+  conflicts: ['old-api'], // Prevents using both APIs together
 });
 ```
 
@@ -379,8 +371,8 @@ export const AssetsCDN = defineService({
   directives: {
     'img-src': ['https://assets.myapp.com'],
     'font-src': ['https://assets.myapp.com'],
-    'style-src': ['https://assets.myapp.com']
-  }
+    'style-src': ['https://assets.myapp.com'],
+  },
 });
 
 // API Services
@@ -390,11 +382,8 @@ export const MainAPI = defineService({
   category: ServiceCategory.API,
   description: 'Primary API and real-time connections',
   directives: {
-    'connect-src': [
-      'https://api.myapp.com',
-      'wss://realtime.myapp.com'
-    ]
-  }
+    'connect-src': ['https://api.myapp.com', 'wss://realtime.myapp.com'],
+  },
 });
 
 // Monitoring
@@ -404,8 +393,8 @@ export const Monitoring = defineService({
   category: ServiceCategory.MONITORING,
   directives: {
     'script-src': ['https://monitoring.myapp.com'],
-    'connect-src': ['https://monitoring.myapp.com']
-  }
+    'connect-src': ['https://monitoring.myapp.com'],
+  },
 });
 
 // app.ts
@@ -420,22 +409,22 @@ export function generateAppCSP(options: { nonce?: string } = {}) {
       AssetsCDN,
       MainAPI,
       Monitoring,
-      
+
       // Third-party services
       GoogleAnalytics,
       Stripe,
-      Sentry
+      Sentry,
     ],
     nonce: options.nonce,
     reportUri: '/api/csp-violations',
-    
+
     // Environment-specific overrides
     development: {
       unsafeEval: true, // For hot reload
       additionalRules: {
-        'connect-src': ['http://localhost:*']
-      }
-    }
+        'connect-src': ['http://localhost:*'],
+      },
+    },
   });
 }
 ```
@@ -460,8 +449,8 @@ const result = generateCSP({
   services: [GoogleAnalytics, Stripe],
   additionalRules: {
     'img-src': ['https://cdn.myapp.com'],
-    'connect-src': ['https://api.myapp.com']
-  }
+    'connect-src': ['https://api.myapp.com'],
+  },
 });
 
 // ✅ New approach with custom services
@@ -470,8 +459,8 @@ const MyCDN = defineService({
   name: 'My CDN',
   category: ServiceCategory.CDN,
   directives: {
-    'img-src': ['https://cdn.myapp.com']
-  }
+    'img-src': ['https://cdn.myapp.com'],
+  },
 });
 
 const MyAPI = defineService({
@@ -479,12 +468,12 @@ const MyAPI = defineService({
   name: 'My API',
   category: ServiceCategory.API,
   directives: {
-    'connect-src': ['https://api.myapp.com']
-  }
+    'connect-src': ['https://api.myapp.com'],
+  },
 });
 
 const result = generateCSP({
-  services: [GoogleAnalytics, Stripe, MyCDN, MyAPI]
+  services: [GoogleAnalytics, Stripe, MyCDN, MyAPI],
 });
 ```
 

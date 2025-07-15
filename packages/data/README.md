@@ -24,7 +24,7 @@ import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
 
 // Generate CSP header for your services
 const { header } = generateCSP({
-  services: [GoogleAnalytics, Stripe, GoogleFonts]
+  services: [GoogleAnalytics, Stripe, GoogleFonts],
 });
 
 // Use in your application
@@ -43,22 +43,22 @@ import {
   Mixpanel,
   Amplitude,
   Hotjar,
-  
+
   // Payment
   Stripe,
   Paypal,
   Square,
-  
+
   // Authentication
   Auth0,
   Clerk,
   FirebaseAuth,
-  
+
   // Video
   Youtube,
   Vimeo,
   Wistia,
-  
+
   // ... and 100+ more services
 } from '@csp-kit/data';
 ```
@@ -93,7 +93,7 @@ const stripeWithAccount = Stripe.configure({ account: 'acct_123456' });
 // Use with generator
 import { generateCSP } from '@csp-kit/generator';
 const { header } = generateCSP({
-  services: [mapsWithKey, stripeWithAccount]
+  services: [mapsWithKey, stripeWithAccount],
 });
 ```
 
@@ -106,9 +106,9 @@ import type { CSPService } from '@csp-kit/data';
 import { GoogleAnalytics } from '@csp-kit/data';
 
 // Each service has these properties
-console.log(GoogleAnalytics.id);         // 'google-analytics'
-console.log(GoogleAnalytics.name);       // 'Google Analytics 4'
-console.log(GoogleAnalytics.category);   // 'analytics'
+console.log(GoogleAnalytics.id); // 'google-analytics'
+console.log(GoogleAnalytics.name); // 'Google Analytics 4'
+console.log(GoogleAnalytics.category); // 'analytics'
 console.log(GoogleAnalytics.directives); // CSP directives object
 ```
 

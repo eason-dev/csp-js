@@ -19,12 +19,13 @@ pnpm add @csp-kit/generator @csp-kit/data
 The primary function for generating Content Security Policy headers.
 
 **Syntax:**
+
 ```typescript
 import { generateCSP } from '@csp-kit/generator';
 import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
 const result = generateCSP({
-  services: [GoogleAnalytics, Stripe]
+  services: [GoogleAnalytics, Stripe],
 });
 ```
 
@@ -32,15 +33,15 @@ const result = generateCSP({
 
 ```typescript
 interface CSPOptions {
-  services: CSPService[];       // Array of service objects (imported from @csp-kit/data)
-  nonce?: boolean | string;     // Generate nonce or use provided value
+  services: CSPService[]; // Array of service objects (imported from @csp-kit/data)
+  nonce?: boolean | string; // Generate nonce or use provided value
   additionalRules?: CSPDirectives; // Additional CSP rules
-  reportUri?: string;           // CSP violation reporting endpoint
-  includeSelf?: boolean;        // Include 'self' directive (default: true)
-  unsafeInline?: boolean;       // Allow unsafe-inline (not recommended)
-  unsafeEval?: boolean;         // Allow unsafe-eval (not recommended)
+  reportUri?: string; // CSP violation reporting endpoint
+  includeSelf?: boolean; // Include 'self' directive (default: true)
+  unsafeInline?: boolean; // Allow unsafe-inline (not recommended)
+  unsafeEval?: boolean; // Allow unsafe-eval (not recommended)
   development?: Partial<CSPOptions>; // Dev-only options
-  production?: Partial<CSPOptions>;  // Production-only options
+  production?: Partial<CSPOptions>; // Production-only options
 }
 ```
 
@@ -48,14 +49,14 @@ interface CSPOptions {
 
 ```typescript
 interface CSPResult {
-  header: string;               // Complete CSP header string
-  directives: CSPDirectives;    // CSP directives as object
-  reportOnlyHeader: string;     // Report-only version
-  includedServices: string[];   // Service IDs that were included
-  unknownServices: string[];    // Always empty in new API
-  warnings: string[];           // Deprecation and security warnings
-  conflicts: string[];          // Service conflicts detected
-  nonce?: string;               // Generated nonce (if requested)
+  header: string; // Complete CSP header string
+  directives: CSPDirectives; // CSP directives as object
+  reportOnlyHeader: string; // Report-only version
+  includedServices: string[]; // Service IDs that were included
+  unknownServices: string[]; // Always empty in new API
+  warnings: string[]; // Deprecation and security warnings
+  conflicts: string[]; // Service conflicts detected
+  nonce?: string; // Generated nonce (if requested)
 }
 ```
 
@@ -67,7 +68,7 @@ import { generateCSP } from '@csp-kit/generator';
 import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
 const result = generateCSP({
-  services: [GoogleAnalytics, Stripe]
+  services: [GoogleAnalytics, Stripe],
 });
 
 // Advanced usage with nonce and custom rules
@@ -76,9 +77,9 @@ const result = generateCSP({
   nonce: true,
   additionalRules: {
     'script-src': ['https://my-cdn.com'],
-    'img-src': ['data:', 'blob:']
+    'img-src': ['data:', 'blob:'],
   },
-  reportUri: 'https://example.com/csp-report'
+  reportUri: 'https://example.com/csp-report',
 });
 
 // Environment-specific configuration
@@ -87,12 +88,12 @@ const result = generateCSP({
   development: {
     unsafeEval: true, // For hot reload
     additionalRules: {
-      'connect-src': ['ws://localhost:*']
-    }
+      'connect-src': ['ws://localhost:*'],
+    },
   },
   production: {
-    reportUri: 'https://api.example.com/csp-violations'
-  }
+    reportUri: 'https://api.example.com/csp-violations',
+  },
 });
 ```
 
@@ -101,12 +102,13 @@ const result = generateCSP({
 Returns only the CSP header string (convenience function).
 
 **Example:**
+
 ```typescript
 import { generateCSPHeader } from '@csp-kit/generator';
 import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
 const header = generateCSPHeader({
-  services: [GoogleAnalytics, Stripe]
+  services: [GoogleAnalytics, Stripe],
 });
 // "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; ..."
 ```
@@ -116,13 +118,14 @@ const header = generateCSPHeader({
 Generates a report-only CSP header for testing.
 
 **Example:**
+
 ```typescript
 import { generateReportOnlyCSP } from '@csp-kit/generator';
 import { GoogleAnalytics } from '@csp-kit/data';
 
 const reportOnlyHeader = generateReportOnlyCSP({
   services: [GoogleAnalytics],
-  reportUri: '/api/csp-report'
+  reportUri: '/api/csp-report',
 });
 // Use: res.setHeader('Content-Security-Policy-Report-Only', reportOnlyHeader);
 ```
@@ -134,6 +137,7 @@ const reportOnlyHeader = generateReportOnlyCSP({
 Define a custom service with full TypeScript support.
 
 **Syntax:**
+
 ```typescript
 import { defineService } from '@csp-kit/generator';
 import { ServiceCategory } from '@csp-kit/data';
@@ -143,8 +147,8 @@ const MyService = defineService({
   name: 'My Service',
   category: ServiceCategory.API,
   directives: {
-    'connect-src': ['https://api.myservice.com']
-  }
+    'connect-src': ['https://api.myservice.com'],
+  },
 });
 ```
 
@@ -153,24 +157,24 @@ const MyService = defineService({
 ```typescript
 interface ServiceDefinition {
   // Required fields
-  id: string;                    // Unique kebab-case identifier
-  name: string;                  // Human-readable name
-  category: ServiceCategory;     // Service category
-  description: string;           // Brief description
-  website: string;               // Official website URL
-  directives: CSPDirectives;     // CSP directives
+  id: string; // Unique kebab-case identifier
+  name: string; // Human-readable name
+  category: ServiceCategory; // Service category
+  description: string; // Brief description
+  website: string; // Official website URL
+  directives: CSPDirectives; // CSP directives
 
   // Optional fields
-  officialDocs?: string[];       // Documentation URLs
-  notes?: string;                // Implementation notes
-  aliases?: string[];            // Alternative identifiers
-  requiresDynamic?: boolean;     // Requires 'strict-dynamic'
-  requiresNonce?: boolean;       // Requires nonce
-  deprecated?: DeprecationInfo;  // Deprecation information
-  conflicts?: string[];          // Conflicting service IDs
+  officialDocs?: string[]; // Documentation URLs
+  notes?: string; // Implementation notes
+  aliases?: string[]; // Alternative identifiers
+  requiresDynamic?: boolean; // Requires 'strict-dynamic'
+  requiresNonce?: boolean; // Requires nonce
+  deprecated?: DeprecationInfo; // Deprecation information
+  conflicts?: string[]; // Conflicting service IDs
   validate?: (directives: CSPDirectives) => ValidationResult;
-  lastUpdated?: string;          // ISO timestamp
-  verifiedAt?: string;           // Last verification timestamp
+  lastUpdated?: string; // ISO timestamp
+  verifiedAt?: string; // Last verification timestamp
 }
 ```
 
@@ -178,6 +182,7 @@ interface ServiceDefinition {
 `CSPService` - A service object ready to use with `generateCSP()`
 
 **Example:**
+
 ```typescript
 import { defineService } from '@csp-kit/generator';
 import { ServiceCategory } from '@csp-kit/data';
@@ -193,13 +198,13 @@ const MyCDN = defineService({
     'img-src': ['https://cdn.myapp.com'],
     'font-src': ['https://cdn.myapp.com'],
     'style-src': ['https://cdn.myapp.com'],
-    'script-src': ['https://cdn.myapp.com']
-  }
+    'script-src': ['https://cdn.myapp.com'],
+  },
 });
 
 // Use it like any built-in service
 const result = generateCSP({
-  services: [MyCDN, GoogleAnalytics]
+  services: [MyCDN, GoogleAnalytics],
 });
 ```
 
@@ -208,6 +213,7 @@ const result = generateCSP({
 Type guard to check if a value is a valid CSPService.
 
 **Example:**
+
 ```typescript
 import { isCSPService } from '@csp-kit/generator';
 import { GoogleAnalytics } from '@csp-kit/data';
@@ -223,12 +229,14 @@ console.log(isCSPService({ id: 'test' })); // false
 Generate a cryptographic nonce for CSP.
 
 **Parameters:**
+
 - `length` (number, optional): Nonce length in bytes (default: 16)
 
 **Return Value:**
 `string` - Base64-encoded nonce
 
 **Example:**
+
 ```typescript
 import { generateNonce } from '@csp-kit/generator';
 
@@ -244,24 +252,24 @@ The core service interface used by all services:
 
 ```typescript
 interface CSPService {
-  id: string;                    // Unique service identifier
-  name: string;                  // Human-readable name
-  category: ServiceCategory;     // Service category
-  description: string;           // Brief description
-  website: string;               // Official website
-  directives: CSPDirectives;     // CSP requirements
-  
+  id: string; // Unique service identifier
+  name: string; // Human-readable name
+  category: ServiceCategory; // Service category
+  description: string; // Brief description
+  website: string; // Official website
+  directives: CSPDirectives; // CSP requirements
+
   // Optional properties
-  officialDocs?: string[];       // Documentation URLs
-  notes?: string;                // Implementation notes
-  aliases?: string[];            // Alternative identifiers
-  requiresDynamic?: boolean;     // Requires 'strict-dynamic'
-  requiresNonce?: boolean;       // Requires nonce
-  deprecated?: DeprecationInfo;  // Deprecation info
-  conflicts?: string[];          // Conflicting service IDs
+  officialDocs?: string[]; // Documentation URLs
+  notes?: string; // Implementation notes
+  aliases?: string[]; // Alternative identifiers
+  requiresDynamic?: boolean; // Requires 'strict-dynamic'
+  requiresNonce?: boolean; // Requires nonce
+  deprecated?: DeprecationInfo; // Deprecation info
+  conflicts?: string[]; // Conflicting service IDs
   validate?: (directives: CSPDirectives) => ValidationResult;
-  lastUpdated?: string;          // ISO timestamp
-  verifiedAt?: string;           // Verification timestamp
+  lastUpdated?: string; // ISO timestamp
+  verifiedAt?: string; // Verification timestamp
 }
 ```
 
@@ -307,7 +315,7 @@ enum ServiceCategory {
   MAPS = 'maps',
   API = 'api',
   DEVELOPMENT = 'development',
-  OTHER = 'other'
+  OTHER = 'other',
 }
 ```
 
@@ -315,8 +323,8 @@ enum ServiceCategory {
 
 ```typescript
 interface DeprecationInfo {
-  since: string;        // ISO date when deprecated
-  message: string;      // Explanation
+  since: string; // ISO date when deprecated
+  message: string; // Explanation
   alternative?: string; // Suggested alternative service ID
 }
 ```
@@ -325,8 +333,8 @@ interface DeprecationInfo {
 
 ```typescript
 interface ValidationResult {
-  warnings?: string[];  // Non-critical issues
-  errors?: string[];    // Critical issues
+  warnings?: string[]; // Non-critical issues
+  errors?: string[]; // Critical issues
 }
 ```
 
@@ -336,23 +344,18 @@ All 106+ pre-configured services are available from `@csp-kit/data`:
 
 ```typescript
 // Import specific services
-import { 
-  GoogleAnalytics,
-  Stripe,
-  GoogleFonts,
-  Intercom,
-  Sentry
-} from '@csp-kit/data';
+import { GoogleAnalytics, Stripe, GoogleFonts, Intercom, Sentry } from '@csp-kit/data';
 
 // Use with generateCSP
 const result = generateCSP({
-  services: [GoogleAnalytics, Stripe, GoogleFonts, Intercom, Sentry]
+  services: [GoogleAnalytics, Stripe, GoogleFonts, Intercom, Sentry],
 });
 ```
 
 ### Available Services by Category
 
 **Analytics** (12+ services):
+
 ```typescript
 import {
   GoogleAnalytics,
@@ -366,6 +369,7 @@ import {
 ```
 
 **Payment** (8+ services):
+
 ```typescript
 import {
   Stripe,
@@ -378,6 +382,7 @@ import {
 ```
 
 **Social** (15+ services):
+
 ```typescript
 import {
   Facebook,
@@ -403,9 +408,9 @@ import { GoogleAnalytics, VercelAnalytics } from '@csp-kit/data';
 
 export function middleware(request: Request) {
   const csp = generateCSPHeader({
-    services: [GoogleAnalytics, VercelAnalytics]
+    services: [GoogleAnalytics, VercelAnalytics],
   });
-  
+
   const response = NextResponse.next();
   response.headers.set('Content-Security-Policy', csp);
   return response;
@@ -425,9 +430,9 @@ const app = express();
 app.use((req, res, next) => {
   const result = generateCSP({
     services: [GoogleAnalytics, Stripe, Sentry],
-    nonce: true
+    nonce: true,
   });
-  
+
   res.locals.nonce = result.nonce;
   res.setHeader('Content-Security-Policy', result.header);
   next();
@@ -449,8 +454,8 @@ const DevServer = defineService({
   website: 'http://localhost:3000',
   directives: {
     'script-src': ['http://localhost:3000', "'unsafe-eval'"],
-    'connect-src': ['ws://localhost:3000']
-  }
+    'connect-src': ['ws://localhost:3000'],
+  },
 });
 
 // Pattern 2: Dynamic service creation
@@ -463,8 +468,8 @@ function createRegionalCDN(region: 'us' | 'eu' | 'asia') {
     website: `https://cdn-${region}.example.com`,
     directives: {
       'img-src': [`https://cdn-${region}.example.com`],
-      'script-src': [`https://cdn-${region}.example.com`]
-    }
+      'script-src': [`https://cdn-${region}.example.com`],
+    },
   });
 }
 
@@ -473,11 +478,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const userRegion = getUserRegion(); // Your logic
 
 const result = generateCSP({
-  services: [
-    GoogleAnalytics,
-    createRegionalCDN(userRegion),
-    ...(isDev ? [DevServer] : [])
-  ]
+  services: [GoogleAnalytics, createRegionalCDN(userRegion), ...(isDev ? [DevServer] : [])],
 });
 ```
 
@@ -488,7 +489,7 @@ CSP Kit provides helpful error messages and warnings:
 ```typescript
 const result = generateCSP({
   services: [GoogleAnalytics],
-  unsafeInline: true  // Not recommended
+  unsafeInline: true, // Not recommended
 });
 
 // Check warnings
@@ -499,7 +500,7 @@ if (result.warnings.length > 0) {
 
 // Check for conflicts
 const result2 = generateCSP({
-  services: [OldAnalytics, NewAnalytics] // If they conflict
+  services: [OldAnalytics, NewAnalytics], // If they conflict
 });
 
 if (result2.conflicts.length > 0) {
@@ -525,12 +526,15 @@ import * as allServices from '@csp-kit/data';
 const cspCache = new Map<string, CSPResult>();
 
 function getCachedCSP(services: CSPService[]): CSPResult {
-  const key = services.map(s => s.id).sort().join(',');
-  
+  const key = services
+    .map(s => s.id)
+    .sort()
+    .join(',');
+
   if (!cspCache.has(key)) {
     cspCache.set(key, generateCSP({ services }));
   }
-  
+
   return cspCache.get(key)!;
 }
 ```
@@ -543,11 +547,11 @@ const commonServices = [GoogleAnalytics, GoogleFonts];
 
 // Different pages
 const homepageCSP = generateCSP({
-  services: [...commonServices, Youtube]
+  services: [...commonServices, Youtube],
 });
 
 const checkoutCSP = generateCSP({
-  services: [...commonServices, Stripe, Paypal]
+  services: [...commonServices, Stripe, Paypal],
 });
 ```
 
@@ -568,7 +572,7 @@ import { generateCSP } from '@csp-kit/generator';
 import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
 const result = generateCSP({
-  services: [GoogleAnalytics, Stripe]
+  services: [GoogleAnalytics, Stripe],
 });
 ```
 
@@ -597,6 +601,7 @@ For optimal TypeScript support:
 ## Browser Support
 
 CSP Kit works in any modern JavaScript environment:
+
 - ✅ Node.js 18+
 - ✅ Modern browsers (ES2020+)
 - ✅ Bundlers (Webpack, Vite, Rollup, esbuild)

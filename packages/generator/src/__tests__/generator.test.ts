@@ -1,10 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  generateCSP,
-  generateCSPHeader,
-  generateReportOnlyCSP,
-  defineService,
-} from '../index.js';
+import { generateCSP, generateCSPHeader, generateReportOnlyCSP, defineService } from '../index.js';
 import { ServiceCategory } from '@csp-kit/data';
 
 // Import some real services for testing
@@ -270,7 +265,7 @@ describe('generateCSP v2 API', () => {
   describe('Helper functions', () => {
     it('generateCSPHeader should return header string directly', () => {
       const header = generateCSPHeader([GoogleAnalytics]);
-      
+
       expect(typeof header).toBe('string');
       expect(header).toContain('script-src');
       expect(header).toContain('https://www.googletagmanager.com');
@@ -278,7 +273,7 @@ describe('generateCSP v2 API', () => {
 
     it('generateReportOnlyCSP should return report-only result', () => {
       const result = generateReportOnlyCSP([GoogleAnalytics]);
-      
+
       expect(result.header).toBe(result.reportOnlyHeader);
     });
   });

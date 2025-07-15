@@ -11,40 +11,31 @@ const SERVICES_DIR = join(__dirname, '../src/services');
 
 function fixImportsInFile(filePath: string): void {
   let content = readFileSync(filePath, 'utf-8');
-  
+
   // Fix imports from service-types
-  content = content.replace(
-    /from '\.\.\/\.\.\/service-types'/g,
-    "from '../../service-types.js'"
-  );
-  
+  content = content.replace(/from '\.\.\/\.\.\/service-types'/g, "from '../../service-types.js'");
+
   // Fix imports from types
-  content = content.replace(
-    /from '\.\.\/\.\.\/types'/g,
-    "from '../../types.js'"
-  );
-  
+  content = content.replace(/from '\.\.\/\.\.\/types'/g, "from '../../types.js'");
+
   // Fix any other relative imports without .js
-  content = content.replace(
-    /from '(\.\.[^']+)'/g,
-    (match, path) => {
-      if (!path.endsWith('.js') && !path.endsWith('.json')) {
-        return `from '${path}.js'`;
-      }
-      return match;
+  content = content.replace(/from '(\.\.[^']+)'/g, (match, path) => {
+    if (!path.endsWith('.js') && !path.endsWith('.json')) {
+      return `from '${path}.js'`;
     }
-  );
-  
+    return match;
+  });
+
   writeFileSync(filePath, content);
 }
 
 function processDirectory(dir: string): void {
   const entries = readdirSync(dir);
-  
+
   for (const entry of entries) {
     const fullPath = join(dir, entry);
     const stat = statSync(fullPath);
-    
+
     if (stat.isDirectory()) {
       processDirectory(fullPath);
     } else if (entry.endsWith('.ts') && !entry.endsWith('.d.ts')) {

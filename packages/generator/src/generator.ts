@@ -15,7 +15,9 @@ import {
  */
 function isConfiguredService(service: unknown): service is { directives: CSPDirectives } {
   // A configured service is a partial CSPService returned by configure()
-  return service !== null && typeof service === 'object' && 'directives' in service && !('id' in service);
+  return (
+    service !== null && typeof service === 'object' && 'directives' in service && !('id' in service)
+  );
 }
 
 /**
@@ -61,7 +63,7 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
 
   // Process each service
   const processedServiceIds = new Set<string>();
-  
+
   for (const serviceItem of finalOptions.services) {
     // Check if this is a configured service partial
     if (isConfiguredService(serviceItem)) {
@@ -86,7 +88,9 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
       for (const conflictId of service.conflicts) {
         if (processedServiceIds.has(conflictId)) {
           conflicts.push(`${service.id} conflicts with ${conflictId}`);
-          warnings.push(`Service ${service.id} conflicts with already included ${conflictId}, skipping`);
+          warnings.push(
+            `Service ${service.id} conflicts with already included ${conflictId}, skipping`
+          );
           hasConflict = true;
           break;
         }
@@ -121,13 +125,16 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
     if (service.deprecated) {
       warnings.push(
         `Service ${service.id} is deprecated since ${service.deprecated.since}. ` +
-        `${service.deprecated.message} Use ${service.deprecated.alternative} instead.`
+          `${service.deprecated.message} Use ${service.deprecated.alternative} instead.`
       );
     }
   }
 
   // Merge all CSP directives including additional rules
-  let mergedDirectives = mergeCSPDirectives(...serviceDirectives, finalOptions.additionalRules || {});
+  let mergedDirectives = mergeCSPDirectives(
+    ...serviceDirectives,
+    finalOptions.additionalRules || {}
+  );
 
   // Add 'self' directive if requested
   if (finalOptions.includeSelf) {
