@@ -19,12 +19,15 @@ body:
       label: Existing Service
       description: Which service needs to be updated?
       options:
-        - google-analytics
-        - microsoft-clarity
-        - typeform
-        - google-tag-manager
-        - google-fonts
-        - youtube
+        - GoogleAnalytics
+        - GoogleTagManager
+        - GoogleFonts
+        - Stripe
+        - YouTube
+        - Cloudflare
+        - Typeform
+        - Intercom
+        - Sentry
         - Other (specify in description)
     validations:
       required: true
