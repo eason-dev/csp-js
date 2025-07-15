@@ -81,14 +81,48 @@ export interface ValidationResult {
 }
 
 /**
- * Type for the defineService function that ensures proper typing
+ * Simplified service definition for public API - pure minimal, just directives
  */
-export type DefineServiceFn = <T extends CSPService>(service: T) => T;
+export interface SimpleCSPService {
+  /** CSP directives required for this service */
+  readonly directives: CSPDirectives;
+}
 
 /**
- * Create a properly typed service definition
+ * Type for the internal defineService function that ensures proper typing
  */
-export const defineService: DefineServiceFn = service => {
+export type DefineServiceInternalFn = <T extends CSPService>(service: T) => T;
+
+/**
+ * Type for the public defineService function
+ */
+export type DefineServiceFn = (service: SimpleCSPService) => CSPService;
+
+/**
+ * Create a simplified service definition for public use
+ */
+export const defineService: DefineServiceFn = (service) => {
+  const id = `custom-service-${Date.now()}`;
+  const name = `Custom Service ${Date.now()}`;
+  
+  const fullService: CSPService = {
+    id,
+    name,
+    category: 'other',
+    description: `Custom service: ${name}`,
+    website: '',
+    officialDocs: [],
+    directives: service.directives,
+    lastUpdated: new Date().toISOString(),
+  };
+
+  return Object.freeze(fullService);
+};
+
+/**
+ * Create a properly typed service definition (internal use)
+ */
+export const defineServiceInternal: DefineServiceInternalFn = service => {
   // Validate required fields at runtime in development
   if (process.env.NODE_ENV !== 'production') {
     const required = [
