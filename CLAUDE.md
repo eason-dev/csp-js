@@ -102,12 +102,6 @@ pnpm changeset
 - Select package or leave empty for all
 - Tags are created as `@csp-kit/package@version`
 
-**Legacy script (still available):**
-
-```bash
-./scripts/publish.sh [patch|minor|major]
-```
-
 Note: NPM provenance is disabled (`--provenance=false`) due to CI limitations.
 
 ## Architecture Notes
