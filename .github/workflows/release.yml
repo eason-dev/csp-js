@@ -11,7 +11,7 @@ on:
         required: false
         type: choice
         options:
-          - ''
+          - 'all'
           - '@csp-kit/generator'
           - '@csp-kit/data'
           - '@csp-kit/cli'
@@ -67,7 +67,7 @@ jobs:
 
       # Manual release for specific package
       - name: Manual Package Release
-        if: github.event_name == 'workflow_dispatch' && github.event.inputs.package != ''
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.package != 'all'
         run: |
           # Filter and publish specific package
           pnpm changeset publish --no-git-tag --filter="${{ github.event.inputs.package }}"
