@@ -204,6 +204,7 @@ console.log(GoogleAnalytics.directives); // { 'script-src': [...], ... }
 | **[📦 Service Catalog](https://csp-kit.eason.ch/services)**             | Browse all 106+ supported services              |
 | **[🤝 Contributing Guide](https://csp-kit.eason.ch/docs/contributing)** | How to contribute new services                  |
 | **[🔄 Migration Guide](https://csp-kit.eason.ch/docs/upgrade-guide)**   | Upgrading from older versions                   |
+| **[💻 Development Setup](./DEVELOPMENT.md)**                            | Complete IDE and environment setup              |
 
 ### Core Concepts
 

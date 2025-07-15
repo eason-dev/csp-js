@@ -47,6 +47,10 @@ csp-cli add --interactive
 
 ### 💻 **Development Setup**
 
+> **📖 For detailed setup instructions, see [DEVELOPMENT.md](./DEVELOPMENT.md)**
+
+Quick start:
+
 ```bash
 # 1. Fork & Clone
 git clone https://github.com/yourusername/csp-kit.git
@@ -64,6 +68,13 @@ pnpm test
 # 5. Start Development
 pnpm dev
 ```
+
+See [DEVELOPMENT.md](./DEVELOPMENT.md) for:
+
+- Complete IDE setup (VS Code extensions, settings)
+- Linting and formatting configuration
+- Troubleshooting common issues
+- Performance optimization tips
 
 ### 📝 **Commit Guidelines**
 

@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    // Essential
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next",
+    
+    // Highly Recommended
+    "vivaxy.vscode-conventional-commits",
+    "streetsidesoftware.code-spell-checker",
+    "christian-kohler.path-intellisense",
+    "aaron-bond.better-comments",
+    "usernamehw.errorlens",
+    
+    // Optional but Useful
+    "yoavbls.pretty-ts-errors",
+    "bradlc.vscode-tailwindcss",
+    "formulahendry.auto-rename-tag",
+    "naumovs.color-highlight",
+    "wayou.vscode-todo-highlight",
+    "gruntfuggly.todo-tree",
+    "eamodio.gitlens"
+  ]
+}
