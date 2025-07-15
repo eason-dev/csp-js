@@ -292,4 +292,3 @@ If a release has critical issues:
 
 - [Changesets Documentation](https://github.com/changesets/changesets)
 - [Conventional Commits](https://www.conventionalcommits.org/)
-- [npm Publishing Guide](./NPM_PUBLISHING_GUIDE.md)

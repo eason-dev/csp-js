@@ -85,7 +85,6 @@ console.log(result.header);
 | **[Service Definition Guide](./maintainer/SERVICE_DEFINITION_GUIDE.md)** | TypeScript service schema documentation |
 | **[Maintainer Guide](./maintainer/MAINTAINER_GUIDE.md)**                 | Project maintenance procedures          |
 | **[Release Process](./maintainer/RELEASE_PROCESS.md)**                   | How releases are managed                |
-| **[NPM Publishing Guide](./maintainer/NPM_PUBLISHING_GUIDE.md)**         | Package publishing procedures           |
 
 ## 🎯 What is CSP Kit?
 
