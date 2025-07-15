@@ -98,13 +98,19 @@ export type DefineServiceInternalFn = <T extends CSPService>(service: T) => T;
  */
 export type DefineServiceFn = (service: SimpleCSPService) => CSPService;
 
+// Counter to ensure unique IDs
+let serviceCounter = 0;
+
 /**
  * Create a simplified service definition for public use
  */
-export const defineService: DefineServiceFn = (service) => {
-  const id = `custom-service-${Date.now()}`;
-  const name = `Custom Service ${Date.now()}`;
-  
+export const defineService: DefineServiceFn = service => {
+  const timestamp = Date.now();
+  const counter = ++serviceCounter;
+  const random = Math.random().toString(36).substring(2, 8);
+  const id = `custom-service-${timestamp}-${counter}-${random}`;
+  const name = `Custom Service ${timestamp}`;
+
   const fullService: CSPService = {
     id,
     name,
