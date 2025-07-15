@@ -389,12 +389,8 @@ csp-cli add --interactive
 # Or manually create a service definition
 cat > new-service.ts << EOF
 import { defineService } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
 
 export const MyService = defineService({
-  id: 'my-service',
-  name: 'My Service',
-  category: ServiceCategory.ANALYTICS,
   directives: {
     'script-src': ['https://cdn.myservice.com'],
     'connect-src': ['https://api.myservice.com']

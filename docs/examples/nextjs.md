@@ -115,15 +115,10 @@ function CSPMeta({ nonce }: { nonce: string }) {
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { generateCSPHeader, defineService } from '@csp-kit/generator';
-import { GoogleAnalytics, Stripe, Typeform, Intercom, ServiceCategory } from '@csp-kit/data';
+import { GoogleAnalytics, Stripe, Typeform, Intercom } from '@csp-kit/data';
 
 // Custom service for your API
 const MyAPI = defineService({
-  id: 'my-api',
-  name: 'My API',
-  category: ServiceCategory.API,
-  description: 'Application API endpoints',
-  website: 'https://api.myapp.com',
   directives: {
     'connect-src': ['https://api.myapp.com'],
   },
@@ -265,15 +260,10 @@ export default MyApp;
 ```typescript
 // lib/csp.ts
 import { generateCSP, defineService } from '@csp-kit/generator';
-import { GoogleFonts, ServiceCategory } from '@csp-kit/data';
+import { GoogleFonts } from '@csp-kit/data';
 
 // Development tools service
 const NextDevTools = defineService({
-  id: 'next-dev-tools',
-  name: 'Next.js Dev Tools',
-  category: ServiceCategory.DEVELOPMENT,
-  description: 'Next.js development server and hot reload',
-  website: 'http://localhost:3000',
   directives: {
     'script-src': ["'unsafe-eval'"], // Required for hot reload
     'connect-src': [
@@ -362,15 +352,10 @@ export default function RootLayout({
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { generateCSPHeader, defineService } from '@csp-kit/generator';
-import { GoogleAnalytics, Stripe, Youtube, GoogleMaps, ServiceCategory } from '@csp-kit/data';
+import { GoogleAnalytics, Stripe, Youtube, GoogleMaps } from '@csp-kit/data';
 
 // Custom services for your features
 const ImageCDN = defineService({
-  id: 'image-cdn',
-  name: 'Image CDN',
-  category: ServiceCategory.CDN,
-  description: 'Next.js Image Optimization',
-  website: 'https://images.myapp.com',
   directives: {
     'img-src': [
       'https://images.myapp.com',
@@ -381,11 +366,6 @@ const ImageCDN = defineService({
 });
 
 const WebSocketAPI = defineService({
-  id: 'websocket-api',
-  name: 'WebSocket API',
-  category: ServiceCategory.API,
-  description: 'Real-time WebSocket connections',
-  website: 'wss://realtime.myapp.com',
   directives: {
     'connect-src': ['wss://realtime.myapp.com'],
   },
@@ -485,16 +465,10 @@ import {
   Stripe,
   Auth0,
   GoogleFonts,
-  ServiceCategory,
 } from '@csp-kit/data';
 
 // Custom services for SaaS
 const GraphQLAPI = defineService({
-  id: 'graphql-api',
-  name: 'GraphQL API',
-  category: ServiceCategory.API,
-  description: 'Application GraphQL endpoint',
-  website: 'https://api.yoursaas.com',
   directives: {
     'connect-src': [
       'https://api.yoursaas.com',
@@ -504,11 +478,6 @@ const GraphQLAPI = defineService({
 });
 
 const FileStorage = defineService({
-  id: 'file-storage',
-  name: 'File Storage',
-  category: ServiceCategory.CDN,
-  description: 'User file uploads',
-  website: 'https://files.yoursaas.com',
   directives: {
     'img-src': ['https://files.yoursaas.com'],
     'media-src': ['https://files.yoursaas.com'],
@@ -787,14 +756,8 @@ describe('CSP Compliance', () => {
 ```typescript
 // Use environment-specific configuration
 import { defineService } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
 
 const NextJSDev = defineService({
-  id: 'nextjs-dev',
-  name: 'Next.js Development',
-  category: ServiceCategory.DEVELOPMENT,
-  description: 'Next.js dev server requirements',
-  website: 'http://localhost:3000',
   directives: {
     'script-src': ["'unsafe-eval'"], // For Fast Refresh
     'connect-src': [
@@ -812,11 +775,6 @@ const NextJSDev = defineService({
 ```typescript
 // Add image domains for next/image
 const NextImages = defineService({
-  id: 'next-images',
-  name: 'Next.js Images',
-  category: ServiceCategory.CDN,
-  description: 'Next.js image optimization',
-  website: 'https://your-domain.com',
   directives: {
     'img-src': [
       'https://your-domain.com',

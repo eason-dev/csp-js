@@ -134,18 +134,14 @@ const reportOnlyHeader = generateReportOnlyCSP({
 
 ### `defineService(definition)`
 
-Define a custom service with full TypeScript support.
+Define a custom service with minimal configuration - just specify the CSP directives you need.
 
 **Syntax:**
 
 ```typescript
 import { defineService } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
 
 const MyService = defineService({
-  id: 'my-service',
-  name: 'My Service',
-  category: ServiceCategory.API,
   directives: {
     'connect-src': ['https://api.myservice.com'],
   },
@@ -155,26 +151,8 @@ const MyService = defineService({
 **Parameters:**
 
 ```typescript
-interface ServiceDefinition {
-  // Required fields
-  id: string; // Unique kebab-case identifier
-  name: string; // Human-readable name
-  category: ServiceCategory; // Service category
-  description: string; // Brief description
-  website: string; // Official website URL
-  directives: CSPDirectives; // CSP directives
-
-  // Optional fields
-  officialDocs?: string[]; // Documentation URLs
-  notes?: string; // Implementation notes
-  aliases?: string[]; // Alternative identifiers
-  requiresDynamic?: boolean; // Requires 'strict-dynamic'
-  requiresNonce?: boolean; // Requires nonce
-  deprecated?: DeprecationInfo; // Deprecation information
-  conflicts?: string[]; // Conflicting service IDs
-  validate?: (directives: CSPDirectives) => ValidationResult;
-  lastUpdated?: string; // ISO timestamp
-  verifiedAt?: string; // Last verification timestamp
+interface SimpleCSPService {
+  directives: CSPDirectives; // CSP directives required for this service
 }
 ```
 
@@ -185,15 +163,9 @@ interface ServiceDefinition {
 
 ```typescript
 import { defineService } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
 
 // Define a custom CDN service
 const MyCDN = defineService({
-  id: 'my-cdn',
-  name: 'My CDN',
-  category: ServiceCategory.CDN,
-  description: 'Custom CDN for static assets',
-  website: 'https://mycdn.com',
   directives: {
     'img-src': ['https://cdn.myapp.com'],
     'font-src': ['https://cdn.myapp.com'],
@@ -443,15 +415,10 @@ app.use((req, res, next) => {
 
 ```typescript
 import { defineService, generateCSP } from '@csp-kit/generator';
-import { ServiceCategory, GoogleAnalytics } from '@csp-kit/data';
+import { GoogleAnalytics } from '@csp-kit/data';
 
 // Pattern 1: Environment-specific services
 const DevServer = defineService({
-  id: 'dev-server',
-  name: 'Development Server',
-  category: ServiceCategory.DEVELOPMENT,
-  description: 'Local development server',
-  website: 'http://localhost:3000',
   directives: {
     'script-src': ['http://localhost:3000', "'unsafe-eval'"],
     'connect-src': ['ws://localhost:3000'],
@@ -461,11 +428,6 @@ const DevServer = defineService({
 // Pattern 2: Dynamic service creation
 function createRegionalCDN(region: 'us' | 'eu' | 'asia') {
   return defineService({
-    id: `cdn-${region}`,
-    name: `CDN ${region.toUpperCase()}`,
-    category: ServiceCategory.CDN,
-    description: `Regional CDN for ${region}`,
-    website: `https://cdn-${region}.example.com`,
     directives: {
       'img-src': [`https://cdn-${region}.example.com`],
       'script-src': [`https://cdn-${region}.example.com`],
