@@ -14,8 +14,8 @@ csp-kit/
 │   ├── web/             # Interactive web interface (Next.js)
 │   └── docs/            # Documentation site
 └── packages/
-    ├── ui/              # Shared UI components
-    └── typescript-config/ # Shared TypeScript configurations
+    ├── typescript-config/ # Shared TypeScript configurations
+    └── eslint-config/   # Shared ESLint configurations
 ```
 
 ## Design Principles

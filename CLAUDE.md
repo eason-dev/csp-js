@@ -41,7 +41,6 @@ This is a Turborepo monorepo with TypeScript and React/Next.js applications. The
   - `generator/` - Core CSP generation library (@csp-kit/generator)
   - `data/` - Service definitions database (@csp-kit/data)
   - `cli/` - Command-line tools (@csp-kit/cli)
-  - `ui/` - Shared React component library (@repo/ui)
   - `eslint-config/` - ESLint configurations
   - `typescript-config/` - TypeScript configurations
 
@@ -60,7 +59,7 @@ This is a Turborepo monorepo with TypeScript and React/Next.js applications. The
 
 - `pnpm exec turbo dev --filter=web` - Run only the web app
 - `pnpm exec turbo build --filter=docs` - Build only the docs app
-- `pnpm exec turbo lint --filter=@repo/ui` - Lint only the UI package
+- `pnpm exec turbo lint --filter=@csp-kit/generator` - Lint only the generator package
 - `pnpm --filter @csp-kit/generator test` - Test specific package
 
 ### Commit Guidelines
@@ -147,17 +146,10 @@ Note: NPM provenance is disabled (`--provenance=false`) due to CI limitations.
   });
   ```
 
-### Component Library (`@repo/ui`)
-
-- Exports components using path-based exports (`./*` → `./src/*.tsx`)
-- Components are client-side React components
-- Has a code generator: `pnpm generate:component` for creating new components
-- Uses Turbo generators with Handlebars templates
-
 ### App Structure
 
 - Both apps use Next.js 15 with React 19
-- Apps consume the shared UI library via `@repo/ui` imports
+- Apps use Radix UI components directly for UI elements
 - TypeScript strict mode enabled across all packages
 - ESLint configured with zero warnings tolerance (`--max-warnings 0`)
 

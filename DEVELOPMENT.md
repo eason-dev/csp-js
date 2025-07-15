@@ -164,7 +164,7 @@ pnpm --filter @csp-kit/generator dev
 # Linting (zero warnings policy)
 pnpm lint                   # Check all packages
 pnpm lint:fix              # Auto-fix issues
-pnpm exec turbo lint --filter=@repo/ui  # Lint specific package
+pnpm exec turbo lint --filter=@csp-kit/generator  # Lint specific package
 
 # Type checking
 pnpm check-types           # Check all packages
@@ -421,7 +421,7 @@ pnpm --loglevel=verbose install
 
 ```bash
 # Only work on what you need
-pnpm exec turbo dev --filter=web --filter=@repo/ui
+pnpm exec turbo dev --filter=web --filter=@csp-kit/generator
 
 # Build only changed packages
 pnpm exec turbo build --filter='[HEAD^1]'

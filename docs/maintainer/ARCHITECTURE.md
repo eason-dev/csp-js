@@ -92,7 +92,6 @@ csp-kit/
 │   ├── generator/            # Core CSP generation library
 │   ├── data/                # Service definitions database
 │   ├── cli/                 # Command-line interface
-│   ├── ui/                  # Shared UI components
 │   ├── eslint-config/       # Shared ESLint configuration
 │   └── typescript-config/   # Shared TypeScript configuration
 ├── apps/
