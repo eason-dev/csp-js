@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Youtube = defineService({
+export const Youtube = defineServiceInternal({
   id: 'youtube',
   name: 'YouTube',
   category: ServiceCategory.VIDEO,

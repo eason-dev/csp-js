@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Swiftype = defineService({
+export const Swiftype = defineServiceInternal({
   id: 'swiftype',
   name: 'Swiftype',
   category: ServiceCategory.OTHER,

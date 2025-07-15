@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const GooglePay = defineService({
+export const GooglePay = defineServiceInternal({
   id: 'google-pay',
   name: 'Google Pay',
   category: ServiceCategory.PAYMENT,

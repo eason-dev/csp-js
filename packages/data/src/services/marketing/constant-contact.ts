@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const ConstantContact = defineService({
+export const ConstantContact = defineServiceInternal({
   id: 'constant-contact',
   name: 'Constant Contact',
   category: ServiceCategory.OTHER,

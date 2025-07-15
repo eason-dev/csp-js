@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Squarespace = defineService({
+export const Squarespace = defineServiceInternal({
   id: 'squarespace',
   name: 'Squarespace',
   category: ServiceCategory.OTHER,

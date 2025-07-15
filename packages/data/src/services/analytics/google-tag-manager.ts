@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const GoogleTagManager = defineService({
+export const GoogleTagManager = defineServiceInternal({
   id: 'google-tag-manager',
   name: 'Google Tag Manager',
   category: ServiceCategory.ANALYTICS,

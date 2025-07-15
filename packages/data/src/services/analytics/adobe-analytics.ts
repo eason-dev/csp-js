@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const AdobeAnalytics = defineService({
+export const AdobeAnalytics = defineServiceInternal({
   id: 'adobe-analytics',
   name: 'Adobe Analytics',
   category: ServiceCategory.ANALYTICS,

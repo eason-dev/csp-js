@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const TwitterAds = defineService({
+export const TwitterAds = defineServiceInternal({
   id: 'twitter-ads',
   name: 'Twitter Ads',
   category: ServiceCategory.ADVERTISING,

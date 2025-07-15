@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Hotjar = defineService({
+export const Hotjar = defineServiceInternal({
   id: 'hotjar',
   name: 'Hotjar',
   category: ServiceCategory.ANALYTICS,

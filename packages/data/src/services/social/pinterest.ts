@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Pinterest = defineService({
+export const Pinterest = defineServiceInternal({
   id: 'pinterest',
   name: 'Pinterest',
   category: ServiceCategory.SOCIAL,

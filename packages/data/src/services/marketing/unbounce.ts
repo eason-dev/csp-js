@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Unbounce = defineService({
+export const Unbounce = defineServiceInternal({
   id: 'unbounce',
   name: 'Unbounce',
   category: ServiceCategory.OTHER,

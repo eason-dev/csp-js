@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const GhostInspector = defineService({
+export const GhostInspector = defineServiceInternal({
   id: 'ghost-inspector',
   name: 'Ghost Inspector',
   category: ServiceCategory.TESTING,

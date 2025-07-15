@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Typeform = defineService({
+export const Typeform = defineServiceInternal({
   id: 'typeform',
   name: 'Typeform',
   category: ServiceCategory.FORMS,

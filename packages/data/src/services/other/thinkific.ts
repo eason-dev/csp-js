@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Thinkific = defineService({
+export const Thinkific = defineServiceInternal({
   id: 'thinkific',
   name: 'Thinkific',
   category: ServiceCategory.OTHER,

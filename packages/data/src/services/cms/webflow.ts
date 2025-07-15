@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Webflow = defineService({
+export const Webflow = defineServiceInternal({
   id: 'webflow',
   name: 'Webflow',
   category: ServiceCategory.OTHER,

@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Fastly = defineService({
+export const Fastly = defineServiceInternal({
   id: 'fastly',
   name: 'Fastly',
   category: ServiceCategory.CDN,

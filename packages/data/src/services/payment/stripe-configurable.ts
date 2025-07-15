@@ -1,4 +1,4 @@
-import { defineService, createConfigurableService } from '../../service-types.js';
+import { defineServiceInternal, createConfigurableService } from '../../service-types.js';
 import { ServiceCategory, type CSPDirectives } from '../../types.js';
 
 // Example of a configurable service
@@ -8,7 +8,7 @@ interface StripeOptions {
   paymentRequest?: boolean;
 }
 
-const baseStripe = defineService({
+const baseStripe = defineServiceInternal({
   id: 'stripe-configurable',
   name: 'Stripe (Configurable)',
   category: ServiceCategory.PAYMENT,

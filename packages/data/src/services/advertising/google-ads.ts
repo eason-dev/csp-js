@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const GoogleAds = defineService({
+export const GoogleAds = defineServiceInternal({
   id: 'google-ads',
   name: 'Google Ads',
   category: ServiceCategory.ADVERTISING,

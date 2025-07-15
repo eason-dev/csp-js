@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Whatsapp = defineService({
+export const Whatsapp = defineServiceInternal({
   id: 'whatsapp',
   name: 'WhatsApp',
   category: ServiceCategory.SOCIAL,

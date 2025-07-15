@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const TawkTo = defineService({
+export const TawkTo = defineServiceInternal({
   id: 'tawk-to',
   name: 'Tawk.to',
   category: ServiceCategory.CHAT,

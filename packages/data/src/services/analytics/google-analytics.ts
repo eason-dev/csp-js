@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const GoogleAnalytics = defineService({
+export const GoogleAnalytics = defineServiceInternal({
   id: 'google-analytics',
   name: 'Google Analytics 4',
   category: ServiceCategory.ANALYTICS,

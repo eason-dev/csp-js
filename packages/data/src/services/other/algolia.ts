@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Algolia = defineService({
+export const Algolia = defineServiceInternal({
   id: 'algolia',
   name: 'Algolia',
   category: ServiceCategory.OTHER,

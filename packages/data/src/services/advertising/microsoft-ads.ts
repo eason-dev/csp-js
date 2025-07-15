@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const MicrosoftAds = defineService({
+export const MicrosoftAds = defineServiceInternal({
   id: 'microsoft-ads',
   name: 'Microsoft Ads',
   category: ServiceCategory.ADVERTISING,

@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const PlausibleAnalytics = defineService({
+export const PlausibleAnalytics = defineServiceInternal({
   id: 'plausible-analytics',
   name: 'Plausible Analytics',
   category: ServiceCategory.ANALYTICS,

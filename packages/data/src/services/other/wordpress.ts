@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Wordpress = defineService({
+export const Wordpress = defineServiceInternal({
   id: 'wordpress',
   name: 'WordPress',
   category: ServiceCategory.OTHER,

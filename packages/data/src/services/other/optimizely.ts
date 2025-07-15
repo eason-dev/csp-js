@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Optimizely = defineService({
+export const Optimizely = defineServiceInternal({
   id: 'optimizely',
   name: 'Optimizely',
   category: ServiceCategory.OTHER,

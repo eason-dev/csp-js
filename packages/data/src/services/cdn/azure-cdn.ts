@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const AzureCdn = defineService({
+export const AzureCdn = defineServiceInternal({
   id: 'azure-cdn',
   name: 'Azure CDN',
   category: ServiceCategory.CDN,

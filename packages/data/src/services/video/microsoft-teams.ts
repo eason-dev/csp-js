@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const MicrosoftTeams = defineService({
+export const MicrosoftTeams = defineServiceInternal({
   id: 'microsoft-teams',
   name: 'Microsoft Teams',
   category: ServiceCategory.VIDEO,

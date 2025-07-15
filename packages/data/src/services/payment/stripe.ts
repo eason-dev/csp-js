@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Stripe = defineService({
+export const Stripe = defineServiceInternal({
   id: 'stripe',
   name: 'Stripe',
   category: ServiceCategory.PAYMENT,

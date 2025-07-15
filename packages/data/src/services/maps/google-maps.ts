@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const GoogleMaps = defineService({
+export const GoogleMaps = defineServiceInternal({
   id: 'google-maps',
   name: 'Google Maps',
   category: ServiceCategory.MAPS,
