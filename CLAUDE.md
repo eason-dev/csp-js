@@ -20,6 +20,7 @@ CSP Kit is a modern Content Security Policy (CSP) toolkit that simplifies CSP he
 - **Documentation**: Comprehensive guides and API reference
 
 ### Key Features
+
 - 🎯 Service-first configuration (not directive-based)
 - 📦 100+ pre-configured services across 19 categories
 - 🌳 Tree-shakeable ES modules with TypeScript
@@ -62,12 +63,44 @@ This is a Turborepo monorepo with TypeScript and React/Next.js applications. The
 - `pnpm exec turbo lint --filter=@repo/ui` - Lint only the UI package
 - `pnpm --filter @csp-kit/generator test` - Test specific package
 
-### Publishing
+### Commit Guidelines
 
-Use the custom publish script for ordered package publishing:
+Use conventional commits for all changes:
+
 ```bash
-./scripts/publish.sh [patch|minor|major]
+# Format: <type>(<scope>): <subject>
+git commit -m "feat(generator): add new CSP directive support"
+git commit -m "fix(data): correct service configuration"
+git commit -m "docs(web): update API examples"
+
+# Or use interactive commit tool:
+pnpm commit
 ```
+
+Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
+Valid scopes: `generator`, `data`, `cli`, `ui`, `web`, `docs`, `deps`, `release`, `config`, `ci`, `root`
+
+### Releasing with Changesets
+
+The project uses Changesets for version management:
+
+```bash
+# Add a changeset for your changes
+pnpm changeset
+
+# The release process is automated:
+# 1. Changesets creates a "Version Packages" PR
+# 2. Merge the PR to trigger publishing
+# 3. Packages are published to npm automatically
+# 4. GitHub releases are created with changelogs
+```
+
+**Manual release (for specific packages):**
+
+- Go to Actions → Release workflow
+- Click "Run workflow"
+- Select package or leave empty for all
+- Tags are created as `@csp-kit/package@version`
 
 Note: NPM provenance is disabled (`--provenance=false`) due to CI limitations.
 
@@ -106,10 +139,12 @@ Note: NPM provenance is disabled (`--provenance=false`) due to CI limitations.
   generateCSP({
     services: [GoogleAnalytics, Stripe],
     nonce: true,
-    additionalRules: { /* ... */ },
+    additionalRules: {
+      /* ... */
+    },
     development: { unsafeEval: true },
-    production: { reportUri: 'https://...' }
-  })
+    production: { reportUri: 'https://...' },
+  });
   ```
 
 ### Component Library (`@repo/ui`)
@@ -154,6 +189,9 @@ Note: NPM provenance is disabled (`--provenance=false`) due to CI limitations.
 - Removal of V2 type annotations (CSPOptionsV2 → CSPOptions)
 - Fixed npm publish provenance errors
 - Updated documentation for PascalCase imports
+- **New Release Process**: Implemented Changesets + Conventional Commits
+- **CI/CD**: Added GitHub Actions workflows for automated testing and releases
+- **Independent Versioning**: Packages can now be released independently
 
 ## Important Notes
 

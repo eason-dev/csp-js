@@ -7,6 +7,7 @@ The CSP Kit web interface provides an interactive, visual way to generate Conten
 **👉 [csp-kit.eason.ch](https://csp-kit.eason.ch)**
 
 The web interface is fully responsive and works on:
+
 - ✅ **Desktop browsers** (Chrome, Firefox, Safari, Edge)
 - ✅ **Mobile devices** (iOS Safari, Android Chrome)
 - ✅ **Tablets** (iPad, Android tablets)
@@ -14,30 +15,35 @@ The web interface is fully responsive and works on:
 ## ✨ Key Features
 
 ### 🎯 **Visual Service Selection**
+
 - Browse 106+ services with intuitive categories
 - Search and filter services by name or functionality
 - View detailed information about each service's CSP requirements
 - Add/remove services with simple clicks
 
 ### ⚡ **Real-time CSP Generation**
+
 - See your CSP policy update instantly as you modify services
 - Visual preview of how changes affect your security policy
 - Color-coded CSP directives for easy understanding
 - Automatic validation with warnings and suggestions
 
 ### 📋 **Multiple Output Formats**
+
 - **HTTP Header**: Ready-to-use header string
 - **HTML Meta Tag**: For static sites and client-side implementation
 - **JSON Configuration**: For programmatic usage
 - **Nginx/Apache**: Server configuration snippets
 
 ### 🔗 **Shareable Configurations**
+
 - Generate shareable URLs for your CSP configuration
 - Collaborate with team members by sharing links
 - Save different configurations for different environments
 - Export configurations for documentation
 
 ### 🔍 **Service Discovery**
+
 - Explore services by category (Analytics, Payment, Social, etc.)
 - Search functionality with fuzzy matching
 - Service recommendations based on common combinations
@@ -73,6 +79,7 @@ When you first visit the interface:
 ### **Service Browser**
 
 **Left Panel: Service Categories**
+
 - Analytics (Google Analytics, Mixpanel, etc.)
 - Payment (Stripe, PayPal, etc.)
 - Social (Facebook, Twitter, etc.)
@@ -80,6 +87,7 @@ When you first visit the interface:
 - And 9+ more categories...
 
 **Main Area: Service Grid**
+
 - Service cards with name, description, and category
 - Search bar for quick filtering
 - Add/remove buttons for each service
@@ -88,18 +96,21 @@ When you first visit the interface:
 ### **CSP Builder**
 
 **Right Panel: Configuration**
+
 - Selected services list
 - Custom rules input
 - Nonce generation options
 - Report URI configuration
 
 **Output Section**
+
 - Live CSP preview
 - Multiple format options
 - Copy to clipboard buttons
 - Validation warnings and suggestions
 
 ### **Header**
+
 - CSP Kit branding and navigation
 - Links to documentation and GitHub
 - Theme toggle (light/dark mode)
@@ -110,12 +121,14 @@ When you first visit the interface:
 The web interface is fully optimized for mobile devices:
 
 ### **Mobile Navigation**
+
 - Collapsible service browser
 - Touch-friendly buttons and controls
 - Swipe gestures for category switching
 - Responsive grid layouts
 
 ### **Mobile Features**
+
 - **Quick search** - Search services on small screens
 - **Condensed view** - Essential information only
 - **Share sheet integration** - Native sharing on mobile
@@ -136,6 +149,7 @@ Image Sources: data:, blob:
 ### **Nonce Generation**
 
 Enable nonce support for secure inline scripts:
+
 - Toggle nonce generation
 - See example usage with generated nonce
 - Copy nonce value for your implementation
@@ -143,6 +157,7 @@ Enable nonce support for secure inline scripts:
 ### **Report URI Configuration**
 
 Set up CSP violation reporting:
+
 ```
 Report URI: https://my-site.com/csp-report
 ```
@@ -150,6 +165,7 @@ Report URI: https://my-site.com/csp-report
 ### **Environment Presets**
 
 Save different configurations for:
+
 - **Development** - More permissive policies for debugging
 - **Staging** - Testing configurations
 - **Production** - Strict security policies
@@ -157,6 +173,7 @@ Save different configurations for:
 ### **Validation and Warnings**
 
 The interface provides intelligent feedback:
+
 - ⚠️ **Security warnings** for unsafe directives
 - 💡 **Suggestions** for optimization
 - ❌ **Errors** for invalid configurations
@@ -173,6 +190,7 @@ https://csp-kit.eason.ch?services=google-analytics,stripe,google-fonts&nonce=tru
 ```
 
 **URL Parameters:**
+
 - `services` - Comma-separated list of service IDs
 - `nonce` - Enable nonce generation (true/false)
 - `custom` - Base64-encoded custom rules
@@ -188,6 +206,7 @@ https://csp-kit.eason.ch?services=google-analytics,stripe,google-fonts&nonce=tru
 ### **Using Shared Links**
 
 When someone visits your shared link:
+
 - Configuration loads automatically
 - All services and settings are preserved
 - Recipients can modify and create their own links
@@ -199,6 +218,7 @@ Each service provides detailed information:
 ### **Service Details Modal**
 
 Click on any service to see:
+
 - **Description** - What the service does
 - **CSP Requirements** - Exact domains and directives needed
 - **Official Documentation** - Links to vendor CSP guides
@@ -217,6 +237,7 @@ Google Analytics requires:
 ### **Implementation Examples**
 
 See how to implement each service:
+
 - HTML meta tag examples
 - Server configuration snippets
 - Framework-specific code
@@ -224,17 +245,20 @@ See how to implement each service:
 ## 🎨 Customization
 
 ### **Theme Options**
+
 - **Light mode** - Default clean interface
 - **Dark mode** - Easy on the eyes for long sessions
 - **Auto mode** - Follows system preference
 
 ### **Display Preferences**
+
 - **Compact view** - More services visible at once
 - **Detailed view** - More information per service
 - **Grid layout** - Card-based service browser
 - **List layout** - Dense list of services
 
 ### **Export Options**
+
 - **Copy to clipboard** - Quick copying
 - **Download as file** - Save configuration locally
 - **Email configuration** - Send to team members
@@ -268,16 +292,19 @@ See how to implement each service:
 ### **Common Issues**
 
 **Services not loading:**
+
 - Check internet connection
 - Try refreshing the page
 - Clear browser cache
 
 **CSP not working in browser:**
+
 - Verify you copied the complete header
 - Check for typos in service names
 - Ensure all required services are included
 
 **Sharing links not working:**
+
 - Check URL encoding for special characters
 - Verify all services exist in current version
 - Try regenerating the share link
@@ -285,12 +312,14 @@ See how to implement each service:
 ### **Browser Compatibility**
 
 **Fully supported:**
+
 - Chrome 90+
 - Firefox 88+
 - Safari 14+
 - Edge 90+
 
 **Limited support:**
+
 - Internet Explorer (basic functionality only)
 - Very old mobile browsers (degraded experience)
 
@@ -306,6 +335,7 @@ See how to implement each service:
 ### **CSP Concepts**
 
 The web interface includes educational content:
+
 - **CSP directive explanations** - What each directive does
 - **Security implications** - Why CSP matters
 - **Common patterns** - Typical service combinations
@@ -314,6 +344,7 @@ The web interface includes educational content:
 ### **Interactive Tutorials**
 
 Built-in tutorials guide you through:
+
 - Creating your first CSP policy
 - Understanding different service categories
 - Using advanced features
@@ -322,6 +353,7 @@ Built-in tutorials guide you through:
 ### **Help System**
 
 Access help content throughout the interface:
+
 - **Tooltips** - Quick explanations for all features
 - **Help panel** - Detailed documentation
 - **Examples** - Real-world usage scenarios
@@ -332,6 +364,7 @@ Access help content throughout the interface:
 ### **Automatic Updates**
 
 The web interface automatically receives:
+
 - **New services** - Added weekly
 - **Service updates** - Updated when requirements change
 - **Feature improvements** - Regular enhancements
@@ -340,6 +373,7 @@ The web interface automatically receives:
 ### **Offline Support**
 
 Limited functionality works offline:
+
 - Previously loaded services remain available
 - CSP generation works with cached data
 - Saved configurations persist locally
@@ -348,6 +382,7 @@ Limited functionality works offline:
 ### **Data Synchronization**
 
 Your data is handled with privacy in mind:
+
 - **No account required** - Anonymous usage
 - **Local storage only** - Configurations saved in browser
 - **No tracking** - Minimal analytics for improvement
@@ -372,6 +407,7 @@ Your data is handled with privacy in mind:
 ### **Expert Mode**
 
 Enable expert mode for:
+
 - **Raw CSP editing** - Direct directive editing
 - **Advanced validation** - More detailed checks
 - **Performance metrics** - CSP size and complexity analysis

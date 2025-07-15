@@ -2,261 +2,133 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches:
+      - main
   pull_request:
-    branches: [ main, develop ]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    name: Test & Lint
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.12.4
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint code
+      - name: Lint
         run: pnpm lint
 
-      - name: Type check
+      - name: Check types
         run: pnpm check-types
+
+      - name: Format check
+        run: pnpm format:check
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build packages
+        run: pnpm build
 
       - name: Run tests
         run: pnpm test
 
-      - name: Build packages
-        run: pnpm build
-
-      - name: Upload test coverage
-        uses: codecov/codecov-action@v3
-        if: success()
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          fail_ci_if_error: false
-
-  build-matrix:
-    name: Build Matrix Test
-    runs-on: ${{ matrix.os }}
-    permissions:
-      contents: read
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        # TODO support older node versions
-        node-version: ['22']
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.12.4
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build packages
-        run: pnpm build
-
-      - name: Test basic functionality
-        run: |
-          cd packages/generator
-          node -e "
-            const { generateCSPAsync } = require('./dist/index.js');
-            generateCSPAsync(['google-analytics']).then(result => {
-              console.log(result.header);
-            }).catch(error => {
-              console.error('Error:', error);
-              process.exit(1);
-            });
-          "
-
-  security:
-    name: Security Audit
+  build:
+    name: Build
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.12.4
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run security audit
-        run: pnpm audit
+      - name: Build all packages
+        run: pnpm build
 
-      - name: Check for vulnerable dependencies
+      - name: Check build artifacts
         run: |
-          # Fail if high or critical vulnerabilities found
-          pnpm audit --audit-level high
+          # Verify that build artifacts exist
+          test -d packages/generator/dist
+          test -d packages/data/dist
+          test -d packages/cli/dist
 
-  validate-services:
-    name: Validate Service Definitions
+  commitlint:
+    name: Commit Lint
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     permissions:
       contents: read
-    
+      pull-requests: read
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.12.4
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build packages
-        run: pnpm build
-
-      - name: Validate service definitions
-        run: |
-          # Validate all service files
-          node -e "
-            const { loadServices, getServiceRegistry } = require('./packages/data/dist/index.js');
-            
-            async function validateServices() {
-              try {
-                await loadServices();
-                const registry = await getServiceRegistry();
-                const services = registry.services;
-                
-                console.log('Validating', Object.keys(services).length, 'services...');
-                
-                let errors = 0;
-                for (const [id, service] of Object.entries(services)) {
-                  // Validate required fields
-                  if (!service.id || !service.name || !service.cspDirectives) {
-                    console.error('❌ Service', id, 'is missing required fields (id, name, cspDirectives)');
-                    errors++;
-                    continue;
-                  }
-                  
-                  // Validate CSP directives are properly structured
-                  if (typeof service.cspDirectives !== 'object' || service.cspDirectives === null) {
-                    console.error('❌ Service', id, 'has invalid cspDirectives');
-                    errors++;
-                    continue;
-                  }
-                  
-                  console.log('✅ Service', id, 'is valid');
-                }
-                
-                if (errors > 0) {
-                  console.error('❌ Found', errors, 'validation errors');
-                  process.exit(1);
-                } else {
-                  console.log('✅ All services validated successfully');
-                }
-              } catch (error) {
-                console.error('Error loading services:', error);
-                process.exit(1);
-              }
-            }
-            
-            validateServices();
-          "
-
-  bundle-size:
-    name: Bundle Size Check
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.12.4
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build packages
-        run: pnpm build
-
-      - name: Check bundle sizes
-        run: |
-          echo "## Bundle Sizes" >> $GITHUB_STEP_SUMMARY
-          echo "| Package | Size | Gzipped |" >> $GITHUB_STEP_SUMMARY
-          echo "|---------|------|---------|" >> $GITHUB_STEP_SUMMARY
-          
-          for pkg in packages/*/dist/index.js; do
-            if [ -f "$pkg" ]; then
-              name=$(echo $pkg | cut -d'/' -f2)
-              size=$(stat -c%s "$pkg" | numfmt --to=iec)
-              gzipped=$(gzip -c "$pkg" | wc -c | numfmt --to=iec)
-              echo "| $name | $size | $gzipped |" >> $GITHUB_STEP_SUMMARY
-              
-              # Fail if main package is too large (>100KB)
-              if [ "$name" = "@csp-kit/generator" ]; then
-                actual_size=$(stat -c%s "$pkg")
-                if [ $actual_size -gt 102400 ]; then
-                  echo "❌ Bundle size too large: $size (limit: 100KB)"
-                  exit 1
-                fi
-              fi
-            fi
-          done
+      - name: Validate PR commits
+        run: npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose

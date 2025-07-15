@@ -38,20 +38,24 @@ csp-cli check stripe --url https://example.com
 Add a new service definition to the CSP Kit database.
 
 **Syntax:**
+
 ```bash
 csp-cli add [options]
 ```
 
 **Options:**
+
 - `-i, --interactive` - Use interactive mode (recommended)
 - `-f, --file <file>` - Load service definition from JSON file
 
 **Interactive Mode (Recommended):**
+
 ```bash
 csp-cli add --interactive
 ```
 
 The interactive mode will prompt you for:
+
 - Service ID and name
 - Category selection
 - Website and documentation URLs
@@ -59,6 +63,7 @@ The interactive mode will prompt you for:
 - Testing and monitoring configuration
 
 **File Mode:**
+
 ```bash
 # Create service-definition.json
 {
@@ -78,6 +83,7 @@ csp-cli add --file service-definition.json
 ```
 
 **Examples:**
+
 ```bash
 # Add service interactively
 csp-cli add -i
@@ -91,18 +97,22 @@ csp-cli add --file ./new-service.json
 Update an existing service definition.
 
 **Syntax:**
+
 ```bash
 csp-cli update <service-id> [options]
 ```
 
 **Arguments:**
+
 - `service-id` - The ID of the service to update
 
 **Options:**
+
 - `-i, --interactive` - Use interactive mode
 - `-f, --file <file>` - Load updates from JSON file
 
 **Examples:**
+
 ```bash
 # Update service interactively
 csp-cli update google-analytics --interactive
@@ -119,14 +129,17 @@ csp-cli update typeform
 Validate service definitions for correctness and completeness.
 
 **Syntax:**
+
 ```bash
 csp-cli validate [options]
 ```
 
 **Options:**
+
 - `-s, --service <service-id>` - Validate specific service only
 
 **Examples:**
+
 ```bash
 # Validate all services
 csp-cli validate
@@ -139,6 +152,7 @@ csp-cli validate -s stripe -s typeform
 ```
 
 **Validation Checks:**
+
 - ✅ Required fields present
 - ✅ Valid category values
 - ✅ Proper URL formats
@@ -151,17 +165,21 @@ csp-cli validate -s stripe -s typeform
 Check if a service's CSP requirements have changed by analyzing their current implementation.
 
 **Syntax:**
+
 ```bash
 csp-cli check <service-id> [options]
 ```
 
 **Arguments:**
+
 - `service-id` - The ID of the service to check
 
 **Options:**
+
 - `-u, --url <url>` - Custom URL to check (optional)
 
 **Examples:**
+
 ```bash
 # Check service using default test URLs
 csp-cli check google-analytics
@@ -174,6 +192,7 @@ csp-cli check google-analytics stripe typeform
 ```
 
 **What it checks:**
+
 - 🔍 Analyzes actual service implementation
 - 📊 Compares with current CSP definition
 - ⚠️ Reports discrepancies and changes
@@ -184,16 +203,19 @@ csp-cli check google-analytics stripe typeform
 List available services with filtering and search capabilities.
 
 **Syntax:**
+
 ```bash
 csp-cli list [options]
 ```
 
 **Options:**
+
 - `-c, --category <category>` - Filter by category
 - `-s, --search <query>` - Search services
 - `--json` - Output in JSON format
 
 **Examples:**
+
 ```bash
 # List all services
 csp-cli list
@@ -209,6 +231,7 @@ csp-cli list --json
 ```
 
 **Categories:**
+
 - `analytics` - Analytics and tracking
 - `advertising` - Ad networks
 - `social` - Social media widgets
@@ -228,11 +251,13 @@ csp-cli list --json
 Search for services by name, description, or functionality.
 
 **Syntax:**
+
 ```bash
 csp-cli search <query>
 ```
 
 **Examples:**
+
 ```bash
 # Search for Google services
 csp-cli search "google"
@@ -249,19 +274,23 @@ csp-cli search "analytics"
 Generate CSP policies from the command line.
 
 **Syntax:**
+
 ```bash
 csp-cli generate <services...> [options]
 ```
 
 **Arguments:**
+
 - `services...` - List of service IDs
 
 **Options:**
+
 - `--nonce` - Include nonce generation
 - `--report-only` - Generate report-only header
 - `--format <format>` - Output format (header, meta, json)
 
 **Examples:**
+
 ```bash
 # Generate CSP header
 csp-cli generate google-analytics stripe
@@ -315,22 +344,26 @@ Create `.csp-kit.json` in your project root:
 ### Contributing a New Service
 
 1. **Research the service**
+
    ```bash
    # Check if service already exists
    csp-cli search "service-name"
    ```
 
 2. **Add the service**
+
    ```bash
    csp-cli add --interactive
    ```
 
 3. **Validate the service**
+
    ```bash
    csp-cli validate --service new-service-id
    ```
 
 4. **Test the service**
+
    ```bash
    csp-cli check new-service-id --url https://test-url.com
    ```
@@ -340,11 +373,13 @@ Create `.csp-kit.json` in your project root:
 ### Updating Existing Services
 
 1. **Check for changes**
+
    ```bash
    csp-cli check service-id
    ```
 
 2. **Update if needed**
+
    ```bash
    csp-cli update service-id --interactive
    ```
@@ -376,14 +411,11 @@ When adding services manually, use this JSON schema:
 ```json
 {
   "id": "service-id",
-  "name": "Service Name", 
+  "name": "Service Name",
   "category": "analytics",
   "description": "Brief description of what this service does",
   "website": "https://service.com",
-  "officialDocs": [
-    "https://docs.service.com/csp",
-    "https://help.service.com/security"
-  ],
+  "officialDocs": ["https://docs.service.com/csp", "https://help.service.com/security"],
   "cspDirectives": {
     "script-src": ["https://cdn.service.com"],
     "connect-src": ["https://api.service.com"],
@@ -405,22 +437,22 @@ When adding services manually, use this JSON schema:
 
 ### Field Descriptions
 
-| Field | Required | Description |
-|-------|----------|-------------|
-| `id` | ✅ | Unique identifier (kebab-case) |
-| `name` | ✅ | Human-readable service name |
-| `category` | ✅ | Service category |
-| `description` | ✅ | Brief description |
-| `website` | ✅ | Official website URL |
-| `officialDocs` | ✅ | Array of documentation URLs |
-| `cspDirectives` | ✅ | CSP requirements object |
-| `requiresDynamic` | ❌ | Requires 'strict-dynamic' |
-| `requiresNonce` | ❌ | Requires nonce |
-| `notes` | ❌ | Additional notes |
-| `aliases` | ❌ | Alternative identifiers |
-| `lastUpdated` | ✅ | ISO timestamp |
-| `verifiedAt` | ❌ | Last verification timestamp |
-| `monitoring` | ❌ | Monitoring configuration |
+| Field             | Required | Description                    |
+| ----------------- | -------- | ------------------------------ |
+| `id`              | ✅       | Unique identifier (kebab-case) |
+| `name`            | ✅       | Human-readable service name    |
+| `category`        | ✅       | Service category               |
+| `description`     | ✅       | Brief description              |
+| `website`         | ✅       | Official website URL           |
+| `officialDocs`    | ✅       | Array of documentation URLs    |
+| `cspDirectives`   | ✅       | CSP requirements object        |
+| `requiresDynamic` | ❌       | Requires 'strict-dynamic'      |
+| `requiresNonce`   | ❌       | Requires nonce                 |
+| `notes`           | ❌       | Additional notes               |
+| `aliases`         | ❌       | Alternative identifiers        |
+| `lastUpdated`     | ✅       | ISO timestamp                  |
+| `verifiedAt`      | ❌       | Last verification timestamp    |
+| `monitoring`      | ❌       | Monitoring configuration       |
 
 ## Automation & CI/CD
 
@@ -431,7 +463,7 @@ When adding services manually, use this JSON schema:
 name: CSP Service Check
 on:
   schedule:
-    - cron: '0 0 * * 1'  # Weekly on Monday
+    - cron: '0 0 * * 1' # Weekly on Monday
 
 jobs:
   check-services:
@@ -474,6 +506,7 @@ fi
 ### Common Issues
 
 **Command not found:**
+
 ```bash
 # Check installation
 npm list -g @csp-kit/cli
@@ -483,6 +516,7 @@ npm install -g @csp-kit/cli
 ```
 
 **Permission errors:**
+
 ```bash
 # Use npx instead
 npx @csp-kit/cli add --interactive
@@ -493,6 +527,7 @@ export PATH=~/.npm-global/bin:$PATH
 ```
 
 **Service validation fails:**
+
 ```bash
 # Check specific errors
 csp-cli validate --service service-id
@@ -502,6 +537,7 @@ DEBUG=csp-cli* csp-cli validate
 ```
 
 **Network timeouts during checks:**
+
 ```bash
 # Increase timeout in config
 {
@@ -527,18 +563,19 @@ csp-cli validate
 
 ## Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `CSP_CLI_CONFIG` | Path to config file | `~/.csp-kit/config.json` |
-| `CSP_CLI_CACHE` | Cache directory | `~/.csp-kit/cache` |
-| `DEBUG` | Enable debug logging | - |
-| `NO_COLOR` | Disable colored output | - |
+| Variable         | Description            | Default                  |
+| ---------------- | ---------------------- | ------------------------ |
+| `CSP_CLI_CONFIG` | Path to config file    | `~/.csp-kit/config.json` |
+| `CSP_CLI_CACHE`  | Cache directory        | `~/.csp-kit/cache`       |
+| `DEBUG`          | Enable debug logging   | -                        |
+| `NO_COLOR`       | Disable colored output | -                        |
 
 ## Examples
 
 ### Real-world Scenarios
 
 **Adding Google Tag Manager:**
+
 ```bash
 csp-cli add --interactive
 # ID: google-tag-manager
@@ -547,12 +584,14 @@ csp-cli add --interactive
 ```
 
 **Updating Stripe after API changes:**
+
 ```bash
 csp-cli check stripe --url https://stripe.com/docs
 csp-cli update stripe --interactive
 ```
 
 **Validating all analytics services:**
+
 ```bash
 csp-cli list --category analytics --json | jq -r '.[].id' | xargs -I {} csp-cli validate --service {}
 ```

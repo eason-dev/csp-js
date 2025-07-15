@@ -22,7 +22,7 @@ import { generateCSP } from '@csp-kit/generator';
 import { GoogleAnalytics, VercelAnalytics, GoogleFonts } from '@csp-kit/data';
 
 export const cspConfig = generateCSP({
-  services: [GoogleAnalytics, VercelAnalytics, GoogleFonts]
+  services: [GoogleAnalytics, VercelAnalytics, GoogleFonts],
 });
 ```
 
@@ -42,15 +42,15 @@ import { GoogleAnalytics, VercelAnalytics, GoogleFonts } from '@csp-kit/data';
 export function middleware(request: NextRequest) {
   // Generate CSP header
   const csp = generateCSPHeader({
-    services: [GoogleAnalytics, VercelAnalytics, GoogleFonts]
+    services: [GoogleAnalytics, VercelAnalytics, GoogleFonts],
   });
 
   // Create response
   const response = NextResponse.next();
-  
+
   // Add CSP header
   response.headers.set('Content-Security-Policy', csp);
-  
+
   return response;
 }
 
@@ -82,7 +82,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const nonce = headers().get('x-nonce') || '';
-  
+
   return (
     <html lang="en">
       <head>
@@ -100,9 +100,9 @@ function CSPMeta({ nonce }: { nonce: string }) {
   });
 
   return (
-    <meta 
-      httpEquiv="Content-Security-Policy" 
-      content={result.header} 
+    <meta
+      httpEquiv="Content-Security-Policy"
+      content={result.header}
     />
   );
 }
@@ -115,13 +115,7 @@ function CSPMeta({ nonce }: { nonce: string }) {
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { generateCSPHeader, defineService } from '@csp-kit/generator';
-import { 
-  GoogleAnalytics, 
-  Stripe, 
-  Typeform, 
-  Intercom,
-  ServiceCategory 
-} from '@csp-kit/data';
+import { GoogleAnalytics, Stripe, Typeform, Intercom, ServiceCategory } from '@csp-kit/data';
 
 // Custom service for your API
 const MyAPI = defineService({
@@ -131,36 +125,36 @@ const MyAPI = defineService({
   description: 'Application API endpoints',
   website: 'https://api.myapp.com',
   directives: {
-    'connect-src': ['https://api.myapp.com']
-  }
+    'connect-src': ['https://api.myapp.com'],
+  },
 });
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  
+
   // Base services for all routes
   const baseServices = [GoogleAnalytics, MyAPI];
-  
+
   // Add services based on route
   const services = [...baseServices];
-  
+
   if (pathname.startsWith('/checkout')) {
     services.push(Stripe);
   }
-  
+
   if (pathname.startsWith('/contact')) {
     services.push(Typeform);
   }
-  
+
   if (pathname.startsWith('/support')) {
     services.push(Intercom);
   }
 
   const csp = generateCSPHeader({ services });
-  
+
   const response = NextResponse.next();
   response.headers.set('Content-Security-Policy', csp);
-  
+
   return response;
 }
 ```
@@ -181,7 +175,7 @@ class MyDocument extends Document {
     ctx: DocumentContext
   ): Promise<DocumentInitialProps & { csp: string }> {
     const initialProps = await Document.getInitialProps(ctx);
-    
+
     // Generate CSP
     const cspResult = generateCSP({
       services: [GoogleAnalytics, GoogleFonts, VercelAnalytics]
@@ -192,22 +186,22 @@ class MyDocument extends Document {
       ctx.res.setHeader('Content-Security-Policy', cspResult.header);
     }
 
-    return { 
-      ...initialProps, 
-      csp: cspResult.header 
+    return {
+      ...initialProps,
+      csp: cspResult.header
     };
   }
 
   render() {
     const { csp } = this.props as any;
-    
+
     return (
       <Html>
         <Head>
           {csp && (
-            <meta 
-              httpEquiv="Content-Security-Policy" 
-              content={csp} 
+            <meta
+              httpEquiv="Content-Security-Policy"
+              content={csp}
             />
           )}
         </Head>
@@ -248,7 +242,7 @@ class MyApp extends App {
       const cspResult = generateCSP({
         services: [GoogleAnalytics, GoogleFonts]
       });
-      
+
       ctx.res.setHeader('Content-Security-Policy', cspResult.header);
     }
 
@@ -284,31 +278,28 @@ const NextDevTools = defineService({
     'script-src': ["'unsafe-eval'"], // Required for hot reload
     'connect-src': [
       'http://localhost:3000',
-      'ws://localhost:3000',    // Hot reload websocket
-      'http://localhost:3001'   // API routes in dev
+      'ws://localhost:3000', // Hot reload websocket
+      'http://localhost:3001', // API routes in dev
     ],
-    'style-src': ["'unsafe-inline'"] // For styled-jsx in dev
-  }
+    'style-src': ["'unsafe-inline'"], // For styled-jsx in dev
+  },
 });
 
 export function getCSPForEnvironment() {
   const isDevelopment = process.env.NODE_ENV === 'development';
   const isProduction = process.env.NODE_ENV === 'production';
-  
+
   return generateCSP({
-    services: [
-      GoogleFonts,
-      ...(isDevelopment ? [NextDevTools] : [])
-    ],
+    services: [GoogleFonts, ...(isDevelopment ? [NextDevTools] : [])],
     development: {
       // More permissive in development
       unsafeEval: true,
-      unsafeInline: true
+      unsafeInline: true,
     },
     production: {
       // Strict in production
-      reportUri: process.env.CSP_REPORT_URI || '/api/csp-report'
-    }
+      reportUri: process.env.CSP_REPORT_URI || '/api/csp-report',
+    },
   });
 }
 ```
@@ -328,7 +319,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const nonce = generateNonce();
-  
+
   const cspResult = generateCSP({
     services: [GoogleAnalytics],
     nonce
@@ -337,14 +328,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta 
-          httpEquiv="Content-Security-Policy" 
-          content={cspResult.header} 
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content={cspResult.header}
         />
       </head>
       <body>
         {children}
-        
+
         {/* Use nonce for inline scripts */}
         <Script
           id="google-analytics"
@@ -371,13 +362,7 @@ export default function RootLayout({
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { generateCSPHeader, defineService } from '@csp-kit/generator';
-import { 
-  GoogleAnalytics,
-  Stripe,
-  Youtube,
-  GoogleMaps,
-  ServiceCategory
-} from '@csp-kit/data';
+import { GoogleAnalytics, Stripe, Youtube, GoogleMaps, ServiceCategory } from '@csp-kit/data';
 
 // Custom services for your features
 const ImageCDN = defineService({
@@ -390,9 +375,9 @@ const ImageCDN = defineService({
     'img-src': [
       'https://images.myapp.com',
       'data:', // For placeholder images
-      'blob:'  // For dynamic images
-    ]
-  }
+      'blob:', // For dynamic images
+    ],
+  },
 });
 
 const WebSocketAPI = defineService({
@@ -402,38 +387,38 @@ const WebSocketAPI = defineService({
   description: 'Real-time WebSocket connections',
   website: 'wss://realtime.myapp.com',
   directives: {
-    'connect-src': ['wss://realtime.myapp.com']
-  }
+    'connect-src': ['wss://realtime.myapp.com'],
+  },
 });
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-  
+
   // Always include these services
   const services = [GoogleAnalytics, ImageCDN];
-  
+
   // Add services based on features used
   if (pathname.includes('/videos')) {
     services.push(Youtube);
   }
-  
+
   if (pathname.includes('/maps')) {
     services.push(GoogleMaps);
   }
-  
+
   if (pathname.includes('/checkout')) {
     services.push(Stripe);
   }
-  
+
   if (pathname.includes('/chat')) {
     services.push(WebSocketAPI);
   }
 
   const csp = generateCSPHeader({ services });
-  
+
   const response = NextResponse.next();
   response.headers.set('Content-Security-Policy', csp);
-  
+
   return response;
 }
 ```
@@ -454,7 +439,7 @@ import {
   Intercom,
   Hotjar,
   Mailchimp,
-  GoogleAds
+  GoogleAds,
 } from '@csp-kit/data';
 
 export function middleware(request: NextRequest) {
@@ -465,20 +450,20 @@ export function middleware(request: NextRequest) {
       FacebookPixel,
       GoogleAds,
       Hotjar,
-      
+
       // Payments
       Stripe,
       Paypal,
-      
+
       // Customer Support
       Intercom,
-      
+
       // Email Marketing
       Mailchimp,
-      
+
       // UI
-      GoogleFonts
-    ]
+      GoogleFonts,
+    ],
   });
 
   const response = NextResponse.next();
@@ -500,7 +485,7 @@ import {
   Stripe,
   Auth0,
   GoogleFonts,
-  ServiceCategory
+  ServiceCategory,
 } from '@csp-kit/data';
 
 // Custom services for SaaS
@@ -513,9 +498,9 @@ const GraphQLAPI = defineService({
   directives: {
     'connect-src': [
       'https://api.yoursaas.com',
-      'wss://subscriptions.yoursaas.com' // GraphQL subscriptions
-    ]
-  }
+      'wss://subscriptions.yoursaas.com', // GraphQL subscriptions
+    ],
+  },
 });
 
 const FileStorage = defineService({
@@ -527,8 +512,8 @@ const FileStorage = defineService({
   directives: {
     'img-src': ['https://files.yoursaas.com'],
     'media-src': ['https://files.yoursaas.com'],
-    'connect-src': ['https://files.yoursaas.com'] // For uploads
-  }
+    'connect-src': ['https://files.yoursaas.com'], // For uploads
+  },
 });
 
 export const saasCsp = generateCSP({
@@ -536,27 +521,27 @@ export const saasCsp = generateCSP({
     // Analytics
     GoogleAnalytics,
     Mixpanel,
-    
+
     // Error Monitoring
     Sentry,
-    
+
     // Customer Support
     Intercom,
-    
+
     // Billing
     Stripe,
-    
+
     // Authentication
     Auth0,
-    
+
     // UI
     GoogleFonts,
-    
+
     // Custom
     GraphQLAPI,
-    FileStorage
+    FileStorage,
   ],
-  reportUri: 'https://api.yoursaas.com/csp-violations'
+  reportUri: 'https://api.yoursaas.com/csp-violations',
 });
 ```
 
@@ -572,28 +557,28 @@ import {
   Twitter,
   Instagram,
   GoogleAds,
-  Disqus
+  Disqus,
 } from '@csp-kit/data';
 
 const blogCsp = generateCSPHeader({
   services: [
     // Analytics
     GoogleAnalytics,
-    
+
     // Typography
     GoogleFonts,
-    
+
     // Embeds
     Youtube,
     Twitter,
     Instagram,
-    
+
     // Monetization
     GoogleAds,
-    
+
     // Comments (if Disqus is supported in the future)
     // Disqus
-  ]
+  ],
 });
 ```
 
@@ -609,7 +594,7 @@ import { GoogleAnalytics, NewServiceToTest } from '@csp-kit/data';
 export function middleware(request: NextRequest) {
   const reportOnlyCsp = generateReportOnlyCSP({
     services: [GoogleAnalytics, NewServiceToTest],
-    reportUri: '/api/csp-report'
+    reportUri: '/api/csp-report',
   });
 
   const response = NextResponse.next();
@@ -627,7 +612,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const report = await request.json();
-    
+
     // Log CSP violations
     console.error('CSP Violation:', {
       documentUri: report['document-uri'],
@@ -635,12 +620,12 @@ export async function POST(request: NextRequest) {
       blockedUri: report['blocked-uri'],
       sourceFile: report['source-file'],
       lineNumber: report['line-number'],
-      columnNumber: report['column-number']
+      columnNumber: report['column-number'],
     });
-    
+
     // Optionally send to monitoring service
     // await sendToMonitoring(report);
-    
+
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error('Error processing CSP report:', error);
@@ -660,20 +645,20 @@ import { cookies } from 'next/headers';
 export function middleware(request: NextRequest) {
   const cookieStore = cookies();
   const isInStrictCSPGroup = cookieStore.get('strict-csp')?.value === 'true';
-  
+
   // 10% of users get strict CSP
   if (!cookieStore.has('strict-csp')) {
     const enableStrict = Math.random() < 0.1;
     cookieStore.set('strict-csp', enableStrict ? 'true' : 'false');
   }
-  
+
   const csp = isInStrictCSPGroup
     ? generateCSP({ services: [GoogleAnalytics] }) // Strict
-    : generateCSP({ 
+    : generateCSP({
         services: [GoogleAnalytics],
-        unsafeInline: true // Less strict for gradual rollout
+        unsafeInline: true, // Less strict for gradual rollout
       });
-  
+
   const response = NextResponse.next();
   response.headers.set('Content-Security-Policy', csp.header);
   return response;
@@ -690,7 +675,7 @@ const { generateCSPHeader } = require('@csp-kit/generator');
 const { GoogleAnalytics, VercelAnalytics } = require('@csp-kit/data');
 
 const csp = generateCSPHeader({
-  services: [GoogleAnalytics, VercelAnalytics]
+  services: [GoogleAnalytics, VercelAnalytics],
 });
 
 module.exports = {
@@ -701,12 +686,12 @@ module.exports = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: csp
-          }
-        ]
-      }
+            value: csp,
+          },
+        ],
+      },
     ];
-  }
+  },
 };
 ```
 
@@ -724,13 +709,13 @@ export const config = {
 export function middleware(request: Request) {
   // CSP Kit works in Vercel Edge Functions
   const csp = generateCSPHeader({
-    services: [GoogleAnalytics, VercelAnalytics]
+    services: [GoogleAnalytics, VercelAnalytics],
   });
-  
+
   return new Response(null, {
     headers: {
-      'Content-Security-Policy': csp
-    }
+      'Content-Security-Policy': csp,
+    },
   });
 }
 ```
@@ -748,20 +733,20 @@ import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
 describe('CSP Configuration', () => {
   it('should generate valid CSP for production', () => {
     const result = generateCSP({
-      services: [GoogleAnalytics, Stripe, GoogleFonts]
+      services: [GoogleAnalytics, Stripe, GoogleFonts],
     });
-    
+
     expect(result.header).toContain("script-src 'self'");
     expect(result.includedServices).toHaveLength(3);
     expect(result.warnings).toHaveLength(0);
   });
-  
+
   it('should include nonce when requested', () => {
     const result = generateCSP({
       services: [GoogleAnalytics],
-      nonce: true
+      nonce: true,
     });
-    
+
     expect(result.nonce).toBeDefined();
     expect(result.header).toContain(`'nonce-${result.nonce}'`);
   });
@@ -775,17 +760,18 @@ describe('CSP Configuration', () => {
 describe('CSP Compliance', () => {
   it('should not have CSP violations', () => {
     cy.visit('/');
-    
+
     // Check for CSP violations in console
-    cy.window().then((win) => {
+    cy.window().then(win => {
       cy.spy(win.console, 'error').as('consoleError');
     });
-    
+
     // Interact with features that use external scripts
     cy.get('[data-testid="analytics-button"]').click();
-    
+
     // Should not have CSP violation errors
-    cy.get('@consoleError').should('not.have.been.calledWith', 
+    cy.get('@consoleError').should(
+      'not.have.been.calledWith',
       Cypress.sinon.match(/Content Security Policy/)
     );
   });
@@ -797,6 +783,7 @@ describe('CSP Compliance', () => {
 ### Common Issues
 
 **1. CSP blocking Next.js development features**
+
 ```typescript
 // Use environment-specific configuration
 import { defineService } from '@csp-kit/generator';
@@ -812,15 +799,16 @@ const NextJSDev = defineService({
     'script-src': ["'unsafe-eval'"], // For Fast Refresh
     'connect-src': [
       'http://localhost:3000',
-      'ws://localhost:3000',      // Hot reload
-      'http://localhost:3001'     // API routes
+      'ws://localhost:3000', // Hot reload
+      'http://localhost:3001', // API routes
     ],
-    'style-src': ["'unsafe-inline'"] // For styled-jsx
-  }
+    'style-src': ["'unsafe-inline'"], // For styled-jsx
+  },
 });
 ```
 
 **2. Next.js Image Optimization**
+
 ```typescript
 // Add image domains for next/image
 const NextImages = defineService({
@@ -834,13 +822,14 @@ const NextImages = defineService({
       'https://your-domain.com',
       'https://images.your-domain.com',
       'data:', // For placeholder images
-      'blob:'  // For dynamic images
-    ]
-  }
+      'blob:', // For dynamic images
+    ],
+  },
 });
 ```
 
 **3. Styled Components / Emotion**
+
 ```typescript
 // Handle CSS-in-JS libraries
 import { generateCSP } from '@csp-kit/generator';

@@ -88,17 +88,26 @@ export type DefineServiceFn = <T extends CSPService>(service: T) => T;
 /**
  * Create a properly typed service definition
  */
-export const defineService: DefineServiceFn = (service) => {
+export const defineService: DefineServiceFn = service => {
   // Validate required fields at runtime in development
   if (process.env.NODE_ENV !== 'production') {
-    const required = ['id', 'name', 'category', 'description', 'website', 'officialDocs', 'directives', 'lastUpdated'];
+    const required = [
+      'id',
+      'name',
+      'category',
+      'description',
+      'website',
+      'officialDocs',
+      'directives',
+      'lastUpdated',
+    ];
     for (const field of required) {
       if (!(field in service)) {
         throw new Error(`Service ${service.id || 'unknown'} is missing required field: ${field}`);
       }
     }
   }
-  
+
   return Object.freeze(service);
 };
 
@@ -140,11 +149,11 @@ export function createConfigurableService<TOptions>(
         ...baseService,
         ...configured,
         id: `${baseService.id}-configured`,
-        directives: configured.directives 
+        directives: configured.directives
           ? mergeDirectives(baseService.directives, configured.directives)
           : baseService.directives,
       };
-    }
+    },
   };
 }
 
@@ -153,20 +162,18 @@ export function createConfigurableService<TOptions>(
  */
 function mergeDirectives(base: CSPDirectives, additional: CSPDirectives): CSPDirectives {
   const result: CSPDirectives = { ...base };
-  
+
   for (const [key, values] of Object.entries(additional)) {
     const directiveKey = key as keyof CSPDirectives;
     if (result[directiveKey]) {
       // Merge arrays and deduplicate
       const existing = result[directiveKey] || [];
       const newValues = values || [];
-      result[directiveKey] = [
-        ...new Set([...existing, ...newValues])
-      ];
+      result[directiveKey] = [...new Set([...existing, ...newValues])];
     } else {
       result[directiveKey] = values;
     }
   }
-  
+
   return result;
 }

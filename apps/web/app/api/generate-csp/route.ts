@@ -10,17 +10,18 @@ export async function POST(request: NextRequest) {
 
     // Convert service IDs to CSPService objects
     const services: CSPService[] = [];
-    
+
     for (const id of serviceIds) {
       // Convert id from kebab-case to PascalCase for the export name
-      const serviceName = id.split('-').map((part: string) => 
-        part.charAt(0).toUpperCase() + part.slice(1)
-      ).join('');
-      
+      const serviceName = id
+        .split('-')
+        .map((part: string) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
+
       // Get the service from the exports
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const service = (allServices as any)[serviceName];
-      
+
       if (service && typeof service === 'object' && 'id' in service && 'directives' in service) {
         services.push(service as CSPService);
       } else {

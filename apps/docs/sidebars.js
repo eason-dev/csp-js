@@ -81,7 +81,6 @@ const sidebars = {
         'maintainer/ARCHITECTURE',
         'maintainer/SERVICE_DEFINITION_GUIDE',
         'maintainer/MAINTAINER_GUIDE',
-        'maintainer/NPM_PUBLISHING_GUIDE',
         'maintainer/RELEASE_PROCESS'
       ]
     },

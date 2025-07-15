@@ -15,6 +15,7 @@ The fastest way to get started is using our interactive web interface:
 **👉 [Try CSP Kit Web Generator](https://csp-kit.eason.ch)**
 
 **Benefits:**
+
 - ✅ No installation required
 - ✅ Visual service selection
 - ✅ Real-time CSP generation
@@ -50,7 +51,7 @@ import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
 
 // Generate CSP using imported services
 const result = generateCSP({
-  services: [GoogleAnalytics, Stripe, GoogleFonts]
+  services: [GoogleAnalytics, Stripe, GoogleFonts],
 });
 
 console.log(result.header);
@@ -85,12 +86,12 @@ import { GoogleAnalytics, VercelAnalytics, GoogleFonts } from '@csp-kit/data';
 
 export function middleware(request: NextRequest) {
   const csp = generateCSPHeader({
-    services: [GoogleAnalytics, VercelAnalytics, GoogleFonts]
+    services: [GoogleAnalytics, VercelAnalytics, GoogleFonts],
   });
-  
+
   const response = NextResponse.next();
   response.headers.set('Content-Security-Policy', csp);
-  
+
   return response;
 }
 
@@ -110,7 +111,7 @@ const app = express();
 
 // Generate CSP once at startup (for better performance)
 const cspResult = generateCSP({
-  services: [GoogleAnalytics, Stripe, Intercom]
+  services: [GoogleAnalytics, Stripe, Intercom],
 });
 
 // Apply CSP to all routes
@@ -129,15 +130,15 @@ import { generateCSPHeader } from '@csp-kit/generator';
 import { GoogleAnalytics, GoogleFonts } from '@csp-kit/data';
 
 const csp = generateCSPHeader({
-  services: [GoogleAnalytics, GoogleFonts]
+  services: [GoogleAnalytics, GoogleFonts],
 });
 
 export default defineConfig({
   server: {
     headers: {
-      'Content-Security-Policy': csp
-    }
-  }
+      'Content-Security-Policy': csp,
+    },
+  },
 });
 ```
 
@@ -151,29 +152,33 @@ import { generateCSPHeader } from '@csp-kit/generator';
 import { GoogleAnalytics, GoogleFonts } from '@csp-kit/data';
 
 const csp = generateCSPHeader({
-  services: [GoogleAnalytics, GoogleFonts]
+  services: [GoogleAnalytics, GoogleFonts],
 });
 
 console.log(csp);
 // Copy this output to your configuration files
 ```
 
-**Netlify (_headers file):**
+**Netlify (\_headers file):**
+
 ```
 /*
   Content-Security-Policy: script-src 'self' https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com
 ```
 
 **Vercel (vercel.json):**
+
 ```json
 {
   "headers": [
     {
       "source": "/(.*)",
-      "headers": [{
-        "key": "Content-Security-Policy",
-        "value": "script-src 'self' https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com"
-      }]
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "script-src 'self' https://www.googletagmanager.com; style-src 'self' https://fonts.googleapis.com"
+        }
+      ]
     }
   ]
 }
@@ -198,15 +203,15 @@ const MyAPI = defineService({
   website: 'https://api.myapp.com',
   directives: {
     'connect-src': ['https://api.myapp.com'],
-    'img-src': ['https://images.myapp.com']
-  }
+    'img-src': ['https://images.myapp.com'],
+  },
 });
 
 // Use it like any built-in service
 const result = generateCSP({
   services: [GoogleAnalytics, Stripe, MyAPI],
   nonce: true, // Generate nonce for inline scripts
-  reportUri: 'https://my-site.com/csp-report'
+  reportUri: 'https://my-site.com/csp-report',
 });
 ```
 
@@ -220,7 +225,7 @@ import { GoogleAnalytics } from '@csp-kit/data';
 
 const result = generateCSP({
   services: [GoogleAnalytics],
-  nonce: true
+  nonce: true,
 });
 
 // Use the nonce in your HTML
@@ -241,7 +246,7 @@ import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
 const reportOnlyHeader = generateReportOnlyCSP({
   services: [GoogleAnalytics, Stripe],
-  reportUri: '/api/csp-violations'
+  reportUri: '/api/csp-violations',
 });
 
 // Use report-only header for testing
@@ -263,27 +268,23 @@ const DevTools = defineService({
   website: 'http://localhost:3000',
   directives: {
     'script-src': ['http://localhost:3000', "'unsafe-eval'"],
-    'connect-src': ['ws://localhost:3000', 'http://localhost:3001']
-  }
+    'connect-src': ['ws://localhost:3000', 'http://localhost:3001'],
+  },
 });
 
 const isDevelopment = process.env.NODE_ENV === 'development';
 
 const result = generateCSP({
-  services: [
-    GoogleAnalytics,
-    Stripe,
-    ...(isDevelopment ? [DevTools] : [])
-  ],
+  services: [GoogleAnalytics, Stripe, ...(isDevelopment ? [DevTools] : [])],
   development: {
     unsafeEval: true, // Allow eval in development
     additionalRules: {
-      'connect-src': ['ws://localhost:*']
-    }
+      'connect-src': ['ws://localhost:*'],
+    },
   },
   production: {
-    reportUri: 'https://api.myapp.com/csp-violations'
-  }
+    reportUri: 'https://api.myapp.com/csp-violations',
+  },
 });
 ```
 
@@ -296,7 +297,7 @@ CSP Kit includes 106+ pre-configured services. Here's how to discover them:
 The best way to discover services is through your IDE:
 
 ```typescript
-import { 
+import {
   // Start typing and your IDE will show all available services
   GoogleAnalytics,
   Stripe,
@@ -333,6 +334,7 @@ import { GoogleFonts, Cloudflare, Fastly } from '@csp-kit/data';
 ### Common Issues
 
 **1. Cannot find service import**
+
 ```typescript
 // ❌ Wrong - using string ID
 const result = generateCSP(['google-analytics']);
@@ -343,6 +345,7 @@ const result = generateCSP({ services: [GoogleAnalytics] });
 ```
 
 **2. Type errors with services**
+
 ```typescript
 // Make sure you have TypeScript configured properly
 // tsconfig.json
@@ -355,6 +358,7 @@ const result = generateCSP({ services: [GoogleAnalytics] });
 ```
 
 **3. Missing @csp-kit/data package**
+
 ```bash
 # Make sure both packages are installed
 npm list @csp-kit/generator @csp-kit/data

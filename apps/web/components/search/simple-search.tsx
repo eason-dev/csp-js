@@ -64,12 +64,12 @@ export function SimpleSearch({
     if (searchQuery.trim() === '') {
       // Show popular services when no search query
       return services
-        .filter((service) => POPULAR_SERVICES.includes(service.id))
+        .filter(service => POPULAR_SERVICES.includes(service.id))
         .sort((a, b) => POPULAR_SERVICES.indexOf(a.id) - POPULAR_SERVICES.indexOf(b.id));
     }
 
     const results = fuse.search(searchQuery);
-    return results.map((result) => result.item).slice(0, 8);
+    return results.map(result => result.item).slice(0, 8);
   }, [searchQuery, fuse, services]);
 
   // Toggle service selection
@@ -93,10 +93,10 @@ export function SimpleSearch({
     (e: React.KeyboardEvent) => {
       if (e.key === 'ArrowDown') {
         e.preventDefault();
-        setFocusedIndex((prev) => Math.min(prev + 1, searchResults.length - 1));
+        setFocusedIndex(prev => Math.min(prev + 1, searchResults.length - 1));
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
-        setFocusedIndex((prev) => Math.max(prev - 1, -1));
+        setFocusedIndex(prev => Math.max(prev - 1, -1));
       } else if (e.key === 'Enter' && focusedIndex >= 0 && focusedIndex < searchResults.length) {
         e.preventDefault();
         const service = searchResults[focusedIndex];
@@ -153,16 +153,16 @@ export function SimpleSearch({
     <div ref={searchRef} className={`relative ${className}`}>
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <Search className="text-muted-foreground absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform" />
         <Input
           ref={inputRef}
           type="text"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          onChange={e => setSearchQuery(e.target.value)}
           onFocus={() => setShowResults(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="pl-10 pr-4 h-12 text-base"
+          className="h-12 pl-10 pr-4 text-base"
           aria-label="Search services"
           aria-expanded={showResults}
           aria-controls="search-results"
@@ -174,7 +174,7 @@ export function SimpleSearch({
               setSearchQuery('');
               inputRef.current?.focus();
             }}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2 transform"
             aria-label="Clear search"
           >
             <X className="h-4 w-4" />
@@ -187,19 +187,19 @@ export function SimpleSearch({
         <Card
           id="search-results"
           ref={resultsRef}
-          className="absolute top-full mt-2 w-full z-50 shadow-lg max-h-[400px] overflow-y-auto"
+          className="absolute top-full z-50 mt-2 max-h-[400px] w-full overflow-y-auto shadow-lg"
         >
           <CardContent className="p-2">
             {searchResults.length === 0 ? (
-              <div className="p-4 text-center text-muted-foreground">
+              <div className="text-muted-foreground p-4 text-center">
                 <p className="font-medium">No services found</p>
-                <p className="text-sm mt-1">Try searching with different keywords</p>
+                <p className="mt-1 text-sm">Try searching with different keywords</p>
               </div>
             ) : (
               <div className="space-y-1">
                 {searchQuery === '' && (
-                  <div className="px-3 py-2 text-sm text-muted-foreground font-medium">
-                    <Sparkles className="inline h-3 w-3 mr-1" />
+                  <div className="text-muted-foreground px-3 py-2 text-sm font-medium">
+                    <Sparkles className="mr-1 inline h-3 w-3" />
                     Popular services
                   </div>
                 )}
@@ -208,18 +208,16 @@ export function SimpleSearch({
                   return (
                     <div
                       key={service.id}
-                      className={`search-result-item group flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
-                        focusedIndex === index
-                          ? 'bg-accent'
-                          : 'hover:bg-accent/50'
+                      className={`search-result-item group flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
+                        focusedIndex === index ? 'bg-accent' : 'hover:bg-accent/50'
                       } ${selected ? 'bg-accent/30' : ''}`}
                       onClick={() => toggleService(service)}
                       onMouseEnter={() => setFocusedIndex(index)}
                       role="option"
                       aria-selected={selected}
                     >
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex items-center gap-2">
                           <span className="font-medium">{service.name}</span>
                           <Badge
                             variant="secondary"
@@ -228,35 +226,33 @@ export function SimpleSearch({
                             {service.category}
                           </Badge>
                         </div>
-                        <p className="text-sm text-muted-foreground truncate">
+                        <p className="text-muted-foreground truncate text-sm">
                           {service.description}
                         </p>
                       </div>
-                      <div className="flex items-center gap-2 ml-4">
+                      <div className="ml-4 flex items-center gap-2">
                         <Link
                           href={`/service/${service.id}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={e => e.stopPropagation()}
+                          className="opacity-0 transition-opacity group-hover:opacity-100"
                           aria-label={`View details for ${service.name}`}
                         >
-                          <ExternalLink className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                          <ExternalLink className="text-muted-foreground hover:text-foreground h-4 w-4" />
                         </Link>
                         <Button
                           size="sm"
                           variant={selected ? 'secondary' : 'outline'}
                           className="min-w-[70px]"
-                          aria-label={
-                            selected ? `Remove ${service.name}` : `Add ${service.name}`
-                          }
+                          aria-label={selected ? `Remove ${service.name}` : `Add ${service.name}`}
                         >
                           {selected ? (
                             <>
-                              <Check className="h-3 w-3 mr-1" />
+                              <Check className="mr-1 h-3 w-3" />
                               Added
                             </>
                           ) : (
                             <>
-                              <Plus className="h-3 w-3 mr-1" />
+                              <Plus className="mr-1 h-3 w-3" />
                               Add
                             </>
                           )}

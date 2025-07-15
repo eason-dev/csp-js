@@ -16,16 +16,17 @@ We're excited you want to help make web security easier for everyone.
 
 ### 🎯 **What We Need Most**
 
-| Priority | Type | Time | Description |
-|----------|------|------|-------------|
-| **🔥 High** | **New Services** | 15-30 min | Add support for popular web services |
-| **🔥 High** | **Service Updates** | 10-15 min | Update existing services when they change |
-| **📚 Medium** | **Documentation** | 30-60 min | Improve guides and examples |
-| **🐛 Medium** | **Bug Reports** | 5-10 min | Report issues and edge cases |
+| Priority      | Type                | Time      | Description                               |
+| ------------- | ------------------- | --------- | ----------------------------------------- |
+| **🔥 High**   | **New Services**    | 15-30 min | Add support for popular web services      |
+| **🔥 High**   | **Service Updates** | 10-15 min | Update existing services when they change |
+| **📚 Medium** | **Documentation**   | 30-60 min | Improve guides and examples               |
+| **🐛 Medium** | **Bug Reports**     | 5-10 min  | Report issues and edge cases              |
 
 ### 🏃‍♂️ **Fastest Ways to Contribute**
 
-**1. 🆕 Add a New Service** *(Most needed!)*
+**1. 🆕 Add a New Service** _(Most needed!)_
+
 ```bash
 # Install CLI and add service interactively
 npm install -g @csp-kit/cli
@@ -33,16 +34,22 @@ csp-cli add --interactive
 ```
 
 **2. 🌐 Use Web Interface**
+
 - Visit [csp-kit.eason.ch](https://csp-kit.eason.ch)
 - Click "Request Service" for missing services
 - Share feedback and suggestions
 
 **3. 📝 Improve Documentation**
+
 - Fix typos and improve clarity
 - Add examples for your favorite framework
 - Translate documentation (coming soon)
 
 ### 💻 **Development Setup**
+
+> **📖 For detailed setup instructions, see [DEVELOPMENT.md](./DEVELOPMENT.md)**
+
+Quick start:
 
 ```bash
 # 1. Fork & Clone
@@ -60,6 +67,45 @@ pnpm test
 
 # 5. Start Development
 pnpm dev
+```
+
+See [DEVELOPMENT.md](./DEVELOPMENT.md) for:
+
+- Complete IDE setup (VS Code extensions, settings)
+- Linting and formatting configuration
+- Troubleshooting common issues
+- Performance optimization tips
+
+### 📝 **Commit Guidelines**
+
+We use [Conventional Commits](https://www.conventionalcommits.org/) for clear commit messages:
+
+```bash
+# Format: <type>(<scope>): <subject>
+
+# Examples:
+git commit -m "feat(data): add Vercel Analytics service"
+git commit -m "fix(generator): handle empty directives correctly"
+git commit -m "docs(web): update installation guide"
+
+# Use interactive commit tool:
+pnpm commit
+```
+
+**Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`  
+**Scopes:** `generator`, `data`, `cli`, `ui`, `web`, `docs`, `deps`, `config`
+
+### 🔄 **Creating a Changeset**
+
+Before submitting your PR, add a changeset to describe your changes:
+
+```bash
+# Run the changeset CLI
+pnpm changeset
+
+# Select the packages you've changed
+# Choose the version bump type (patch/minor/major)
+# Write a summary of your changes
 ```
 
 ## 📦 **Project Structure**
@@ -86,7 +132,7 @@ csp-kit/
 
 ## 🎯 **Popular Contributions**
 
-### 🆕 **Adding Services** *(Most impactful)*
+### 🆕 **Adding Services** _(Most impactful)_
 
 Help expand CSP Kit's service support:
 
@@ -102,8 +148,9 @@ csp-cli add --interactive
 ```
 
 **Popular services to add:**
+
 - New social media platforms
-- Emerging payment providers  
+- Emerging payment providers
 - Popular WordPress plugins
 - Microsoft services (Teams, Office)
 - Regional services (non-US)
@@ -140,18 +187,21 @@ csp-cli update service-name --interactive
 
 ### 🚀 **Quick Service Addition**
 
-**Method 1: Interactive CLI** *(Recommended)*
+**Method 1: Interactive CLI** _(Recommended)_
+
 ```bash
 npm install -g @csp-kit/cli
 csp-cli add --interactive
 ```
 
 **Method 2: Web Interface**
+
 - Visit [csp-kit.eason.ch](https://csp-kit.eason.ch)
 - Click "Request Service"
 - Follow the guided form
 
 **Method 3: GitHub Issue**
+
 - Use [Add Service template](https://github.com/eason-dev/csp-kit/issues/new?template=add-service.md)
 - Provide service details and CSP requirements
 - Community will help implement
@@ -170,16 +220,17 @@ CSP Kit uses a simplified JSON schema:
   "officialDocs": ["https://docs.service.com/csp"],
   "cspDirectives": {
     "script-src": ["https://cdn.service.com"],
-    "connect-src": ["https://api.service.com"]
+    "connect-src": ["https://api.service.com"],
   },
   // Optional fields
   "aliases": ["service", "svc"],
   "notes": "Implementation details",
-  "lastUpdated": "2024-07-05T00:00:00.000Z"
+  "lastUpdated": "2024-07-05T00:00:00.000Z",
 }
 ```
 
 **Key changes from v0.x:**
+
 - ✅ **Simplified schema** - No more complex version management
 - ✅ **Easier contribution** - Single CSP configuration per service
 - ✅ **Better validation** - Automated testing and validation
@@ -189,18 +240,18 @@ CSP Kit uses a simplified JSON schema:
 
 Choose the best category for your service:
 
-| Category | Examples | Count |
-|----------|----------|-------|
-| **analytics** | Google Analytics, Mixpanel, Hotjar | 12+ |
-| **payment** | Stripe, PayPal, Square | 8+ |
-| **social** | Facebook, Twitter, LinkedIn | 15+ |
-| **forms** | Typeform, Calendly, Mailchimp | 10+ |
-| **chat** | Intercom, Zendesk, Crisp | 8+ |
-| **video** | YouTube, Vimeo, Twitch | 6+ |
-| **cdn** | Google Fonts, jsDelivr, Cloudflare | 12+ |
-| **maps** | Google Maps, Mapbox | 4+ |
-| **testing** | Optimizely, Sentry, Cypress | 15+ |
-| **other** | Auth0, Firebase, Slack | 28+ |
+| Category      | Examples                           | Count |
+| ------------- | ---------------------------------- | ----- |
+| **analytics** | Google Analytics, Mixpanel, Hotjar | 12+   |
+| **payment**   | Stripe, PayPal, Square             | 8+    |
+| **social**    | Facebook, Twitter, LinkedIn        | 15+   |
+| **forms**     | Typeform, Calendly, Mailchimp      | 10+   |
+| **chat**      | Intercom, Zendesk, Crisp           | 8+    |
+| **video**     | YouTube, Vimeo, Twitch             | 6+    |
+| **cdn**       | Google Fonts, jsDelivr, Cloudflare | 12+   |
+| **maps**      | Google Maps, Mapbox                | 4+    |
+| **testing**   | Optimizely, Sentry, Cypress        | 15+   |
+| **other**     | Auth0, Firebase, Slack             | 28+   |
 
 ### ✅ **Service Quality Guidelines**
 
@@ -220,7 +271,9 @@ Choose the best category for your service:
 ## ✅ **Review Process**
 
 ### 🤖 **Automated Checks**
+
 All contributions go through:
+
 - ✅ **TypeScript compilation**
 - ✅ **ESLint** (zero warnings policy)
 - ✅ **Tests** pass
@@ -228,13 +281,16 @@ All contributions go through:
 - ✅ **Build** succeeds
 
 ### 👥 **Community Review**
+
 - **Service contributions**: Reviewed for accuracy within 48 hours
-- **Bug fixes**: Priority review, usually within 24 hours  
+- **Bug fixes**: Priority review, usually within 24 hours
 - **Features**: Discussion and design review
 - **Documentation**: Quick approval for improvements
 
 ### 🏆 **Recognition**
+
 Contributors get:
+
 - **[Contributors page](https://csp-kit.eason.ch/contributors)** listing
 - **GitHub recognition** in repository
 - **Monthly highlights** in community updates
@@ -243,6 +299,7 @@ Contributors get:
 ## 🧪 **Testing Your Contributions**
 
 ### 🔍 **Service Testing**
+
 ```bash
 # Validate service definition
 csp-cli validate --service your-service
@@ -255,6 +312,7 @@ csp-cli check your-service --url https://test-url.com
 ```
 
 ### 🏃‍♂️ **Code Testing**
+
 ```bash
 # Run all tests
 pnpm test
@@ -267,21 +325,23 @@ pnpm lint && pnpm check-types
 ```
 
 ### 🌐 **Manual Testing**
+
 - Test your service with [web interface](https://csp-kit.eason.ch)
 - Verify CSP works in real applications
 - Check for browser console errors
 
 ## 📚 **Documentation Structure**
 
-| Document | Purpose | Audience |
-|----------|---------|----------|
-| **[docs/contributing.md](./docs/contributing.md)** | **Complete contribution guide** | **All contributors** |
-| **[docs/getting-started.md](./docs/getting-started.md)** | User onboarding | New users |
-| **[docs/api-reference.md](./docs/api-reference.md)** | API documentation | Developers |
-| **[docs/cli-guide.md](./docs/cli-guide.md)** | CLI tools reference | Advanced users |
-| **[docs/examples/](./docs/examples/)** | Framework examples | Integration developers |
+| Document                                                 | Purpose                         | Audience               |
+| -------------------------------------------------------- | ------------------------------- | ---------------------- |
+| **[docs/contributing.md](./docs/contributing.md)**       | **Complete contribution guide** | **All contributors**   |
+| **[docs/getting-started.md](./docs/getting-started.md)** | User onboarding                 | New users              |
+| **[docs/api-reference.md](./docs/api-reference.md)**     | API documentation               | Developers             |
+| **[docs/cli-guide.md](./docs/cli-guide.md)**             | CLI tools reference             | Advanced users         |
+| **[docs/examples/](./docs/examples/)**                   | Framework examples              | Integration developers |
 
 **Need help with documentation?**
+
 - 📝 **Fix typos** - Quick improvements welcome
 - 📖 **Add examples** - Show real-world usage
 - 🌍 **Translate** - Multi-language support (coming soon)
@@ -291,12 +351,12 @@ pnpm lint && pnpm check-types
 
 We have templates to make contributing easier:
 
-| Template | Use For | Processing Time |
-|----------|---------|------------------|
-| **[🆕 Add Service](https://github.com/eason-dev/csp-kit/issues/new?template=add-service.md)** | Request new service support | 1-2 weeks |
-| **[🔄 Update Service](https://github.com/eason-dev/csp-kit/issues/new?template=update-service.md)** | Report CSP requirement changes | 2-3 days |
-| **[🐛 Bug Report](https://github.com/eason-dev/csp-kit/issues/new?template=bug-report.md)** | Report bugs or issues | 1-3 days |
-| **[💡 Feature Request](https://github.com/eason-dev/csp-kit/issues/new?template=feature-request.md)** | Suggest new features | 1-2 weeks |
+| Template                                                                                              | Use For                        | Processing Time |
+| ----------------------------------------------------------------------------------------------------- | ------------------------------ | --------------- |
+| **[🆕 Add Service](https://github.com/eason-dev/csp-kit/issues/new?template=add-service.md)**         | Request new service support    | 1-2 weeks       |
+| **[🔄 Update Service](https://github.com/eason-dev/csp-kit/issues/new?template=update-service.md)**   | Report CSP requirement changes | 2-3 days        |
+| **[🐛 Bug Report](https://github.com/eason-dev/csp-kit/issues/new?template=bug-report.md)**           | Report bugs or issues          | 1-3 days        |
+| **[💡 Feature Request](https://github.com/eason-dev/csp-kit/issues/new?template=feature-request.md)** | Suggest new features           | 1-2 weeks       |
 
 **💡 Tip**: Use the web interface at [csp-kit.eason.ch](https://csp-kit.eason.ch) for the fastest service requests!
 
@@ -304,11 +364,11 @@ We have templates to make contributing easier:
 
 ### 📦 **Package Release Schedule**
 
-| Package | Frequency | Purpose |
-|---------|-----------|----------|
-| **@csp-kit/data** | **Weekly** | New services, service updates |
-| **@csp-kit/generator** | **Monthly** | Features, API improvements |
-| **@csp-kit/cli** | **Monthly** | CLI enhancements, bug fixes |
+| Package                | Frequency   | Purpose                       |
+| ---------------------- | ----------- | ----------------------------- |
+| **@csp-kit/data**      | **Weekly**  | New services, service updates |
+| **@csp-kit/generator** | **Monthly** | Features, API improvements    |
+| **@csp-kit/cli**       | **Monthly** | CLI enhancements, bug fixes   |
 
 ### 🔄 **Contribution Timeline**
 
@@ -329,6 +389,7 @@ Maintainer-specific documentation:
 - **[NPM Publishing Guide](./docs/maintainer/npm-publishing-guide.md)** - Package publishing
 
 ### 🎯 **Maintainer Duties**
+
 - **Service monitoring** - Weekly automated checks
 - **Issue triage** - Respond to community issues
 - **Code review** - Review contributions for quality
@@ -337,13 +398,13 @@ Maintainer-specific documentation:
 
 ## 💬 **Getting Help**
 
-| Need Help With | Best Place | Response Time |
-|----------------|------------|---------------|
-| **🆕 Adding services** | [CLI tool](https://github.com/eason-dev/csp-kit/discussions) or [discussions](https://github.com/eason-dev/csp-kit/discussions) | ~24 hours |
-| **🐛 Bug reports** | [GitHub Issues](https://github.com/eason-dev/csp-kit/issues) | ~48 hours |
-| **💡 Feature ideas** | [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions) | ~48 hours |
-| **❓ General questions** | [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions) | ~24 hours |
-| **📖 Documentation** | [Full docs site](https://csp-kit.eason.ch/docs) | Instant |
+| Need Help With           | Best Place                                                                                                                      | Response Time |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | ------------- |
+| **🆕 Adding services**   | [CLI tool](https://github.com/eason-dev/csp-kit/discussions) or [discussions](https://github.com/eason-dev/csp-kit/discussions) | ~24 hours     |
+| **🐛 Bug reports**       | [GitHub Issues](https://github.com/eason-dev/csp-kit/issues)                                                                    | ~48 hours     |
+| **💡 Feature ideas**     | [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions)                                                          | ~48 hours     |
+| **❓ General questions** | [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions)                                                          | ~24 hours     |
+| **📖 Documentation**     | [Full docs site](https://csp-kit.eason.ch/docs)                                                                                 | Instant       |
 
 ---
 

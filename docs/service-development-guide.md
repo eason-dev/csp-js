@@ -44,6 +44,7 @@ Look for CSP-specific documentation:
 ```
 
 Example sources:
+
 - Google Analytics: https://developers.google.com/tag-platform/security/guides/csp
 - Stripe: https://stripe.com/docs/security/guide#content-security-policy
 - Intercom: https://www.intercom.com/help/en/articles/3894-using-intercom-with-content-security-policy
@@ -53,17 +54,18 @@ Example sources:
 Use browser DevTools to analyze actual network requests:
 
 1. **Create a test page** with the service integration:
+
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>Service Test Page</title>
-  <!-- Add service integration code here -->
-</head>
-<body>
-  <h1>Testing Service CSP Requirements</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Service Test Page</title>
+    <!-- Add service integration code here -->
+  </head>
+  <body>
+    <h1>Testing Service CSP Requirements</h1>
+  </body>
 </html>
 ```
 
@@ -77,7 +79,7 @@ Test with restrictive CSP to find requirements:
 
 ```html
 <!-- Start with very restrictive CSP -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
 
 <!-- Add service code and see what breaks -->
 <!-- Check console for CSP violations -->
@@ -91,22 +93,26 @@ Create a research document:
 # Service: [Service Name]
 
 ## Domains Used
+
 - `https://cdn.service.com` - Main JavaScript library
 - `https://api.service.com` - API endpoints
 - `https://assets.service.com` - Images and static assets
 - `wss://realtime.service.com` - WebSocket connections
 
 ## CSP Requirements
+
 - `script-src`: https://cdn.service.com
 - `connect-src`: https://api.service.com, wss://realtime.service.com
 - `img-src`: https://assets.service.com
 
 ## Special Requirements
+
 - Requires 'unsafe-inline' for styles (try to avoid if possible)
 - Uses dynamic script injection
 - Needs frame-src for embedded widgets
 
 ## Test URLs
+
 - Demo page: https://service.com/demo
 - Documentation: https://docs.service.com/integrate
 ```
@@ -133,39 +139,37 @@ export const NewAnalyticsService = defineService({
   id: 'new-analytics-service',
   name: 'New Analytics Service',
   category: ServiceCategory.ANALYTICS,
-  
+
   // Description and documentation
   description: 'Advanced analytics platform for tracking user behavior and conversions',
   website: 'https://newanalytics.com',
-  
+
   // CSP directives based on research
   directives: {
     'script-src': ['https://cdn.newanalytics.com'],
-    'connect-src': [
-      'https://api.newanalytics.com',
-      'https://collect.newanalytics.com'
-    ],
-    'img-src': ['https://pixel.newanalytics.com']
+    'connect-src': ['https://api.newanalytics.com', 'https://collect.newanalytics.com'],
+    'img-src': ['https://pixel.newanalytics.com'],
   },
-  
+
   // Documentation
   officialDocs: [
     'https://docs.newanalytics.com/security/csp',
-    'https://help.newanalytics.com/integrate'
+    'https://help.newanalytics.com/integrate',
   ],
-  
+
   // Implementation notes
-  notes: 'Requires script-src for tracking library. The collect endpoint is for event data. Pixel endpoint is used for conversion tracking.',
-  
+  notes:
+    'Requires script-src for tracking library. The collect endpoint is for event data. Pixel endpoint is used for conversion tracking.',
+
   // Optional: Aliases for easier discovery
   aliases: ['new-analytics', 'na'],
-  
+
   // Optional: Special requirements
   requiresDynamic: true, // If service injects scripts dynamically
-  
+
   // Timestamps
   lastUpdated: new Date().toISOString(),
-  verifiedAt: new Date().toISOString()
+  verifiedAt: new Date().toISOString(),
 });
 ```
 
@@ -194,29 +198,29 @@ describe('NewAnalyticsService', () => {
   it('should have valid structure', () => {
     expect(validateService(NewAnalyticsService)).toBe(true);
   });
-  
+
   it('should have correct ID and name', () => {
     expect(NewAnalyticsService.id).toBe('new-analytics-service');
     expect(NewAnalyticsService.name).toBe('New Analytics Service');
   });
-  
+
   it('should include all required domains', () => {
     const { directives } = NewAnalyticsService;
-    
+
     expect(directives['script-src']).toContain('https://cdn.newanalytics.com');
     expect(directives['connect-src']).toContain('https://api.newanalytics.com');
     expect(directives['connect-src']).toContain('https://collect.newanalytics.com');
     expect(directives['img-src']).toContain('https://pixel.newanalytics.com');
   });
-  
+
   it('should have valid URLs', () => {
     const allUrls = Object.values(NewAnalyticsService.directives).flat();
-    
+
     allUrls.forEach(url => {
       expect(url).toMatch(/^https?:\/\/.+/);
     });
   });
-  
+
   it('should have proper documentation', () => {
     expect(NewAnalyticsService.website).toBeTruthy();
     expect(NewAnalyticsService.description).toBeTruthy();
@@ -236,7 +240,7 @@ import { NewAnalyticsService } from './packages/data/src/services/analytics/new-
 
 // Test basic generation
 const result = generateCSP({
-  services: [NewAnalyticsService]
+  services: [NewAnalyticsService],
 });
 
 console.log('Generated CSP:', result.header);
@@ -245,7 +249,7 @@ console.log('Warnings:', result.warnings);
 
 // Test with other services
 const multiResult = generateCSP({
-  services: [NewAnalyticsService, GoogleAnalytics, Stripe]
+  services: [NewAnalyticsService, GoogleAnalytics, Stripe],
 });
 
 console.log('Multi-service CSP:', multiResult.header);
@@ -253,7 +257,7 @@ console.log('Multi-service CSP:', multiResult.header);
 // Test with nonce
 const nonceResult = generateCSP({
   services: [NewAnalyticsService],
-  nonce: true
+  nonce: true,
 });
 
 console.log('With nonce:', nonceResult.header);
@@ -274,21 +278,24 @@ describe('Service Tests', () => {
     expect(Service.category).toBeDefined();
     expect(Service.directives).toBeDefined();
   });
-  
+
   // ID format
   it('should have kebab-case ID', () => {
     expect(Service.id).toMatch(/^[a-z]+(-[a-z]+)*$/);
   });
-  
+
   // URL validation
   it('should have valid HTTPS URLs', () => {
-    Object.values(Service.directives).flat().forEach(url => {
-      if (!url.startsWith("'")) { // Skip CSP keywords
-        expect(url).toMatch(/^https:\/\//);
-      }
-    });
+    Object.values(Service.directives)
+      .flat()
+      .forEach(url => {
+        if (!url.startsWith("'")) {
+          // Skip CSP keywords
+          expect(url).toMatch(/^https:\/\//);
+        }
+      });
   });
-  
+
   // No duplicates
   it('should not have duplicate URLs in directives', () => {
     Object.entries(Service.directives).forEach(([directive, urls]) => {
@@ -306,28 +313,29 @@ Create a real-world test page:
 ```html
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>CSP Test - New Analytics Service</title>
-  
-  <!-- Apply generated CSP -->
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://cdn.newanalytics.com; connect-src 'self' https://api.newanalytics.com https://collect.newanalytics.com; img-src 'self' https://pixel.newanalytics.com">
-  
-  <!-- Service integration code -->
-  <script src="https://cdn.newanalytics.com/analytics.js"></script>
-  <script>
-    NewAnalytics.init('YOUR_API_KEY');
-    NewAnalytics.track('page_view');
-  </script>
-</head>
-<body>
-  <h1>Testing New Analytics Service CSP</h1>
-  <p>Check console for CSP violations</p>
-  
-  <button onclick="NewAnalytics.track('button_click')">
-    Test Event Tracking
-  </button>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>CSP Test - New Analytics Service</title>
+
+    <!-- Apply generated CSP -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'self' https://cdn.newanalytics.com; connect-src 'self' https://api.newanalytics.com https://collect.newanalytics.com; img-src 'self' https://pixel.newanalytics.com"
+    />
+
+    <!-- Service integration code -->
+    <script src="https://cdn.newanalytics.com/analytics.js"></script>
+    <script>
+      NewAnalytics.init('YOUR_API_KEY');
+      NewAnalytics.track('page_view');
+    </script>
+  </head>
+  <body>
+    <h1>Testing New Analytics Service CSP</h1>
+    <p>Check console for CSP violations</p>
+
+    <button onclick="NewAnalytics.track('button_click')">Test Event Tracking</button>
+  </body>
 </html>
 ```
 
@@ -359,17 +367,17 @@ export const AnalyticsPattern = defineService({
   category: ServiceCategory.ANALYTICS,
   directives: {
     'script-src': [
-      'https://cdn.analytics.com'      // Main tracking library
+      'https://cdn.analytics.com', // Main tracking library
     ],
     'connect-src': [
-      'https://api.analytics.com',     // Event collection
-      'https://collect.analytics.com'  // Beacon API
+      'https://api.analytics.com', // Event collection
+      'https://collect.analytics.com', // Beacon API
     ],
     'img-src': [
-      'https://pixel.analytics.com'    // Tracking pixels
-    ]
+      'https://pixel.analytics.com', // Tracking pixels
+    ],
   },
-  requiresDynamic: true // Most analytics inject scripts
+  requiresDynamic: true, // Most analytics inject scripts
 });
 ```
 
@@ -384,20 +392,20 @@ export const PaymentPattern = defineService({
   category: ServiceCategory.PAYMENT,
   directives: {
     'script-src': [
-      'https://js.payment.com'         // Payment SDK
+      'https://js.payment.com', // Payment SDK
     ],
     'frame-src': [
-      'https://checkout.payment.com',  // Embedded checkout
-      'https://3ds.payment.com'        // 3D Secure
+      'https://checkout.payment.com', // Embedded checkout
+      'https://3ds.payment.com', // 3D Secure
     ],
     'connect-src': [
-      'https://api.payment.com'        // API calls
+      'https://api.payment.com', // API calls
     ],
     'img-src': [
-      'https://assets.payment.com'     // Card brand logos
-    ]
+      'https://assets.payment.com', // Card brand logos
+    ],
   },
-  notes: 'frame-src required for embedded checkout and 3D Secure authentication'
+  notes: 'frame-src required for embedded checkout and 3D Secure authentication',
 });
 ```
 
@@ -412,24 +420,24 @@ export const ChatPattern = defineService({
   category: ServiceCategory.CHAT,
   directives: {
     'script-src': [
-      'https://widget.chat.com'        // Chat widget loader
+      'https://widget.chat.com', // Chat widget loader
     ],
     'frame-src': [
-      'https://widget.chat.com',       // Chat iframe
-      'https://app.chat.com'           // Full chat interface
+      'https://widget.chat.com', // Chat iframe
+      'https://app.chat.com', // Full chat interface
     ],
     'connect-src': [
-      'https://api.chat.com',          // REST API
-      'wss://realtime.chat.com'        // WebSocket for real-time
+      'https://api.chat.com', // REST API
+      'wss://realtime.chat.com', // WebSocket for real-time
     ],
     'img-src': [
-      'https://static.chat.com',       // Avatars
-      'https://uploads.chat.com'       // User uploads
+      'https://static.chat.com', // Avatars
+      'https://uploads.chat.com', // User uploads
     ],
     'media-src': [
-      'https://media.chat.com'         // Voice/video calls
-    ]
-  }
+      'https://media.chat.com', // Voice/video calls
+    ],
+  },
 });
 ```
 
@@ -447,9 +455,9 @@ export const CDNPattern = defineService({
     'style-src': ['https://cdn.example.com'],
     'img-src': ['https://cdn.example.com'],
     'font-src': ['https://cdn.example.com'],
-    'media-src': ['https://cdn.example.com']
+    'media-src': ['https://cdn.example.com'],
   },
-  notes: 'General-purpose CDN serving multiple content types'
+  notes: 'General-purpose CDN serving multiple content types',
 });
 ```
 
@@ -461,6 +469,7 @@ export const CDNPattern = defineService({
 
 **Symptom**: Integration broken despite CSP rules
 **Solution**: Check for:
+
 - Missing domains (check ALL network requests)
 - Dynamic script injection requiring 'strict-dynamic'
 - Inline scripts/styles needing nonce
@@ -469,7 +478,8 @@ export const CDNPattern = defineService({
 #### 2. Too Many Warnings
 
 **Symptom**: Validation warnings about wildcards
-**Solution**: 
+**Solution**:
+
 - Be more specific with domains
 - List known subdomains explicitly
 - Only use wildcards when absolutely necessary
@@ -483,7 +493,7 @@ export const CDNPattern = defineService({
 export const ServiceA = defineService({
   id: 'service-a',
   // ... other fields
-  conflicts: ['service-b'] // Cannot be used with service-b
+  conflicts: ['service-b'], // Cannot be used with service-b
 });
 ```
 
@@ -496,14 +506,15 @@ export const ServiceA = defineService({
 export const DynamicService = defineService({
   id: 'dynamic-service',
   // ... other fields
-  notes: 'Basic integration requires script-src only. If using advanced features (video calls), also needs media-src and additional connect-src endpoints.',
-  validate: (directives) => {
+  notes:
+    'Basic integration requires script-src only. If using advanced features (video calls), also needs media-src and additional connect-src endpoints.',
+  validate: directives => {
     const warnings = [];
     if (!directives['media-src']?.includes('https://media.service.com')) {
       warnings.push('Video features require media-src for https://media.service.com');
     }
     return { warnings };
-  }
+  },
 });
 ```
 
@@ -579,8 +590,8 @@ export const DeprecatedService = defineService({
   deprecated: {
     since: '2025-01-01',
     message: 'This service has shut down',
-    alternative: 'new-service' // Suggest replacement
-  }
+    alternative: 'new-service', // Suggest replacement
+  },
 });
 ```
 
@@ -622,6 +633,7 @@ git push origin add-new-analytics-service
 ```
 
 Include in your PR:
+
 - Service definition file
 - Tests
 - Export from category index

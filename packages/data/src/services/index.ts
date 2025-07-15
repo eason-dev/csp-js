@@ -20,7 +20,12 @@ export * from './testing/index.js';
 export * from './video/index.js';
 
 // Re-export types
-export type { CSPService, DefineServiceFn, ValidationResult, ConfigurableService } from '../service-types.js';
+export type {
+  CSPService,
+  DefineServiceFn,
+  ValidationResult,
+  ConfigurableService,
+} from '../service-types.js';
 export { defineService, isCSPService } from '../service-types.js';
 // Note: createConfigurableService is not exported as it creates functions
 // that can't be serialized to client components

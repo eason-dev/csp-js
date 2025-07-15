@@ -18,11 +18,11 @@ sidebar_position: 1
 
 ### Choose Your Interface
 
-| Method | Best For | Time to Start |
-|--------|----------|---------------|
-| **[🌐 Web Interface](./web-interface.md)** | Beginners, visual learners, quick testing | **0 minutes** |
-| **[📦 TypeScript API](./getting-started.md)** | Developers, production apps | **2 minutes** |
-| **[🛠️ CLI Tools](./cli-guide.md)** | Contributors, automation | **5 minutes** |
+| Method                                        | Best For                                  | Time to Start |
+| --------------------------------------------- | ----------------------------------------- | ------------- |
+| **[🌐 Web Interface](./web-interface.md)**    | Beginners, visual learners, quick testing | **0 minutes** |
+| **[📦 TypeScript API](./getting-started.md)** | Developers, production apps               | **2 minutes** |
+| **[🛠️ CLI Tools](./cli-guide.md)**            | Contributors, automation                  | **5 minutes** |
 
 ### Most Popular: Web Interface
 
@@ -46,7 +46,7 @@ import { generateCSP } from '@csp-kit/generator';
 import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
 
 const result = generateCSP({
-  services: [GoogleAnalytics, Stripe, GoogleFonts]
+  services: [GoogleAnalytics, Stripe, GoogleFonts],
 });
 console.log(result.header);
 // "script-src 'self' https://www.googletagmanager.com..."
@@ -56,36 +56,35 @@ console.log(result.header);
 
 ### 🎯 **User Guides**
 
-| Guide | Description | Audience |
-|-------|-------------|----------|
-| **[Getting Started](./getting-started.md)** | Installation, TypeScript API, common patterns | New users |
-| **[Web Interface](./web-interface.md)** | Interactive CSP generator guide | All users |
-| **[API Reference](./api-reference.md)** | Complete TypeScript API documentation | Developers |
-| **[CLI Guide](./cli-guide.md)** | Command-line tools reference | Advanced users |
+| Guide                                       | Description                                   | Audience       |
+| ------------------------------------------- | --------------------------------------------- | -------------- |
+| **[Getting Started](./getting-started.md)** | Installation, TypeScript API, common patterns | New users      |
+| **[Web Interface](./web-interface.md)**     | Interactive CSP generator guide               | All users      |
+| **[API Reference](./api-reference.md)**     | Complete TypeScript API documentation         | Developers     |
+| **[CLI Guide](./cli-guide.md)**             | Command-line tools reference                  | Advanced users |
 
 ### 📖 **Reference**
 
-| Resource | Description |
-|----------|-------------|
-| **[Service Support](./service-support.md)** | List of 106+ supported services |
-| **[Framework Examples](./examples/nextjs.md)** | Next.js, Express, and more |
+| Resource                                       | Description                     |
+| ---------------------------------------------- | ------------------------------- |
+| **[Service Support](./service-support.md)**    | List of 106+ supported services |
+| **[Framework Examples](./examples/nextjs.md)** | Next.js, Express, and more      |
 
 ### 🤝 **Contributing**
 
-| Guide | Description |
-|-------|-------------|
-| **[Contributing Guide](./contributing.md)** | How to contribute TypeScript service definitions |
-| **[Service Development](./service-development-guide.md)** | Complete guide for creating services |
+| Guide                                                     | Description                                      |
+| --------------------------------------------------------- | ------------------------------------------------ |
+| **[Contributing Guide](./contributing.md)**               | How to contribute TypeScript service definitions |
+| **[Service Development](./service-development-guide.md)** | Complete guide for creating services             |
 
 ### 🔧 **For Maintainers**
 
-| Guide | Description |
-|-------|-------------|
-| **[Architecture](./maintainer/ARCHITECTURE.md)** | Technical architecture overview |
+| Guide                                                                    | Description                             |
+| ------------------------------------------------------------------------ | --------------------------------------- |
+| **[Architecture](./maintainer/ARCHITECTURE.md)**                         | Technical architecture overview         |
 | **[Service Definition Guide](./maintainer/SERVICE_DEFINITION_GUIDE.md)** | TypeScript service schema documentation |
-| **[Maintainer Guide](./maintainer/MAINTAINER_GUIDE.md)** | Project maintenance procedures |
-| **[Release Process](./maintainer/RELEASE_PROCESS.md)** | How releases are managed |
-| **[NPM Publishing Guide](./maintainer/NPM_PUBLISHING_GUIDE.md)** | Package publishing procedures |
+| **[Maintainer Guide](./maintainer/MAINTAINER_GUIDE.md)**                 | Project maintenance procedures          |
+| **[Release Process](./maintainer/RELEASE_PROCESS.md)**                   | How releases are managed                |
 
 ## 🎯 What is CSP Kit?
 
@@ -93,7 +92,8 @@ CSP Kit transforms Content Security Policy management from manual, error-prone w
 
 ```typescript
 // ❌ Traditional approach: Manual, hard to maintain
-const csp = "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; style-src 'self' https://fonts.googleapis.com...";
+const csp =
+  "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; style-src 'self' https://fonts.googleapis.com...";
 
 // ✅ CSP Kit approach: Type-safe, automatic, always up-to-date
 import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
@@ -123,6 +123,7 @@ CSP Kit uses a data-package separation model:
 ```
 
 **Why separate packages?**
+
 - ✅ **Fast Updates**: Get new services without library updates
 - ✅ **Stable API**: Core library changes rarely
 - ✅ **Tree Shaking**: Only bundle the services you import
@@ -131,13 +132,13 @@ CSP Kit uses a data-package separation model:
 
 ### 🌐 **TypeScript-First Design**
 
-| Feature | Benefit |
-|---------|---------|
-| **Direct Imports** | `import { GoogleAnalytics } from '@csp-kit/data'` |
-| **Type Safety** | Full compile-time checking and IntelliSense |
-| **Tree Shaking** | Only bundle the services you use |
-| **No Runtime Loading** | Services imported at build time |
-| **Better DX** | Clear dependencies and refactoring support |
+| Feature                | Benefit                                           |
+| ---------------------- | ------------------------------------------------- |
+| **Direct Imports**     | `import { GoogleAnalytics } from '@csp-kit/data'` |
+| **Type Safety**        | Full compile-time checking and IntelliSense       |
+| **Tree Shaking**       | Only bundle the services you use                  |
+| **No Runtime Loading** | Services imported at build time                   |
+| **Better DX**          | Clear dependencies and refactoring support        |
 
 ## 🚀 What's New in v2.x
 
@@ -175,19 +176,18 @@ const result = generateCSP({ services: [GoogleAnalytics, Stripe] });
 
 ### 📞 **Support Channels**
 
-| Channel | Best For | Response Time |
-|---------|----------|---------------|
-| **[📖 Documentation](https://csp-kit.eason.ch/docs)** | Guides, API reference, examples | Instant |
-| **[🌐 Web Interface](https://csp-kit.eason.ch)** | Interactive CSP generation | Instant |
-| **[💬 GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions)** | Questions, feature requests | ~24 hours |
-| **[🐛 GitHub Issues](https://github.com/eason-dev/csp-kit/issues)** | Bug reports, specific problems | ~48 hours |
+| Channel                                                                       | Best For                        | Response Time |
+| ----------------------------------------------------------------------------- | ------------------------------- | ------------- |
+| **[📖 Documentation](https://csp-kit.eason.ch/docs)**                         | Guides, API reference, examples | Instant       |
+| **[🌐 Web Interface](https://csp-kit.eason.ch)**                              | Interactive CSP generation      | Instant       |
+| **[💬 GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions)** | Questions, feature requests     | ~24 hours     |
+| **[🐛 GitHub Issues](https://github.com/eason-dev/csp-kit/issues)**           | Bug reports, specific problems  | ~48 hours     |
 
 ### 🚀 **Quick Solutions**
 
 **First time user?** → Start with the [Web Interface](https://csp-kit.eason.ch)
 
 **Need to install?** → Follow the [Getting Started Guide](./getting-started.md)
-
 
 **Looking for a service?** → Check [Service Support](./service-support.md)
 

@@ -81,7 +81,10 @@ export function UsageMethods({
     // Convert service IDs to service names for imports
     const serviceNames = serviceIds.map(id => {
       // Convert kebab-case to PascalCase for import names
-      return id.split('-').map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('');
+      return id
+        .split('-')
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
     });
     const serviceImports = serviceNames.join(', ');
 

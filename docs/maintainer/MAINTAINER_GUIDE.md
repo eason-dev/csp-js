@@ -275,8 +275,16 @@ CSP Kit follows a data-package separation approach inspired by browserslist:
    ```
 
 6. **Publish to NPM**
+
    ```bash
-   pnpm publish:all
+   # Create a changeset
+   pnpm changeset
+
+   # Version packages and create release commit
+   pnpm changeset version
+
+   # Publish to NPM
+   pnpm release
    ```
 
 **Post-Release:**

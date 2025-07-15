@@ -54,22 +54,20 @@ export const GoogleAnalytics = defineService({
   id: 'google-analytics',
   name: 'Google Analytics 4',
   category: ServiceCategory.ANALYTICS,
-  
+
   // Required: Description and Documentation
   description: 'Web analytics service that tracks and reports website traffic and user behavior',
   website: 'https://analytics.google.com/',
-  
+
   // Required: CSP Directives
   directives: {
-    'script-src': [
-      'https://*.googletagmanager.com'
-    ],
+    'script-src': ['https://*.googletagmanager.com'],
     'img-src': [
       'https://*.google-analytics.com',
       'https://*.googletagmanager.com',
       'https://*.g.doubleclick.net',
       'https://*.google.com',
-      'https://*.google.<TLD>'
+      'https://*.google.<TLD>',
     ],
     'connect-src': [
       'https://*.google-analytics.com',
@@ -78,57 +76,55 @@ export const GoogleAnalytics = defineService({
       'https://*.g.doubleclick.net',
       'https://*.google.com',
       'https://*.google.<TLD>',
-      'https://pagead2.googlesyndication.com'
+      'https://pagead2.googlesyndication.com',
     ],
-    'frame-src': [
-      'https://td.doubleclick.net',
-      'https://www.googletagmanager.com'
-    ]
+    'frame-src': ['https://td.doubleclick.net', 'https://www.googletagmanager.com'],
   },
-  
+
   // Optional: Additional Metadata
   officialDocs: [
     'https://developers.google.com/tag-platform/security/guides/csp',
     'https://developers.google.com/analytics/devguides/collection/ga4',
-    'https://www.google.com/supported_domains'
+    'https://www.google.com/supported_domains',
   ],
-  notes: 'For Google Signals (cross-device tracking), use the extended CSP configuration. Each Google top-level domain (TLD) must be specified individually in CSP. See https://www.google.com/supported_domains for complete list of Google TLDs.',
+  notes:
+    'For Google Signals (cross-device tracking), use the extended CSP configuration. Each Google top-level domain (TLD) must be specified individually in CSP. See https://www.google.com/supported_domains for complete list of Google TLDs.',
   aliases: ['ga4', 'gtag', 'google-gtag'],
-  
+
   // Optional: Behavior Flags
   requiresDynamic: true,
-  
+
   // Optional: Metadata
   lastUpdated: '2024-06-28T00:00:00.000Z',
-  verifiedAt: '2025-07-03T00:00:00.000Z'
+  verifiedAt: '2025-07-03T00:00:00.000Z',
 });
 ```
 
 ### Required Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | `string` | Unique kebab-case identifier |
-| `name` | `string` | Human-readable service name |
-| `category` | `ServiceCategory` | Service category enum value |
-| `description` | `string` | Brief description (50-150 characters) |
-| `website` | `string` | Official service website URL |
-| `directives` | `CSPDirectives` | CSP directives required by the service |
+| Field         | Type              | Description                            |
+| ------------- | ----------------- | -------------------------------------- |
+| `id`          | `string`          | Unique kebab-case identifier           |
+| `name`        | `string`          | Human-readable service name            |
+| `category`    | `ServiceCategory` | Service category enum value            |
+| `description` | `string`          | Brief description (50-150 characters)  |
+| `website`     | `string`          | Official service website URL           |
+| `directives`  | `CSPDirectives`   | CSP directives required by the service |
 
 ### Optional Fields
 
-| Field | Type | Description |
-|-------|------|-------------|
-| `officialDocs` | `string[]` | Links to official CSP documentation |
-| `notes` | `string` | Implementation notes and requirements |
-| `aliases` | `string[]` | Alternative service identifiers |
-| `requiresDynamic` | `boolean` | Service injects scripts dynamically |
-| `requiresNonce` | `boolean` | Service requires nonce for inline scripts |
-| `deprecated` | `DeprecationInfo` | Deprecation information |
-| `conflicts` | `string[]` | IDs of conflicting services |
-| `validate` | `(directives) => ValidationResult` | Custom validation function |
-| `lastUpdated` | `string` | ISO timestamp of last update |
-| `verifiedAt` | `string` | ISO timestamp when CSP was last verified |
+| Field             | Type                               | Description                               |
+| ----------------- | ---------------------------------- | ----------------------------------------- |
+| `officialDocs`    | `string[]`                         | Links to official CSP documentation       |
+| `notes`           | `string`                           | Implementation notes and requirements     |
+| `aliases`         | `string[]`                         | Alternative service identifiers           |
+| `requiresDynamic` | `boolean`                          | Service injects scripts dynamically       |
+| `requiresNonce`   | `boolean`                          | Service requires nonce for inline scripts |
+| `deprecated`      | `DeprecationInfo`                  | Deprecation information                   |
+| `conflicts`       | `string[]`                         | IDs of conflicting services               |
+| `validate`        | `(directives) => ValidationResult` | Custom validation function                |
+| `lastUpdated`     | `string`                           | ISO timestamp of last update              |
+| `verifiedAt`      | `string`                           | ISO timestamp when CSP was last verified  |
 
 ## Creating a New Service
 
@@ -181,26 +177,27 @@ export * from './new-analytics.js'; // Add your service
 
 ```typescript
 interface CSPDirectives {
-  'script-src'?: string[];      // JavaScript sources
-  'style-src'?: string[];       // CSS sources
-  'img-src'?: string[];         // Image sources
-  'connect-src'?: string[];     // Fetch/XHR/WebSocket sources
-  'frame-src'?: string[];       // Frame/iframe sources
-  'font-src'?: string[];        // Font sources
-  'media-src'?: string[];       // Audio/video sources
-  'object-src'?: string[];      // Plugin sources
-  'worker-src'?: string[];      // Web workers
-  'child-src'?: string[];       // Workers and frames
-  'manifest-src'?: string[];    // Web app manifests
-  'form-action'?: string[];     // Form submission targets
+  'script-src'?: string[]; // JavaScript sources
+  'style-src'?: string[]; // CSS sources
+  'img-src'?: string[]; // Image sources
+  'connect-src'?: string[]; // Fetch/XHR/WebSocket sources
+  'frame-src'?: string[]; // Frame/iframe sources
+  'font-src'?: string[]; // Font sources
+  'media-src'?: string[]; // Audio/video sources
+  'object-src'?: string[]; // Plugin sources
+  'worker-src'?: string[]; // Web workers
+  'child-src'?: string[]; // Workers and frames
+  'manifest-src'?: string[]; // Web app manifests
+  'form-action'?: string[]; // Form submission targets
   'frame-ancestors'?: string[]; // Who can frame this site
-  'base-uri'?: string[];        // Base tag restrictions
+  'base-uri'?: string[]; // Base tag restrictions
 }
 ```
 
 ### CSP Source Guidelines
 
 **Be Specific**:
+
 ```typescript
 // ✅ Good - Specific domains
 directives: {
@@ -215,6 +212,7 @@ directives: {
 ```
 
 **Use Wildcards Carefully**:
+
 ```typescript
 // ✅ Acceptable - Necessary for multi-subdomain services
 directives: {
@@ -231,6 +229,7 @@ directives: {
 ```
 
 **Special Values**:
+
 - `'self'` - Automatically added by generator
 - `'unsafe-inline'` - Avoid! Use nonce instead
 - `'unsafe-eval'` - Avoid! Security risk
@@ -250,27 +249,27 @@ export const ServiceWithValidation = defineService({
   category: ServiceCategory.ANALYTICS,
   directives: {
     'script-src': ['https://analytics.service.com'],
-    'connect-src': ['https://api.service.com']
+    'connect-src': ['https://api.service.com'],
   },
-  
+
   // Custom validation
-  validate: (directives) => {
+  validate: directives => {
     const warnings: string[] = [];
     const errors: string[] = [];
-    
+
     // Check for wildcards
     const scriptSrc = directives['script-src'] || [];
     if (scriptSrc.some(src => src.includes('*'))) {
       warnings.push('script-src contains wildcards which may be overly permissive');
     }
-    
+
     // Check for required directive
     if (!directives['connect-src']) {
       errors.push('connect-src is required for analytics tracking');
     }
-    
+
     return { warnings, errors };
-  }
+  },
 });
 ```
 
@@ -284,14 +283,14 @@ export const OldService = defineService({
   name: 'Old Service (Deprecated)',
   category: ServiceCategory.ANALYTICS,
   directives: {
-    'script-src': ['https://old.service.com']
+    'script-src': ['https://old.service.com'],
   },
-  
+
   deprecated: {
     since: '2024-01-01',
     message: 'Old Service has been replaced by New Service',
-    alternative: 'new-service'
-  }
+    alternative: 'new-service',
+  },
 });
 ```
 
@@ -305,9 +304,9 @@ export const ServiceA = defineService({
   name: 'Service A',
   category: ServiceCategory.ANALYTICS,
   directives: {
-    'script-src': ['https://a.service.com']
+    'script-src': ['https://a.service.com'],
   },
-  conflicts: ['service-b'] // Cannot be used with service-b
+  conflicts: ['service-b'], // Cannot be used with service-b
 });
 ```
 
@@ -322,31 +321,27 @@ export const StripeConfigurable = createConfigurableService({
   id: 'stripe-configurable',
   name: 'Stripe (Configurable)',
   category: ServiceCategory.PAYMENT,
-  
+
   // Base configuration
   directives: {
     'script-src': ['https://js.stripe.com'],
-    'frame-src': ['https://js.stripe.com']
+    'frame-src': ['https://js.stripe.com'],
   },
-  
+
   // Configuration function
-  configure: (options: { 
-    checkout?: boolean;
-    elements?: boolean;
-    paymentRequest?: boolean;
-  }) => {
+  configure: (options: { checkout?: boolean; elements?: boolean; paymentRequest?: boolean }) => {
     const directives: CSPDirectives = {};
-    
+
     if (options.checkout) {
       directives['frame-src'] = ['https://checkout.stripe.com'];
     }
-    
+
     if (options.paymentRequest) {
       directives['connect-src'] = ['https://api.stripe.com'];
     }
-    
+
     return { directives };
-  }
+  },
 });
 ```
 
@@ -366,12 +361,12 @@ describe('NewAnalytics', () => {
   it('should have valid structure', () => {
     expect(validateService(NewAnalytics)).toBe(true);
   });
-  
+
   it('should have required directives', () => {
     expect(NewAnalytics.directives['script-src']).toBeDefined();
     expect(NewAnalytics.directives['connect-src']).toBeDefined();
   });
-  
+
   it('should have valid URLs', () => {
     const scriptSrcs = NewAnalytics.directives['script-src'] || [];
     scriptSrcs.forEach(src => {
@@ -392,7 +387,7 @@ import { NewAnalytics } from '@csp-kit/data';
 
 const result = generateCSP({
   services: [NewAnalytics],
-  nonce: true
+  nonce: true,
 });
 
 console.log('CSP Header:', result.header);
@@ -442,28 +437,29 @@ export const WellDocumentedService = defineService({
   id: 'well-documented',
   name: 'Well Documented Service',
   category: ServiceCategory.ANALYTICS,
-  
+
   // Clear, concise description
   description: 'Analytics service for tracking user interactions and conversions',
-  
+
   // Link to official site
   website: 'https://welldocumented.com',
-  
+
   // CSP-specific documentation
   officialDocs: [
     'https://docs.welldocumented.com/security/csp',
-    'https://help.welldocumented.com/integrate/content-security-policy'
+    'https://help.welldocumented.com/integrate/content-security-policy',
   ],
-  
+
   // Implementation notes
-  notes: 'Requires nonce for inline tracking scripts. For e-commerce tracking, additional domains may be needed. See official docs for advanced configuration.',
-  
+  notes:
+    'Requires nonce for inline tracking scripts. For e-commerce tracking, additional domains may be needed. See official docs for advanced configuration.',
+
   // All CSP requirements
   directives: {
     'script-src': ['https://cdn.welldocumented.com'],
     'connect-src': ['https://api.welldocumented.com'],
-    'img-src': ['https://pixel.welldocumented.com']
-  }
+    'img-src': ['https://pixel.welldocumented.com'],
+  },
 });
 ```
 

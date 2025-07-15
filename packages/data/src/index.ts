@@ -1,7 +1,12 @@
 // Export types first
 export * from './types.js';
 // Export only the types and functions safe for client components
-export type { CSPService, DefineServiceFn, ValidationResult, ConfigurableService } from './service-types.js';
+export type {
+  CSPService,
+  DefineServiceFn,
+  ValidationResult,
+  ConfigurableService,
+} from './service-types.js';
 export { defineService, isCSPService } from './service-types.js';
 
 // Export new services
@@ -21,7 +26,7 @@ export async function getServiceRegistry(): Promise<ServiceRegistry> {
   // Convert all exported services to a registry format
   const services: Record<string, ServiceDefinition> = {};
   const categories: Record<ServiceCategory, string[]> = {} as Record<ServiceCategory, string[]>;
-  
+
   for (const [, value] of Object.entries(allServices)) {
     if (value && typeof value === 'object' && 'id' in value && 'directives' in value) {
       const service = value as CSPService;
@@ -41,7 +46,7 @@ export async function getServiceRegistry(): Promise<ServiceRegistry> {
         requiresNonce: false,
       };
       services[service.id] = serviceDefinition;
-      
+
       // Build categories index
       const cat = service.category as ServiceCategory;
       if (!categories[cat]) {
@@ -50,12 +55,12 @@ export async function getServiceRegistry(): Promise<ServiceRegistry> {
       categories[cat].push(service.id);
     }
   }
-  
+
   return {
     services,
     categories,
     lastUpdated: new Date().toISOString(),
     version: '1.0.0',
-    schemaVersion: '2.0'
+    schemaVersion: '2.0',
   };
 }

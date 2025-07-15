@@ -1,17 +1,20 @@
 # CSP-Kit Architecture Migration Progress
 
 ## Overview
+
 Migrating CSP-Kit from JSONC-based service definitions to TypeScript-based architecture with improved API design.
 
 ## Migration Tasks
 
 ### Phase 1: Preparation & Analysis ✅
+
 - [x] Create progress tracking document
 - [x] Analyze current project architecture
 - [x] Create TypeScript service type definitions
 - [x] Create defineService utility function
 
 ### Phase 2: Service Migration (106+ files) ✅
+
 - [x] Create service migration script
 - [x] Migrate all 106 services to TypeScript
 - [x] Create index files for all categories
@@ -30,6 +33,7 @@ Migrating CSP-Kit from JSONC-based service definitions to TypeScript-based archi
   - [ ] Other services (remaining)
 
 ### Phase 3: Generator Updates ✅
+
 - [x] Update @csp-kit/generator types
 - [x] Implement new generateCSP API
 - [x] Add defineService function
@@ -38,6 +42,7 @@ Migrating CSP-Kit from JSONC-based service definitions to TypeScript-based archi
 - [x] Create new generator-v2 implementation
 
 ### Phase 4: Testing
+
 - [ ] Update unit tests for generator
 - [ ] Update unit tests for data package
 - [ ] Update integration tests
@@ -46,6 +51,7 @@ Migrating CSP-Kit from JSONC-based service definitions to TypeScript-based archi
 - [ ] Update test fixtures
 
 ### Phase 5: Documentation
+
 - [ ] Update main README.md
 - [ ] Update packages/generator/README.md
 - [ ] Update packages/data/README.md
@@ -59,12 +65,14 @@ Migrating CSP-Kit from JSONC-based service definitions to TypeScript-based archi
 - [ ] Update TypeScript examples
 
 ### Phase 6: Demo Application
+
 - [ ] Update apps/web to use new API
 - [ ] Add custom service examples
 - [ ] Update UI to show new features
 - [ ] Update code generation examples
 
 ### Phase 7: Cleanup
+
 - [ ] Remove old JSONC files
 - [ ] Remove old loading logic
 - [ ] Update build scripts
@@ -74,6 +82,7 @@ Migrating CSP-Kit from JSONC-based service definitions to TypeScript-based archi
 ## Service Migration Strategy
 
 ### From JSONC:
+
 ```jsonc
 {
   "id": "google-analytics-4",
@@ -84,6 +93,7 @@ Migrating CSP-Kit from JSONC-based service definitions to TypeScript-based archi
 ```
 
 ### To TypeScript:
+
 ```typescript
 import { defineService } from '../types';
 
@@ -98,9 +108,10 @@ export const GoogleAnalytics4 = defineService({
 ## Progress Log
 
 ### Day 1
+
 - Created progress tracking document
 - Starting architecture analysis...
 
 ---
 
-*This document will be updated as migration progresses*
+_This document will be updated as migration progresses_

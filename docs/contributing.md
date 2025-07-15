@@ -4,13 +4,13 @@ Welcome to the CSP Kit community! We're excited you want to contribute to making
 
 ## 🎯 What We Need Most
 
-| Priority | Type | Description | Time Estimate |
-|----------|------|-------------|---------------|
-| **🔥 High** | **New Services** | Add TypeScript service definitions | 15-30 min |
-| **🔥 High** | **Service Updates** | Update existing services when they change | 10-15 min |
-| **📚 Medium** | **Documentation** | Improve guides and examples | 30-60 min |
-| **🐛 Medium** | **Bug Reports** | Report issues and edge cases | 5-10 min |
-| **💡 Low** | **Feature Ideas** | Suggest new features and improvements | varies |
+| Priority      | Type                | Description                               | Time Estimate |
+| ------------- | ------------------- | ----------------------------------------- | ------------- |
+| **🔥 High**   | **New Services**    | Add TypeScript service definitions        | 15-30 min     |
+| **🔥 High**   | **Service Updates** | Update existing services when they change | 10-15 min     |
+| **📚 Medium** | **Documentation**   | Improve guides and examples               | 30-60 min     |
+| **🐛 Medium** | **Bug Reports**     | Report issues and edge cases              | 5-10 min      |
+| **💡 Low**    | **Feature Ideas**   | Suggest new features and improvements     | varies        |
 
 ## 🚀 Quick Start
 
@@ -85,26 +85,26 @@ export const MyAnalytics = defineService({
   category: ServiceCategory.ANALYTICS,
   description: 'Advanced analytics platform for tracking user behavior',
   website: 'https://myanalytics.com',
-  
+
   // CSP directives
   directives: {
     'script-src': ['https://cdn.myanalytics.com'],
     'connect-src': ['https://api.myanalytics.com'],
-    'img-src': ['https://pixel.myanalytics.com']
+    'img-src': ['https://pixel.myanalytics.com'],
   },
-  
+
   // Optional metadata
   officialDocs: [
     'https://docs.myanalytics.com/security/csp',
-    'https://help.myanalytics.com/implementation'
+    'https://help.myanalytics.com/implementation',
   ],
   notes: 'Requires script-src for tracking code. Use connect-src for real-time events.',
   aliases: ['my-analytics', 'ma'],
   requiresDynamic: true, // If service injects scripts dynamically
-  
+
   // Timestamps
   lastUpdated: '2025-07-12T00:00:00.000Z',
-  verifiedAt: '2025-07-12T00:00:00.000Z'
+  verifiedAt: '2025-07-12T00:00:00.000Z',
 });
 ```
 
@@ -131,13 +131,14 @@ pnpm tsx test-service.ts
 ```
 
 Create a test file:
+
 ```typescript
 // test-service.ts
 import { generateCSP } from '@csp-kit/generator';
 import { MyAnalytics } from './packages/data/src/services/analytics/my-analytics.js';
 
 const result = generateCSP({
-  services: [MyAnalytics]
+  services: [MyAnalytics],
 });
 
 console.log('Generated CSP:', result.header);
@@ -149,12 +150,14 @@ console.log('Warnings:', result.warnings);
 When a service changes their CSP requirements:
 
 1. **Find the service file:**
+
    ```bash
    # Search for the service
    find packages/data/src/services -name "*stripe*"
    ```
 
 2. **Update the directives:**
+
    ```typescript
    // packages/data/src/services/payment/stripe.ts
    export const Stripe = defineService({
@@ -162,11 +165,11 @@ When a service changes their CSP requirements:
      directives: {
        'script-src': [
          'https://js.stripe.com',
-         'https://checkout.stripe.com' // Add new domain
+         'https://checkout.stripe.com', // Add new domain
        ],
        // ... other directives
      },
-     lastUpdated: '2025-07-12T00:00:00.000Z' // Update timestamp
+     lastUpdated: '2025-07-12T00:00:00.000Z', // Update timestamp
    });
    ```
 
@@ -179,51 +182,54 @@ When a service changes their CSP requirements:
 
 Choose the most appropriate category:
 
-| Category | Import Path | Examples |
-|----------|-------------|----------|
-| `ANALYTICS` | `services/analytics/` | Google Analytics, Mixpanel |
-| `ADVERTISING` | `services/advertising/` | Google Ads, Facebook Pixel |
-| `SOCIAL` | `services/social/` | Facebook, Twitter, LinkedIn |
-| `PAYMENT` | `services/payment/` | Stripe, PayPal, Square |
-| `FORMS` | `services/forms/` | Typeform, Calendly |
-| `CHAT` | `services/chat/` | Intercom, Zendesk |
-| `CDN` | `services/cdn/` | Cloudflare, jsDelivr |
-| `FONTS` | `services/fonts/` | Google Fonts, Adobe Fonts |
-| `MAPS` | `services/maps/` | Google Maps, Mapbox |
-| `VIDEO` | `services/video/` | YouTube, Vimeo |
-| `MONITORING` | `services/monitoring/` | Sentry, DataDog |
-| `OTHER` | `services/other/` | Everything else |
+| Category      | Import Path             | Examples                    |
+| ------------- | ----------------------- | --------------------------- |
+| `ANALYTICS`   | `services/analytics/`   | Google Analytics, Mixpanel  |
+| `ADVERTISING` | `services/advertising/` | Google Ads, Facebook Pixel  |
+| `SOCIAL`      | `services/social/`      | Facebook, Twitter, LinkedIn |
+| `PAYMENT`     | `services/payment/`     | Stripe, PayPal, Square      |
+| `FORMS`       | `services/forms/`       | Typeform, Calendly          |
+| `CHAT`        | `services/chat/`        | Intercom, Zendesk           |
+| `CDN`         | `services/cdn/`         | Cloudflare, jsDelivr        |
+| `FONTS`       | `services/fonts/`       | Google Fonts, Adobe Fonts   |
+| `MAPS`        | `services/maps/`        | Google Maps, Mapbox         |
+| `VIDEO`       | `services/video/`       | YouTube, Vimeo              |
+| `MONITORING`  | `services/monitoring/`  | Sentry, DataDog             |
+| `OTHER`       | `services/other/`       | Everything else             |
 
 ### 🔍 Research Guidelines
 
 Before adding a service, research their CSP requirements:
 
 1. **Check official documentation**
+
    ```bash
    # Search their docs for CSP information
    # Look for: "Content Security Policy", "CSP", "security headers"
    ```
 
 2. **Analyze real implementations**
+
    ```bash
    # Check what domains they use
    curl -I https://example-using-service.com | grep -i content-security
-   
+
    # Use browser DevTools Network tab
    # Filter by domain to see all requests
    ```
 
 3. **Test with minimal CSP**
+
    ```html
    <!DOCTYPE html>
    <html>
-   <head>
-     <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
-     <!-- Add service integration code -->
-   </head>
-   <body>
-     <!-- Test if service works -->
-   </body>
+     <head>
+       <meta http-equiv="Content-Security-Policy" content="default-src 'self'" />
+       <!-- Add service integration code -->
+     </head>
+     <body>
+       <!-- Test if service works -->
+     </body>
    </html>
    ```
 
@@ -260,6 +266,7 @@ console.log('Actual:', result.header);
 ### 3. Use Bug Report Template
 
 Include:
+
 - **CSP Kit versions**: `npm list @csp-kit/generator @csp-kit/data`
 - **Node.js version**: `node --version`
 - **TypeScript version**: `npx tsc --version`
@@ -300,6 +307,7 @@ Help make CSP Kit more accessible:
 ### Contributing Docs
 
 1. **Documentation structure:**
+
    ```
    docs/
    ├── getting-started.md      # User onboarding
@@ -310,16 +318,17 @@ Help make CSP Kit more accessible:
    ```
 
 2. **Use clear examples:**
+
    ```typescript
    // ✅ Good: Complete, runnable example
    import { generateCSP } from '@csp-kit/generator';
    import { GoogleAnalytics, Stripe } from '@csp-kit/data';
-   
+
    const result = generateCSP({
      services: [GoogleAnalytics, Stripe],
      nonce: true
    });
-   
+
    // ❌ Avoid: Incomplete snippets
    generateCSP({ services: [...] })
    ```
@@ -329,6 +338,7 @@ Help make CSP Kit more accessible:
 ### Development Workflow
 
 1. **Create a feature branch:**
+
    ```bash
    git checkout -b feature/add-service-validation
    # or
@@ -336,39 +346,41 @@ Help make CSP Kit more accessible:
    ```
 
 2. **Follow TypeScript best practices:**
+
    ```typescript
    // Use proper types
    export function validateService(service: CSPService): ValidationResult {
      // Implementation
    }
-   
+
    // Avoid any
-   export function processData(data: any) { // ❌
+   export function processData(data: any) {
+     // ❌
      // ...
    }
    ```
 
 3. **Write tests:**
+
    ```typescript
    // packages/data/src/services/analytics/__tests__/my-analytics.test.ts
    import { describe, it, expect } from 'vitest';
    import { MyAnalytics } from '../my-analytics.js';
    import { validateService } from '../../../test-utils.js';
-   
+
    describe('MyAnalytics', () => {
      it('should have valid structure', () => {
        expect(validateService(MyAnalytics)).toBe(true);
      });
-     
+
      it('should include required domains', () => {
-       expect(MyAnalytics.directives['script-src']).toContain(
-         'https://cdn.myanalytics.com'
-       );
+       expect(MyAnalytics.directives['script-src']).toContain('https://cdn.myanalytics.com');
      });
    });
    ```
 
 4. **Run quality checks:**
+
    ```bash
    pnpm lint           # ESLint with zero warnings
    pnpm check-types    # TypeScript validation
@@ -398,48 +410,49 @@ Help make CSP Kit more accessible:
 ```typescript
 interface ServiceDefinition {
   // Required fields
-  id: string;                    // Unique kebab-case identifier
-  name: string;                  // Human-readable name
-  category: ServiceCategory;     // Category enum value
-  description: string;           // 50-150 character description
-  website: string;               // Official service URL
-  directives: CSPDirectives;     // CSP requirements
-  
+  id: string; // Unique kebab-case identifier
+  name: string; // Human-readable name
+  category: ServiceCategory; // Category enum value
+  description: string; // 50-150 character description
+  website: string; // Official service URL
+  directives: CSPDirectives; // CSP requirements
+
   // Optional metadata
-  officialDocs?: string[];       // Documentation URLs
-  notes?: string;                // Implementation notes
-  aliases?: string[];            // Alternative identifiers
-  requiresDynamic?: boolean;     // Needs 'strict-dynamic'
-  requiresNonce?: boolean;       // Needs nonce support
-  
+  officialDocs?: string[]; // Documentation URLs
+  notes?: string; // Implementation notes
+  aliases?: string[]; // Alternative identifiers
+  requiresDynamic?: boolean; // Needs 'strict-dynamic'
+  requiresNonce?: boolean; // Needs nonce support
+
   // Advanced features
   deprecated?: {
-    since: string;               // ISO date
-    message: string;             // Explanation
-    alternative?: string;        // Suggested replacement
+    since: string; // ISO date
+    message: string; // Explanation
+    alternative?: string; // Suggested replacement
   };
-  conflicts?: string[];          // Incompatible service IDs
+  conflicts?: string[]; // Incompatible service IDs
   validate?: (directives: CSPDirectives) => {
     warnings?: string[];
     errors?: string[];
   };
-  
+
   // Timestamps
-  lastUpdated?: string;          // ISO timestamp
-  verifiedAt?: string;           // Last verification
+  lastUpdated?: string; // ISO timestamp
+  verifiedAt?: string; // Last verification
 }
 ```
 
 ### Service Definition Best Practices
 
 1. **Be specific with domains:**
+
    ```typescript
    // ✅ Good - Specific domains
    directives: {
      'script-src': ['https://js.stripe.com'],
      'frame-src': ['https://checkout.stripe.com']
    }
-   
+
    // ❌ Avoid - Overly broad
    directives: {
      'script-src': ['https://*.stripe.com']
@@ -447,6 +460,7 @@ interface ServiceDefinition {
    ```
 
 2. **Include helpful metadata:**
+
    ```typescript
    notes: 'Requires frame-src for 3D Secure authentication. The connect-src is only needed for Stripe.js v3+.',
    officialDocs: [
@@ -456,13 +470,13 @@ interface ServiceDefinition {
 
 3. **Add validation when needed:**
    ```typescript
-   validate: (directives) => {
+   validate: directives => {
      const warnings = [];
      if (!directives['frame-src']?.includes('https://checkout.stripe.com')) {
        warnings.push('Stripe Checkout requires frame-src for payment forms');
      }
      return { warnings };
-   }
+   };
    ```
 
 ## 🤝 Pull Request Process
@@ -524,12 +538,12 @@ We value our contributors!
 
 ## 📞 Getting Help
 
-| Need Help With | Where to Go | Response Time |
-|----------------|-------------|---------------|
-| TypeScript questions | [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions) | ~24 hours |
-| Service research | [Discord #services](https://discord.gg/csp-kit) | Real-time |
-| PR feedback | Comment on PR | ~48 hours |
-| General questions | [Discord #general](https://discord.gg/csp-kit) | Real-time |
+| Need Help With       | Where to Go                                                            | Response Time |
+| -------------------- | ---------------------------------------------------------------------- | ------------- |
+| TypeScript questions | [GitHub Discussions](https://github.com/eason-dev/csp-kit/discussions) | ~24 hours     |
+| Service research     | [Discord #services](https://discord.gg/csp-kit)                        | Real-time     |
+| PR feedback          | Comment on PR                                                          | ~48 hours     |
+| General questions    | [Discord #general](https://discord.gg/csp-kit)                         | Real-time     |
 
 ## 🎉 First-Time Contributors
 
@@ -560,10 +574,10 @@ export const GoogleFonts = defineService({
   website: 'https://fonts.google.com',
   directives: {
     'style-src': ['https://fonts.googleapis.com'],
-    'font-src': ['https://fonts.gstatic.com']
+    'font-src': ['https://fonts.gstatic.com'],
   },
   officialDocs: ['https://developers.google.com/fonts/docs/getting_started'],
-  notes: 'Use style-src for CSS and font-src for font files'
+  notes: 'Use style-src for CSS and font-src for font files',
 });
 ```
 
@@ -579,6 +593,7 @@ export const GoogleFonts = defineService({
 ## 📄 License Agreement
 
 By contributing to CSP Kit:
+
 - Your contributions will be licensed under the [MIT License](https://github.com/eason-dev/csp-kit/blob/main/LICENSE)
 - You retain copyright of your contributions
 - CSP Kit remains free and open source forever
