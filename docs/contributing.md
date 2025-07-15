@@ -50,8 +50,7 @@ csp-kit/
 │   ├── data/               # TypeScript service definitions
 │   │   └── src/
 │   │       └── services/   # Service definition files
-│   ├── cli/                # Command-line tools
-│   └── ui/                 # Shared UI components
+│   └── cli/                # Command-line tools
 ├── apps/
 │   ├── web/                # Next.js web interface
 │   └── docs/               # Documentation site

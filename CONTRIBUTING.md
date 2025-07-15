@@ -116,7 +116,6 @@ csp-kit/
 │   ├── generator/           # Core CSP generation library
 │   ├── data/               # Service definitions database (106+ services)
 │   ├── cli/                # Command-line tools for contributors
-│   ├── ui/                 # Shared UI components
 │   └── *-config/           # Shared configurations
 ├── apps/
 │   ├── web/                # Interactive web interface
