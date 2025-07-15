@@ -30,7 +30,13 @@ export type {
   ConfigurableService,
 } from '@csp-kit/data';
 
-export { defineService, defineServiceInternal, isCSPService, loadServices, getServiceRegistry } from '@csp-kit/data';
+export {
+  defineService,
+  defineServiceInternal,
+  isCSPService,
+  loadServices,
+  getServiceRegistry,
+} from '@csp-kit/data';
 
 // Default export for simple usage
 export { generateCSP as default } from './generator.js';
