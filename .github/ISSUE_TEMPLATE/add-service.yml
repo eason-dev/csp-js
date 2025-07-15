@@ -39,19 +39,26 @@ body:
       label: Service Category
       description: What category does this service belong to?
       options:
-        - Analytics
-        - Advertising
-        - Social
-        - Payment
-        - Forms
-        - Chat
-        - CDN
-        - Fonts
-        - Maps
-        - Video
-        - Testing
-        - Monitoring
-        - Other
+        - analytics
+        - authentication
+        - captcha
+        - cdn
+        - chat
+        - communication
+        - crm
+        - devtools
+        - email
+        - error-tracking
+        - fonts
+        - forms
+        - maps
+        - marketing
+        - media
+        - payment
+        - scheduling
+        - social
+        - video
+        - other
     validations:
       required: true
 

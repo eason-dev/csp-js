@@ -20,13 +20,13 @@ body:
     attributes:
       label: Component
       description: Which component is affected?
-              options:
-          - @csp-kit/generator (core library)
-          - @csp-kit/data (service definitions)
-          - @csp-kit/cli (command line tool)
-        - Web interface
-        - Documentation
-        - Other
+      options:
+        - '@csp-kit/generator (core library)'
+        - '@csp-kit/data (service definitions)'
+        - '@csp-kit/cli (command line tool)'
+        - 'Web interface'
+        - 'Documentation'
+        - 'Other'
     validations:
       required: true
 
@@ -76,10 +76,13 @@ body:
       label: Code Example
       description: If applicable, provide a minimal code example that demonstrates the issue
       render: javascript
-              placeholder: |
-          import { generateCSP } from '@csp-kit/generator';
+      placeholder: |
+        import { generateCSP } from '@csp-kit/generator';
+        import { GoogleAnalytics } from '@csp-kit/data';
         
-        const result = generateCSP(['google-analytics']);
+        const result = generateCSP({
+          services: [GoogleAnalytics]
+        });
         console.log(result.header);
     validations:
       required: false
@@ -99,7 +102,7 @@ body:
     attributes:
       label: Package Version
       description: What version of the package are you using?
-      placeholder: e.g., 0.1.0, latest
+      placeholder: e.g., 2.0.0, latest
     validations:
       required: true
 
