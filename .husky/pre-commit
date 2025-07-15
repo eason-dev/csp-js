@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# Run linting on staged files only
+pnpm lint-staged

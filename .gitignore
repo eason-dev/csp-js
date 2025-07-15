@@ -42,4 +42,8 @@ sitemap*.xml
 robots.txt
 packages/data/src/services-bundle.ts
 
+# Changesets
+.changeset/*.md
+!.changeset/README.md
+
 .serena

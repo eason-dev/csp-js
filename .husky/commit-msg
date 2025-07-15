@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+
+# Read commit message
+commit_regex='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([\w\-]+\))?: .+$'
+commit_msg=$(cat "$1")
+
+# Check if commit message follows conventional commits format
+if ! echo "$commit_msg" | grep -qE "$commit_regex"; then
+    echo "❌ Invalid commit message format!"
+    echo ""
+    echo "Commit message must follow the Conventional Commits format:"
+    echo "<type>(<scope>): <subject>"
+    echo ""
+    echo "Examples:"
+    echo "  feat(generator): add support for new CSP directive"
+    echo "  fix(data): correct Google Analytics configuration"
+    echo "  docs(web): update installation guide"
+    echo ""
+    echo "Valid types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+    echo "Valid scopes: generator, data, cli, ui, web, docs, deps, release, config, ci, root"
+    echo ""
+    echo "💡 Tip: Use 'pnpm commit' for an interactive commit tool"
+    exit 1
+fi
+
+# Run commitlint if available
+if command -v commitlint >/dev/null 2>&1; then
+    npx --no -- commitlint --edit "$1"
+fi

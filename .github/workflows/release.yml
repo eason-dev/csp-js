@@ -2,96 +2,48 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      package:
+        description: 'Package to release (leave empty for all)'
+        required: false
+        type: choice
+        options:
+          - ''
+          - '@csp-kit/generator'
+          - '@csp-kit/data'
+          - '@csp-kit/cli'
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+  id-token: write
 
 jobs:
-  validate-tag:
-    name: Validate Release Tag
+  release:
+    name: Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    outputs:
-      version: ${{ steps.extract.outputs.version }}
-      is-prerelease: ${{ steps.extract.outputs.is-prerelease }}
-    
     steps:
-      - name: Extract version from tag
-        id: extract
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          
-          # Check if this is a prerelease (contains alpha, beta, rc)
-          if [[ $VERSION =~ (alpha|beta|rc) ]]; then
-            echo "is-prerelease=true" >> $GITHUB_OUTPUT
-          else
-            echo "is-prerelease=false" >> $GITHUB_OUTPUT
-          fi
-          
-          echo "Releasing version: $VERSION"
-          echo "Is prerelease: ${{ steps.extract.outputs.is-prerelease }}"
-
-  test:
-    name: Run Full Test Suite
-    runs-on: ubuntu-latest
-    needs: validate-tag
-    permissions:
-      contents: read
-    
-    steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.12.4
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run tests
-        run: pnpm test
-
-      - name: Type check
-        run: pnpm check-types
-
-      - name: Lint
-        run: pnpm lint
-
-      - name: Security audit
-        run: pnpm audit --audit-level moderate
-
-  build-and-publish:
-    name: Build and Publish
-    runs-on: ubuntu-latest
-    needs: [validate-tag, test]
-    permissions:
-      contents: write
-      id-token: write  # for npm provenance
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # for changelog generation
+        uses: pnpm/action-setup@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: 'pnpm'
           registry-url: 'https://registry.npmjs.org'
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.12.4
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -99,187 +51,38 @@ jobs:
       - name: Build packages
         run: pnpm build
 
-      - name: Verify package contents
-        run: |
-          echo "## Package Contents" >> $GITHUB_STEP_SUMMARY
-          for pkg in packages/*/package.json; do
-            dir=$(dirname "$pkg")
-            name=$(jq -r '.name' "$pkg")
-            echo "### $name" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-            find "$dir/dist" -type f 2>/dev/null | head -10 >> $GITHUB_STEP_SUMMARY || echo "No dist files found" >> $GITHUB_STEP_SUMMARY
-            echo '```' >> $GITHUB_STEP_SUMMARY
-          done
-
-      - name: Run package tests
-        run: |
-          # Test that packages can be required/imported
-          cd packages/generator
-          node -e "
-            const pkg = require('./dist/index.js');
-            console.log('✅ @csp-kit/generator can be required');
-            console.log('Available exports:', Object.keys(pkg));
-            
-            const result = pkg.generateCSP(['google-analytics']);
-            if (!result.header) throw new Error('generateCSP failed');
-            console.log('✅ generateCSP works');
-          "
-          
-          cd ../data
-          node -e "
-            const pkg = require('./dist/index.js');
-            console.log('✅ @csp-kit/data can be required');
-            console.log('Services count:', Object.keys(pkg.services).length);
-            
-            if (Object.keys(pkg.services).length === 0) {
-              throw new Error('No services found');
-            }
-            console.log('✅ Services loaded');
-          "
-
-      - name: Generate changelog excerpt
-        run: |
-          # Extract changelog for this version
-          VERSION=${{ needs.validate-tag.outputs.version }}
-          
-          # Create a changelog excerpt for this release
-          if [ -f CHANGELOG.md ]; then
-            awk "/^## \[$VERSION\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md > /tmp/changelog-excerpt.md
-          else
-            echo "Release $VERSION" > /tmp/changelog-excerpt.md
-            echo "" >> /tmp/changelog-excerpt.md
-            echo "Automated release from tag v$VERSION" >> /tmp/changelog-excerpt.md
-          fi
-          
-          echo "Changelog excerpt:"
-          cat /tmp/changelog-excerpt.md
-
-      - name: Publish to NPM
-        run: |
-          # Configure npm authentication
-          echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" > ~/.npmrc
-          
-          VERSION=${{ needs.validate-tag.outputs.version }}
-          IS_PRERELEASE=${{ needs.validate-tag.outputs.is-prerelease }}
-          
-          # Determine npm tag
-          if [ "$IS_PRERELEASE" = "true" ]; then
-            NPM_TAG="beta"
-          else
-            NPM_TAG="latest"
-          fi
-          
-          echo "Publishing with tag: $NPM_TAG"
-          
-          # Publish packages
-          cd packages/data
-          npm publish --tag $NPM_TAG --provenance --access public
-          
-          cd ../generator
-          npm publish --tag $NPM_TAG --provenance --access public
-          
-          echo "✅ All packages published successfully"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      # Create Release Pull Request or Publish to npm
+      - name: Create Release Pull Request or Publish
+        id: changesets
+        uses: changesets/action@v1
         with:
-          body_path: /tmp/changelog-excerpt.md
-          prerelease: ${{ needs.validate-tag.outputs.is-prerelease == 'true' }}
-          generate_release_notes: true
-          files: |
-            packages/*/dist/*.tgz
+          publish: pnpm changeset publish --no-git-tag
+          title: 'chore: version packages'
+          commit: 'chore: version packages'
+          createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: false
 
-      - name: Update GitHub Pages
-        if: needs.validate-tag.outputs.is-prerelease == 'false'
+      # Manual release for specific package
+      - name: Manual Package Release
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.package != ''
         run: |
-          # Trigger documentation update
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            "${{ github.api_url }}/repos/${{ github.repository }}/dispatches" \
-            -d '{"event_type":"docs-update","client_payload":{"version":"${{ needs.validate-tag.outputs.version }}"}}'
-
-  verify-release:
-    name: Verify Release
-    runs-on: ubuntu-latest
-    needs: [validate-tag, build-and-publish]
-    permissions:
-      contents: read
-    
-    steps:
-      - name: Wait for NPM propagation
-        run: sleep 60
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Verify NPM packages
-        run: |
-          VERSION=${{ needs.validate-tag.outputs.version }}
-          
-          # Test installation from NPM
-          npm install @csp-kit/generator@$VERSION
-          npm install @csp-kit/data@$VERSION
-          
-          echo "✅ Packages installed successfully"
-          
-          # Test basic functionality
-          node -e "
-            const { generateCSP } = require('@csp-kit/generator');
-            const result = generateCSP(['google-analytics']);
-            if (!result.header.includes('google-analytics')) {
-              throw new Error('CSP generation failed');
-            }
-            console.log('✅ Package functionality verified');
-          "
-
-      # CLI package doesn't exist yet, removing this step
-      # - name: Test CLI installation
-      #   run: |
-      #     # Test global CLI installation
-      #     npm install -g @csp-kit/cli@${{ needs.validate-tag.outputs.version }}
-      #     
-      #     # Test CLI functionality
-      #     csp-cli --version
-      #     
-      #     echo "✅ CLI installed and working"
-
-  notify:
-    name: Notify Release
-    runs-on: ubuntu-latest
-    needs: [validate-tag, verify-release]
-    if: always() && needs.build-and-publish.result == 'success'
-    permissions:
-      contents: read
-    
-    steps:
-      - name: Notify Discord (if configured)
-        if: env.DISCORD_WEBHOOK_URL != ''
-        run: |
-          VERSION=${{ needs.validate-tag.outputs.version }}
-          curl -H "Content-Type: application/json" \
-            -d "{\"content\":\"🎉 CSP Kit v$VERSION has been released! 🛡️\\n\\nCheck it out: https://github.com/${{ github.repository }}/releases/tag/v$VERSION\"}" \
-            $DISCORD_WEBHOOK_URL
+          # Filter and publish specific package
+          pnpm changeset publish --no-git-tag --filter="${{ github.event.inputs.package }}"
         env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: false
 
-      - name: Create Twitter announcement (if configured)
-        if: env.TWITTER_ENABLED == 'true'
+      # Create tags after successful publish
+      - name: Create Git Tags
+        if: steps.changesets.outputs.published == 'true'
         run: |
-          echo "🛡️ CSP Kit v${{ needs.validate-tag.outputs.version }} is live!"
-          echo ""
-          echo "Generate Content Security Policies from service names in seconds!"
-          echo ""
-          echo "npm install @csp-kit/generator@${{ needs.validate-tag.outputs.version }}"
-          echo ""
-          echo "#WebSecurity #CSP #OpenSource #JavaScript #TypeScript"
-          echo ""
-          echo "https://github.com/${{ github.repository }}"
+          # Parse published packages and create tags
+          echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -r '.[] | "\(.name)@\(.version)"' | while read -r tag; do
+            git tag -a "$tag" -m "Release $tag"
+            git push origin "$tag"
+          done
         env:
-          TWITTER_ENABLED: ${{ secrets.TWITTER_ENABLED }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
