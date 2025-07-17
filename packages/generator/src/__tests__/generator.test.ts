@@ -137,7 +137,6 @@ describe('generateCSP v2 API', () => {
 
       const result = generateCSP([ServiceWithValidation]);
 
-      // Since the minimal API doesn't support validation, just check that the service works
       expect(result.includedServices).toHaveLength(1);
       expect(result.header).toContain('https://validated.com');
     });
@@ -151,7 +150,6 @@ describe('generateCSP v2 API', () => {
 
       const result = generateCSP([DeprecatedService]);
 
-      // Since the minimal API doesn't support deprecation info, just check that the service works
       expect(result.includedServices).toHaveLength(1);
       expect(result.header).toContain('https://deprecated.com');
     });
@@ -171,7 +169,6 @@ describe('generateCSP v2 API', () => {
 
       const result = generateCSP([ServiceA, ServiceB]);
 
-      // Since the minimal API doesn't support conflicts, just check that both services work
       expect(result.includedServices).toHaveLength(2);
       expect(result.header).toContain('https://a.com');
       expect(result.header).toContain('https://b.com');
