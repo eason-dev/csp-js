@@ -1,6 +1,6 @@
 {
   "name": "@csp-kit/generator",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Generate Content Security Policy headers for popular web services and libraries",
   "type": "module",
   "main": "./dist/index.js",
