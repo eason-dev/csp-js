@@ -192,15 +192,10 @@ Define your own services alongside built-in ones:
 
 ```typescript
 import { generateCSP, defineService } from '@csp-kit/generator';
-import { GoogleAnalytics, Stripe, ServiceCategory } from '@csp-kit/data';
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
 // Define a custom service
 const MyAPI = defineService({
-  id: 'my-api',
-  name: 'My API',
-  category: ServiceCategory.API,
-  description: 'Custom API endpoints',
-  website: 'https://api.myapp.com',
   directives: {
     'connect-src': ['https://api.myapp.com'],
     'img-src': ['https://images.myapp.com'],
@@ -257,15 +252,10 @@ response.setHeader('Content-Security-Policy-Report-Only', reportOnlyHeader);
 
 ```typescript
 import { generateCSP, defineService } from '@csp-kit/generator';
-import { GoogleAnalytics, Stripe, ServiceCategory } from '@csp-kit/data';
+import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
 // Development-only service
 const DevTools = defineService({
-  id: 'dev-tools',
-  name: 'Development Tools',
-  category: ServiceCategory.DEVELOPMENT,
-  description: 'Local development servers',
-  website: 'http://localhost:3000',
   directives: {
     'script-src': ['http://localhost:3000', "'unsafe-eval'"],
     'connect-src': ['ws://localhost:3000', 'http://localhost:3001'],

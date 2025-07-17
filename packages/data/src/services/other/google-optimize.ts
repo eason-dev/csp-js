@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const GoogleOptimize = defineService({
+export const GoogleOptimize = defineServiceInternal({
   id: 'google-optimize',
   name: 'Google Optimize',
   category: ServiceCategory.OTHER,

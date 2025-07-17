@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Strapi = defineService({
+export const Strapi = defineServiceInternal({
   id: 'strapi',
   name: 'Strapi',
   category: ServiceCategory.OTHER,

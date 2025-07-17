@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Vimeo = defineService({
+export const Vimeo = defineServiceInternal({
   id: 'vimeo',
   name: 'Vimeo',
   category: ServiceCategory.VIDEO,

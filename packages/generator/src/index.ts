@@ -23,12 +23,20 @@ export type {
   CSPDirectives,
   ServiceRegistry,
   CSPService,
+  SimpleCSPService,
   DefineServiceFn,
+  DefineServiceInternalFn,
   ValidationResult,
   ConfigurableService,
 } from '@csp-kit/data';
 
-export { defineService, isCSPService, loadServices, getServiceRegistry } from '@csp-kit/data';
+export {
+  defineService,
+  defineServiceInternal,
+  isCSPService,
+  loadServices,
+  getServiceRegistry,
+} from '@csp-kit/data';
 
 // Default export for simple usage
 export { generateCSP as default } from './generator.js';

@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Hubspot = defineService({
+export const Hubspot = defineServiceInternal({
   id: 'hubspot',
   name: 'HubSpot',
   category: ServiceCategory.FORMS,

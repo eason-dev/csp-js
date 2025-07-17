@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Browserstack = defineService({
+export const Browserstack = defineServiceInternal({
   id: 'browserstack',
   name: 'BrowserStack',
   category: ServiceCategory.TESTING,

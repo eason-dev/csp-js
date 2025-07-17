@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Mixpanel = defineService({
+export const Mixpanel = defineServiceInternal({
   id: 'mixpanel',
   name: 'Mixpanel',
   category: ServiceCategory.ANALYTICS,

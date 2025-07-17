@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const FathomAnalytics = defineService({
+export const FathomAnalytics = defineServiceInternal({
   id: 'fathom-analytics',
   name: 'Fathom Analytics',
   category: ServiceCategory.ANALYTICS,

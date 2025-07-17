@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Tiktok = defineService({
+export const Tiktok = defineServiceInternal({
   id: 'tiktok',
   name: 'TikTok',
   category: ServiceCategory.SOCIAL,

@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const GoogleFonts = defineService({
+export const GoogleFonts = defineServiceInternal({
   id: 'google-fonts',
   name: 'Google Fonts',
   category: ServiceCategory.FONTS,

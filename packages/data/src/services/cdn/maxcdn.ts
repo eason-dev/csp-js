@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Maxcdn = defineService({
+export const Maxcdn = defineServiceInternal({
   id: 'maxcdn',
   name: 'MaxCDN',
   category: ServiceCategory.CDN,

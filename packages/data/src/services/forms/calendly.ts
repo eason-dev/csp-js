@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Calendly = defineService({
+export const Calendly = defineServiceInternal({
   id: 'calendly',
   name: 'Calendly',
   category: ServiceCategory.FORMS,

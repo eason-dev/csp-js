@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Instagram = defineService({
+export const Instagram = defineServiceInternal({
   id: 'instagram',
   name: 'Instagram',
   category: ServiceCategory.SOCIAL,

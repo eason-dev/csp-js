@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const AwsCloudfront = defineService({
+export const AwsCloudfront = defineServiceInternal({
   id: 'aws-cloudfront',
   name: 'AWS CloudFront',
   category: ServiceCategory.CDN,

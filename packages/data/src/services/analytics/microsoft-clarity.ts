@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const MicrosoftClarity = defineService({
+export const MicrosoftClarity = defineServiceInternal({
   id: 'microsoft-clarity',
   name: 'Microsoft Clarity',
   category: ServiceCategory.ANALYTICS,

@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Constructor = defineService({
+export const Constructor = defineServiceInternal({
   id: 'constructor',
   name: 'Constructor',
   category: ServiceCategory.OTHER,

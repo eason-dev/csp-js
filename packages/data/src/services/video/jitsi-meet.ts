@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const JitsiMeet = defineService({
+export const JitsiMeet = defineServiceInternal({
   id: 'jitsi-meet',
   name: 'Jitsi Meet',
   category: ServiceCategory.VIDEO,

@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Gitbook = defineService({
+export const Gitbook = defineServiceInternal({
   id: 'gitbook',
   name: 'GitBook',
   category: ServiceCategory.OTHER,

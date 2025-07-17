@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const CloudflareAnalytics = defineService({
+export const CloudflareAnalytics = defineServiceInternal({
   id: 'cloudflare-analytics',
   name: 'Cloudflare Analytics',
   category: ServiceCategory.ANALYTICS,

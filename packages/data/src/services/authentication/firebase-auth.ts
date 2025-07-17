@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const FirebaseAuth = defineService({
+export const FirebaseAuth = defineServiceInternal({
   id: 'firebase-auth',
   name: 'Firebase Authentication',
   category: ServiceCategory.OTHER,

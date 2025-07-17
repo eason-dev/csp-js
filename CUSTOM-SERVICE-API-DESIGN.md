@@ -9,13 +9,9 @@ While CSP Kit provides 106+ pre-configured services, you'll often need to add yo
 ```typescript
 import { generateCSP, defineService } from '@csp-kit/generator';
 import { GoogleAnalytics, Stripe } from '@csp-kit/data';
-import { ServiceCategory } from '@csp-kit/data';
 
 // Define a custom service for your CDN
 const MyCDN = defineService({
-  id: 'my-cdn',
-  name: 'My CDN',
-  category: ServiceCategory.CDN,
   directives: {
     'img-src': ['https://cdn.myapp.com'],
     'font-src': ['https://cdn.myapp.com'],
@@ -49,30 +45,20 @@ For simple services with static domains:
 
 ```typescript
 import { defineService } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
 
 export const MyAPI = defineService({
-  id: 'my-api',
-  name: 'My API',
-  category: ServiceCategory.API,
-  description: 'Main application API and WebSocket connections',
   directives: {
     'connect-src': ['https://api.myapp.com', 'wss://realtime.myapp.com'],
   },
 });
 ```
 
-### 2. Comprehensive Service with Metadata
+### 2. Complex Service with Multiple Directives
 
-Add documentation and validation for team collaboration:
+For services that need multiple CSP directives:
 
 ```typescript
 export const VideoStreaming = defineService({
-  id: 'video-streaming',
-  name: 'Video Streaming Service',
-  category: ServiceCategory.VIDEO,
-  description: 'Custom video streaming infrastructure for product demos',
-  website: 'https://docs.internal/video-streaming',
   directives: {
     'media-src': [
       'https://video.myapp.com',
@@ -81,8 +67,6 @@ export const VideoStreaming = defineService({
     'img-src': ['https://thumbnails.myapp.com'],
     'connect-src': ['https://video-api.myapp.com'],
   },
-  notes: 'Requires authentication token in query params',
-  requiresDynamic: true, // Indicates dynamic content generation
 });
 ```
 
@@ -93,10 +77,6 @@ Handle different configurations for development and production:
 ```typescript
 // services/development.ts
 export const DevTools = defineService({
-  id: 'dev-tools',
-  name: 'Development Tools',
-  category: ServiceCategory.DEVELOPMENT,
-  description: 'Local development servers and hot reload',
   directives: {
     'script-src': [
       'http://localhost:3000',
@@ -109,7 +89,6 @@ export const DevTools = defineService({
       'http://localhost:3001', // API dev server
     ],
   },
-  notes: 'Only include in development builds',
 });
 
 // Usage with environment detection
@@ -129,14 +108,9 @@ Create services dynamically based on user location:
 ```typescript
 // services/regional.ts
 import { defineService } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
 
 export function createRegionalCDN(region: 'us' | 'eu' | 'asia') {
   return defineService({
-    id: `cdn-${region}`,
-    name: `CDN ${region.toUpperCase()}`,
-    category: ServiceCategory.CDN,
-    description: `Regional CDN for ${region.toUpperCase()} users`,
     directives: {
       'img-src': [`https://cdn-${region}.myapp.com`],
       'font-src': [`https://cdn-${region}.myapp.com`],
@@ -159,11 +133,9 @@ For services that need runtime configuration:
 
 ```typescript
 // services/monitoring.ts
-import { defineService, createConfigurableService } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
+import { defineService } from '@csp-kit/generator';
 
-// Note: createConfigurableService is for advanced use cases
-// For most cases, use a factory function instead
+// For most cases, use a factory function
 export function createMonitoringService(options: {
   apiKey: string;
   region?: 'us' | 'eu';
@@ -173,9 +145,6 @@ export function createMonitoringService(options: {
   const baseUrl = `https://monitoring-${region}.myapp.com`;
 
   return defineService({
-    id: 'monitoring',
-    name: 'Application Monitoring',
-    category: ServiceCategory.MONITORING,
     directives: {
       'script-src': [baseUrl],
       'connect-src': [baseUrl, ...(options.enableRUM ? [`https://rum-${region}.myapp.com`] : [])],
@@ -213,12 +182,8 @@ export * from './development';
 
 // services/cdn.ts
 import { defineService } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
 
 export const AssetsCDN = defineService({
-  id: 'assets-cdn',
-  name: 'Assets CDN',
-  category: ServiceCategory.CDN,
   directives: {
     'img-src': ['https://assets.myapp.com'],
     'font-src': ['https://assets.myapp.com'],
@@ -228,9 +193,6 @@ export const AssetsCDN = defineService({
 });
 
 export const MediaCDN = defineService({
-  id: 'media-cdn',
-  name: 'Media CDN',
-  category: ServiceCategory.CDN,
   directives: {
     'img-src': ['https://media.myapp.com'],
     'media-src': ['https://media.myapp.com'],
@@ -278,15 +240,10 @@ import { AssetsCDN, MainAPI } from './services';
 const services: CSPService[] = [AssetsCDN, MainAPI];
 
 // IntelliSense for service properties
-console.log(AssetsCDN.id); // "assets-cdn"
-console.log(AssetsCDN.category); // "cdn"
 console.log(AssetsCDN.directives); // { 'img-src': [...], ... }
 
 // Type errors for invalid directives
 const BadService = defineService({
-  id: 'bad',
-  name: 'Bad Service',
-  category: ServiceCategory.OTHER,
   directives: {
     'invalid-src': ['...'], // TypeScript error!
   },
@@ -301,24 +258,8 @@ Add validation to ensure services are configured correctly:
 
 ```typescript
 export const APIService = defineService({
-  id: 'api-service',
-  name: 'API Service',
-  category: ServiceCategory.API,
   directives: {
     'connect-src': ['https://api.myapp.com'],
-  },
-  validate: directives => {
-    const warnings = [];
-
-    // Check if API is using HTTPS
-    const connectSrc = directives['connect-src'] || [];
-    const hasHttp = connectSrc.some(src => src.startsWith('http://'));
-
-    if (hasHttp) {
-      warnings.push('API should use HTTPS in production');
-    }
-
-    return { warnings };
   },
 });
 ```
@@ -329,27 +270,15 @@ Prevent incompatible services from being used together:
 
 ```typescript
 export const OldAPI = defineService({
-  id: 'old-api',
-  name: 'Legacy API',
-  category: ServiceCategory.API,
   directives: {
     'connect-src': ['https://old-api.myapp.com'],
-  },
-  deprecated: {
-    since: '2024-01-01',
-    message: 'Legacy API is deprecated',
-    alternative: 'new-api',
   },
 });
 
 export const NewAPI = defineService({
-  id: 'new-api',
-  name: 'New API',
-  category: ServiceCategory.API,
   directives: {
     'connect-src': ['https://api.myapp.com'],
   },
-  conflicts: ['old-api'], // Prevents using both APIs together
 });
 ```
 
@@ -360,14 +289,9 @@ Here's a complete example of a production-ready CSP configuration:
 ```typescript
 // services/index.ts
 import { defineService } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
 
 // CDN Services
 export const AssetsCDN = defineService({
-  id: 'assets-cdn',
-  name: 'Static Assets CDN',
-  category: ServiceCategory.CDN,
-  description: 'CDN for images, fonts, and static assets',
   directives: {
     'img-src': ['https://assets.myapp.com'],
     'font-src': ['https://assets.myapp.com'],
@@ -377,10 +301,6 @@ export const AssetsCDN = defineService({
 
 // API Services
 export const MainAPI = defineService({
-  id: 'main-api',
-  name: 'Main API',
-  category: ServiceCategory.API,
-  description: 'Primary API and real-time connections',
   directives: {
     'connect-src': ['https://api.myapp.com', 'wss://realtime.myapp.com'],
   },
@@ -388,9 +308,6 @@ export const MainAPI = defineService({
 
 // Monitoring
 export const Monitoring = defineService({
-  id: 'monitoring',
-  name: 'Error & Performance Monitoring',
-  category: ServiceCategory.MONITORING,
   directives: {
     'script-src': ['https://monitoring.myapp.com'],
     'connect-src': ['https://monitoring.myapp.com'],
@@ -432,9 +349,9 @@ export function generateAppCSP(options: { nonce?: string } = {}) {
 ## Best Practices
 
 1. **Use TypeScript**: Define services in `.ts` files for full type safety
-2. **Add Descriptions**: Help your team understand what each service does
-3. **Group by Category**: Organize services logically
-4. **Document Requirements**: Use the `notes` field for special requirements
+2. **Add Comments**: Use code comments to document what each service does
+3. **Group by Purpose**: Organize services logically by functionality
+4. **Document Requirements**: Add comments for special requirements
 5. **Version Control**: Track service changes in your repository
 6. **Test Services**: Validate CSP headers in development and staging
 7. **Monitor Violations**: Use `reportUri` to track CSP violations
@@ -455,18 +372,12 @@ const result = generateCSP({
 
 // ✅ New approach with custom services
 const MyCDN = defineService({
-  id: 'my-cdn',
-  name: 'My CDN',
-  category: ServiceCategory.CDN,
   directives: {
     'img-src': ['https://cdn.myapp.com'],
   },
 });
 
 const MyAPI = defineService({
-  id: 'my-api',
-  name: 'My API',
-  category: ServiceCategory.API,
   directives: {
     'connect-src': ['https://api.myapp.com'],
   },

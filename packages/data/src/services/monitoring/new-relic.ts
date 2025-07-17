@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const NewRelic = defineService({
+export const NewRelic = defineServiceInternal({
   id: 'new-relic',
   name: 'New Relic',
   category: ServiceCategory.MONITORING,

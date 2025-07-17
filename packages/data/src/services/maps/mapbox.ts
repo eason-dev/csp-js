@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Mapbox = defineService({
+export const Mapbox = defineServiceInternal({
   id: 'mapbox',
   name: 'Mapbox',
   category: ServiceCategory.MAPS,

@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Convertkit = defineService({
+export const Convertkit = defineServiceInternal({
   id: 'convertkit',
   name: 'ConvertKit',
   category: ServiceCategory.OTHER,

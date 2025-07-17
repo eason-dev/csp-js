@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const PingIdentity = defineService({
+export const PingIdentity = defineServiceInternal({
   id: 'ping-identity',
   name: 'Ping Identity',
   category: ServiceCategory.OTHER,

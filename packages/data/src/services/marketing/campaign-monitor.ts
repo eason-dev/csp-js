@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const CampaignMonitor = defineService({
+export const CampaignMonitor = defineServiceInternal({
   id: 'campaign-monitor',
   name: 'Campaign Monitor',
   category: ServiceCategory.OTHER,

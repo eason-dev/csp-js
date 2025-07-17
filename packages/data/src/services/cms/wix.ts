@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Wix = defineService({
+export const Wix = defineServiceInternal({
   id: 'wix',
   name: 'Wix',
   category: ServiceCategory.OTHER,

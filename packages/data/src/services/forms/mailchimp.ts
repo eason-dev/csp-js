@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Mailchimp = defineService({
+export const Mailchimp = defineServiceInternal({
   id: 'mailchimp',
   name: 'Mailchimp',
   category: ServiceCategory.FORMS,

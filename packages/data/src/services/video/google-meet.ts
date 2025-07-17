@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const GoogleMeet = defineService({
+export const GoogleMeet = defineServiceInternal({
   id: 'google-meet',
   name: 'Google Meet',
   category: ServiceCategory.VIDEO,

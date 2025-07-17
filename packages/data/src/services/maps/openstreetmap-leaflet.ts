@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const OpenstreetmapLeaflet = defineService({
+export const OpenstreetmapLeaflet = defineServiceInternal({
   id: 'openstreetmap-leaflet',
   name: 'OpenStreetMap/Leaflet',
   category: ServiceCategory.MAPS,

@@ -1,7 +1,7 @@
-import { defineService } from '../../service-types.js';
+import { defineServiceInternal } from '../../service-types.js';
 import { ServiceCategory } from '../../types.js';
 
-export const Bigbluebutton = defineService({
+export const Bigbluebutton = defineServiceInternal({
   id: 'bigbluebutton',
   name: 'BigBlueButton',
   category: ServiceCategory.VIDEO,
