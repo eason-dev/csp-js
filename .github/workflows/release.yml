@@ -60,7 +60,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          publish: pnpm exec changeset publish --no-git-tag
+          publish: pnpm exec changeset publish
           title: 'chore: version packages'
           commit: 'chore: version packages'
           createGithubReleases: true
@@ -77,19 +77,16 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.package != 'all'
         run: |
           # Filter and publish specific package
-          pnpm changeset publish --no-git-tag --filter="${{ github.event.inputs.package }}"
+          pnpm changeset publish --filter="${{ github.event.inputs.package }}"
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Create tags after successful publish
-      - name: Create Git Tags
+      # Push tags after successful publish
+      - name: Push Git Tags
         if: steps.changesets.outputs.published == 'true'
         run: |
-          # Parse published packages and create tags
-          echo '${{ steps.changesets.outputs.publishedPackages }}' | jq -r '.[] | "\(.name)@\(.version)"' | while read -r tag; do
-            git tag -a "$tag" -m "Release $tag"
-            git push origin "$tag"
-          done
+          git push --follow-tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
