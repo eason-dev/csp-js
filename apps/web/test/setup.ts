@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 
 // Mock Next.js modules
 vi.mock('next/headers', () => ({
-  headers: () => ({
+  headers: () => Promise.resolve({
     get: vi.fn(),
   }),
 }));
@@ -16,5 +16,5 @@ vi.mock('next/navigation', () => ({
 if (typeof global.crypto === 'undefined') {
   global.crypto = {
     randomUUID: () => 'test-uuid-' + Math.random().toString(36).substr(2, 9),
-  } as any;
+  } as Crypto;
 }
