@@ -67,9 +67,9 @@ pnpm test:e2e
 - **TypeScript**: Full type safety
 - **Library**: @csp-kit/generator for CSP generation
 
-## CSP Configuration with Google Analytics
+## CSP Implementation with Google Analytics
 
-This app demonstrates production-ready CSP implementation with Google Analytics:
+This app also demonstrates production-ready CSP implementation with Google Analytics:
 
 ### Setup
 
@@ -85,17 +85,14 @@ This app demonstrates production-ready CSP implementation with Google Analytics:
 
    ```env
    NEXT_PUBLIC_GA_MEASUREMENT_ID=G-YOUR-ID-HERE
-   CSP_REPORT_URI=https://your-report-endpoint.com/csp-reports # Optional
    ```
 
 2. **Implementation Details**
-
    - **Middleware** (`middleware.ts`): Generates CSP headers with nonces for each request
    - **Google Analytics** (`components/analytics/google-analytics.tsx`): Loads GA with proper nonce attributes
    - **Layout** (`app/layout.tsx`): Integrates GA component and propagates nonces
 
 3. **Key Features**
-
    - Unique nonces generated per request for security
    - Report-Only mode in development for testing
    - Strict CSP enforcement in production
