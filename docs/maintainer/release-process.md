@@ -143,4 +143,3 @@ Key settings:
 
 - [Changesets Documentation](https://github.com/changesets/changesets)
 - [Contributing Guide](../contributing.md)
-- [Development Setup](../../DEVELOPMENT.md)
