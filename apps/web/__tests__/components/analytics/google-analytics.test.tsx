@@ -4,7 +4,11 @@ import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 
 // Mock Next.js Script component
 vi.mock('next/script', () => ({
-  default: ({ children, dangerouslySetInnerHTML, ...props }: any) => {
+  default: ({ children, dangerouslySetInnerHTML, ...props }: {
+    children?: React.ReactNode;
+    dangerouslySetInnerHTML?: { __html: string };
+    [key: string]: unknown;
+  }) => {
     if (dangerouslySetInnerHTML) {
       return (
         <script
@@ -27,12 +31,12 @@ describe('GoogleAnalytics', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Clear window.gtag and dataLayer
-    (window as any).gtag = undefined;
-    (window as any).dataLayer = undefined;
+    window.gtag = undefined as unknown as typeof window.gtag;
+    window.dataLayer = undefined as unknown as typeof window.dataLayer;
     
     // Mock window.gtag function
-    (window as any).gtag = vi.fn();
-    (window as any).dataLayer = [];
+    window.gtag = vi.fn();
+    window.dataLayer = [];
   });
 
   it('should render Google Analytics scripts with correct measurement ID', () => {
@@ -81,7 +85,7 @@ describe('GoogleAnalytics', () => {
   it('should track page views on route changes', () => {
     // Mock window.gtag
     const gtagMock = vi.fn();
-    (window as any).gtag = gtagMock;
+    window.gtag = gtagMock;
 
     const { rerender } = render(
       <GoogleAnalytics measurementId="G-TESTID123" />

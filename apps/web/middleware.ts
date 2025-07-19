@@ -13,10 +13,6 @@ export function middleware(request: NextRequest) {
       // In development, we might need unsafe-eval for hot reloading
       unsafeEval: process.env.NODE_ENV !== 'production',
     },
-    production: {
-      // In production, optionally add report URI
-      reportUri: process.env.CSP_REPORT_URI,
-    },
     // Include 'self' directive for Next.js assets
     includeSelf: true,
   });

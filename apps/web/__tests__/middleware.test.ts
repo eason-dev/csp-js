@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { MockedFunction } from 'vitest';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Mock @csp-kit packages
@@ -23,20 +24,21 @@ import { middleware, config } from '../middleware';
 import { generateCSP } from '@csp-kit/generator';
 
 describe('Middleware', () => {
-  const mockGenerateCSP = generateCSP as vi.MockedFunction<typeof generateCSP>;
+  const mockGenerateCSP = generateCSP as MockedFunction<typeof generateCSP>;
   
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset environment variables
-    process.env.NODE_ENV = 'test';
-    delete process.env.CSP_REPORT_URI;
+    vi.stubEnv('NODE_ENV', 'test');
     
     // Set default mock return value
     mockGenerateCSP.mockReturnValue({
-      header: 'default-src \'self\'; script-src \'self\' \'nonce-test-nonce\' https://*.googletagmanager.com;',
+      header: 'script-src \'self\' \'nonce-test-nonce\' https://*.googletagmanager.com; img-src \'self\' https://*.google-analytics.com;',
+      reportOnlyHeader: 'script-src \'self\' \'nonce-test-nonce\' https://*.googletagmanager.com; img-src \'self\' https://*.google-analytics.com;',
       directives: {
-        'default-src': ["'self'"],
         'script-src': ["'self'", "'nonce-test-nonce'", 'https://*.googletagmanager.com'],
+        'img-src': ["'self'", 'https://*.google-analytics.com'],
+        'connect-src': ["'self'", 'https://*.google-analytics.com'],
       },
       nonce: 'test-nonce',
       includedServices: ['google-analytics'],
@@ -52,7 +54,7 @@ describe('Middleware', () => {
     // Check that CSP header is set
     const cspHeader = response.headers.get('Content-Security-Policy-Report-Only');
     expect(cspHeader).toBeTruthy();
-    expect(cspHeader).toContain("default-src 'self'");
+    expect(cspHeader).toContain("script-src 'self'");
     expect(cspHeader).toContain('https://*.googletagmanager.com');
   });
 
@@ -66,7 +68,7 @@ describe('Middleware', () => {
   });
 
   it('should use Content-Security-Policy header in production', () => {
-    process.env.NODE_ENV = 'production';
+    vi.stubEnv('NODE_ENV', 'production');
     
     const request = new NextRequest(new URL('http://localhost:3000/'));
     const response = middleware(request);
@@ -80,28 +82,6 @@ describe('Middleware', () => {
     expect(reportOnlyHeader).toBeFalsy();
   });
 
-  it('should include report URI when provided', () => {
-    process.env.CSP_REPORT_URI = 'https://example.com/csp-report';
-    process.env.NODE_ENV = 'production';
-    
-    mockGenerateCSP.mockReturnValueOnce({
-      header: 'default-src \'self\'; report-uri https://example.com/csp-report;',
-      directives: {
-        'default-src': ["'self'"],
-        'report-uri': ['https://example.com/csp-report'],
-      },
-      nonce: 'test-nonce',
-      includedServices: ['google-analytics'],
-      unknownServices: [],
-      warnings: [],
-    });
-
-    const request = new NextRequest(new URL('http://localhost:3000/'));
-    const response = middleware(request);
-
-    const cspHeader = response.headers.get('Content-Security-Policy');
-    expect(cspHeader).toContain('report-uri https://example.com/csp-report');
-  });
 
   it('should match correct paths based on config', () => {
     // The matcher in the config excludes certain paths
@@ -114,7 +94,7 @@ describe('Middleware', () => {
   });
 
   it('should enable unsafe-eval in development mode', () => {
-    process.env.NODE_ENV = 'development';
+    vi.stubEnv('NODE_ENV', 'development');
     
     const request = new NextRequest(new URL('http://localhost:3000/'));
     middleware(request);
