@@ -54,7 +54,8 @@
       "esbuild": ">=0.25.0",
       "brace-expansion": ">=2.0.2",
       "webpack-dev-server": ">=5.2.1",
-      "prismjs": ">=1.30.0"
+      "prismjs": ">=1.30.0",
+      "on-headers": ">=1.1.0"
     }
   },
   "packageManager": "pnpm@10.12.4",
