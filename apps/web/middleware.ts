@@ -4,7 +4,7 @@ import { GoogleAnalytics } from '@csp-kit/data';
 
 export function middleware(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64');
-  
+
   // Generate CSP using csp-kit with Google Analytics
   const cspResult = generateCSP({
     services: [GoogleAnalytics],
@@ -23,18 +23,18 @@ export function middleware(request: NextRequest) {
   // Set up request headers with nonce
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-nonce', nonce);
-  
+
   // Create response with modified request headers
   const response = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
-  
+
   // Set CSP header on response
   response.headers.set(
-    process.env.NODE_ENV === 'production' 
-      ? 'Content-Security-Policy' 
+    process.env.NODE_ENV === 'production'
+      ? 'Content-Security-Policy'
       : 'Content-Security-Policy-Report-Only',
     contentSecurityPolicyHeaderValue
   );

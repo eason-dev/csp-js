@@ -4,18 +4,17 @@ import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 
 // Mock Next.js Script component
 vi.mock('next/script', () => ({
-  default: ({ children, dangerouslySetInnerHTML, ...props }: {
+  default: ({
+    children,
+    dangerouslySetInnerHTML,
+    ...props
+  }: {
     children?: React.ReactNode;
     dangerouslySetInnerHTML?: { __html: string };
     [key: string]: unknown;
   }) => {
     if (dangerouslySetInnerHTML) {
-      return (
-        <script
-          {...props}
-          dangerouslySetInnerHTML={dangerouslySetInnerHTML}
-        />
-      );
+      return <script {...props} dangerouslySetInnerHTML={dangerouslySetInnerHTML} />;
     }
     return <script {...props}>{children}</script>;
   },
@@ -33,21 +32,17 @@ describe('GoogleAnalytics', () => {
     // Clear window.gtag and dataLayer
     window.gtag = undefined as unknown as typeof window.gtag;
     window.dataLayer = undefined as unknown as typeof window.dataLayer;
-    
+
     // Mock window.gtag function
     window.gtag = vi.fn();
     window.dataLayer = [];
   });
 
   it('should render Google Analytics scripts with correct measurement ID', () => {
-    const { container } = render(
-      <GoogleAnalytics measurementId="G-TESTID123" />
-    );
+    const { container } = render(<GoogleAnalytics measurementId="G-TESTID123" />);
 
     // Check for gtag.js script
-    const gtagScript = container.querySelector(
-      'script[src*="googletagmanager.com/gtag/js"]'
-    );
+    const gtagScript = container.querySelector('script[src*="googletagmanager.com/gtag/js"]');
     expect(gtagScript).toBeTruthy();
     expect(gtagScript?.getAttribute('src')).toBe(
       'https://www.googletagmanager.com/gtag/js?id=G-TESTID123'
@@ -56,21 +51,17 @@ describe('GoogleAnalytics', () => {
 
   it('should include nonce attribute when provided', () => {
     const nonce = 'test-nonce-123';
-    const { container } = render(
-      <GoogleAnalytics measurementId="G-TESTID123" nonce={nonce} />
-    );
+    const { container } = render(<GoogleAnalytics measurementId="G-TESTID123" nonce={nonce} />);
 
     // Check that both scripts have nonce attribute
     const scripts = container.querySelectorAll('script');
-    scripts.forEach((script) => {
+    scripts.forEach(script => {
       expect(script.getAttribute('nonce')).toBe(nonce);
     });
   });
 
   it('should initialize gtag with correct configuration', () => {
-    const { container } = render(
-      <GoogleAnalytics measurementId="G-TESTID123" />
-    );
+    const { container } = render(<GoogleAnalytics measurementId="G-TESTID123" />);
 
     // Check inline script content
     const inlineScript = container.querySelector('script#google-analytics');
@@ -87,9 +78,7 @@ describe('GoogleAnalytics', () => {
     const gtagMock = vi.fn();
     window.gtag = gtagMock;
 
-    const { rerender } = render(
-      <GoogleAnalytics measurementId="G-TESTID123" />
-    );
+    const { rerender } = render(<GoogleAnalytics measurementId="G-TESTID123" />);
 
     // Initial render should call gtag with current path
     expect(gtagMock).toHaveBeenCalledWith('config', 'G-TESTID123', {
@@ -109,9 +98,7 @@ describe('GoogleAnalytics', () => {
   });
 
   it('should use afterInteractive strategy for script loading', () => {
-    const { container } = render(
-      <GoogleAnalytics measurementId="G-TESTID123" />
-    );
+    const { container } = render(<GoogleAnalytics measurementId="G-TESTID123" />);
 
     // In our mock, strategy is a prop that won't be visible in the DOM
     // Let's just check that the scripts are rendered

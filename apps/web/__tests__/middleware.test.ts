@@ -25,16 +25,18 @@ import { generateCSP } from '@csp-kit/generator';
 
 describe('Middleware', () => {
   const mockGenerateCSP = generateCSP as MockedFunction<typeof generateCSP>;
-  
+
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset environment variables
     vi.stubEnv('NODE_ENV', 'test');
-    
+
     // Set default mock return value
     mockGenerateCSP.mockReturnValue({
-      header: 'script-src \'self\' \'nonce-test-nonce\' https://*.googletagmanager.com; img-src \'self\' https://*.google-analytics.com;',
-      reportOnlyHeader: 'script-src \'self\' \'nonce-test-nonce\' https://*.googletagmanager.com; img-src \'self\' https://*.google-analytics.com;',
+      header:
+        "script-src 'self' 'nonce-test-nonce' https://*.googletagmanager.com; img-src 'self' https://*.google-analytics.com;",
+      reportOnlyHeader:
+        "script-src 'self' 'nonce-test-nonce' https://*.googletagmanager.com; img-src 'self' https://*.google-analytics.com;",
       directives: {
         'script-src': ["'self'", "'nonce-test-nonce'", 'https://*.googletagmanager.com'],
         'img-src': ["'self'", 'https://*.google-analytics.com'],
@@ -69,25 +71,24 @@ describe('Middleware', () => {
 
   it('should use Content-Security-Policy header in production', () => {
     vi.stubEnv('NODE_ENV', 'production');
-    
+
     const request = new NextRequest(new URL('http://localhost:3000/'));
     const response = middleware(request);
 
     // In production, should use Content-Security-Policy (not Report-Only)
     const cspHeader = response.headers.get('Content-Security-Policy');
     expect(cspHeader).toBeTruthy();
-    
+
     // Report-Only header should not be set in production
     const reportOnlyHeader = response.headers.get('Content-Security-Policy-Report-Only');
     expect(reportOnlyHeader).toBeFalsy();
   });
 
-
   it('should match correct paths based on config', () => {
     // The matcher in the config excludes certain paths
     expect(config.matcher).toBeDefined();
     expect(config.matcher.length).toBe(1);
-    
+
     // The pattern excludes api, _next/static, _next/image, favicon.ico, files with extensions, and public folder
     const pattern = config.matcher[0];
     expect(pattern).toContain('(?!api|_next/static|_next/image|favicon.ico');
@@ -95,7 +96,7 @@ describe('Middleware', () => {
 
   it('should enable unsafe-eval in development mode', () => {
     vi.stubEnv('NODE_ENV', 'development');
-    
+
     const request = new NextRequest(new URL('http://localhost:3000/'));
     middleware(request);
 
