@@ -10,6 +10,7 @@ A modern web application for generating Content Security Policy headers using th
 - 🌙 Dark mode support
 - 📱 Responsive design
 - ⚡ Fast build times with TailwindCSS v4
+- 🔒 Production-ready CSP implementation with Google Analytics
 
 ## Browser Support
 
@@ -49,6 +50,12 @@ pnpm lint
 
 # Type checking
 pnpm check-types
+
+# Run unit tests
+pnpm test
+
+# Run E2E tests
+pnpm test:e2e
 ```
 
 ## Technology Stack
@@ -59,6 +66,45 @@ pnpm check-types
 - **Fonts**: Geist Sans & Geist Mono
 - **TypeScript**: Full type safety
 - **Library**: @csp-kit/generator for CSP generation
+
+## CSP Implementation with Google Analytics
+
+This app also demonstrates production-ready CSP implementation with Google Analytics:
+
+### Setup
+
+1. **Environment Variables**
+
+   Copy `.env.example` to `.env.local`:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   Configure your Google Analytics ID:
+
+   ```env
+   NEXT_PUBLIC_GA_MEASUREMENT_ID=G-YOUR-ID-HERE
+   ```
+
+2. **Implementation Details**
+   - **Middleware** (`middleware.ts`): Generates CSP headers with nonces for each request
+   - **Google Analytics** (`components/analytics/google-analytics.tsx`): Loads GA with proper nonce attributes
+   - **Layout** (`app/layout.tsx`): Integrates GA component and propagates nonces
+
+3. **Key Features**
+   - Unique nonces generated per request for security
+   - Report-Only mode in development for testing
+   - Strict CSP enforcement in production
+   - Automatic exclusion of static assets
+   - Full support for Google Analytics tracking
+
+### Testing
+
+The app includes comprehensive test coverage:
+
+- **Unit Tests**: Middleware logic, component rendering, nonce handling
+- **E2E Tests**: CSP header verification, GA integration, security policies
 
 ## Deploy on Vercel
 
