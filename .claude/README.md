@@ -9,11 +9,13 @@ This directory contains Claude Code configuration and hooks for the CSP Kit proj
 The `format-files.sh` script automatically formats files after Claude makes changes using the Write, Edit, or MultiEdit tools.
 
 **Supported file types:**
+
 - TypeScript/JavaScript (`.ts`, `.tsx`, `.js`, `.jsx`) - formatted with Prettier
-- Markdown (`.md`) - formatted with Prettier  
+- Markdown (`.md`) - formatted with Prettier
 - JSON (`.json`) - formatted with Prettier
 
 **How it works:**
+
 1. Claude makes changes to a file using Write, Edit, or MultiEdit
 2. The PostToolUse hook is triggered
 3. The script receives file information via JSON input
@@ -21,6 +23,7 @@ The `format-files.sh` script automatically formats files after Claude makes chan
 5. The file is automatically formatted in place
 
 **Requirements:**
+
 - `jq` for JSON parsing (optional, falls back to grep)
 - `pnpm` and `prettier` for formatting (tries pnpm first, then global prettier)
 
@@ -34,6 +37,7 @@ This configuration is automatically active when Claude Code is run from this pro
 ## Debugging
 
 If formatting fails, check:
+
 1. File permissions on `format-files.sh` (should be executable)
 2. `pnpm` and `prettier` are available in the project
 3. Check Claude Code output for hook execution logs
