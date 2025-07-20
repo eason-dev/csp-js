@@ -129,7 +129,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
       setResult(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedServices, useNonce, reportUri, customRules]);
+  }, [selectedServices, useNonce, reportUri, customRules, includeSelf, includeUnsafeInline, includeUnsafeEval]);
 
   const generateCurrentCSP = async () => {
     try {
@@ -641,6 +641,9 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                       serviceIds={selectedServices.map(s => s.id)}
                       useNonce={useNonce}
                       reportUri={reportUri}
+                      includeSelf={includeSelf}
+                      includeUnsafeInline={includeUnsafeInline}
+                      includeUnsafeEval={includeUnsafeEval}
                       customRules={Object.fromEntries(
                         Object.entries(customRules)
                           .filter(

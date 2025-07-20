@@ -20,6 +20,9 @@ interface UsageMethodsProps {
   useNonce?: boolean;
   reportUri?: string;
   customRules?: Record<string, string[]>;
+  includeSelf?: boolean;
+  includeUnsafeInline?: boolean;
+  includeUnsafeEval?: boolean;
 }
 
 // Usage method options
@@ -63,6 +66,9 @@ export function UsageMethods({
   useNonce = false,
   reportUri = '',
   customRules = {},
+  includeSelf = false,
+  includeUnsafeInline = false,
+  includeUnsafeEval = false,
 }: UsageMethodsProps) {
   const [selectedUsageMethod, setSelectedUsageMethod] = useState('npm-package');
   const [copied, setCopied] = useState(false);
@@ -99,7 +105,7 @@ import { ${serviceImports || 'GoogleAnalytics, Stripe'} } from '@csp-kit/data';
 
 const result = generateCSP({
   services: [${serviceImports || 'GoogleAnalytics, Stripe'}],
-  nonce: ${useNonce},${
+  nonce: ${useNonce},${includeSelf ? '\n  includeSelf: true,' : ''}${includeUnsafeInline ? '\n  includeUnsafeInline: true,' : ''}${includeUnsafeEval ? '\n  includeUnsafeEval: true,' : ''}${
     Object.keys(customRules).length > 0
       ? '\n  additionalRules: {\n' +
         Object.entries(customRules)
