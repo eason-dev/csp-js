@@ -94,6 +94,30 @@ pnpm changeset
 # 4. GitHub releases are created with changelogs
 ```
 
+**Important Changeset Rules:**
+
+- **NEVER include ignored packages in changesets**: The `web` and `docs` apps are configured as ignored packages and must not be included in changesets
+- **Mixed changesets are not allowed**: A changeset cannot contain both ignored packages (web, docs) and published packages (@csp-kit/\*)
+- When creating a changeset that affects both apps and packages, only include the publishable packages in the changeset
+
+Example of INCORRECT changeset:
+
+```yaml
+---
+'@csp-kit/generator': minor
+'web': minor # ❌ This will cause release to fail!
+---
+```
+
+Example of CORRECT changeset:
+
+```yaml
+---
+'@csp-kit/generator': minor
+# ✅ Omit web/docs even if they have related changes
+---
+```
+
 **Manual release (for specific packages):**
 
 - Go to Actions → Release workflow
