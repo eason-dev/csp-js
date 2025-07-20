@@ -1,5 +1,36 @@
 # @csp-kit/generator
 
+## 0.4.0
+
+### Minor Changes
+
+- [#100](https://github.com/eason-dev/csp-kit/pull/100) [`74ade57`](https://github.com/eason-dev/csp-kit/commit/74ade573a16f807d7303473e4876352d4494abb0) Thanks [@eason-dev](https://github.com/eason-dev)! - Simplify CSP API with direct boolean flags
+
+  Replace abstract security levels with intuitive boolean flags for better control over CSP generation:
+  - Add `includeSelf`, `includeUnsafeInline`, and `includeUnsafeEval` boolean options
+  - Change default behavior: `includeSelf` now defaults to `false` for more secure CSP generation
+  - Add UI toggles in web app Advanced Configuration section
+  - Remove `securityLevel` option (breaking change)
+
+  **Breaking Changes:**
+  - Removed `securityLevel` option, replaced with direct boolean flags
+  - `includeSelf` now defaults to `false` instead of `true`
+
+  **Migration:**
+
+  ```typescript
+  // Before
+  generateCSP({ services: [GoogleAnalytics], securityLevel: 'strict' });
+
+  // After
+  generateCSP({
+    services: [GoogleAnalytics],
+    includeSelf: false,
+    includeUnsafeInline: false,
+    includeUnsafeEval: false,
+  });
+  ```
+
 ## 0.3.0
 
 ### Minor Changes
