@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label';
 interface UsageMethodsProps {
   cspHeader: string;
   serviceIds?: string[];
-  useNonce?: boolean;
+  useNonce?: boolean | string;
   reportUri?: string;
   customRules?: Record<string, string[]>;
   includeSelf?: boolean;
@@ -104,8 +104,13 @@ import { generateCSP } from '@csp-kit/generator';
 import { ${serviceImports || 'GoogleAnalytics, Stripe'} } from '@csp-kit/data';
 
 const result = generateCSP({
-  services: [${serviceImports || 'GoogleAnalytics, Stripe'}],
-  nonce: ${useNonce},${includeSelf ? '\n  includeSelf: true,' : ''}${includeUnsafeInline ? '\n  includeUnsafeInline: true,' : ''}${includeUnsafeEval ? '\n  includeUnsafeEval: true,' : ''}${
+  services: [${serviceImports || 'GoogleAnalytics, Stripe'}],${
+    useNonce === true
+      ? '\n  nonce: true, // Auto-generate unique nonce per request'
+      : useNonce && typeof useNonce === 'string'
+        ? `\n  nonce: '${useNonce}', // Use custom static nonce`
+        : ''
+  }${includeSelf ? '\n  includeSelf: true,' : ''}${includeUnsafeInline ? '\n  includeUnsafeInline: true,' : ''}${includeUnsafeEval ? '\n  includeUnsafeEval: true,' : ''}${
     Object.keys(customRules).length > 0
       ? '\n  additionalRules: {\n' +
         Object.entries(customRules)
