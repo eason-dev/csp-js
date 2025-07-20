@@ -83,6 +83,8 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
 
   // State management
   const [useNonce, setUseNonce] = useState(false);
+  const [useCustomNonce, setUseCustomNonce] = useState(false);
+  const [customNonceValue, setCustomNonceValue] = useState('');
   const [reportUri, setReportUri] = useState('');
   const [includeSelf, setIncludeSelf] = useState(false);
   const [includeUnsafeInline, setIncludeUnsafeInline] = useState(false);
@@ -132,6 +134,8 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
   }, [
     selectedServices,
     useNonce,
+    useCustomNonce,
+    customNonceValue,
     reportUri,
     customRules,
     includeSelf,
@@ -155,6 +159,14 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
       // Build service array with versions
       const servicesWithVersions = selectedServices.map(service => service.id);
 
+      // Determine nonce value
+      let nonceValue: boolean | string = false;
+      if (useNonce) {
+        nonceValue = true;
+      } else if (useCustomNonce && customNonceValue.trim()) {
+        nonceValue = customNonceValue.trim();
+      }
+
       const response = await fetch('/api/generate-csp', {
         method: 'POST',
         headers: {
@@ -162,7 +174,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
         },
         body: JSON.stringify({
           services: servicesWithVersions,
-          nonce: useNonce,
+          nonce: nonceValue,
           customRules: customRulesObj,
           reportUri: reportUri || undefined,
           includeSelf,
@@ -354,7 +366,12 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                         <div className="flex items-center gap-2">
                           {useNonce && (
                             <Badge variant="secondary" className="text-xs" data-badge>
-                              Nonce
+                              Auto Nonce
+                            </Badge>
+                          )}
+                          {useCustomNonce && customNonceValue && (
+                            <Badge variant="secondary" className="text-xs" data-badge>
+                              Custom Nonce
                             </Badge>
                           )}
                           {reportUri && (
@@ -382,21 +399,73 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div className="space-y-0.5">
-                            <div className="flex items-center gap-2">
-                              <Label>Generate Nonce</Label>
-                              <InfoTooltip
-                                content="A nonce (number used once) is a cryptographic token that makes inline scripts safer by allowing only scripts with the correct nonce value to execute. Essential for secure inline JavaScript and styles."
-                                referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#nonce"
-                                referenceText="MDN: CSP Nonce"
+                        <div className="border-b pb-4">
+                          <div className="mb-3 flex items-center gap-2">
+                            <Label className="text-base font-medium">Nonce Configuration</Label>
+                            <InfoTooltip
+                              content="A nonce (number used once) is a cryptographic token that makes inline scripts safer by allowing only scripts with the correct nonce value to execute. You can either let the server generate a unique nonce automatically or provide your own custom value."
+                              referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy#nonce"
+                              referenceText="MDN: CSP Nonce"
+                            />
+                          </div>
+
+                          <div className="space-y-3 pl-4">
+                            <div className="flex items-center justify-between">
+                              <div className="space-y-0.5">
+                                <Label className="text-sm">Auto-generate Nonce</Label>
+                                <p className="text-muted-foreground text-xs">
+                                  Server generates a unique nonce for each request (recommended)
+                                </p>
+                              </div>
+                              <Switch
+                                checked={useNonce}
+                                onCheckedChange={checked => {
+                                  setUseNonce(checked);
+                                  if (checked) {
+                                    setUseCustomNonce(false);
+                                  }
+                                }}
                               />
                             </div>
-                            <p className="text-muted-foreground text-xs">
-                              Generate a unique nonce for inline scripts
-                            </p>
+
+                            <div className="flex items-center justify-between">
+                              <div className="space-y-0.5">
+                                <Label className="text-sm">Use Custom Nonce</Label>
+                                <p className="text-muted-foreground text-xs">
+                                  Provide your own nonce value (for testing or static sites)
+                                </p>
+                              </div>
+                              <Switch
+                                checked={useCustomNonce}
+                                onCheckedChange={checked => {
+                                  setUseCustomNonce(checked);
+                                  if (checked) {
+                                    setUseNonce(false);
+                                    if (!customNonceValue) {
+                                      setCustomNonceValue(
+                                        'my-static-nonce-' + Math.random().toString(36).substring(7)
+                                      );
+                                    }
+                                  }
+                                }}
+                              />
+                            </div>
+
+                            {useCustomNonce && (
+                              <div className="pl-4">
+                                <Input
+                                  type="text"
+                                  placeholder="Enter your custom nonce value"
+                                  value={customNonceValue}
+                                  onChange={e => setCustomNonceValue(e.target.value)}
+                                  className="font-mono text-xs"
+                                />
+                                <p className="text-muted-foreground mt-1 text-xs">
+                                  This exact value will be used as the nonce
+                                </p>
+                              </div>
+                            )}
                           </div>
-                          <Switch checked={useNonce} onCheckedChange={setUseNonce} />
                         </div>
 
                         <div className="space-y-2">
@@ -647,7 +716,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                     <UsageMethods
                       cspHeader={result.header}
                       serviceIds={selectedServices.map(s => s.id)}
-                      useNonce={useNonce}
+                      useNonce={useNonce || (useCustomNonce ? customNonceValue : false)}
                       reportUri={reportUri}
                       includeSelf={includeSelf}
                       includeUnsafeInline={includeUnsafeInline}
