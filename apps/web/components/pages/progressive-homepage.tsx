@@ -129,7 +129,15 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
       setResult(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedServices, useNonce, reportUri, customRules, includeSelf, includeUnsafeInline, includeUnsafeEval]);
+  }, [
+    selectedServices,
+    useNonce,
+    reportUri,
+    customRules,
+    includeSelf,
+    includeUnsafeInline,
+    includeUnsafeEval,
+  ]);
 
   const generateCurrentCSP = async () => {
     try {
