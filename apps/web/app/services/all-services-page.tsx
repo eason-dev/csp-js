@@ -188,7 +188,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
     return (
       <Card
         className={`group relative flex h-full cursor-pointer flex-col transition-all hover:shadow-md ${
-          serviceSelected ? 'border-primary border-2 shadow-sm' : 'border'
+          serviceSelected ? 'border-primary border-2 shadow-xs' : 'border'
         }`}
         onClick={handleCardClick}
       >
@@ -268,7 +268,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
                     {selectedServices.map(service => (
                       <div
                         key={service.id}
-                        className="bg-background hover:bg-muted group flex cursor-pointer items-center gap-1 rounded border px-2 py-1 text-xs transition-colors"
+                        className="bg-background hover:bg-muted group flex cursor-pointer items-center gap-1 rounded-sm border px-2 py-1 text-xs transition-colors"
                         onClick={() => router.push(`/service/${service.id}`)}
                       >
                         <span className="font-medium">{service.name}</span>

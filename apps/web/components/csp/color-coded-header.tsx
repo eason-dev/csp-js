@@ -397,7 +397,7 @@ export function ColorCodedHeader({
                   {sources.map((source, index) => (
                     <div
                       key={index}
-                      className="bg-muted/50 flex items-center justify-between rounded border p-2 text-xs"
+                      className="bg-muted/50 flex items-center justify-between rounded-sm border p-2 text-xs"
                     >
                       <code className="font-mono text-xs">{source}</code>
                       {/* Show service tags for URLs (only services that match this specific URL) */}
