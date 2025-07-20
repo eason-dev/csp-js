@@ -332,7 +332,7 @@ export function ColorCodedHeader({
         </Button>
       </div>
 
-      <div className="bg-muted break-all rounded-lg p-4 font-mono text-sm">
+      <div className="bg-muted rounded-lg p-4 font-mono text-sm break-all">
         {showColors ? (
           <div className="flex flex-wrap items-baseline gap-1">
             {segments.map((segment, index) => {
@@ -344,7 +344,7 @@ export function ColorCodedHeader({
                   <Badge
                     key={index}
                     variant="outline"
-                    className={`whitespace-nowrap font-mono text-xs ${colorClass}`}
+                    className={`font-mono text-xs whitespace-nowrap ${colorClass}`}
                   >
                     {segment.text}
                   </Badge>

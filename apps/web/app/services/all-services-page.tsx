@@ -155,7 +155,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
           }`}
           onClick={handleCardClick}
         >
-          <ChevronRight className="text-muted-foreground absolute right-4 top-4 h-4 w-4" />
+          <ChevronRight className="text-muted-foreground absolute top-4 right-4 h-4 w-4" />
           <div className="min-w-0 flex-1 pr-8">
             <div className="mb-2 flex items-center gap-3">
               <h3 className="truncate text-lg font-medium">{service.name}</h3>
@@ -168,7 +168,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
               <span>Updated {new Date(service.lastUpdated).toLocaleDateString()}</span>
             </div>
           </div>
-          <div className="absolute bottom-4 right-4">
+          <div className="absolute right-4 bottom-4">
             <Button
               variant={serviceSelected ? 'destructive' : 'default'}
               size="sm"
@@ -192,8 +192,8 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
         }`}
         onClick={handleCardClick}
       >
-        <ChevronRight className="text-muted-foreground absolute right-6 top-6 h-4 w-4" />
-        <CardHeader className="pb-3 pr-12">
+        <ChevronRight className="text-muted-foreground absolute top-6 right-6 h-4 w-4" />
+        <CardHeader className="pr-12 pb-3">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
               <CardTitle className="mb-1 truncate text-lg">{service.name}</CardTitle>
@@ -252,7 +252,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
               <div className="flex items-center justify-between gap-4">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
                   <div className="flex items-center gap-3">
-                    <span className="whitespace-nowrap text-sm font-medium">
+                    <span className="text-sm font-medium whitespace-nowrap">
                       Selected ({selectedServices.length}):
                     </span>
                     <Button
@@ -302,7 +302,7 @@ export default function AllServicesPage({ serviceRegistry }: AllServicesPageProp
         {/* Search and Filters */}
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="text-muted-foreground absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2" />
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Search services (e.g., Google Analytics, Stripe, Sentry)..."
               className="pl-10"

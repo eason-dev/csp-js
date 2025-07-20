@@ -153,7 +153,7 @@ export function SimpleSearch({
     <div ref={searchRef} className={`relative ${className}`}>
       {/* Search Input */}
       <div className="relative">
-        <Search className="text-muted-foreground absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 transform" />
+        <Search className="text-muted-foreground absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform" />
         <Input
           ref={inputRef}
           type="text"
@@ -162,7 +162,7 @@ export function SimpleSearch({
           onFocus={() => setShowResults(true)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="h-12 pl-10 pr-4 text-base"
+          className="h-12 pr-4 pl-10 text-base"
           aria-label="Search services"
           aria-expanded={showResults}
           aria-controls="search-results"
@@ -174,7 +174,7 @@ export function SimpleSearch({
               setSearchQuery('');
               inputRef.current?.focus();
             }}
-            className="text-muted-foreground hover:text-foreground absolute right-3 top-1/2 -translate-y-1/2 transform"
+            className="text-muted-foreground hover:text-foreground absolute top-1/2 right-3 -translate-y-1/2 transform"
             aria-label="Clear search"
           >
             <X className="h-4 w-4" />
