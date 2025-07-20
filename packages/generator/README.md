@@ -33,9 +33,9 @@ import { generateCSP } from '@csp-kit/generator';
 import { GoogleAnalytics } from '@csp-kit/data';
 
 // Generate CSP using service objects
-const result = generateCSP({ services: [GoogleAnalytics] });
+const result = generateCSP([GoogleAnalytics]);
 console.log(result.header);
-// Output: script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com; img-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com; connect-src 'self' https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net
+// Output: script-src https://www.google-analytics.com https://www.googletagmanager.com; img-src https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com; connect-src https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net
 
 // Use the CSP header in your response
 response.setHeader('Content-Security-Policy', result.header);
@@ -49,14 +49,17 @@ response.setHeader('Content-Security-Policy', result.header);
 import { generateCSP } from '@csp-kit/generator';
 import { GoogleAnalytics, MicrosoftClarity, Typeform } from '@csp-kit/data';
 
-// Single service
-const result = generateCSP({ services: [GoogleAnalytics] });
+// Single service (simple array syntax)
+const result = generateCSP([GoogleAnalytics]);
 
-// Multiple services
-const result = generateCSP({ services: [GoogleAnalytics, MicrosoftClarity, Typeform] });
-
-// Shorthand syntax (array only)
+// Multiple services (simple array syntax)
 const result = generateCSP([GoogleAnalytics, MicrosoftClarity, Typeform]);
+
+// With options object (for advanced configuration)
+const result = generateCSP({
+  services: [GoogleAnalytics, MicrosoftClarity, Typeform],
+  includeSelf: true,
+});
 ```
 
 ### Advanced Usage
@@ -74,9 +77,9 @@ const result = generateCSP({
     'img-src': ['data:', 'blob:'],
   },
   reportUri: 'https://my-site.com/csp-report',
-  includeSelf: true, // Include 'self' in all directives (default: true)
-  unsafeInline: false, // Allow 'unsafe-inline' (default: false)
-  unsafeEval: false, // Allow 'unsafe-eval' (default: false)
+  includeSelf: true, // Include 'self' in common directives (default: false)
+  includeUnsafeInline: false, // Allow 'unsafe-inline' (default: false, not recommended)
+  includeUnsafeEval: false, // Allow 'unsafe-eval' (default: false, not recommended)
 });
 
 console.log(result.header); // Complete CSP header
@@ -114,8 +117,8 @@ const result = generateCSP({
   services: [GoogleAnalytics, Sentry],
   // Development-specific settings
   development: {
-    unsafeEval: true, // Allow eval() in development
-    unsafeInline: true, // Allow inline scripts
+    includeUnsafeEval: true, // Allow eval() in development
+    includeUnsafeInline: true, // Allow inline scripts
   },
   // Production-specific settings
   production: {
@@ -157,15 +160,18 @@ Generate a complete CSP configuration.
 **Options:**
 
 ```typescript
+// Simple array syntax
+generateCSP(services: CSPService[])
+
+// Full options object
 interface CSPOptions {
   services: CSPService[]; // Service objects to include
   nonce?: boolean | string; // Generate/use nonce
   additionalRules?: CSPDirectives; // Additional CSP rules
   reportUri?: string; // CSP violation report URI
-  includeSelf?: boolean; // Include 'self' (default: true)
-  unsafeInline?: boolean; // Allow 'unsafe-inline'
-  unsafeEval?: boolean; // Allow 'unsafe-eval'
-  upgradeInsecureRequests?: boolean; // Upgrade HTTP to HTTPS
+  includeSelf?: boolean; // Include 'self' (default: false)
+  includeUnsafeInline?: boolean; // Allow 'unsafe-inline' (default: false)
+  includeUnsafeEval?: boolean; // Allow 'unsafe-eval' (default: false)
   development?: Partial<CSPOptions>; // Development overrides
   production?: Partial<CSPOptions>; // Production overrides
 }

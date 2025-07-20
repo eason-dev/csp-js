@@ -40,10 +40,10 @@ describe('generateCSP v2 API', () => {
       expect(result.header).toContain('https://js.stripe.com');
     });
 
-    it('should include self directive by default', () => {
+    it('should not include self directive by default', () => {
       const result = generateCSP([GoogleFonts]);
 
-      expect(result.header).toContain("'self'");
+      expect(result.header).not.toContain("'self'");
     });
   });
 
@@ -93,20 +93,32 @@ describe('generateCSP v2 API', () => {
     it('should handle unsafe directives with warnings', () => {
       const result = generateCSP({
         services: [TestService],
-        unsafeInline: true,
-        unsafeEval: true,
+        includeUnsafeInline: true,
+        includeUnsafeEval: true,
       });
 
       expect(result.header).toContain("'unsafe-inline'");
       expect(result.header).toContain("'unsafe-eval'");
-      expect(result.warnings).toContain("Using 'unsafe-inline' is not recommended for production");
-      expect(result.warnings).toContain("Using 'unsafe-eval' is not recommended for production");
+      expect(result.warnings).toContain(
+        "Using 'unsafe-inline' significantly reduces CSP security. Consider using nonces or hashes instead."
+      );
+      expect(result.warnings).toContain(
+        "Using 'unsafe-eval' reduces security. Avoid eval() and similar constructs."
+      );
     });
 
-    it('should exclude self directive when requested', () => {
+    it('should include self directive when explicitly requested', () => {
       const result = generateCSP({
         services: [TestService],
-        includeSelf: false,
+        includeSelf: true,
+      });
+
+      expect(result.header).toContain("'self'");
+    });
+
+    it('should not include self directive by default', () => {
+      const result = generateCSP({
+        services: [TestService],
       });
 
       expect(result.header).not.toContain("'self'");
@@ -183,8 +195,8 @@ describe('generateCSP v2 API', () => {
       const result = generateCSP({
         services: [TestService],
         development: {
-          unsafeEval: true,
-          unsafeInline: true,
+          includeUnsafeEval: true,
+          includeUnsafeInline: true,
         },
         production: {
           reportUri: '/csp-report',
@@ -205,8 +217,8 @@ describe('generateCSP v2 API', () => {
       const result = generateCSP({
         services: [TestService],
         development: {
-          unsafeEval: true,
-          unsafeInline: true,
+          includeUnsafeEval: true,
+          includeUnsafeInline: true,
         },
         production: {
           reportUri: '/csp-report',

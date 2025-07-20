@@ -32,9 +32,9 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
     nonce: nonceOption = false,
     additionalRules = {},
     reportUri,
-    includeSelf = true,
-    unsafeInline = false,
-    unsafeEval = false,
+    includeSelf = false,
+    includeUnsafeInline = false,
+    includeUnsafeEval = false,
     development = {},
     production = {},
   } = options;
@@ -47,8 +47,8 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
     additionalRules,
     reportUri,
     includeSelf,
-    unsafeInline,
-    unsafeEval,
+    includeUnsafeInline,
+    includeUnsafeEval,
     development,
     production,
     ...envOptions,
@@ -142,19 +142,21 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
   }
 
   // Add unsafe directives if requested (not recommended)
-  if (finalOptions.unsafeInline) {
+  if (finalOptions.includeUnsafeInline) {
     if (mergedDirectives['script-src']) {
       mergedDirectives['script-src'].push("'unsafe-inline'");
     }
     if (mergedDirectives['style-src']) {
       mergedDirectives['style-src'].push("'unsafe-inline'");
     }
-    warnings.push("Using 'unsafe-inline' is not recommended for production");
+    warnings.push(
+      "Using 'unsafe-inline' significantly reduces CSP security. Consider using nonces or hashes instead."
+    );
   }
 
-  if (finalOptions.unsafeEval && mergedDirectives['script-src']) {
+  if (finalOptions.includeUnsafeEval && mergedDirectives['script-src']) {
     mergedDirectives['script-src'].push("'unsafe-eval'");
-    warnings.push("Using 'unsafe-eval' is not recommended for production");
+    warnings.push("Using 'unsafe-eval' reduces security. Avoid eval() and similar constructs.");
   }
 
   // Handle nonce generation

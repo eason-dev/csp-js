@@ -104,7 +104,7 @@ describe('Middleware', () => {
     expect(mockGenerateCSP).toHaveBeenCalledWith(
       expect.objectContaining({
         development: {
-          unsafeEval: true,
+          includeUnsafeEval: true,
         },
       })
     );

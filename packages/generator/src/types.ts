@@ -16,14 +16,25 @@ export interface CSPOptions {
   /** Report URI for CSP violations */
   reportUri?: string;
 
-  /** Include 'self' directive by default */
+  /**
+   * Include 'self' directive for common directives
+   * @default false
+   */
   includeSelf?: boolean;
 
-  /** Include 'unsafe-inline' (not recommended) */
-  unsafeInline?: boolean;
+  /**
+   * Include 'unsafe-inline' for script-src and style-src
+   * WARNING: This significantly reduces security. Only use when absolutely necessary.
+   * @default false
+   */
+  includeUnsafeInline?: boolean;
 
-  /** Include 'unsafe-eval' (not recommended) */
-  unsafeEval?: boolean;
+  /**
+   * Include 'unsafe-eval' for script-src
+   * WARNING: This reduces security. Avoid unless required for legacy code.
+   * @default false
+   */
+  includeUnsafeEval?: boolean;
 
   /** Development-specific options */
   development?: Partial<Omit<CSPOptions, 'services' | 'development' | 'production'>>;

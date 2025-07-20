@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
     nonce,
     development: {
       // In development, we might need unsafe-eval for hot reloading
-      unsafeEval: process.env.NODE_ENV !== 'production',
+      includeUnsafeEval: process.env.NODE_ENV !== 'production',
     },
     // Include 'self' directive for Next.js assets
     includeSelf: true,

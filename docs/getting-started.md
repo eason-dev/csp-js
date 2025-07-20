@@ -49,13 +49,11 @@ pnpm add @csp-kit/generator @csp-kit/data
 import { generateCSP } from '@csp-kit/generator';
 import { GoogleAnalytics, Stripe, GoogleFonts } from '@csp-kit/data';
 
-// Generate CSP using imported services
-const result = generateCSP({
-  services: [GoogleAnalytics, Stripe, GoogleFonts],
-});
+// Generate CSP using imported services (simple array syntax)
+const result = generateCSP([GoogleAnalytics, Stripe, GoogleFonts]);
 
 console.log(result.header);
-// Output: "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; style-src 'self' https://fonts.googleapis.com; ..."
+// Output: "script-src https://www.googletagmanager.com https://js.stripe.com; style-src https://fonts.googleapis.com; ..."
 
 // Use the CSP header
 response.setHeader('Content-Security-Policy', result.header);
@@ -85,9 +83,7 @@ import { generateCSPHeader } from '@csp-kit/generator';
 import { GoogleAnalytics, VercelAnalytics, GoogleFonts } from '@csp-kit/data';
 
 export function middleware(request: NextRequest) {
-  const csp = generateCSPHeader({
-    services: [GoogleAnalytics, VercelAnalytics, GoogleFonts],
-  });
+  const csp = generateCSPHeader([GoogleAnalytics, VercelAnalytics, GoogleFonts]);
 
   const response = NextResponse.next();
   response.headers.set('Content-Security-Policy', csp);
@@ -129,9 +125,7 @@ import { defineConfig } from 'vite';
 import { generateCSPHeader } from '@csp-kit/generator';
 import { GoogleAnalytics, GoogleFonts } from '@csp-kit/data';
 
-const csp = generateCSPHeader({
-  services: [GoogleAnalytics, GoogleFonts],
-});
+const csp = generateCSPHeader([GoogleAnalytics, GoogleFonts]);
 
 export default defineConfig({
   server: {
@@ -151,9 +145,7 @@ Generate CSP headers and add them to your hosting configuration:
 import { generateCSPHeader } from '@csp-kit/generator';
 import { GoogleAnalytics, GoogleFonts } from '@csp-kit/data';
 
-const csp = generateCSPHeader({
-  services: [GoogleAnalytics, GoogleFonts],
-});
+const csp = generateCSPHeader([GoogleAnalytics, GoogleFonts]);
 
 console.log(csp);
 // Copy this output to your configuration files
@@ -207,6 +199,7 @@ const result = generateCSP({
   services: [GoogleAnalytics, Stripe, MyAPI],
   nonce: true, // Generate nonce for inline scripts
   reportUri: 'https://my-site.com/csp-report',
+  includeSelf: true, // Include 'self' in common directives
 });
 ```
 
@@ -239,10 +232,12 @@ Test CSP without breaking your site:
 import { generateReportOnlyCSP } from '@csp-kit/generator';
 import { GoogleAnalytics, Stripe } from '@csp-kit/data';
 
-const reportOnlyHeader = generateReportOnlyCSP({
+const result = generateReportOnlyCSP({
   services: [GoogleAnalytics, Stripe],
   reportUri: '/api/csp-violations',
 });
+
+const reportOnlyHeader = result.header;
 
 // Use report-only header for testing
 response.setHeader('Content-Security-Policy-Report-Only', reportOnlyHeader);
@@ -267,7 +262,7 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 const result = generateCSP({
   services: [GoogleAnalytics, Stripe, ...(isDevelopment ? [DevTools] : [])],
   development: {
-    unsafeEval: true, // Allow eval in development
+    includeUnsafeEval: true, // Allow eval in development
     additionalRules: {
       'connect-src': ['ws://localhost:*'],
     },
