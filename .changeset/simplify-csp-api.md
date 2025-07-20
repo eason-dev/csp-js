@@ -1,6 +1,5 @@
 ---
 "@csp-kit/generator": minor
-"web": minor
 ---
 
 Simplify CSP API with direct boolean flags
