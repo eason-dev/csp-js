@@ -30,7 +30,7 @@ CSP Kit is a modern Content Security Policy (CSP) toolkit that simplifies CSP he
 
 ## Project Structure
 
-This is a Turborepo monorepo with TypeScript and React/Next.js applications. The project uses pnpm as the package manager and requires Node.js >=22.
+This is a Turborepo monorepo with TypeScript and React/Next.js applications. The project uses pnpm as the package manager and requires Node.js >=24.
 
 ### Key Directories
 
@@ -166,7 +166,7 @@ Note: NPM provenance is disabled (`--provenance=false`) due to CI limitations.
 - Uses pnpm workspaces defined in `pnpm-workspace.yaml`
 - Workspace dependencies are automatically resolved
 - Lock file: `pnpm-lock.yaml`
-- Node.js >=22 required
+- Node.js >=24 required
 
 ## Tech Stack Summary
 

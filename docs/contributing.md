@@ -16,7 +16,7 @@ Welcome to the CSP Kit community! We're excited you want to contribute to making
 
 ### Prerequisites
 
-- **Node.js 22+** and **pnpm 9+** (required)
+- **Node.js 24+** and **pnpm 9+** (required)
 - **Git** for version control
 - **TypeScript knowledge** (helpful for service definitions)
 - **Basic CSP knowledge** (helpful but not required)

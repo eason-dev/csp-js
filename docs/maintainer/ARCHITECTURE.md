@@ -384,7 +384,7 @@ import { nextjsPlugin } from '@csp-kit/generator/plugins/nextjs';
 ### Development Dependencies
 
 - **TypeScript**: 5.8.2 (latest stable)
-- **Node.js**: >=18 (LTS support)
+- **Node.js**: >=24
 - **ESLint**: 9.x (latest)
 - **Prettier**: 3.x
 - **Vitest**: 2.x
