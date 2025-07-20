@@ -37,9 +37,9 @@ interface CSPOptions {
   nonce?: boolean | string; // Generate nonce or use provided value
   additionalRules?: CSPDirectives; // Additional CSP rules
   reportUri?: string; // CSP violation reporting endpoint
-  includeSelf?: boolean; // Include 'self' directive (default: true)
-  unsafeInline?: boolean; // Allow unsafe-inline (not recommended)
-  unsafeEval?: boolean; // Allow unsafe-eval (not recommended)
+  includeSelf?: boolean; // Include 'self' directive (default: false)
+  includeUnsafeInline?: boolean; // Allow unsafe-inline (not recommended)
+  includeUnsafeEval?: boolean; // Allow unsafe-eval (not recommended)
   development?: Partial<CSPOptions>; // Dev-only options
   production?: Partial<CSPOptions>; // Production-only options
 }
@@ -86,7 +86,7 @@ const result = generateCSP({
 const result = generateCSP({
   services: [GoogleAnalytics],
   development: {
-    unsafeEval: true, // For hot reload
+    includeUnsafeEval: true, // For hot reload
     additionalRules: {
       'connect-src': ['ws://localhost:*'],
     },
@@ -451,7 +451,7 @@ CSP Kit provides helpful error messages and warnings:
 ```typescript
 const result = generateCSP({
   services: [GoogleAnalytics],
-  unsafeInline: true, // Not recommended
+  includeUnsafeInline: true, // Not recommended
 });
 
 // Check warnings

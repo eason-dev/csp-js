@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/format-files.sh",
+            "description": "Auto-format files after Claude makes changes"
+          }
+        ]
+      }
+    ]
+  }
+}

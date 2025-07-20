@@ -6,7 +6,15 @@ import type { CSPService } from '@csp-kit/data';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { services: serviceIds, nonce, customRules, reportUri } = body;
+    const {
+      services: serviceIds,
+      nonce,
+      customRules,
+      reportUri,
+      includeSelf,
+      includeUnsafeInline,
+      includeUnsafeEval,
+    } = body;
 
     // Convert service IDs to CSPService objects
     const services: CSPService[] = [];
@@ -34,6 +42,9 @@ export async function POST(request: NextRequest) {
       nonce,
       additionalRules: customRules,
       reportUri,
+      includeSelf,
+      includeUnsafeInline,
+      includeUnsafeEval,
     });
 
     return NextResponse.json(result);

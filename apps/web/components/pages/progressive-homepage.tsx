@@ -84,6 +84,9 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
   // State management
   const [useNonce, setUseNonce] = useState(false);
   const [reportUri, setReportUri] = useState('');
+  const [includeSelf, setIncludeSelf] = useState(false);
+  const [includeUnsafeInline, setIncludeUnsafeInline] = useState(false);
+  const [includeUnsafeEval, setIncludeUnsafeEval] = useState(false);
   const [customRules, setCustomRules] = useState<Record<string, string>>({
     'script-src': '',
     'style-src': '',
@@ -126,7 +129,15 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
       setResult(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedServices, useNonce, reportUri, customRules]);
+  }, [
+    selectedServices,
+    useNonce,
+    reportUri,
+    customRules,
+    includeSelf,
+    includeUnsafeInline,
+    includeUnsafeEval,
+  ]);
 
   const generateCurrentCSP = async () => {
     try {
@@ -154,6 +165,9 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
           nonce: useNonce,
           customRules: customRulesObj,
           reportUri: reportUri || undefined,
+          includeSelf,
+          includeUnsafeInline,
+          includeUnsafeEval,
         }),
       });
 
@@ -348,6 +362,21 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                               Report URI
                             </Badge>
                           )}
+                          {includeSelf && (
+                            <Badge variant="secondary" className="text-xs" data-badge>
+                              &apos;self&apos;
+                            </Badge>
+                          )}
+                          {includeUnsafeInline && (
+                            <Badge variant="destructive" className="text-xs" data-badge>
+                              ⚠️ unsafe-inline
+                            </Badge>
+                          )}
+                          {includeUnsafeEval && (
+                            <Badge variant="destructive" className="text-xs" data-badge>
+                              ⚠️ unsafe-eval
+                            </Badge>
+                          )}
                         </div>
                       </div>
                     </AccordionTrigger>
@@ -389,6 +418,69 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                           <p className="text-muted-foreground text-xs">
                             CSP violations will be reported to this endpoint
                           </p>
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-2">
+                              <Label>Include &apos;self&apos;</Label>
+                              <InfoTooltip
+                                content="Includes 'self' in CSP directives, allowing resources from the same origin. This is common but not always necessary."
+                                referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/Sources#self"
+                                referenceText="MDN: 'self' source"
+                              />
+                            </div>
+                            <p className="text-muted-foreground text-xs">
+                              Allow resources from the same origin
+                            </p>
+                          </div>
+                          <Switch checked={includeSelf} onCheckedChange={setIncludeSelf} />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-2">
+                              <Label>Include &apos;unsafe-inline&apos;</Label>
+                              <InfoTooltip
+                                content="WARNING: Allows inline scripts and styles. This significantly reduces security by enabling XSS attacks. Only use when absolutely necessary."
+                                referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src#unsafe-inline"
+                                referenceText="MDN: 'unsafe-inline'"
+                              />
+                            </div>
+                            <p className="text-muted-foreground text-xs">
+                              <span className="text-orange-600 dark:text-orange-400">
+                                ⚠️ Not recommended
+                              </span>{' '}
+                              - Allows inline scripts/styles
+                            </p>
+                          </div>
+                          <Switch
+                            checked={includeUnsafeInline}
+                            onCheckedChange={setIncludeUnsafeInline}
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-0.5">
+                            <div className="flex items-center gap-2">
+                              <Label>Include &apos;unsafe-eval&apos;</Label>
+                              <InfoTooltip
+                                content="WARNING: Allows eval() and similar JavaScript functions. This reduces security and should be avoided unless required for legacy code."
+                                referenceUrl="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src#unsafe-eval"
+                                referenceText="MDN: 'unsafe-eval'"
+                              />
+                            </div>
+                            <p className="text-muted-foreground text-xs">
+                              <span className="text-orange-600 dark:text-orange-400">
+                                ⚠️ Not recommended
+                              </span>{' '}
+                              - Allows eval() and similar functions
+                            </p>
+                          </div>
+                          <Switch
+                            checked={includeUnsafeEval}
+                            onCheckedChange={setIncludeUnsafeEval}
+                          />
                         </div>
                       </div>
                     </AccordionContent>
@@ -557,6 +649,9 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                       serviceIds={selectedServices.map(s => s.id)}
                       useNonce={useNonce}
                       reportUri={reportUri}
+                      includeSelf={includeSelf}
+                      includeUnsafeInline={includeUnsafeInline}
+                      includeUnsafeEval={includeUnsafeEval}
                       customRules={Object.fromEntries(
                         Object.entries(customRules)
                           .filter(

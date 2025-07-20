@@ -255,9 +255,9 @@ type CSPOptions = {
   nonce?: boolean | string; // Generate or use nonce
   additionalRules?: CSPDirectives; // Additional CSP rules
   reportUri?: string; // Violation reporting endpoint
-  includeSelf?: boolean; // Include 'self' (default: true)
-  unsafeInline?: boolean; // Allow unsafe-inline (not recommended)
-  unsafeEval?: boolean; // Allow unsafe-eval (not recommended)
+  includeSelf?: boolean; // Include 'self' (default: false)
+  includeUnsafeInline?: boolean; // Allow unsafe-inline (not recommended)
+  includeUnsafeEval?: boolean; // Allow unsafe-eval (not recommended)
   development?: Partial<CSPOptions>; // Dev-only options
   production?: Partial<CSPOptions>; // Production-only options
 };
