@@ -564,7 +564,7 @@ For optimal TypeScript support:
 
 CSP Kit works in any modern JavaScript environment:
 
-- ✅ Node.js 24+
+- ✅ Node.js 20+
 - ✅ Modern browsers (ES2020+)
 - ✅ Bundlers (Webpack, Vite, Rollup, esbuild)
 - ✅ Edge runtimes (Vercel, Cloudflare Workers)

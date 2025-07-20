@@ -472,7 +472,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '24'
+          node-version: '20'
       - run: npm install -g @csp-kit/cli
       - run: csp-cli validate
       - run: csp-cli check google-analytics stripe
