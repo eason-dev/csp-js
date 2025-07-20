@@ -6,7 +6,7 @@ This guide provides comprehensive instructions for setting up a development envi
 
 ### Required Software
 
-- **Node.js**: v22+ (check `.nvmrc` for exact version)
+- **Node.js**: v24+ (check `.nvmrc` for exact version)
 - **pnpm**: v10.12.4+ (required package manager)
 - **Git**: Latest version
 - **IDE**: VS Code recommended (see IDE setup below)

@@ -224,7 +224,7 @@ export default function ServicePage({ service }: ServicePageProps) {
             </CardHeader>
             <CardContent>
               <div className="bg-muted/50 rounded-lg p-3">
-                <div className="whitespace-pre-line text-sm">{service.notes}</div>
+                <div className="text-sm whitespace-pre-line">{service.notes}</div>
               </div>
             </CardContent>
           </Card>

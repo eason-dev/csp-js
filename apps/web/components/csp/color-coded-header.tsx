@@ -332,7 +332,7 @@ export function ColorCodedHeader({
         </Button>
       </div>
 
-      <div className="bg-muted break-all rounded-lg p-4 font-mono text-sm">
+      <div className="bg-muted rounded-lg p-4 font-mono text-sm break-all">
         {showColors ? (
           <div className="flex flex-wrap items-baseline gap-1">
             {segments.map((segment, index) => {
@@ -344,7 +344,7 @@ export function ColorCodedHeader({
                   <Badge
                     key={index}
                     variant="outline"
-                    className={`whitespace-nowrap font-mono text-xs ${colorClass}`}
+                    className={`font-mono text-xs whitespace-nowrap ${colorClass}`}
                   >
                     {segment.text}
                   </Badge>
@@ -397,7 +397,7 @@ export function ColorCodedHeader({
                   {sources.map((source, index) => (
                     <div
                       key={index}
-                      className="bg-muted/50 flex items-center justify-between rounded border p-2 text-xs"
+                      className="bg-muted/50 flex items-center justify-between rounded-sm border p-2 text-xs"
                     >
                       <code className="font-mono text-xs">{source}</code>
                       {/* Show service tags for URLs (only services that match this specific URL) */}

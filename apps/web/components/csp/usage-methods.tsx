@@ -136,7 +136,7 @@ Header always set Content-Security-Policy "${cspHeader}"`;
     <div className="space-y-4">
       <div className="flex items-start justify-between gap-4">
         <div className="flex min-w-0 flex-1 items-start gap-2">
-          <Label htmlFor="usage-method" className="mt-2 whitespace-nowrap text-sm">
+          <Label htmlFor="usage-method" className="mt-2 text-sm whitespace-nowrap">
             Usage:
           </Label>
           <Select value={selectedUsageMethod} onValueChange={setSelectedUsageMethod}>
@@ -148,7 +148,7 @@ Header always set Content-Security-Policy "${cspHeader}"`;
                 <SelectItem key={method.id} value={method.id}>
                   <div className="max-w-none text-left">
                     <div className="font-medium">{method.title}</div>
-                    <div className="text-muted-foreground whitespace-normal text-xs">
+                    <div className="text-muted-foreground text-xs whitespace-normal">
                       {method.description}
                     </div>
                   </div>

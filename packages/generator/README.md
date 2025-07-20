@@ -211,7 +211,7 @@ const header = generateCSPHeader(['google-analytics']);
 
 csp-kit works in all JavaScript environments:
 
-- ✅ Node.js (18+)
+- ✅ Node.js (20+)
 - ✅ Deno
 - ✅ Cloudflare Workers
 - ✅ Vercel Edge Runtime

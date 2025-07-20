@@ -46,7 +46,7 @@ export function ServiceCart() {
           {selectedServices.length > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center p-0 text-xs"
+              className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center p-0 text-xs"
             >
               {selectedServices.length}
             </Badge>
@@ -86,7 +86,7 @@ export function ServiceCart() {
                 {selectedServices.map(service => (
                   <div
                     key={service.id}
-                    className="bg-card hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded border p-2 transition-colors"
+                    className="bg-card hover:bg-muted/50 flex cursor-pointer items-center justify-between rounded-sm border p-2 transition-colors"
                     onClick={() => handleServiceClick(service.id)}
                   >
                     <div className="min-w-0 flex-1">
