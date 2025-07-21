@@ -45,7 +45,6 @@ describe('Middleware', () => {
       nonce: 'test-nonce',
       includedServices: ['google-analytics'],
       unknownServices: [],
-      warnings: [],
     });
   });
 
