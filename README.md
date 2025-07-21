@@ -47,42 +47,19 @@ const { header } = generateCSP({
 });
 ```
 
-**Transform your security workflow:**
+**Key Benefits:**
 
-- 🎯 **Service-First**: Configure by services, not directives
-- 📦 **106+ Services**: Pre-configured for Google Analytics, Stripe, Intercom, and more
-- 🔄 **Always Updated**: Community-driven service definitions with automated monitoring
-- 💪 **TypeScript-First**: Full type safety with tree-shakeable ES modules
-- 🌐 **Multiple Interfaces**: Web UI and JavaScript/TypeScript API
-- 🚀 **Production Ready**: Used by thousands of developers worldwide
-- 🆓 **Free & Open Source**: MIT licensed, free for commercial and personal use
+- 🎯 **Service-First**: Import services directly, no manual CSP directives
+- 📦 **106+ Services**: Pre-configured CSP for all major web services
+- 🔧 **TypeScript**: Full type safety and IntelliSense support
+- 🌐 **Web Interface**: Visual generator at [csp-kit.eason.ch](https://csp-kit.eason.ch)
 
 ## ✨ Features
 
-### 🌐 **Web Interface**
-
-**[Try the interactive generator →](https://csp-kit.eason.ch)**
-
-- Visual service selection with real-time CSP preview
-- Copy headers, meta tags, or JSON configurations
-- Browse and search 106+ supported services
-- Test and validate your CSP policies
-
-### 📦 **JavaScript/TypeScript API**
-
-- **TypeScript-First**: Import services as typed objects for full IntelliSense support
-- **Tree-Shakeable**: Only bundle the services you actually use
-- **106+ Popular Services**: Google Analytics, Stripe, Intercom, YouTube, and more
-- **Always Up-to-Date**: Community-maintained service definitions
-- **Multiple Formats**: Headers, meta tags, or JSON configurations
-- **Nonce Support**: Cryptographic nonce generation for secure inline scripts
-
-### 🔄 **Ecosystem**
-
-- **Data Package**: Separate `@csp-kit/data` for fast updates
-- **Community-Driven**: Open source with active community
-- **Production Ready**: Battle-tested in real-world applications
-- **Security-First**: Conservative defaults, security warnings, regular audits
+- **[Web Interface](https://csp-kit.eason.ch)**: Visual service selection, instant CSP generation
+- **TypeScript API**: Type-safe service imports with tree-shaking
+- **Nonce Support**: Built-in cryptographic nonce generation
+- **Multiple Outputs**: Headers, meta tags, or JSON format
 
 ## 🚀 Quick Start
 
