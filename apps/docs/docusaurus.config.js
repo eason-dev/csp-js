@@ -66,6 +66,11 @@ const config = {
             label: 'Documentation',
           },
           {
+            href: 'https://csp-kit.eason.ch',
+            label: 'CSP Generator',
+            position: 'left',
+          },
+          {
             href: 'https://github.com/eason-dev/csp-kit',
             label: 'GitHub',
             position: 'right',
