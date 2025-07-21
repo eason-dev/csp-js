@@ -411,24 +411,18 @@ View the full interactive list at [csp-kit.eason.ch/services](https://csp-kit.ea
 | **[🛠️ API Reference](https://csp-kit.eason.ch/docs/api-reference)**     | Detailed API documentation                      |
 | **[📦 Service Catalog](https://csp-kit.eason.ch/services)**             | Browse all 106+ supported services              |
 | **[🤝 Contributing Guide](https://csp-kit.eason.ch/docs/contributing)** | How to contribute new services                  |
-| **[🔄 Migration Guide](https://csp-kit.eason.ch/docs/upgrade-guide)**   | Upgrading from older versions                   |
 | **[💻 Development Setup](./DEVELOPMENT.md)**                            | Complete IDE and environment setup              |
 
 ## 🔄 Keeping Up-to-Date
 
-### Upgrading Packages
-
-To get the latest service definitions and features:
+### Getting Updates
 
 ```bash
-# Upgrade both packages together
+# Update to latest versions
 npm update @csp-kit/generator @csp-kit/data
 
-# Check for latest versions
+# Check for available updates
 npm outdated @csp-kit/generator @csp-kit/data
-
-# View installed versions
-npm list @csp-kit/generator @csp-kit/data
 ```
 
 ## 🤝 Contributing
