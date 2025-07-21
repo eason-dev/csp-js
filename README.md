@@ -265,16 +265,11 @@ const hexNonce = generateNonce({
 Define your own services for internal or unsupported third-party services:
 
 ```typescript
-import { defineService, generateCSP } from '@csp-kit/generator';
-import { ServiceCategory } from '@csp-kit/data';
+import { defineService } from '@csp-kit/data';
+import { generateCSP } from '@csp-kit/generator';
 
-// Define a custom service
+// Define a custom service - only directives are required
 const MyCustomService = defineService({
-  id: 'my-custom-service',
-  name: 'My Custom Service',
-  category: ServiceCategory.OTHER,
-  description: 'Internal analytics service',
-  website: 'https://internal.company.com',
   directives: {
     'script-src': ['https://analytics.internal.company.com'],
     'connect-src': ['https://api.internal.company.com'],
@@ -286,170 +281,149 @@ const MyCustomService = defineService({
 const result = generateCSP({
   services: [MyCustomService, GoogleAnalytics, Stripe],
 });
-
-// For reusable custom services across your organization
-export const CompanyServices = {
-  Analytics: defineService({
-    /* ... */
-  }),
-  Monitoring: defineService({
-    /* ... */
-  }),
-  CDN: defineService({
-    /* ... */
-  }),
-};
-
-// Then import and use
-import { CompanyServices } from './company-services';
-const result = generateCSP({
-  services: [CompanyServices.Analytics, CompanyServices.CDN, Stripe],
-});
 ```
 
 ## 📦 Available Services
 
 CSP Kit includes 106+ pre-configured services. Import them by name from `@csp-kit/data`:
 
-### Analytics Services
-
 ```typescript
 import {
+  // Analytics
   AdobeAnalytics, // Adobe Analytics
   Amplitude, // Amplitude Analytics
   CloudflareAnalytics, // Cloudflare Web Analytics
+  CrazyEgg, // Crazy Egg Analytics
   FathomAnalytics, // Fathom Analytics
   GoogleAnalytics, // Google Analytics 4
+  GoogleOptimize, // Google Optimize
   GoogleTagManager, // Google Tag Manager
   Hotjar, // Hotjar Analytics
   MicrosoftClarity, // Microsoft Clarity
   Mixpanel, // Mixpanel Analytics
   PlausibleAnalytics, // Plausible Analytics
   Segment, // Segment CDP
-} from '@csp-kit/data';
-```
+  Vwo, // VWO Analytics
 
-### Payment Services
-
-```typescript
-import {
-  Adyen, // Adyen Payments
-  Klarna, // Klarna Checkout
-  Paddle, // Paddle Billing
+  // Payment
+  ApplePay, // Apple Pay
+  GooglePay, // Google Pay
   Paypal, // PayPal
-  Razorpay, // Razorpay Payments
+  Shopify, // Shopify
   Square, // Square Payments
   Stripe, // Stripe
-} from '@csp-kit/data';
-```
 
-### Authentication Services
-
-```typescript
-import {
+  // Authentication
   Auth0, // Auth0
-  Clerk, // Clerk Auth
   FirebaseAuth, // Firebase Authentication
   Okta, // Okta
-  SupabaseAuth, // Supabase Auth
-} from '@csp-kit/data';
-```
+  Onelogin, // OneLogin
+  PingIdentity, // Ping Identity
 
-### Video Services
-
-```typescript
-import {
-  Loom, // Loom Videos
+  // Video & Media
+  Bigbluebutton, // BigBlueButton
+  GoogleMeet, // Google Meet
+  JitsiMeet, // Jitsi Meet
+  MicrosoftTeams, // Microsoft Teams
+  Twitch, // Twitch
   Vimeo, // Vimeo
-  Wistia, // Wistia Videos
   Youtube, // YouTube
-} from '@csp-kit/data';
-```
+  Zoom, // Zoom
 
-### Social Media
-
-```typescript
-import {
+  // Social Media
   Discord, // Discord Widget
   Facebook, // Facebook SDK
+  FacebookAds, // Facebook Ads
   Instagram, // Instagram Embeds
-  LinkedIn, // LinkedIn
-  Reddit, // Reddit Embeds
-  TikTok, // TikTok Embeds
-  Twitter, // Twitter/X Widgets
-} from '@csp-kit/data';
-```
+  Linkedin, // LinkedIn
+  LinkedinAds, // LinkedIn Ads
+  Pinterest, // Pinterest
+  Slack, // Slack
+  Snapchat, // Snapchat
+  Tiktok, // TikTok
+  Twitter, // Twitter/X
+  TwitterAds, // Twitter Ads
+  Whatsapp, // WhatsApp
 
-### Chat & Support
-
-```typescript
-import {
-  Crisp, // Crisp Chat
+  // Chat & Support
+  CrispChat, // Crisp Chat
   Drift, // Drift Chat
-  FreshChat, // Freshworks Chat
-  HelpScout, // Help Scout Beacon
+  Freshchat, // Freshchat
   Intercom, // Intercom
-  LiveChat, // LiveChat
-  Tawk, // Tawk.to
-  Tidio, // Tidio Chat
-  ZendeskChat, // Zendesk Chat
-} from '@csp-kit/data';
-```
+  TawkTo, // Tawk.to
+  Zendesk, // Zendesk
 
-### Forms
-
-```typescript
-import {
-  ConvertKit, // ConvertKit Forms
-  Formspree, // Formspree
-  Jotform, // Jotform
-  Mailchimp, // Mailchimp Forms
-  Tally, // Tally Forms
+  // Forms & Email
+  Calendly, // Calendly
+  CampaignMonitor, // Campaign Monitor
+  ConstantContact, // Constant Contact
+  Convertkit, // ConvertKit
+  Mailchimp, // Mailchimp
+  Mailgun, // Mailgun
+  Sendgrid, // SendGrid
   Typeform, // Typeform
-} from '@csp-kit/data';
-```
+  Unbounce, // Unbounce
 
-### CDN Services
-
-```typescript
-import {
-  Bunny, // Bunny CDN
+  // CDN & Infrastructure
+  AwsCloudfront, // AWS CloudFront
+  AzureCdn, // Azure CDN
   Cdnjs, // cdnjs
-  Cloudflare, // Cloudflare CDN
-  Cloudinary, // Cloudinary
+  Cloudflare, // Cloudflare (legacy alias for AwsCloudfront)
   Fastly, // Fastly CDN
-  JsDelivr, // jsDelivr
+  Jsdelivr, // jsDelivr
+  Keycdn, // KeyCDN
+  Maxcdn, // MaxCDN
   Unpkg, // unpkg
-} from '@csp-kit/data';
-```
 
-### Monitoring & Error Tracking
-
-```typescript
-import {
-  Bugsnag, // Bugsnag
+  // Monitoring & Analytics
   Datadog, // Datadog RUM
-  LogRocket, // LogRocket
   NewRelic, // New Relic Browser
-  Rollbar, // Rollbar
   Sentry, // Sentry
+
+  // Marketing & Advertising
+  GoogleAds, // Google Ads
+  Hubspot, // HubSpot
+  MicrosoftAds, // Microsoft Ads
+  Optimizely, // Optimizely
+
+  // Maps
+  GoogleMaps, // Google Maps
+  Mapbox, // Mapbox
+  OpenstreetmapLeaflet, // OpenStreetMap with Leaflet
+
+  // Fonts
+  GoogleFonts, // Google Fonts
+
+  // CMS & Platforms
+  Contentful, // Contentful
+  Divi, // Divi
+  Drupal, // Drupal
+  Elementor, // Elementor
+  Gitbook, // GitBook
+  Sanity, // Sanity
+  Squarespace, // Squarespace
+  Strapi, // Strapi
+  Teachable, // Teachable
+  Thinkific, // Thinkific
+  Udemy, // Udemy
+  Webflow, // Webflow
+  Wix, // Wix
+  Woocommerce, // WooCommerce
+  Wordpress, // WordPress
+
+  // Search & Discovery
+  Algolia, // Algolia
+  Constructor, // Constructor.io
+  Elasticsearch, // Elasticsearch
+  Klevu, // Klevu
+  Swiftype, // Swiftype
+
+  // Other
+  Notion, // Notion
 } from '@csp-kit/data';
 ```
 
-### And Many More...
-
-Including services for:
-
-- **Fonts**: GoogleFonts, AdobeFonts
-- **Maps**: GoogleMaps, Mapbox
-- **Marketing**: HubSpot, ActiveCampaign
-- **Documentation**: Algolia, Docsearch
-- **Testing**: LaunchDarkly, Optimizely
-- **Productivity**: Airtable, Calendly, Notion
-- **CMS**: Contentful, Ghost, Sanity
-- **Education**: Coursera, Udemy
-
-View the full list at [csp-kit.eason.ch/services](https://csp-kit.eason.ch/services)
+View the full interactive list at [csp-kit.eason.ch/services](https://csp-kit.eason.ch/services)
 
 ## 📚 Documentation & Resources
 
