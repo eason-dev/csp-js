@@ -1,5 +1,20 @@
 # @csp-kit/generator
 
+## 0.5.0
+
+### Minor Changes
+
+- Remove warnings system from CSP generation
+
+  The `warnings` property has been removed from the `CSPResult` interface. The CSP generator now focuses purely on generating working CSP headers without educational warnings.
+  - Remove warnings property from CSPResult interface
+  - Remove warnings generation logic from generateCSP function
+  - Remove validateDirectives function
+  - Simplify service processing by removing conflict/deprecation warnings
+  - Remove security warnings for unsafe directives
+
+  This change simplifies the API and improves developer experience by eliminating distracting warnings that interrupted the workflow.
+
 ## 0.4.0
 
 ### Minor Changes

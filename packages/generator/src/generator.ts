@@ -7,7 +7,6 @@ import {
   addNonceToDirectives,
   directivesToHeader,
   addSelfDirective,
-  validateDirectives,
 } from './utils.js';
 
 /**
@@ -58,8 +57,6 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
   const includedServices: string[] = [];
   const unknownServices: string[] = [];
   const serviceDirectives: CSPDirectives[] = [];
-  const warnings: string[] = [];
-  const conflicts: string[] = [];
 
   // Process each service
   const processedServiceIds = new Set<string>();
@@ -75,7 +72,6 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
 
     // Type guard check for full service
     if (!isCSPService(serviceItem)) {
-      warnings.push(`Invalid service object provided`);
       continue;
     }
 
@@ -87,10 +83,6 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
       let hasConflict = false;
       for (const conflictId of service.conflicts) {
         if (processedServiceIds.has(conflictId)) {
-          conflicts.push(`${service.id} conflicts with ${conflictId}`);
-          warnings.push(
-            `Service ${service.id} conflicts with already included ${conflictId}, skipping`
-          );
           hasConflict = true;
           break;
         }
@@ -100,7 +92,6 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
 
     // Check if service replaces another
     if (processedServiceIds.has(service.id)) {
-      warnings.push(`Duplicate service ${service.id}, skipping`);
       continue;
     }
 
@@ -109,25 +100,6 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
 
     // Use service directives directly
     serviceDirectives.push(service.directives);
-
-    // Run validation if available
-    if (service.validate) {
-      const validation = service.validate(service.directives);
-      if (validation.warnings) {
-        warnings.push(...validation.warnings.map(w => `[${service.id}] ${w}`));
-      }
-      if (validation.errors) {
-        warnings.push(...validation.errors.map(e => `[${service.id}] ERROR: ${e}`));
-      }
-    }
-
-    // Check for deprecation
-    if (service.deprecated) {
-      warnings.push(
-        `Service ${service.id} is deprecated since ${service.deprecated.since}. ` +
-          `${service.deprecated.message} Use ${service.deprecated.alternative} instead.`
-      );
-    }
   }
 
   // Merge all CSP directives including additional rules
@@ -141,7 +113,7 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
     mergedDirectives = addSelfDirective(mergedDirectives);
   }
 
-  // Add unsafe directives if requested (not recommended)
+  // Add unsafe directives if requested
   if (finalOptions.includeUnsafeInline) {
     if (mergedDirectives['script-src']) {
       // Only add if not already present
@@ -155,9 +127,6 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
         mergedDirectives['style-src'].push("'unsafe-inline'");
       }
     }
-    warnings.push(
-      "Using 'unsafe-inline' significantly reduces CSP security. Consider using nonces or hashes instead."
-    );
   }
 
   if (finalOptions.includeUnsafeEval && mergedDirectives['script-src']) {
@@ -165,7 +134,6 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
     if (!mergedDirectives['script-src'].includes("'unsafe-eval'")) {
       mergedDirectives['script-src'].push("'unsafe-eval'");
     }
-    warnings.push("Using 'unsafe-eval' reduces security. Avoid eval() and similar constructs.");
   }
 
   // Handle nonce generation
@@ -180,10 +148,6 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
     mergedDirectives['report-uri'] = [finalOptions.reportUri];
   }
 
-  // Generate validation warnings and merge with existing warnings
-  const validationWarnings = validateDirectives(mergedDirectives);
-  warnings.push(...validationWarnings);
-
   // Generate headers
   const header = directivesToHeader(mergedDirectives);
   const reportOnlyHeader = header; // Same content, different header name
@@ -194,7 +158,6 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
     reportOnlyHeader,
     includedServices,
     unknownServices,
-    warnings,
     nonce,
   };
 }

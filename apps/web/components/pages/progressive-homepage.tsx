@@ -2,18 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { type ServiceRegistry } from '@csp-kit/generator';
-import {
-  Shield,
-  AlertTriangle,
-  X,
-  Info,
-  Settings,
-  Zap,
-  Users,
-  TrendingUp,
-  Layers,
-  Bookmark,
-} from 'lucide-react';
+import { Shield, X, Info, Settings, Zap, Users, TrendingUp, Layers, Bookmark } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -113,7 +102,6 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
   const [copied, setCopied] = useState(false);
   const [result, setResult] = useState<{
     header: string;
-    warnings: string[];
     includedServices: string[];
     unknownServices: string[];
     nonce?: string;
@@ -209,7 +197,6 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
       console.error('Error generating CSP:', error);
       setResult({
         header: 'Error: Failed to generate CSP',
-        warnings: ['Please check your configuration'],
         includedServices: [],
         unknownServices: selectedServices.map(s => s.id),
         directives: {},
@@ -781,28 +768,20 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
                   </CardContent>
                 </Card>
 
-                {/* Warnings */}
-                {(result.warnings?.length > 0 || result.unknownServices?.length > 0) && (
+                {/* Unknown Services */}
+                {result.unknownServices?.length > 0 && (
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
-                        <AlertTriangle className="h-5 w-5 text-amber-500" />
-                        Warnings
+                        <X className="h-5 w-5 text-red-500" />
+                        Unknown Services
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-3">
-                      {result.warnings?.map((warning, index) => (
-                        <div key={index} className="flex items-start gap-2 text-sm">
-                          <AlertTriangle className="mt-0.5 h-4 w-4 text-amber-500" />
-                          <span>{warning}</span>
-                        </div>
-                      ))}
-                      {result.unknownServices?.length > 0 && (
-                        <div className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400">
-                          <X className="mt-0.5 h-4 w-4" />
-                          <span>Unknown services: {result.unknownServices.join(', ')}</span>
-                        </div>
-                      )}
+                    <CardContent>
+                      <div className="flex items-start gap-2 text-sm text-red-600 dark:text-red-400">
+                        <X className="mt-0.5 h-4 w-4" />
+                        <span>Unknown services: {result.unknownServices.join(', ')}</span>
+                      </div>
                     </CardContent>
                   </Card>
                 )}
