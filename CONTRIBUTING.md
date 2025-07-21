@@ -27,11 +27,7 @@ We're excited you want to help make web security easier for everyone.
 
 **1. 🆕 Add a New Service** _(Most needed!)_
 
-```bash
-# Install CLI and add service interactively
-npm install -g @csp-kit/cli
-csp-cli add --interactive
-```
+For maintainers with CLI access, see the [CLI Guide](./docs/cli-guide.md). For contributors, please [open an issue](https://github.com/eason-dev/csp-kit/issues/new?template=add-service.md) to request a new service.
 
 **2. 🌐 Use Web Interface**
 

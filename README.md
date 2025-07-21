@@ -40,7 +40,7 @@ const { header } = generateCSP({
 - 📦 **106+ Services**: Pre-configured for Google Analytics, Stripe, Intercom, and more
 - 🔄 **Always Updated**: Community-driven service definitions with automated monitoring
 - 💪 **TypeScript-First**: Full type safety with tree-shakeable ES modules
-- 🌐 **Multiple Interfaces**: Web UI, CLI tools, and JavaScript/TypeScript API
+- 🌐 **Multiple Interfaces**: Web UI and JavaScript/TypeScript API
 - 🚀 **Production Ready**: Used by thousands of developers worldwide
 - 🆓 **Free & Open Source**: MIT licensed, free for commercial and personal use
 
@@ -63,13 +63,6 @@ const { header } = generateCSP({
 - **Always Up-to-Date**: Community-maintained service definitions
 - **Multiple Formats**: Headers, meta tags, or JSON configurations
 - **Nonce Support**: Cryptographic nonce generation for secure inline scripts
-
-### 🛠️ **CLI Tools**
-
-- **Service Management**: Add, update, and validate service definitions
-- **Automated Monitoring**: GitHub Actions integration to detect changes
-- **Development Workflow**: Streamlined tools for contributors
-- **Data Validation**: Comprehensive validation and testing tools
 
 ### 🔄 **Ecosystem**
 
@@ -102,13 +95,6 @@ yarn add @csp-kit/generator @csp-kit/data
 
 # pnpm
 pnpm add @csp-kit/generator @csp-kit/data
-```
-
-**CLI tools** (optional):
-
-```bash
-# Global installation for CLI tools
-npm install -g @csp-kit/cli
 ```
 
 > **📦 Package Architecture**: CSP Kit uses a data-package separation model inspired by [browserslist](https://github.com/browserslist/browserslist). The `@csp-kit/data` package contains service definitions and updates independently from the core library.
@@ -334,36 +320,6 @@ npm list @csp-kit/generator @csp-kit/data
 - **`@csp-kit/data`**: Service definitions that update frequently
 - **Benefits**: Get service updates without API changes, faster updates, optimal bundle size
 
-## 🛠️ CLI Tools
-
-The CLI tools help manage services and contribute to the project:
-
-```bash
-npm install -g @csp-kit/cli
-```
-
-### Available Commands
-
-```bash
-# 🆕 Add a new service interactively
-csp-cli add --interactive
-
-# 🔄 Update existing service definition
-csp-cli update google-analytics
-
-# ✅ Validate all service definitions
-csp-cli validate
-
-# 🔍 Check service for CSP changes
-csp-cli check google-analytics --url https://example.com
-
-# 📋 List all services by category
-csp-cli list --category analytics
-
-# 🚀 Generate CSP from command line
-csp-cli generate google-analytics stripe --output header
-```
-
 ## 🤝 Contributing
 
 We welcome contributions! CSP Kit is community-driven, and we appreciate:
@@ -375,27 +331,6 @@ We welcome contributions! CSP Kit is community-driven, and we appreciate:
 - ⚡ **Performance**: Optimize code and reduce bundle size
 
 See our [Contributing Guide](CONTRIBUTING.md) for detailed instructions.
-
-### Quick Contribution
-
-Add a new service in minutes:
-
-```bash
-# Interactive service creation
-csp-cli add --interactive
-
-# Or manually create a service definition
-cat > new-service.ts << EOF
-import { defineService } from '@csp-kit/generator';
-
-export const MyService = defineService({
-  directives: {
-    'script-src': ['https://cdn.myservice.com'],
-    'connect-src': ['https://api.myservice.com']
-  }
-});
-EOF
-```
 
 ## 🔒 Security
 
