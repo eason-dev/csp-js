@@ -226,7 +226,7 @@ export function SimpleSearch({
                             {service.category}
                           </Badge>
                         </div>
-                        <p className="text-muted-foreground truncate text-sm">
+                        <p className="text-muted-foreground truncate text-left text-sm">
                           {service.description}
                         </p>
                       </div>
