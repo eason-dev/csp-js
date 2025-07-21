@@ -202,8 +202,6 @@ console.log(result.directives); // { 'script-src': [...], 'style-src': [...] }
 console.log(result.reportOnlyHeader); // "Content-Security-Policy-Report-Only: ..."
 console.log(result.includedServices); // ["google-analytics", "stripe", "cloudflare"]
 console.log(result.unknownServices); // [] (services that weren't found)
-console.log(result.warnings); // ["Service X is deprecated..."]
-console.log(result.conflicts); // ["Service A conflicts with Service B"]
 console.log(result.nonce); // "xyz123..." (the generated nonce)
 
 // Apply the CSP header
