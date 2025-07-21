@@ -16,6 +16,19 @@
 
 ---
 
+## Table of Contents
+
+- [Why CSP Kit?](#-why-csp-kit)
+- [Features](#-features)
+- [Quick Start](#-quick-start)
+- [API Reference](#-api-reference)
+- [Custom Services](#-custom-services)
+- [Available Services](#-available-services)
+- [Documentation & Resources](#-documentation--resources)
+- [Keeping Up-to-Date](#-keeping-up-to-date)
+- [Contributing](#-contributing)
+- [License](#-license)
+
 ## 🎯 Why CSP Kit?
 
 Content Security Policy is **critical for web security**, but manually managing CSP headers is complex and error-prone. CSP Kit transforms this experience:
@@ -97,8 +110,6 @@ yarn add @csp-kit/generator @csp-kit/data
 pnpm add @csp-kit/generator @csp-kit/data
 ```
 
-> **📦 Package Architecture**: CSP Kit uses a data-package separation model inspired by [browserslist](https://github.com/browserslist/browserslist). The `@csp-kit/data` package contains service definitions and updates independently from the core library.
-
 ### 3. Basic Usage
 
 ```typescript
@@ -160,23 +171,285 @@ console.log(result);
 res.setHeader('Content-Security-Policy-Report-Only', result.reportOnlyHeader);
 ```
 
-### 5. TypeScript Benefits
+## 📚 API Reference
+
+### Complete Example with All Options
 
 ```typescript
-import { generateCSP, type CSPService } from '@csp-kit/generator';
-import { GoogleAnalytics, Stripe } from '@csp-kit/data';
+import { generateCSP, generateNonce } from '@csp-kit/generator';
+import { GoogleAnalytics, Stripe, Cloudflare } from '@csp-kit/data';
 
-// ✅ Full type safety - services are typed objects
-const services: CSPService[] = [GoogleAnalytics, Stripe];
+// Generate a cryptographic nonce
+const nonce = generateNonce();
 
-// ✅ IntelliSense support - see all available properties
-console.log(GoogleAnalytics.id); // "google-analytics"
-console.log(GoogleAnalytics.category); // "analytics"
-console.log(GoogleAnalytics.directives); // { 'script-src': [...], ... }
+// Configure CSP with all available options
+const result = generateCSP({
+  // Required: Services to include
+  services: [GoogleAnalytics, Stripe, Cloudflare],
 
-// ✅ Tree-shaking - only imports what you use
-// Unused services are automatically removed from your bundle
+  // Optional: Nonce for inline scripts
+  nonce: nonce, // or true to auto-generate, or your own string
+
+  // Optional: Additional custom rules
+  additionalRules: {
+    'script-src': ['https://my-custom-cdn.com'],
+    'img-src': ['data:', 'blob:'],
+    'font-src': ['https://my-fonts.com'],
+  },
+
+  // Optional: CSP violation reporting endpoint
+  reportUri: 'https://my-site.com/csp-violations',
+
+  // Optional: Include 'self' in directives (default: false)
+  includeSelf: true,
+
+  // Optional: Allow unsafe-inline (NOT recommended, default: false)
+  includeUnsafeInline: false,
+
+  // Optional: Allow unsafe-eval (NOT recommended, default: false)
+  includeUnsafeEval: false,
+
+  // Optional: Environment-specific overrides
+  development: {
+    includeUnsafeEval: true, // Allow eval() in development only
+    includeUnsafeInline: true, // Allow inline scripts in development
+  },
+  production: {
+    reportUri: 'https://production.com/csp-report',
+  },
+});
+
+// Access all result properties
+console.log(result.header); // "script-src 'self' 'nonce-xyz' https://..."
+console.log(result.directives); // { 'script-src': [...], 'style-src': [...] }
+console.log(result.reportOnlyHeader); // "Content-Security-Policy-Report-Only: ..."
+console.log(result.includedServices); // ["google-analytics", "stripe", "cloudflare"]
+console.log(result.unknownServices); // [] (services that weren't found)
+console.log(result.warnings); // ["Service X is deprecated..."]
+console.log(result.conflicts); // ["Service A conflicts with Service B"]
+console.log(result.nonce); // "xyz123..." (the generated nonce)
+
+// Apply the CSP header
+app.use((req, res, next) => {
+  res.setHeader('Content-Security-Policy', result.header);
+  next();
+});
 ```
+
+### Key Functions
+
+```typescript
+import {
+  generateCSP, // Main generator function (shown above)
+  generateCSPHeader, // Returns only the header string
+  generateNonce, // Generate cryptographic nonce
+  defineService, // Define custom services
+} from '@csp-kit/generator';
+
+// generateCSPHeader - Shorthand for getting just the header
+const header = generateCSPHeader({
+  services: [GoogleAnalytics, Stripe],
+});
+// Returns: "script-src 'self' https://www.google-analytics.com..."
+
+// generateNonce - Create secure nonces
+const nonce = generateNonce(); // Default: 16 bytes, base64
+const hexNonce = generateNonce({
+  encoding: 'hex', // 'base64' or 'hex'
+  length: 32, // Length in bytes
+});
+```
+
+## 🔧 Custom Services
+
+Define your own services for internal or unsupported third-party services:
+
+```typescript
+import { defineService, generateCSP } from '@csp-kit/generator';
+import { ServiceCategory } from '@csp-kit/data';
+
+// Define a custom service
+const MyCustomService = defineService({
+  id: 'my-custom-service',
+  name: 'My Custom Service',
+  category: ServiceCategory.OTHER,
+  description: 'Internal analytics service',
+  website: 'https://internal.company.com',
+  directives: {
+    'script-src': ['https://analytics.internal.company.com'],
+    'connect-src': ['https://api.internal.company.com'],
+    'img-src': ['https://assets.internal.company.com'],
+  },
+});
+
+// Use it like any other service
+const result = generateCSP({
+  services: [MyCustomService, GoogleAnalytics, Stripe],
+});
+
+// For reusable custom services across your organization
+export const CompanyServices = {
+  Analytics: defineService({
+    /* ... */
+  }),
+  Monitoring: defineService({
+    /* ... */
+  }),
+  CDN: defineService({
+    /* ... */
+  }),
+};
+
+// Then import and use
+import { CompanyServices } from './company-services';
+const result = generateCSP({
+  services: [CompanyServices.Analytics, CompanyServices.CDN, Stripe],
+});
+```
+
+## 📦 Available Services
+
+CSP Kit includes 106+ pre-configured services. Import them by name from `@csp-kit/data`:
+
+### Analytics Services
+
+```typescript
+import {
+  AdobeAnalytics, // Adobe Analytics
+  Amplitude, // Amplitude Analytics
+  CloudflareAnalytics, // Cloudflare Web Analytics
+  FathomAnalytics, // Fathom Analytics
+  GoogleAnalytics, // Google Analytics 4
+  GoogleTagManager, // Google Tag Manager
+  Hotjar, // Hotjar Analytics
+  MicrosoftClarity, // Microsoft Clarity
+  Mixpanel, // Mixpanel Analytics
+  PlausibleAnalytics, // Plausible Analytics
+  Segment, // Segment CDP
+} from '@csp-kit/data';
+```
+
+### Payment Services
+
+```typescript
+import {
+  Adyen, // Adyen Payments
+  Klarna, // Klarna Checkout
+  Paddle, // Paddle Billing
+  Paypal, // PayPal
+  Razorpay, // Razorpay Payments
+  Square, // Square Payments
+  Stripe, // Stripe
+} from '@csp-kit/data';
+```
+
+### Authentication Services
+
+```typescript
+import {
+  Auth0, // Auth0
+  Clerk, // Clerk Auth
+  FirebaseAuth, // Firebase Authentication
+  Okta, // Okta
+  SupabaseAuth, // Supabase Auth
+} from '@csp-kit/data';
+```
+
+### Video Services
+
+```typescript
+import {
+  Loom, // Loom Videos
+  Vimeo, // Vimeo
+  Wistia, // Wistia Videos
+  Youtube, // YouTube
+} from '@csp-kit/data';
+```
+
+### Social Media
+
+```typescript
+import {
+  Discord, // Discord Widget
+  Facebook, // Facebook SDK
+  Instagram, // Instagram Embeds
+  LinkedIn, // LinkedIn
+  Reddit, // Reddit Embeds
+  TikTok, // TikTok Embeds
+  Twitter, // Twitter/X Widgets
+} from '@csp-kit/data';
+```
+
+### Chat & Support
+
+```typescript
+import {
+  Crisp, // Crisp Chat
+  Drift, // Drift Chat
+  FreshChat, // Freshworks Chat
+  HelpScout, // Help Scout Beacon
+  Intercom, // Intercom
+  LiveChat, // LiveChat
+  Tawk, // Tawk.to
+  Tidio, // Tidio Chat
+  ZendeskChat, // Zendesk Chat
+} from '@csp-kit/data';
+```
+
+### Forms
+
+```typescript
+import {
+  ConvertKit, // ConvertKit Forms
+  Formspree, // Formspree
+  Jotform, // Jotform
+  Mailchimp, // Mailchimp Forms
+  Tally, // Tally Forms
+  Typeform, // Typeform
+} from '@csp-kit/data';
+```
+
+### CDN Services
+
+```typescript
+import {
+  Bunny, // Bunny CDN
+  Cdnjs, // cdnjs
+  Cloudflare, // Cloudflare CDN
+  Cloudinary, // Cloudinary
+  Fastly, // Fastly CDN
+  JsDelivr, // jsDelivr
+  Unpkg, // unpkg
+} from '@csp-kit/data';
+```
+
+### Monitoring & Error Tracking
+
+```typescript
+import {
+  Bugsnag, // Bugsnag
+  Datadog, // Datadog RUM
+  LogRocket, // LogRocket
+  NewRelic, // New Relic Browser
+  Rollbar, // Rollbar
+  Sentry, // Sentry
+} from '@csp-kit/data';
+```
+
+### And Many More...
+
+Including services for:
+
+- **Fonts**: GoogleFonts, AdobeFonts
+- **Maps**: GoogleMaps, Mapbox
+- **Marketing**: HubSpot, ActiveCampaign
+- **Documentation**: Algolia, Docsearch
+- **Testing**: LaunchDarkly, Optimizely
+- **Productivity**: Airtable, Calendly, Notion
+- **CMS**: Contentful, Ghost, Sanity
+- **Education**: Coursera, Udemy
+
+View the full list at [csp-kit.eason.ch/services](https://csp-kit.eason.ch/services)
 
 ## 📚 Documentation & Resources
 
@@ -189,113 +462,6 @@ console.log(GoogleAnalytics.directives); // { 'script-src': [...], ... }
 | **[🤝 Contributing Guide](https://csp-kit.eason.ch/docs/contributing)** | How to contribute new services                  |
 | **[🔄 Migration Guide](https://csp-kit.eason.ch/docs/upgrade-guide)**   | Upgrading from older versions                   |
 | **[💻 Development Setup](./DEVELOPMENT.md)**                            | Complete IDE and environment setup              |
-
-### Core Concepts
-
-#### Service-Based Configuration
-
-Instead of manually specifying CSP directives, you import and use service objects:
-
-```typescript
-// Traditional approach ❌
-const csp =
-  "script-src 'self' https://www.googletagmanager.com https://js.stripe.com; img-src 'self' https://www.google-analytics.com";
-
-// CSP Kit approach ✅
-import { GoogleAnalytics, Stripe } from '@csp-kit/data';
-const result = generateCSP({ services: [GoogleAnalytics, Stripe] });
-```
-
-#### Type-Safe Services
-
-All services are TypeScript objects with full type definitions:
-
-```typescript
-import type { CSPService } from '@csp-kit/generator';
-
-interface CSPService {
-  id: string; // Unique identifier
-  name: string; // Display name
-  category: ServiceCategory; // Service category
-  directives: CSPDirectives; // CSP directives
-  description?: string; // Service description
-  website?: string; // Service website
-  deprecated?: DeprecationInfo; // Deprecation info
-  conflicts?: string[]; // Conflicting services
-}
-```
-
-### API Reference
-
-#### `generateCSP(options)`
-
-Generate a complete CSP header with service-based configuration.
-
-**Parameters:**
-
-```typescript
-type CSPOptions = {
-  services: CSPService[]; // Array of service objects
-  nonce?: boolean | string; // Generate or use nonce
-  additionalRules?: CSPDirectives; // Additional CSP rules
-  reportUri?: string; // Violation reporting endpoint
-  includeSelf?: boolean; // Include 'self' (default: false)
-  includeUnsafeInline?: boolean; // Allow unsafe-inline (not recommended)
-  includeUnsafeEval?: boolean; // Allow unsafe-eval (not recommended)
-  development?: Partial<CSPOptions>; // Dev-only options
-  production?: Partial<CSPOptions>; // Production-only options
-};
-```
-
-**Returns:**
-
-```typescript
-interface CSPResult {
-  header: string; // Complete CSP header string
-  directives: CSPDirectives; // CSP directives as object
-  reportOnlyHeader: string; // Report-only version
-  includedServices: string[]; // Successfully included services
-  unknownServices: string[]; // Services not found
-  warnings: string[]; // Deprecation and security warnings
-  conflicts: string[]; // Service conflicts detected
-  nonce?: string; // Generated nonce (if requested)
-}
-```
-
-#### Other Functions
-
-```typescript
-import {
-  generateCSP, // Main generator function
-  generateCSPHeader, // Returns only header string
-  generateReportOnlyCSP, // Returns report-only header
-  generateNonce, // Generate cryptographic nonce
-
-  // Service utilities
-  defineService, // Define custom services
-  isCSPService, // Type guard for services
-} from '@csp-kit/generator';
-
-// All services are exported from @csp-kit/data
-import {
-  // Analytics
-  GoogleAnalytics,
-  Amplitude,
-  Mixpanel,
-
-  // Payment
-  Stripe,
-  Paypal,
-  Square,
-
-  // Social
-  Facebook,
-  Twitter,
-  LinkedIn,
-
-  // ... and 100+ more services
-} from '@csp-kit/data';
-```
 
 ## 🔄 Keeping Up-to-Date
 
@@ -314,12 +480,6 @@ npm outdated @csp-kit/generator @csp-kit/data
 npm list @csp-kit/generator @csp-kit/data
 ```
 
-### Package Architecture
-
-- **`@csp-kit/generator`**: Core library with stable API (rarely changes)
-- **`@csp-kit/data`**: Service definitions that update frequently
-- **Benefits**: Get service updates without API changes, faster updates, optimal bundle size
-
 ## 🤝 Contributing
 
 We welcome contributions! CSP Kit is community-driven, and we appreciate:
@@ -332,35 +492,9 @@ We welcome contributions! CSP Kit is community-driven, and we appreciate:
 
 See our [Contributing Guide](CONTRIBUTING.md) for detailed instructions.
 
-## 🔒 Security
-
-CSP Kit is designed with security as the top priority:
-
-- **Conservative Defaults**: Restrictive by default, explicit opt-in for unsafe features
-- **Security Warnings**: Clear warnings for potentially unsafe configurations
-- **Regular Audits**: Automated security scanning and dependency updates
-- **Community Review**: All service definitions reviewed by maintainers
-- **Version Pinning**: Lock to specific versions for production stability
-
-## 📊 Project Status
-
-- **106+ Services**: Comprehensive coverage of popular web services
-- **Active Development**: Regular updates and new features
-- **Community**: Growing community of contributors
-- **Production Ready**: Used in production by numerous companies
-- **Open Source**: MIT licensed, free forever
-
 ## 📄 License
 
 CSP Kit is [MIT licensed](LICENSE). Free for commercial and personal use.
-
-## 🙏 Acknowledgments
-
-Special thanks to:
-
-- All [contributors](https://github.com/eason-dev/csp-kit/graphs/contributors) who help maintain service definitions
-- The [browserslist](https://github.com/browserslist/browserslist) project for the data-package architecture inspiration
-- The web security community for CSP best practices
 
 ---
 
