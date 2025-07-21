@@ -226,6 +226,34 @@ const getServicesForUrl = (
   return matchingServices;
 };
 
+// Function to find which services require a specific special directive (like 'unsafe-inline', 'self', etc.)
+const getServicesForSpecialDirective = (
+  specialDirective: string,
+  currentDirective: string,
+  serviceDetails?: Array<{ serviceId: string; serviceName: string; cspDirectives: CSPDirectives }>
+): Array<{ serviceId: string; serviceName: string }> => {
+  const matchingServices: Array<{ serviceId: string; serviceName: string }> = [];
+
+  if (!serviceDetails) return matchingServices;
+
+  for (const service of serviceDetails) {
+    const { cspDirectives } = service;
+
+    // Check if this service requires the special directive for the current CSP directive
+    const directiveSources = cspDirectives[currentDirective as keyof CSPDirectives];
+    if (directiveSources && Array.isArray(directiveSources)) {
+      if (directiveSources.includes(specialDirective)) {
+        matchingServices.push({
+          serviceId: service.serviceId,
+          serviceName: service.serviceName,
+        });
+      }
+    }
+  }
+
+  return matchingServices;
+};
+
 export function ColorCodedHeader({
   header,
   directives,
@@ -400,21 +428,26 @@ export function ColorCodedHeader({
                       className="bg-muted/50 flex items-center justify-between rounded-sm border p-2 text-xs"
                     >
                       <code className="font-mono text-xs">{source}</code>
-                      {/* Show service tags for URLs (only services that match this specific URL) */}
+                      {/* Show service tags for URLs and special directives */}
                       {(() => {
-                        // Only show tags for actual URLs, not CSP keywords
-                        if (
-                          source.startsWith("'") ||
-                          (!source.includes('http') && !source.includes('.'))
-                        ) {
-                          return null;
+                        let matchingServices: Array<{ serviceId: string; serviceName: string }> =
+                          [];
+
+                        // Check if it's a special directive (like 'self', 'unsafe-inline', etc.)
+                        const isSpecialDirective = CSP_KEYWORDS.some(keyword => source === keyword);
+
+                        if (isSpecialDirective) {
+                          // Get services that require this special directive for the current CSP directive
+                          matchingServices = getServicesForSpecialDirective(
+                            source,
+                            directive,
+                            serviceDetails
+                          );
+                        } else if (source.includes('http') || source.includes('.')) {
+                          // It's a URL - get services that match this URL
+                          matchingServices = getServicesForUrl(source, serviceTags, serviceDetails);
                         }
 
-                        const matchingServices = getServicesForUrl(
-                          source,
-                          serviceTags,
-                          serviceDetails
-                        );
                         if (matchingServices.length === 0) {
                           return null;
                         }
