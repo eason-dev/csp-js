@@ -248,4 +248,59 @@ describe('generateCSP v2 API', () => {
       expect(result.header).toBe(result.reportOnlyHeader);
     });
   });
+
+  describe('Duplication prevention', () => {
+    it('should not duplicate unsafe-inline when service already includes it', async () => {
+      // Import Hotjar which includes unsafe-inline
+      const { Hotjar } = await import('@csp-kit/data');
+
+      const result = generateCSP({
+        services: [Hotjar],
+        includeUnsafeInline: true,
+      });
+
+      // Count occurrences of unsafe-inline in script-src and style-src
+      const scriptSrcMatch = result.header.match(/script-src[^;]+/)?.[0] || '';
+      const styleSrcMatch = result.header.match(/style-src[^;]+/)?.[0] || '';
+
+      const scriptUnsafeInlineCount = (scriptSrcMatch.match(/'unsafe-inline'/g) || []).length;
+      const styleUnsafeInlineCount = (styleSrcMatch.match(/'unsafe-inline'/g) || []).length;
+
+      expect(scriptUnsafeInlineCount).toBe(1);
+      expect(styleUnsafeInlineCount).toBe(1);
+    });
+
+    it('should not duplicate unsafe-eval when added multiple times', () => {
+      const result = generateCSP({
+        services: [TestService],
+        includeUnsafeEval: true,
+        additionalRules: {
+          'script-src': ["'unsafe-eval'"],
+        },
+      });
+
+      const scriptSrcMatch = result.header.match(/script-src[^;]+/)?.[0] || '';
+      const unsafeEvalCount = (scriptSrcMatch.match(/'unsafe-eval'/g) || []).length;
+
+      expect(unsafeEvalCount).toBe(1);
+    });
+
+    it('should not duplicate self directive', () => {
+      const ServiceWithSelf = defineService({
+        directives: {
+          'script-src': ["'self'", 'https://example.com'],
+        },
+      });
+
+      const result = generateCSP({
+        services: [ServiceWithSelf],
+        includeSelf: true,
+      });
+
+      const scriptSrcMatch = result.header.match(/script-src[^;]+/)?.[0] || '';
+      const selfCount = (scriptSrcMatch.match(/'self'/g) || []).length;
+
+      expect(selfCount).toBe(1);
+    });
+  });
 });
