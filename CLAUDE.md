@@ -149,10 +149,6 @@ Note: NPM provenance is disabled (`--provenance=false`) due to CI limitations.
 
 - Services exported with PascalCase naming: `import { GoogleAnalytics, Stripe } from '@csp-kit/data'`
 - 19 categories: analytics, payment, authentication, video, fonts, etc.
-- Configurable services support dynamic values:
-  ```typescript
-  const mapsWithKey = GoogleMaps.configure({ apiKey: 'YOUR_KEY' });
-  ```
 
 ### API Design
 

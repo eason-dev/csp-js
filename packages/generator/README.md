@@ -89,24 +89,6 @@ console.log(result.includedServices); // Successfully included services
 console.log(result.unknownServices); // Services not found
 ```
 
-### Configurable Services
-
-Some services support dynamic configuration:
-
-```javascript
-import { generateCSP } from '@csp-kit/generator';
-import { GoogleMaps, Stripe } from '@csp-kit/data';
-
-// Configure Google Maps with API key
-const mapsConfig = GoogleMaps.configure({ apiKey: 'YOUR_API_KEY' });
-
-// Configure Stripe with specific account
-const stripeConfig = Stripe.configure({ account: 'acct_123456' });
-
-// Generate CSP with configured services
-const result = generateCSP({ services: [mapsConfig, stripeConfig] });
-```
-
 ### Environment-Specific Configuration
 
 ```javascript
@@ -115,15 +97,14 @@ import { GoogleAnalytics, Sentry } from '@csp-kit/data';
 
 const result = generateCSP({
   services: [GoogleAnalytics, Sentry],
-  // Development-specific settings
+  // Development-specific settings (when NODE_ENV !== 'production')
   development: {
     includeUnsafeEval: true, // Allow eval() in development
     includeUnsafeInline: true, // Allow inline scripts
   },
-  // Production-specific settings
+  // Production-specific settings (when NODE_ENV === 'production')
   production: {
     reportUri: 'https://my-site.com/csp-report',
-    upgradeInsecureRequests: true,
   },
 });
 ```
@@ -172,8 +153,8 @@ interface CSPOptions {
   includeSelf?: boolean; // Include 'self' (default: false)
   includeUnsafeInline?: boolean; // Allow 'unsafe-inline' (default: false)
   includeUnsafeEval?: boolean; // Allow 'unsafe-eval' (default: false)
-  development?: Partial<CSPOptions>; // Development overrides
-  production?: Partial<CSPOptions>; // Production overrides
+  development?: Partial<CSPOptions>; // Development overrides (when NODE_ENV !== 'production')
+  production?: Partial<CSPOptions>; // Production overrides (when NODE_ENV === 'production')
 }
 ```
 

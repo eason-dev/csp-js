@@ -79,24 +79,6 @@ import {
 - **video**: YouTube, Vimeo, Wistia, Loom
 - And many more...
 
-## Configurable Services
-
-Some services support dynamic configuration:
-
-```javascript
-import { GoogleMaps, Stripe } from '@csp-kit/data';
-
-// Configure services with dynamic values
-const mapsWithKey = GoogleMaps.configure({ apiKey: 'YOUR_API_KEY' });
-const stripeWithAccount = Stripe.configure({ account: 'acct_123456' });
-
-// Use with generator
-import { generateCSP } from '@csp-kit/generator';
-const { header } = generateCSP({
-  services: [mapsWithKey, stripeWithAccount],
-});
-```
-
 ## TypeScript Support
 
 All services are fully typed:

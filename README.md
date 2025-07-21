@@ -2,7 +2,8 @@
 
 <div align="center">
 
-[![NPM Version](https://img.shields.io/npm/v/@csp-kit/generator)](https://www.npmjs.com/package/@csp-kit/generator)
+[![Generator Version](https://img.shields.io/npm/v/@csp-kit/generator?label=%40csp-kit%2Fgenerator)](https://www.npmjs.com/package/@csp-kit/generator)
+[![Data Version](https://img.shields.io/npm/v/@csp-kit/data?label=%40csp-kit%2Fdata)](https://www.npmjs.com/package/@csp-kit/data)
 [![NPM Downloads](https://img.shields.io/npm/dm/@csp-kit/generator)](https://www.npmjs.com/package/@csp-kit/generator)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/eason-dev/csp-kit/blob/main/LICENSE)
 [![Open Source](https://img.shields.io/badge/Open%20Source-%E2%9D%A4-red.svg)](https://github.com/eason-dev/csp-kit)
