@@ -179,39 +179,3 @@ export function addSelfDirective(directives: CSPDirectives): CSPDirectives {
 
   return result;
 }
-
-/**
- * Validate CSP directives for common issues
- */
-export function validateDirectives(directives: CSPDirectives): string[] {
-  const warnings: string[] = [];
-
-  // Check for unsafe directives
-  for (const [directive, values] of Object.entries(directives)) {
-    if (!values) continue;
-
-    if (values.includes("'unsafe-inline'")) {
-      warnings.push(`${directive} contains 'unsafe-inline' which reduces security`);
-    }
-
-    if (values.includes("'unsafe-eval'")) {
-      warnings.push(`${directive} contains 'unsafe-eval' which reduces security`);
-    }
-
-    // Check for wildcards
-    if (values.some((v: string) => v.includes('*'))) {
-      warnings.push(`${directive} contains wildcards which may be overly permissive`);
-    }
-  }
-
-  // Check for missing important directives
-  if (!directives['script-src']) {
-    warnings.push('No script-src directive specified');
-  }
-
-  if (!directives['style-src']) {
-    warnings.push('No style-src directive specified');
-  }
-
-  return warnings;
-}

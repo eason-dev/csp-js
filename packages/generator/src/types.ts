@@ -62,9 +62,6 @@ export interface CSPResult {
   /** Services that were not found */
   unknownServices: string[];
 
-  /** Warnings about the generated policy */
-  warnings: string[];
-
   /** Generated nonce (if requested) */
   nonce?: string;
 }

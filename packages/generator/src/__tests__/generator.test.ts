@@ -90,7 +90,7 @@ describe('generateCSP v2 API', () => {
       expect(result.header).toContain('report-uri /csp-report');
     });
 
-    it('should handle unsafe directives with warnings', () => {
+    it('should handle unsafe directives', () => {
       const result = generateCSP({
         services: [TestService],
         includeUnsafeInline: true,
@@ -99,12 +99,6 @@ describe('generateCSP v2 API', () => {
 
       expect(result.header).toContain("'unsafe-inline'");
       expect(result.header).toContain("'unsafe-eval'");
-      expect(result.warnings).toContain(
-        "Using 'unsafe-inline' significantly reduces CSP security. Consider using nonces or hashes instead."
-      );
-      expect(result.warnings).toContain(
-        "Using 'unsafe-eval' reduces security. Avoid eval() and similar constructs."
-      );
     });
 
     it('should include self directive when explicitly requested', () => {

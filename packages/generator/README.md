@@ -52,8 +52,6 @@ generateCSP({
   reportOnlyHeader: string,    // Report-only version
   includedServices: string[],  // Services included
   unknownServices: string[],   // Services not found
-  warnings: string[],          // Security warnings
-  conflicts: string[],         // Service conflicts
   nonce?: string,             // Generated nonce
 }
 ```
