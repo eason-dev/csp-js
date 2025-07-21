@@ -144,10 +144,16 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
   // Add unsafe directives if requested (not recommended)
   if (finalOptions.includeUnsafeInline) {
     if (mergedDirectives['script-src']) {
-      mergedDirectives['script-src'].push("'unsafe-inline'");
+      // Only add if not already present
+      if (!mergedDirectives['script-src'].includes("'unsafe-inline'")) {
+        mergedDirectives['script-src'].push("'unsafe-inline'");
+      }
     }
     if (mergedDirectives['style-src']) {
-      mergedDirectives['style-src'].push("'unsafe-inline'");
+      // Only add if not already present
+      if (!mergedDirectives['style-src'].includes("'unsafe-inline'")) {
+        mergedDirectives['style-src'].push("'unsafe-inline'");
+      }
     }
     warnings.push(
       "Using 'unsafe-inline' significantly reduces CSP security. Consider using nonces or hashes instead."
@@ -155,7 +161,10 @@ export function generateCSP(input: CSPService[] | CSPOptions): CSPResult {
   }
 
   if (finalOptions.includeUnsafeEval && mergedDirectives['script-src']) {
-    mergedDirectives['script-src'].push("'unsafe-eval'");
+    // Only add if not already present
+    if (!mergedDirectives['script-src'].includes("'unsafe-eval'")) {
+      mergedDirectives['script-src'].push("'unsafe-eval'");
+    }
     warnings.push("Using 'unsafe-eval' reduces security. Avoid eval() and similar constructs.");
   }
 
