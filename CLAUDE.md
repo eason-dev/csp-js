@@ -79,6 +79,13 @@ pnpm commit
 Valid types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
 Valid scopes: `generator`, `data`, `cli`, `ui`, `web`, `docs`, `deps`, `release`, `config`, `ci`, `root`
 
+**⚠️ CRITICAL: Breaking Change Format**
+
+- For breaking changes, use `feat!:` or `fix!:` (no backslash)
+- NEVER use `feat\!:` (backslash breaks commit lint)
+- Example: `feat!: remove deprecated API` ✅
+- Wrong: `feat\!: remove deprecated API` ❌
+
 ### Releasing with Changesets
 
 The project uses Changesets for version management:
