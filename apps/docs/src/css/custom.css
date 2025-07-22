@@ -94,14 +94,13 @@
   transition: color 0.2s ease;
 }
 
-/* Root level TOC items (h2) - make them bold */
-.table-of-contents__left-border > ul > li > .table-of-contents__link {
-  font-weight: 600;
-}
-
-/* Child level TOC items - normal weight */
-.table-of-contents__left-border ul ul .table-of-contents__link {
-  font-weight: normal;
+/* Remove all bold styling from TOC links and any nested bold elements */
+.table-of-contents__link,
+.table-of-contents__link strong,
+.table-of-contents__link b,
+.table-of-contents strong,
+.table-of-contents b {
+  font-weight: normal !important;
 }
 
 /* Hover state - purple color with proper accessibility */
@@ -115,7 +114,6 @@
 .table-of-contents__link--active,
 .table-of-contents__link--active code {
   color: #6d28d9; /* Even darker purple for active state */
-  font-weight: var(--ifm-font-weight-semibold);
 }
 
 /* Dark mode hover state - lighter purple for contrast */
@@ -130,10 +128,6 @@
   color: #a78bfa; /* Bright purple for active state in dark mode */
 }
 
-/* Ensure root level active items remain bold */
-.table-of-contents__left-border > ul > li > .table-of-contents__link.table-of-contents__link--active {
-  font-weight: 700;
-}
 
 /* Add left border color to match theme */
 .table-of-contents__left-border {
