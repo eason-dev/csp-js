@@ -16,6 +16,19 @@
   --ifm-color-primary-lightest: #ddd6fe;
   --ifm-code-font-size: 95%;
   --docusaurus-highlighted-code-line-bg: rgba(139, 92, 246, 0.1);
+  
+  /* Additional color overrides for better purple theme coverage */
+  --ifm-link-color: #8b5cf6;
+  --ifm-menu-color-active: #8b5cf6;
+  --ifm-navbar-link-hover-color: #8b5cf6;
+  --ifm-toc-link-color: #8b5cf6;
+  --ifm-tabs-color-active: #8b5cf6;
+  --ifm-tabs-color-active-border: #8b5cf6;
+  --ifm-footer-link-hover-color: #a78bfa;
+  --ifm-color-success: #10b981;
+  --ifm-color-info: #8b5cf6;
+  --ifm-color-warning: #f59e0b;
+  --ifm-color-danger: #ef4444;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -29,4 +42,48 @@
   --ifm-color-primary-lighter: #ddd6fe;
   --ifm-color-primary-lightest: #ede9fe;
   --docusaurus-highlighted-code-line-bg: rgba(139, 92, 246, 0.3);
+  
+  /* Additional dark mode color overrides */
+  --ifm-link-color: #a78bfa;
+  --ifm-menu-color-active: #a78bfa;
+  --ifm-navbar-link-hover-color: #a78bfa;
+  --ifm-toc-link-color: #a78bfa;
+  --ifm-tabs-color-active: #a78bfa;
+  --ifm-tabs-color-active-border: #a78bfa;
+  --ifm-footer-link-hover-color: #c4b5fd;
+  --ifm-color-success: #10b981;
+  --ifm-color-info: #a78bfa;
+  --ifm-color-warning: #f59e0b;
+  --ifm-color-danger: #ef4444;
+}
+
+/* Ensure navbar brand and links use purple theme */
+.navbar__brand:hover {
+  color: var(--ifm-color-primary);
+}
+
+.navbar__link--active {
+  color: var(--ifm-color-primary);
+}
+
+/* Purple theme for buttons */
+.button--primary {
+  background-color: var(--ifm-color-primary);
+  border-color: var(--ifm-color-primary);
+}
+
+.button--primary:hover {
+  background-color: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-primary-dark);
+}
+
+/* Purple theme for pagination */
+.pagination-nav__link:hover {
+  border-color: var(--ifm-color-primary);
+}
+
+/* Purple theme for tabs */
+.tabs__item--active {
+  border-bottom-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
 }
