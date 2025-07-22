@@ -116,7 +116,7 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
       // Convert selected services to CSPService objects
       const cspServices: CSPService[] = [];
       const unknownServiceIds: string[] = [];
-      
+
       for (const selectedService of selectedServices) {
         // Convert id from kebab-case to PascalCase for the export name
         const serviceName = selectedService.id
