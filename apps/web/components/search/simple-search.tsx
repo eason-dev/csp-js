@@ -136,7 +136,7 @@ export function SimpleSearch({
   // Category colors
   const getCategoryColor = (category: string) => {
     const colors: Record<string, string> = {
-      analytics: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+      analytics: 'bg-purple-100 text-purple-800 dark:bg-zinc-900/30 dark:text-purple-300',
       payment: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
       social: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
       video: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
@@ -209,8 +209,12 @@ export function SimpleSearch({
                     <div
                       key={service.id}
                       className={`search-result-item group flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
-                        focusedIndex === index ? 'bg-accent' : 'hover:bg-accent/50'
-                      } ${selected ? 'bg-accent/30' : ''}`}
+                        focusedIndex === index
+                          ? 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100'
+                          : selected
+                            ? 'bg-purple-50 dark:bg-purple-900/20'
+                            : 'hover:bg-purple-50 dark:hover:bg-zinc-800'
+                      }`}
                       onClick={() => toggleService(service)}
                       onMouseEnter={() => setFocusedIndex(index)}
                       role="option"
@@ -226,7 +230,7 @@ export function SimpleSearch({
                             {service.category}
                           </Badge>
                         </div>
-                        <p className="text-muted-foreground truncate text-left text-sm">
+                        <p className="truncate text-left text-sm text-gray-600 group-hover:text-gray-700 dark:text-gray-400 dark:group-hover:text-gray-200">
                           {service.description}
                         </p>
                       </div>
