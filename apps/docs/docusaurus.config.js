@@ -12,7 +12,7 @@ const config = {
   favicon: 'img/favicon.ico',
 
   url: 'https://csp-kit.eason.ch',
-  baseUrl: '/docs/',
+  baseUrl: process.env.VERCEL_ENV === 'preview' ? '/' : '/docs/',
 
   organizationName: 'eason-dev',
   projectName: 'csp-kit',
