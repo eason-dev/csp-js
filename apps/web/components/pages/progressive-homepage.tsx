@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { type ServiceRegistry } from '@csp-kit/generator';
+import { useState, useMemo } from 'react';
+import { type ServiceRegistry, generateCSP } from '@csp-kit/generator';
+import * as allServices from '@csp-kit/data';
+import type { CSPService } from '@csp-kit/data';
 import { Shield, X, Info, Settings, Zap, Users, TrendingUp, Layers, Bookmark } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -100,39 +102,39 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
     'object-src': false,
   });
   const [copied, setCopied] = useState(false);
-  const [result, setResult] = useState<{
-    header: string;
-    includedServices: string[];
-    unknownServices: string[];
-    nonce?: string;
-    directives: Record<string, string[]>;
-  } | null>(null);
 
   // Check if we have any selected services
   const hasSelectedServices = selectedServices.length > 0;
 
-  // Generate CSP automatically when services change
-  useEffect(() => {
-    if (hasSelectedServices) {
-      generateCurrentCSP();
-    } else {
-      setResult(null);
+  // Generate CSP synchronously when dependencies change
+  const result = useMemo(() => {
+    if (!hasSelectedServices) {
+      return null;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    selectedServices,
-    useNonce,
-    useCustomNonce,
-    customNonceValue,
-    reportUri,
-    customRules,
-    includeSelf,
-    includeUnsafeInline,
-    includeUnsafeEval,
-  ]);
 
-  const generateCurrentCSP = async () => {
     try {
+      // Convert selected services to CSPService objects
+      const cspServices: CSPService[] = [];
+      const unknownServiceIds: string[] = [];
+
+      for (const selectedService of selectedServices) {
+        // Convert id from kebab-case to PascalCase for the export name
+        const serviceName = selectedService.id
+          .split('-')
+          .map((part: string) => part.charAt(0).toUpperCase() + part.slice(1))
+          .join('');
+
+        // Get the service from the exports
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const service = (allServices as any)[serviceName];
+
+        if (service && typeof service === 'object' && 'id' in service && 'directives' in service) {
+          cspServices.push(service as CSPService);
+        } else {
+          unknownServiceIds.push(selectedService.id);
+        }
+      }
+
       // Build custom rules object, filtering out empty values
       const customRulesObj: Record<string, string[]> = {};
       Object.entries(customRules).forEach(([directive, value]) => {
@@ -144,9 +146,6 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
         }
       });
 
-      // Build service array with versions
-      const servicesWithVersions = selectedServices.map(service => service.id);
-
       // Determine nonce value
       let nonceValue: boolean | string = false;
       if (useNonce) {
@@ -155,27 +154,16 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
         nonceValue = customNonceValue.trim();
       }
 
-      const response = await fetch('/api/generate-csp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          services: servicesWithVersions,
-          nonce: nonceValue,
-          customRules: customRulesObj,
-          reportUri: reportUri || undefined,
-          includeSelf,
-          includeUnsafeInline,
-          includeUnsafeEval,
-        }),
+      // Generate CSP synchronously
+      const cspResult = generateCSP({
+        services: cspServices,
+        nonce: nonceValue,
+        additionalRules: customRulesObj,
+        reportUri: reportUri || undefined,
+        includeSelf,
+        includeUnsafeInline,
+        includeUnsafeEval,
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate CSP');
-      }
-
-      const cspResult = await response.json();
 
       // Parse the CSP header to extract directives for better display
       const directives: Record<string, string[]> = {};
@@ -189,20 +177,33 @@ export default function ProgressiveHomepage({ serviceRegistry }: ProgressiveHome
         });
       }
 
-      setResult({
+      return {
         ...cspResult,
         directives,
-      });
+        unknownServices: unknownServiceIds,
+      };
     } catch (error) {
       console.error('Error generating CSP:', error);
-      setResult({
+      return {
         header: 'Error: Failed to generate CSP',
         includedServices: [],
         unknownServices: selectedServices.map(s => s.id),
         directives: {},
-      });
+      };
     }
-  };
+  }, [
+    selectedServices,
+    hasSelectedServices,
+    useNonce,
+    useCustomNonce,
+    customNonceValue,
+    reportUri,
+    customRules,
+    customRuleToggles,
+    includeSelf,
+    includeUnsafeInline,
+    includeUnsafeEval,
+  ]);
 
   const copyToClipboard = async (text: string) => {
     try {
