@@ -21,7 +21,7 @@
   --ifm-link-color: #8b5cf6;
   --ifm-menu-color-active: #8b5cf6;
   --ifm-navbar-link-hover-color: #8b5cf6;
-  --ifm-toc-link-color: #8b5cf6;
+  --ifm-toc-link-color: inherit; /* Use default text color for TOC */
   --ifm-tabs-color-active: #8b5cf6;
   --ifm-tabs-color-active-border: #8b5cf6;
   --ifm-footer-link-hover-color: #a78bfa;
@@ -47,7 +47,7 @@
   --ifm-link-color: #a78bfa;
   --ifm-menu-color-active: #a78bfa;
   --ifm-navbar-link-hover-color: #a78bfa;
-  --ifm-toc-link-color: #a78bfa;
+  --ifm-toc-link-color: inherit; /* Use default text color for TOC */
   --ifm-tabs-color-active: #a78bfa;
   --ifm-tabs-color-active-border: #a78bfa;
   --ifm-footer-link-hover-color: #c4b5fd;
@@ -86,4 +86,55 @@
 .tabs__item--active {
   border-bottom-color: var(--ifm-color-primary);
   color: var(--ifm-color-primary);
+}
+
+/* Table of Contents - Enhanced styling with proper hierarchy */
+.table-of-contents__link {
+  color: var(--ifm-toc-link-color);
+  transition: color 0.2s ease;
+}
+
+/* Remove all bold styling from TOC links and any nested bold elements */
+.table-of-contents__link,
+.table-of-contents__link strong,
+.table-of-contents__link b,
+.table-of-contents strong,
+.table-of-contents b {
+  font-weight: normal !important;
+}
+
+/* Hover state - purple color with proper accessibility */
+.table-of-contents__link:hover,
+.table-of-contents__link:hover code {
+  color: #7c3aed; /* Darker purple for better contrast in light mode */
+  text-decoration: none;
+}
+
+/* Active state - purple color with proper accessibility */
+.table-of-contents__link--active,
+.table-of-contents__link--active code {
+  color: #6d28d9; /* Even darker purple for active state */
+}
+
+/* Dark mode hover state - lighter purple for contrast */
+[data-theme='dark'] .table-of-contents__link:hover,
+[data-theme='dark'] .table-of-contents__link:hover code {
+  color: #c4b5fd; /* Light purple with good contrast on dark background */
+}
+
+/* Dark mode active state - bright purple */
+[data-theme='dark'] .table-of-contents__link--active,
+[data-theme='dark'] .table-of-contents__link--active code {
+  color: #a78bfa; /* Bright purple for active state in dark mode */
+}
+
+
+/* Add left border color to match theme */
+.table-of-contents__left-border {
+  border-left-color: var(--ifm-toc-border-color);
+}
+
+/* Active item border - purple */
+.table-of-contents__link--active {
+  border-left-color: var(--ifm-color-primary);
 }
