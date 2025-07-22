@@ -88,29 +88,59 @@
   color: var(--ifm-color-primary);
 }
 
-/* Table of Contents - Use regular text colors instead of purple */
+/* Table of Contents - Enhanced styling with proper hierarchy */
 .table-of-contents__link {
   color: var(--ifm-toc-link-color);
+  transition: color 0.2s ease;
 }
 
+/* Root level TOC items (h2) - make them bold */
+.table-of-contents__left-border > ul > li > .table-of-contents__link {
+  font-weight: 600;
+}
+
+/* Child level TOC items - normal weight */
+.table-of-contents__left-border ul ul .table-of-contents__link {
+  font-weight: normal;
+}
+
+/* Hover state - purple color with proper accessibility */
 .table-of-contents__link:hover,
 .table-of-contents__link:hover code {
-  color: var(--ifm-color-emphasis-800);
+  color: #7c3aed; /* Darker purple for better contrast in light mode */
   text-decoration: none;
 }
 
+/* Active state - purple color with proper accessibility */
 .table-of-contents__link--active,
 .table-of-contents__link--active code {
-  color: var(--ifm-color-emphasis-1000);
+  color: #6d28d9; /* Even darker purple for active state */
   font-weight: var(--ifm-font-weight-semibold);
 }
 
+/* Dark mode hover state - lighter purple for contrast */
 [data-theme='dark'] .table-of-contents__link:hover,
 [data-theme='dark'] .table-of-contents__link:hover code {
-  color: var(--ifm-color-emphasis-200);
+  color: #c4b5fd; /* Light purple with good contrast on dark background */
 }
 
+/* Dark mode active state - bright purple */
 [data-theme='dark'] .table-of-contents__link--active,
 [data-theme='dark'] .table-of-contents__link--active code {
-  color: var(--ifm-color-emphasis-0);
+  color: #a78bfa; /* Bright purple for active state in dark mode */
+}
+
+/* Ensure root level active items remain bold */
+.table-of-contents__left-border > ul > li > .table-of-contents__link.table-of-contents__link--active {
+  font-weight: 700;
+}
+
+/* Add left border color to match theme */
+.table-of-contents__left-border {
+  border-left-color: var(--ifm-toc-border-color);
+}
+
+/* Active item border - purple */
+.table-of-contents__link--active {
+  border-left-color: var(--ifm-color-primary);
 }
