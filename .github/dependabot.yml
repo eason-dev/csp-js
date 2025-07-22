@@ -8,8 +8,6 @@ updates:
       day: 'monday'
       time: '06:00'
       timezone: 'UTC'
-    reviewers:
-      - 'eason-dev'
     assignees:
       - 'eason-dev'
     commit-message:
@@ -36,8 +34,6 @@ updates:
       day: 'monday'
       time: '06:00'
       timezone: 'UTC'
-    reviewers:
-      - 'eason-dev'
     assignees:
       - 'eason-dev'
     commit-message:
@@ -58,8 +54,6 @@ updates:
       day: 'monday'
       time: '06:00'
       timezone: 'UTC'
-    reviewers:
-      - 'eason-dev'
     assignees:
       - 'eason-dev'
     commit-message:
@@ -80,8 +74,6 @@ updates:
       day: 'monday'
       time: '06:00'
       timezone: 'UTC'
-    reviewers:
-      - 'eason-dev'
     assignees:
       - 'eason-dev'
     commit-message:
@@ -103,8 +95,6 @@ updates:
       day: 'monday'
       time: '06:00'
       timezone: 'UTC'
-    reviewers:
-      - 'eason-dev'
     assignees:
       - 'eason-dev'
     commit-message:
@@ -125,8 +115,6 @@ updates:
       day: 'monday'
       time: '06:00'
       timezone: 'UTC'
-    reviewers:
-      - 'eason-dev'
     assignees:
       - 'eason-dev'
     commit-message:
@@ -148,8 +136,6 @@ updates:
       day: 'monday'
       time: '06:00'
       timezone: 'UTC'
-    reviewers:
-      - 'eason-dev'
     assignees:
       - 'eason-dev'
     commit-message:
