@@ -267,12 +267,12 @@ export default function ServicePage({ service }: ServicePageProps) {
 
               {service.requiresNonce && (
                 <div className="flex items-start gap-2 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-zinc-800 dark:bg-zinc-900/20">
-                  <Info className="mt-0.5 h-4 w-4 text-blue-600 dark:text-sky-400" />
+                  <Info className="mt-0.5 h-4 w-4 text-blue-600 dark:text-purple-400" />
                   <div className="text-sm">
-                    <div className="font-medium text-blue-800 dark:text-sky-300">
+                    <div className="font-medium text-blue-800 dark:text-purple-300">
                       Nonce Required
                     </div>
-                    <div className="text-blue-700 dark:text-sky-300">
+                    <div className="text-blue-700 dark:text-purple-300">
                       This service requires nonce-based CSP for inline scripts to function properly.
                     </div>
                   </div>
