@@ -35,7 +35,7 @@ const SCENARIO_CARDS = [
     description: 'Personal blog with Google Analytics tracking',
     icon: TrendingUp,
     color:
-      'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
+      'bg-blue-50 text-blue-700 border-blue-200 dark:bg-zinc-900/20 dark:text-sky-300 dark:border-zinc-800',
     services: ['google-analytics', 'google-fonts'],
   },
   {

@@ -29,7 +29,7 @@ const DIRECTIVE_COLORS = {
   'script-src':
     'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800',
   'style-src':
-    'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
+    'bg-blue-100 text-blue-800 border-blue-200 dark:bg-zinc-900/20 dark:text-sky-300 dark:border-zinc-800',
   'img-src':
     'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800',
   'connect-src':
@@ -316,7 +316,7 @@ export function ColorCodedHeader({
       if (isKeyword) {
         className = 'font-semibold text-violet-700 dark:text-violet-300';
       } else if (isUrl) {
-        className = 'text-blue-600 dark:text-blue-400';
+        className = 'text-blue-600 dark:text-sky-400';
       }
 
       return (
@@ -503,7 +503,7 @@ export function ColorCodedHeader({
                   <span>(&apos;self&apos;, &apos;none&apos;, etc.)</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <span className="text-blue-600 dark:text-blue-400">URLs</span>
+                  <span className="text-blue-600 dark:text-sky-400">URLs</span>
                   <span>(domains, protocols)</span>
                 </div>
               </div>
