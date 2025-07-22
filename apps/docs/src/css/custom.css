@@ -21,7 +21,7 @@
   --ifm-link-color: #8b5cf6;
   --ifm-menu-color-active: #8b5cf6;
   --ifm-navbar-link-hover-color: #8b5cf6;
-  --ifm-toc-link-color: #8b5cf6;
+  --ifm-toc-link-color: inherit; /* Use default text color for TOC */
   --ifm-tabs-color-active: #8b5cf6;
   --ifm-tabs-color-active-border: #8b5cf6;
   --ifm-footer-link-hover-color: #a78bfa;
@@ -47,7 +47,7 @@
   --ifm-link-color: #a78bfa;
   --ifm-menu-color-active: #a78bfa;
   --ifm-navbar-link-hover-color: #a78bfa;
-  --ifm-toc-link-color: #a78bfa;
+  --ifm-toc-link-color: inherit; /* Use default text color for TOC */
   --ifm-tabs-color-active: #a78bfa;
   --ifm-tabs-color-active-border: #a78bfa;
   --ifm-footer-link-hover-color: #c4b5fd;
@@ -86,4 +86,31 @@
 .tabs__item--active {
   border-bottom-color: var(--ifm-color-primary);
   color: var(--ifm-color-primary);
+}
+
+/* Table of Contents - Use regular text colors instead of purple */
+.table-of-contents__link {
+  color: var(--ifm-toc-link-color);
+}
+
+.table-of-contents__link:hover,
+.table-of-contents__link:hover code {
+  color: var(--ifm-color-emphasis-800);
+  text-decoration: none;
+}
+
+.table-of-contents__link--active,
+.table-of-contents__link--active code {
+  color: var(--ifm-color-emphasis-1000);
+  font-weight: var(--ifm-font-weight-semibold);
+}
+
+[data-theme='dark'] .table-of-contents__link:hover,
+[data-theme='dark'] .table-of-contents__link:hover code {
+  color: var(--ifm-color-emphasis-200);
+}
+
+[data-theme='dark'] .table-of-contents__link--active,
+[data-theme='dark'] .table-of-contents__link--active code {
+  color: var(--ifm-color-emphasis-0);
 }
