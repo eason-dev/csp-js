@@ -1,0 +1,19 @@
+# CODEOWNERS for CSP Kit
+# These owners will be requested for review when someone opens a pull request.
+
+# Default owner for everything
+* @eason-dev
+
+# Package-specific owners
+/packages/generator/ @eason-dev
+/packages/data/ @eason-dev
+/packages/cli/ @eason-dev
+
+# App-specific owners
+/apps/web/ @eason-dev
+/apps/docs/ @eason-dev
+
+# Configuration files
+/.github/ @eason-dev
+/package.json @eason-dev
+/turbo.json @eason-dev
