@@ -211,8 +211,10 @@ export function SimpleSearch({
                       className={`search-result-item group flex cursor-pointer items-center justify-between rounded-lg p-3 transition-colors ${
                         focusedIndex === index
                           ? 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100'
-                          : 'hover:bg-purple-50 dark:hover:bg-zinc-800'
-                      } ${selected ? 'ring-2 ring-purple-500 dark:ring-purple-400' : ''}`}
+                          : selected
+                            ? 'bg-purple-50 dark:bg-purple-900/20'
+                            : 'hover:bg-purple-50 dark:hover:bg-zinc-800'
+                      }`}
                       onClick={() => toggleService(service)}
                       onMouseEnter={() => setFocusedIndex(index)}
                       role="option"
